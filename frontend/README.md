@@ -2,6 +2,9 @@
 
 ## Frontend
 
+### Getting started
+to run the website, in the terminal and sure you are in the frontend folder and run `npm install`. Then run `npm run dev` and you should have the website running. 
+
 ### Vue 3
 This project uses [Vue 3](https://vuejs.org) as Frontend Framework
 
@@ -21,8 +24,11 @@ You can use them like so:
 ```
 #### Tailwind CSS
 In this project you can also use Tailwind CSS. Tailwind can be used right inline with your HTML. It is also integrated with our design system colors.
-```
 
+Quick example:
 ```
+<div class="flex gap-8 items-center bg-primary-500 hover:bg-primary-700"></div>
+```
+We apply Flexbox with a gap and center the items horizontally, we give it the primary background color, when we hover we apply a darker shade as the background.  
 
 
