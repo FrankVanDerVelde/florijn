@@ -5,10 +5,17 @@
     </div>
 
     <div class="nav-items-container">
-      <div><router-link to="/home">Home</router-link></div>
-        <div><router-link to="/profile">Profile</router-link></div>
+      <div>
+        <router-link to="/home">Home</router-link>
+      </div>
+      <div>
+        <router-link to="/profile">Profile</router-link>
+      </div>
+      <div>
+        <router-link to="/project-overview">Project Overview</router-link>
+      </div>
     </div>
-    
+
   </div>
 </template>
 
@@ -19,11 +26,11 @@ import logo from '../../assets/florijn_logo.png';
 <style scoped>
 /* Temp style for nav */
 .nav-items-container {
-    position: absolute;
-    left: 211px;
-    top: 20px;
-    display: flex;
-    width: 28em;
-    justify-content: space-evenly;
+  position: absolute;
+  left: 211px;
+  top: 20px;
+  display: flex;
+  width: 28em;
+  justify-content: space-evenly;
 }
 </style>
