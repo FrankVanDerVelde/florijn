@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { router } from './components/router/index';
 import './style.css'
 import App from './App.vue'
 import PrimaryButton from "./components/Common/PrimaryButton.vue";
@@ -7,7 +8,7 @@ import TextField from "./components/Common/TextField.vue";
 import NavBar from "./components/Common/NavBar.vue";
 
 // `Chainable` list of global components.
-let app = createApp(App)
+const app = createApp(App).use(router)
     .component('PrimaryButton', PrimaryButton)
     .component('SecondaryButton', SecondaryButton)
     .component('TextField', TextField)
