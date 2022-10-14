@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-row mt-4 w-full md:w-auto">
-    <img :src="participant.avatar" alt="Avatar" class="avatar">
+  <div class="flex flex-row mt-4 w-full md:w-auto" v-if="!small">
+    <img :src="participant.avatar" alt="Avatar" class="w-[82px] h-[82px] rounded-full mr-4">
     <div class="flex flex-col justify-between relative pr-[34px] w-full md:w-auto">
       <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" :href="'mailto:' + participant.email">
         <font-awesome-icon icon="envelope"/>
@@ -14,6 +14,13 @@
       </div>
     </div>
   </div>
+  <div class="flex flex-row items-center w-full" v-else>
+    <img :src="participant.avatar" alt="Avatar" class="w-[28px] h-[28px] rounded-full mr-2">
+    <div class="flex flex-col justify-between">
+      <div class="font-bold text-sm">{{ name }}</div>
+      <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>
+    </div>
+  </div>
 
 </template>
 
@@ -23,7 +30,8 @@ export default {
 
   computed: {
     name() {
-      return this.participant.firstName + " " + this.participant.lastName.charAt(0) + ".";
+      let lastNameParts = this.participant.lastName.split(" ");
+      return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
     }
   },
 
@@ -31,20 +39,16 @@ export default {
     participant: {
       type: Object,
       required: true
+    },
+    small: {
+      type: Boolean,
+      default: false
     }
   }
 }
 </script>
 
 <style scoped>
-.avatar {
-  width: 82px;
-  height: 82px;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  margin-right: 16px;
-}
-
 .email-btn {
   position: absolute;
   top: 0;

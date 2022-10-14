@@ -26,15 +26,35 @@
             <div class="flex flex-row flex-wrap gap-8">
               <participant v-for="participant in participants" :key="participant.id" :participant="participant"/>
             </div>
-
           </section>
 
+          <section class="pt-[48px]">
+            <h2>Uren</h2>
+            <div class="grid grid-cols-12 gap-4">
+              <SummaryBlock label="Totaal gemaakte uren" :value="totalHours"/>
+              <SummaryBlock label="Gemaakte uren deze maand" :value="hoursThisMonth"/>
+              <SummaryBlock label="Gemaakte uren deze week" :value="hoursThisWeek"/>
+              <SummaryBlock label="Ontwikkelkosten" :value="totalCosts"/>
+            </div>
+
+            <table class="w-full mt-4">
+              <thead>
+                <tr class="text-left">
+                  <th>Deelnemer</th>
+                  <th>Aantal uren</th>
+                  <th>Kosten</th>
+                  <th>Datum</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <hours-row v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
+              </tbody>
+            </table>
+          </section>
         </div>
       </div>
-
-
     </div>
-
   </div>
 </template>
 
@@ -42,22 +62,36 @@
 import Stats from "./Project/Stats.vue";
 import Stat from "./Project/Stat.vue";
 import Participant from "./Project/Participant.vue";
+import SummaryBlock from "./Project/SummaryBlock.vue";
+import HoursRow from "./Project/hoursRow.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {Stat, Stats, Participant},
+  components: {HoursRow, SummaryBlock, Stat, Stats, Participant},
 
   computed: {
     participantCount() {
       return this.participants.length;
     },
+    totalHours() {
+      return 24.5;
+    },
+    hoursThisMonth() {
+      return 16.75;
+    },
+    hoursThisWeek() {
+      return 8.25;
+    },
+    totalCosts() {
+      return 2058.80;
+    }
   },
 
   data() {
     return {
       bannerSrc: "/src/assets/Barentszplein6B-voorkant.webp",
       logoSrc: "/src/assets/logo-small.png",
-      title: "Een nieuwe Florijn project",
+      title: "Een nieuw Florijn project",
       description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
       participants: [
         {
@@ -81,6 +115,68 @@ export default {
           role: "Designer",
           avatar: "/src/assets/avatars/avatar3.png",
           email: "jant@florijn.com"
+        }
+      ],
+      hourRegistry: [
+        {
+          id: 0,
+          participant: {
+            id: 1,
+            firstName: "Sophie",
+            lastName: "Keulen",
+            role: "Lead Developer",
+            avatar: "/src/assets/avatars/avatar2.png",
+            email: "sophiek@florijn.com"
+          },
+          startTime: "2022-10-14T12:00:00.000Z",
+          endTime: "2022-10-14T14:45:00.000Z",
+          hourlyRate: 60,
+          status: 'AWAITING'
+        },
+        {
+          id: 1,
+          participant: {
+            id: 1,
+            firstName: "Sophie",
+            lastName: "Keulen",
+            role: "Lead Developer",
+            avatar: "/src/assets/avatars/avatar2.png",
+            email: "sophiek@florijn.com"
+          },
+          startTime: "2022-10-13T09:00:00.000Z",
+          endTime: "2022-10-13T11:30:00.000Z",
+          hourlyRate: 60,
+          status: 'APPROVED'
+        },
+        {
+          id: 2,
+          participant: {
+            id: 2,
+            firstName: "Jan",
+            lastName: "Timmermans",
+            role: "Designer",
+            avatar: "/src/assets/avatars/avatar3.png",
+            email: "jant@florijn.com"
+          },
+          startTime: "2022-10-11T14:00:00.000Z",
+          endTime: "2022-10-11T18:20:00.000Z",
+          hourlyRate: 40,
+          status: 'APPROVED'
+        },
+        {
+          id: 3,
+          participant: {
+            id: 1,
+            firstName: "Sophie",
+            lastName: "Keulen",
+            role: "Lead Developer",
+            avatar: "/src/assets/avatars/avatar2.png",
+            email: "sophiek@florijn.com"
+          },
+          startTime: "2021-03-08T15:30:00.000Z",
+          endTime: "2021-03-08T19:20:00.000Z",
+          hourlyRate: 60,
+          status: 'DECLINED'
         }
       ]
     };
@@ -132,7 +228,7 @@ h2 {
   font-weight: 700;
   font-size: 28px;
   line-height: 34px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   color: var(--neutral-700)
 }
 
@@ -145,6 +241,13 @@ h2 {
 
 .border-bottom {
   border-bottom: 1px solid var(--neutral-100);
+}
+
+th {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 26px;
+  padding-bottom: 12px;
 }
 
 @media screen and (min-width: 1024px) {
