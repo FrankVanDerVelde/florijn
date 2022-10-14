@@ -7,10 +7,11 @@ import SecondaryButton from "./components/Common/SecondaryButton.vue";
 import TextField from "./components/Common/TextField.vue";
 import NavBar from "./components/Common/NavBar.vue";
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faUserSecret} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-library.add(faUserSecret);
+import {faUsers, faEnvelope} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faUsers, faEnvelope);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)
