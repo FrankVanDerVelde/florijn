@@ -1,5 +1,7 @@
 <template>
-<div>Hello there</div>
+  <div class="page-main-mw p-4">
+    <div>Hello there</div>
+  </div>
 </template>
 
 <script>

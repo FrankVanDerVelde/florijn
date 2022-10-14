@@ -9,6 +9,10 @@ const count = ref(0)
 </script>
 
 <template>
+
+  <div class="page-main-mw p-4">
+      <h1>Helllo Worldd</h1>
+  </div>
 <!--  <h1>{{ msg }}</h1>-->
 
 <!--  <div class="card">-->

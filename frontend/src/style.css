@@ -83,3 +83,8 @@
   --app_green-800: #0E5814;
   --app_green-900: #05400A;
 }
+
+.page-main-mw {
+  margin: 0 auto;
+  max-width: 1230px;
+}
