@@ -9,9 +9,9 @@ import NavBar from "./components/Common/NavBar.vue";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-import {faUsers, faEnvelope} from '@fortawesome/free-solid-svg-icons'
+import {faUsers, faEnvelope, faXmark, faCheck} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faEnvelope);
+library.add(faUsers, faEnvelope, faXmark, faCheck);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)

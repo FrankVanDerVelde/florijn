@@ -15,13 +15,19 @@
             <h1>{{ title }}</h1>
             <p class="description">{{ description }}</p>
 
-            <stats>
-              <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
-            </stats>
+            <div class="flex items-center justify-between mb-[24px]">
+              <stats class="!pb-0">
+                <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
+              </stats>
+              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzig informatie</button>
+            </div>
           </section>
 
           <section class="pt-[24px]">
-            <h2>Deelnemers</h2>
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="!mb-0">Deelnemers</h2>
+              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzigen</button>
+            </div>
 
             <div class="flex flex-row flex-wrap gap-8">
               <participant v-for="participant in participants" :key="participant.id" :participant="participant"/>
@@ -39,16 +45,16 @@
 
             <table class="w-full mt-4">
               <thead>
-                <tr class="text-left">
-                  <th>Deelnemer</th>
-                  <th>Aantal uren</th>
-                  <th>Kosten</th>
-                  <th>Datum</th>
-                  <th>Status</th>
-                </tr>
+              <tr class="text-left">
+                <th>Deelnemer</th>
+                <th>Aantal uren</th>
+                <th>Kosten</th>
+                <th>Datum</th>
+                <th>Status</th>
+              </tr>
               </thead>
               <tbody>
-                <hours-row v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
+              <hours-row v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
               </tbody>
             </table>
           </section>
@@ -83,7 +89,7 @@ export default {
       return 8.25;
     },
     totalCosts() {
-      return 2058.80;
+      return "€" + 2058.80;
     }
   },
 
@@ -201,17 +207,18 @@ export default {
 }
 
 .icon-container {
-  margin-top: -28px;
+  margin-top: -32px;
   z-index: 1;
 }
 
 .icon-container > img {
-  margin-left: 48px;
-  width: 48px;
-  height: 48px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 68px;
+  height: 68px;
   object-fit: cover;
   -o-object-fit: cover;
-  border-radius: 12px;
+  border-radius: 18px;
   border: 4px solid #fff;
   background-color: #fff;
 }
@@ -260,6 +267,8 @@ th {
   }
 
   .icon-container > img {
+    margin-left: 48px;
+    margin-right: unset;
     width: 88px;
     height: 88px;
     border-width: 8px;

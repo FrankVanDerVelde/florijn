@@ -13,7 +13,7 @@
       {{ this.formatDate }}
     </td>
     <td class="status">
-      <hour-registry-status :status="registry.status"/>
+      <hour-registry-status :status="registry.status" @updateRegistryStatus="updateRegistryStatus"/>
     </td>
   </tr>
 </template>
@@ -74,6 +74,9 @@ export default {
     formatTimeSpent(timeSpent = [0, 0, 0], short = false) {
       if (short) return (timeSpent[2]).toFixed(2) + "h";
       return `${timeSpent[0]}h ${timeSpent[1]}m`;
+    },
+    updateRegistryStatus(newStatus) {
+      this.registry.status = newStatus;
     }
   }
 }
