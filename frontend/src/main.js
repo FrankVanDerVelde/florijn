@@ -1,19 +1,19 @@
-import { createApp } from 'vue'
-import { router } from './components/router/index';
+import {createApp} from 'vue'
+import {router} from './components/router/index';
 import './style.css'
 import App from './App.vue'
 import PrimaryButton from "./components/Common/PrimaryButton.vue";
 import SecondaryButton from "./components/Common/SecondaryButton.vue";
 import TextField from "./components/Common/TextField.vue";
 import NavBar from "./components/Common/NavBar.vue";
-
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faWindowMinimize } from '@fortawesome/free-regular-svg-icons';
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 // temporarily import all because single import won't work
-library.add(fas)
+
+import {faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize} from '@fortawesome/free-solid-svg-icons'
+
+library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)
