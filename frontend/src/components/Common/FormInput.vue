@@ -1,7 +1,7 @@
 <template>
     <div class="input-container">
-        <label v-bind:for="nameToId">{{ capitalizedName }}</label>
-        <input v-bind:type="type" v-bind:id="nameToId" v-bind:name="nameToId" v-bind:placeholder="capitalizedName">
+        <label v-bind:for="nameToId" class="mb-[12px]">{{ capitalizedName }}</label>
+        <input v-bind:type="type" v-bind:id="nameToId" v-bind:name="nameToId" v-bind:placeholder="capitalizedName" class="pl-[7px]">
     </div>
 </template>
     
