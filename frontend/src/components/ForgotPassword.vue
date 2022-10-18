@@ -81,6 +81,12 @@ export default {
   text-align: center;
 }
 
+.text-forgotpassword {
+  color: #7B8794;
+  margin: 2% 2% 5%;
+  max-width: 300px;
+}
+
 .back-text {
   color: #F35627;
   margin: 1%;
@@ -89,10 +95,8 @@ export default {
   min-height: 50px;
 }
 
-.text-forgotpassword {
-  color: #7B8794;
-  margin: 2% 2% 5%;
-  max-width: 300px;
+.back-text:hover{
+  color: #C52707;
 }
 
 
