@@ -88,4 +88,8 @@ export default {
   font-size: 17px;
 }
 
+.forgot-password:hover{
+  color: #C52707;
+}
+
 </style>

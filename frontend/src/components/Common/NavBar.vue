@@ -13,8 +13,10 @@
         <div>
           <router-link to="/project-overview">Project Overview</router-link>
         </div>
+      </div>
+      <div class="nav-items-right">
         <div>
-          <router-link class="nav-items-right" to="/login">Log in</router-link>
+          <router-link to="/login">Log in</router-link>
         </div>
       </div>
     </div>
@@ -30,5 +32,11 @@ import logo from '../../assets/florijn_logo.png';</script>
   display: flex;
   column-gap: 20px;
   -webkit-column-gap: 20px;
+}
+
+.nav-items-right {
+  display: flex;
+  margin-left: 60%;
+  position: relative;
 }
 </style>
