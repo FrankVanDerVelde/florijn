@@ -31,4 +31,31 @@ Quick example:
 ```
 We apply Flexbox with a gap and center the items horizontally, we give it the primary background color, when we hover we apply a darker shade as the background.  
 
+---
+## Backend
+
+### Getting started
+Use IntelliJ IDEA to start the backend application, it should run on http://localhost:8086.
+
+### Architecture
+The backend uses Clean Architecture. Like the original Clean Architecture idea from Uncle Bob our application uses 4 layers. 
+Let's go through how our application uses these 4 layers.
+
+![img.png](clean_architecture_for_readme.png)
+
+#### Frameworks and Drivers
+We will use the Spring framework in Java for creating the REST API. The database we will use is probably an H2 database.
+
+#### Interface Adapters
+- We use `Controller`'s for handling our REST requests, this will rely on the Spring framework
+- We use `Repository`'s for (database) CRUD operations.
+- We use `Presenter`'s for formatting the outgoing models to make them ready for the view.
+
+#### Application Business Rules
+`Interactor`'s will incorporate the application-specific business rules of the application.
+
+#### Enterprise Business Rules
+The application will have "domain" models. These models incorporate the highest level business rules, which are not application-specific.  
+
+
 
