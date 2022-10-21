@@ -13,6 +13,9 @@
         <div>
           <router-link to="/project-overview">Project Overview</router-link>
         </div>
+        <div>
+          <router-link to="/project-list">Project List</router-link>
+        </div>
       </div>
       <div class="nav-items-right">
         <div>

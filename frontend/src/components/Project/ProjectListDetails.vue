@@ -1,0 +1,72 @@
+<template>
+  <div class="container main-container rounded-xl">
+    <div class="flex  mt-4 w-full justify-center">
+
+      <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container fa-border m-auto">
+
+      <div class="flex flex-col justify-between container ml-2">
+        <div class="flex flex-col mb-3">
+          <div class="font-bold">{{ project.title }}</div>
+          <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+        </div>
+
+        <div class="container flex justify-between m-1">
+          <stat class="relative bottom-0 ">
+            <stat :dot="false" icon="users">{{ project.participants }}</stat>
+          </stat>
+          <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Wijzigen
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</template>
+
+<script>
+import Stat from "./Stat.vue";
+
+export default {
+  components: {Stat},
+
+  name: "ProjectListDetails",
+
+  props: {
+    project: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+.main-container {
+  background-color: #F5F7FA;
+  border-radius: ;
+}
+
+
+.icon-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+}
+
+.icon-container > img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 68px;
+  height: 68px;
+  object-fit: cover;
+  -o-object-fit: cover;
+  border-radius: 18px;
+  border: 4px solid #fff;
+  background-color: #fff;
+}
+</style>
