@@ -1,5 +1,17 @@
+<template>
+  <div class="page-main-mw p-4 container">
+    <div class="welcome-text">
+      <h1>Welkom bij het portaal voor Florijn App & Web Solutions. Hier zul je al je projecten inzien.</h1><br>
+      <p>Om in te loggen kun je boven in de navbar rechtsboven op de login knop drukken!</p>
+    </div>
+    <div class="welcome-picture">
+      <img src="../assets/picture_welcome.png" height="347" width="683" alt=""/>
+    </div>
+  </div>
+</template>
+
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 defineProps({
   msg: String
@@ -8,37 +20,20 @@ defineProps({
 const count = ref(0)
 </script>
 
-<template>
-
-  <div class="page-main-mw p-4">
-      <h1>Helllo Worldd</h1>
-  </div>
-<!--  <h1>{{ msg }}</h1>-->
-
-<!--  <div class="card">-->
-<!--    <button type="button" @click="count++">count is {{ count }}</button>-->
-<!--    <p>-->
-<!--      <code>components/HelloWorld.vue</code> to test it HMR-->
-<!--    </p>-->
-<!--  </div>-->
-
-<!--  <p>-->
-<!--    Check out-->
-<!--    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"-->
-<!--      >create-vue</a-->
-<!--    >, the official Vue + Vite starter-->
-<!--  </p>-->
-<!--  <p>-->
-<!--    Install-->
-<!--    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>-->
-<!--    in your IDE for a better DX-->
-<!--  </p>-->
-<!--  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>-->
-<!--  -->
-</template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
+
+.welcome-text {
+  margin-top: 10%;
 }
+
+.container {
+  display: flex;
+}
+
+.welcome-picture {
+  margin: 2%;
+  float: right;
+}
+
 </style>

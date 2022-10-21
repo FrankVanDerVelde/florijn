@@ -39,7 +39,7 @@ import logo from '../../assets/florijn_logo.png';</script>
 
 .nav-items-right {
   display: flex;
-  margin-left: 60%;
+  margin-left: 50%;
   position: relative;
 }
 </style>

@@ -6,13 +6,14 @@
           <p class="header-text">Vul inloggegevens in</p>
         </div>
         <div class="inputfield-mail">
-          <FormInput name="emailadres"></FormInput>
+          <FormInput name="emailadres" v-model="email">{{ email }}</FormInput>
         </div>
         <div class="inputfield-wachtwoord">
-          <FormInput name="wachtwoord"></FormInput>
+          <FormInput name="wachtwoord" v-model="password">{{ password }}</FormInput>
+          <p class="wrongLogin"></p>
         </div>
         <div class="submit-button">
-          <primary-button title="Log in"></primary-button>
+          <primary-button title="Log in" @click="submitButton()"></primary-button>
         </div>
         <div class="forgot-password" @click="forgotPassword()">Wachtwoord vergeten?</div>
       </div>
@@ -33,8 +34,34 @@ export default {
   methods: {
     forgotPassword() {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword")
+    },
+    submitButton() {
+      for (let i = 0; i < this.users.length; i++) {
+        if (this.email === this.users[i].email && this.password === this.users[i].password) {
+          this.$router.push(this.$route.matched[0].path + "/project-overview");
+        }
+      }
+
     }
-  }
+  },
+  data() {
+    return {
+      email: '',
+      password: '',
+      users: [
+        {
+          id: 0,
+          emailadress: "jveerman@outlook.com",
+          password: "GebakkenEieren10",
+
+        }, {
+          id: 1,
+          emailadress: "rtol@outlook.com",
+          password: "Vuurtoren10",
+        },
+      ],
+    };
+  },
 }
 </script>
 
@@ -88,8 +115,12 @@ export default {
   font-size: 17px;
 }
 
-.forgot-password:hover{
+.forgot-password:hover {
   color: #C52707;
+}
+
+.wrongLogin {
+  color: red;
 }
 
 </style>

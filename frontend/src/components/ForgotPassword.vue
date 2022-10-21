@@ -9,10 +9,7 @@
         <p class="text-forgotpassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
           account, dan ontvangt u van ons een link om uw wachtwoord opnieuw in te stellen.</p>
         <div class="inputfield-wachtwoord">
-          <FormInput name="wachtwoord"></FormInput>
-        </div>
-        <div class="inputfield-wachtwoord-herhaal">
-          <FormInput name="herhaal wachtwoord"></FormInput>
+          <FormInput name="emailadres"></FormInput>
         </div>
         <div class="submit-button">
           <primary-button title="Verstuur email"></primary-button>
@@ -95,7 +92,7 @@ export default {
   min-height: 50px;
 }
 
-.back-text:hover{
+.back-text:hover {
   color: #C52707;
 }
 
