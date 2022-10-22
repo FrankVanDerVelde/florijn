@@ -9,7 +9,10 @@
         <p class="text-forgotpassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
           account, dan ontvangt u van ons een link om uw wachtwoord opnieuw in te stellen.</p>
         <div class="inputfield-wachtwoord">
-          <FormInput name="emailadres"></FormInput>
+          <div class="input-container">
+            <label class="mb-[12px]">Emailadres</label>
+            <input class="pl-[7px]">
+          </div>
         </div>
         <div class="submit-button">
           <primary-button title="Verstuur email"></primary-button>
@@ -96,5 +99,27 @@ export default {
   color: #C52707;
 }
 
+.input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+  color: #7B8794;
+  font-size: 14px
+}
+
+.input-container input {
+  width: 100%;
+  color: #BFBFBF;
+  border: 1px solid #BFBFBF;
+  border-radius: 6px;
+  font-family: 'Roboto', sans-serif;
+  height: 40px;
+  font-size: 16px;
+}
 
 </style>
