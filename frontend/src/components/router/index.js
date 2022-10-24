@@ -6,6 +6,7 @@ import ProjectOverview from "../ProjectOverview.vue";
 import LogIn from "../LogIn.vue";
 import ForgotPassword from "../ForgotPassword.vue";
 import ProjectList from "../ProjectList.vue";
+import ChangePassword from "../ChangePassword.vue";
 
 const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
@@ -13,6 +14,7 @@ const routes = [
     {path: '/home', component: HelloWorld},
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
+    {path: '/login/forgotpassword/cp', component: ChangePassword},
     {
         // path: "/profile/:id",
         path: "/profile",
