@@ -65,11 +65,11 @@
 </template>
 
 <script>
-import Stats from "./Project/Stats.vue";
-import Stat from "./Project/Stat.vue";
-import Participant from "./Project/Participant.vue";
-import SummaryBlock from "./Project/SummaryBlock.vue";
-import HoursRow from "./Project/hoursRow.vue";
+import Stats from "./Stats.vue";
+import Stat from "./Stat.vue";
+import Participant from "./Participant.vue";
+import SummaryBlock from "./SummaryBlock.vue";
+import HoursRow from "./hoursRow.vue";
 
 export default {
   name: "ProjectOverview",

@@ -1,20 +1,20 @@
 import {createRouter, createWebHashHistory} from "vue-router";
 
-import HelloWorld from "../HelloWorld.vue";
+import HelloWorld from "../Scenes/Welcome/WelcomeView.vue";
 
-import ProjectOverview from "../ProjectOverview.vue";
-import LogIn from "../LogIn.vue";
-import ForgotPassword from "../ForgotPassword.vue";
-import ProjectList from "../ProjectList.vue";
-import ChangePassword from "../ChangePassword.vue";
+import ProjectOverview from "../Scenes/Project/ProjectOverview.vue";
+import LogIn from "../Scenes/Authentication/LogIn.vue";
+import ForgotPassword from "../Scenes/Authentication/ForgotPassword.vue";
+import ProjectList from "../Scenes/Project/ProjectList.vue";
+import ChangePassword from "../Scenes/Authentication/ChangePassword.vue";
 import { info } from "autoprefixer";
 
 // Profile components
-import Profile from "../Profile.vue";
-import PersonalInfo from "../ProfilePage/PersonalInfo.vue";
-import AvailableHours from "../ProfilePage/AvailableHours.vue";
-import Skills from "../ProfilePage/Skills.vue";
-import Resume from "../ProfilePage/Resume.vue";
+import Profile from "../Scenes/ProfilePage/Profile.vue";
+import PersonalInfo from "../Scenes/ProfilePage/PersonalInfo.vue";
+import AvailableHours from "../Scenes/ProfilePage/AvailableHours.vue";
+import Skills from "../Scenes/ProfilePage/Skills.vue";
+import Resume from "../Scenes/ProfilePage/Resume.vue";
 
 const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },

@@ -21,7 +21,7 @@
 
 <script>
 
-import ProjectListDetails from "./Project/ProjectListDetails.vue";
+import ProjectListDetails from "./ProjectListDetails.vue";
 
 
 export default {

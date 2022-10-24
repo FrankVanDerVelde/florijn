@@ -142,8 +142,8 @@ export default {
         }
     }
 }
-import FormInput from "./Common/FormInput.vue";
-import WorkHoursInput from "./Common/WorkHoursInput.vue";
-import SideBarNav from "./Common/SideBarNav.vue";
+import FormInput from "../../Common/FormInput.vue";
+import WorkHoursInput from "../../Common/WorkHoursInput.vue";
+import SideBarNav from "../../Common/SideBarNav.vue";
 
 </script>

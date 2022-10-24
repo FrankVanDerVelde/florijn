@@ -5,7 +5,7 @@
       <p>Om in te loggen kun je boven in de navbar rechtsboven op de login knop drukken!</p>
     </div>
     <div class="welcome-picture">
-      <img src="../assets/picture_welcome.png" height="347" width="683" alt=""/>
+      <img src="../../../assets/picture_welcome.png" height="347" width="683" alt=""/>
     </div>
   </div>
 </template>
