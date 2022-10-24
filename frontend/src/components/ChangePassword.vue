@@ -3,21 +3,25 @@
     <div class="container">
       <div class="login-form">
         <div class="border-bottom">
-          <p class="header-text">Wachtwoord vergeten?</p>
-          <p class="back-text" @click="backToInlogPage()"> &ltBack</p>
+          <p class="header-text">Wachtwoord veranderen</p>
         </div>
-        <p class="text-forgotpassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
-          account, dan ontvangt u van ons een link om uw wachtwoord opnieuw in te stellen.</p>
+        <p class="text-forgotpassword">Gelieve uw wachtwoord te herstellen in onderstaande invulvelden</p>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
-            <label class="mb-[12px]">Emailadres</label>
-            <input v-model="email" class="pl-[7px]">
+            <label class="mb-[12px]">Wachtwoord</label>
+            <input v-model="password" type="password" class="pl-[7px]">
           </div>
-          <p class="wrongText">{{ validationText }}</p>
+        </div>
+        <div class="inputfield-wachtwoord">
+          <div class="input-container">
+            <label class="mb-[12px]">Herhaal wachtwoord</label>
+            <input v-model="repeatPassword" type="password" class="pl-[7px]">
+            <p class="wrongText">{{ validationText }}</p>
+          </div>
         </div>
         <div class="submit-button">
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit" @click="sendMailButton()">Verstuur email
+          text-sm leading-5 rounded-lg w-fit" @click="saveButton()">Opslaan
           </button>
         </div>
       </div>
@@ -28,23 +32,24 @@
 <script>
 
 export default {
-  name: "ForgotPassword",
+  name: "ChangePassword",
   methods: {
-    backToInlogPage() {
-      this.$router.push("/login");
-    },
-    sendMailButton() {
-      if (this.email !== '') {
-        this.validationText = '';
-        this.$router.push(this.$route.matched[0].path + "/cp");
+    saveButton() {
+      if (this.password === '' || this.repeatPassword === '') {
+        this.validationText = 'De velden zijn niet volledig ingevuld!';
+      } else if (this.password !== this.repeatPassword) {
+        this.validationText = 'De opgegeven wachtwoorden zijn niet gelijk!';
       } else {
-        this.validationText = 'Het invulveld is niet correct ingevuld!';
+        this.validationText = '';
+        this.$router.push("/login");
       }
     }
   },
   data() {
     return {
       email: '',
+      password: '',
+      repeatPassword: '',
       validationText: '',
     };
   }
@@ -62,7 +67,7 @@ export default {
 
 .login-form {
   border-radius: 6px;
-  min-width: 300px;
+  width: 300px;
   border: 2px solid #BFBFBF;
   box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
 }
@@ -94,18 +99,6 @@ export default {
   max-width: 300px;
 }
 
-.back-text {
-  color: #F35627;
-  margin: 1%;
-  font-weight: bold;
-  font-size: 15px;
-  min-height: 50px;
-}
-
-.back-text:hover {
-  color: #C52707;
-}
-
 .input-container {
   width: 100%;
   display: flex;
@@ -132,6 +125,5 @@ export default {
 .wrongText {
   color: red;
 }
-
 
 </style>

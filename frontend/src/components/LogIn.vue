@@ -14,7 +14,7 @@
         <div class="inputfield-wachtwoord">
           <div class="input-container">
             <label class="mb-[12px]">Wachtwoord</label>
-            <input v-model="password" class="pl-[7px]">
+            <input v-model="password" type="password" class="pl-[7px]">
             <p class="wrongLogin">{{ validationText }}</p>
           </div>
         </div>
@@ -44,7 +44,7 @@ export default {
       }
       for (let i = 0; i < this.users.length; i++) {
         if (this.email === this.users[i].emailadress && this.password === this.users[i].password) {
-          console.log("Ingelogd met het id: " + this.users[i].id)
+          console.log("Ingelogd met het id: " + this.users[i].id);
           this.$router.push("/project-overview");
           return;
         }
