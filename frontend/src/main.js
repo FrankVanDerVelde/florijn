@@ -10,9 +10,9 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faEnvelope, faUsers, faWindowMinimize, faXmark, faUser, faFile} from '@fortawesome/free-solid-svg-icons'
+import {faBars, faCheck, faChevronRight, faEnvelope, faUsers, faWindowMinimize, faXmark, faUser, faFile, faCalendarDays, faLightbulb} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faChevronRight, faUser, faFile);
+library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faChevronRight, faUser, faFile, faCalendarDays, faLightbulb);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)

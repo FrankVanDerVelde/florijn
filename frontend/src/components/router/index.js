@@ -10,11 +10,11 @@ import ChangePassword from "../Scenes/Authentication/ChangePassword.vue";
 import { info } from "autoprefixer";
 
 // Profile components
-import Profile from "../Scenes/ProfilePage/Profile.vue";
-import PersonalInfo from "../Scenes/ProfilePage/PersonalInfo.vue";
-import AvailableHours from "../Scenes/ProfilePage/AvailableHours.vue";
-import Skills from "../Scenes/ProfilePage/Skills.vue";
-import Resume from "../Scenes/ProfilePage/Resume.vue";
+import Profile from "../Scenes/Profile/Profile.vue";
+import PersonalInfo from "../Scenes/Profile/PersonalInfo.vue";
+import AvailableHours from "../Scenes/Profile/WorkingHours.vue";
+import Skills from "../Scenes/Profile/Skills.vue";
+import Resume from "../Scenes/Profile/Resume.vue";
 
 const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
