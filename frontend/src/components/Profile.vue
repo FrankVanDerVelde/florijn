@@ -4,114 +4,18 @@
     <div class="page-main-mw p-4">
         <div class="profile-container flex self-center w-4/5">
             <div class="side-bar w-1/5">
-                <span>Profiel</span>
-                <span>CV</span>
+                <SideBarNav :sideBarItems="sideBarLinks"></SideBarNav>
             </div>
+            <router-view></router-view>
             <!-- <FormInput :name="test">test</FormInput> -->
             <div class="form grow">
 
-                <div class="text-[20px] font-bold mb-[10px]">Profiel</div>
-                <div class="name-and-picture-container flex items-center">
-                    <img class="rounded-full w-[60px] h-[60px] mr-4"
-                        src="https://media.istockphoto.com/vectors/thumbnail-image-vector-graphic-vector-id1147544807?k=20&m=1147544807&s=612x612&w=0&h=pBhz1dkwsCMq37Udtp9sfxbjaMl27JUapoyYpQm0anc=">
-                    <div>
-                        <div class="text-[20px] font-bold">Naam placeholder</div>
-                        <div class="text-[14px] text-primary-400 font-bold">Title placeholder</div>
-                    </div>
-                </div>
-
+          
                 <form>
-                    <div class="font-bold text-[20px]">Persoonlijke Informatie</div>
+                    
+                  
 
-                    <div class="input-container duo">
-                        <FormInput name="voornaam"></FormInput>
-                        <FormInput name="achternaam"></FormInput>
-                    </div>
-
-                    <span class="adress">Woongegevens</span>
-                    <div class="input-container">
-                        <FormInput name="Email" type="email"></FormInput>
-                    </div>
-
-                    <div class="input-container duo">
-                        <FormInput name="woonplaats"></FormInput>
-                        <FormInput name="postcode"></FormInput>
-                    </div>
-
-                    <div class="input-container duo">
-                        <FormInput name="huisnummer"></FormInput>
-                        <FormInput name="toevoeging"></FormInput>
-                    </div>
-
-                    <span class="font-bold text-[20px]">Beschikbare uren</span>
-                    <div v-for="day in days">
-                        <WorkHoursInput :day="day" class="mb-[8px]"></WorkHoursInput>
-                    </div>
-
-                    <div class="font-bold text-[20px]">Skills</div>
-                    <div class="uppercase text-neutral-400 font-bold">Office front End</div>
-
-                    <div class="grid grid-cols-2">
-                        <div></div>
-                        <div class="grid grid-cols-6 gap-2 text-center">
-                            <div>NVT</div>
-                            <div>1</div>
-                            <div>2</div>
-                            <div>3</div>
-                            <div>4</div>
-                            <div>5</div>
-                        </div>
-                    </div>
-                    <div v-for="skill in skills">
-                        <div class="grid grid-cols-2 bg-neutral-100 my-3 h-[38px] items-center">
-                            <div class="ml-[6px] font-bold text-[14px]">{{ skill }}</div>
-                            <div class="grid grid-cols-6 gap-2 justify-center bg-neutral-100 h-[25px]">
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-nvt`" class="radio-button">
-                                        <input :id="`${skill}-nvt`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-1`" class="radio-button">
-                                        <input :id="`${skill}-1`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-2`" class="radio-button">
-                                        <input :id="`${skill}-2`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-3`" class="radio-button">
-                                        <input :id="`${skill}-3`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-4`" class="radio-button">
-                                        <input :id="`${skill}-4`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-5`" class="radio-button">
-                                        <input :id="`${skill}-5`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                  
 
 
                 </form>
@@ -200,19 +104,46 @@
 
 <script>
 export default {
-    name: " Profile",
+    name: "Profile",
     components: {
-        FormInput,
-        WorkHoursInput
-    },
+    FormInput,
+    WorkHoursInput,
+    SideBarNav
+},
     data() {
         return {
             days: ["Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"],
-            skills: ["Html", "Php", "javascript"]
+            skills: ["Html", "Php", "javascript"],
+            sideBarLinks: [{
+                icon: "fa-solid fa-user",
+                name: "profiel",
+                href: "/profile/personal-info"
+            },
+            {
+                icon: "fa-solid fa-file",
+                name: "available hours",
+                href: "/profile/available-hours"
+            },
+            {
+                icon: "fa-solid fa-file",
+                name: "skills",
+                href: "/profile/skills"
+            },
+            {
+                icon: "fa-solid fa-file",
+                name: "cv",
+                href: "/profile/cv"
+            },
+            {
+                icon: "fa-solid fa-file",
+                name: "resume",
+                href: "/profile/resume"
+            }]
         }
     }
 }
 import FormInput from "./Common/FormInput.vue";
 import WorkHoursInput from "./Common/WorkHoursInput.vue";
+import SideBarNav from "./Common/SideBarNav.vue";
 
 </script>
