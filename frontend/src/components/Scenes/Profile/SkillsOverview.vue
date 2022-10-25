@@ -4,20 +4,19 @@
     <div class="font-bold text-[32px] mb-3">Skills</div>
 
     <div v-for="skill in skills">
-        <div class="border-[1px] border-neutral-100 bg-neutral-0 my-3 h-[38px] items-center rounded-lg">
+        <div class="border-[1px] border-neutral-100 bg-neutral-0 my-3 h-[58px] items-center rounded-lg">
             <div class="grid grid-cols-4 gap-2 h-full items-center justify-center col-span-2 text-center">
-                <div class="font-bold capitalize text-[14px] text-left ml-[16px]">{{ skill.name}}</div>
+                <div class="font-bold capitalize text-[14px] text-left ml-[16px]">{{ skill.name }}</div>
                 <div>{{ skill.date}}</div>
                 <div>{{ skill.average}}</div>
-                <div>
+                <div class="flex justify-end mr-3">
                     <!-- :to="this.iets" -->
                     <router-link to="/profile/skills/edit">
                         <div
-                            class="bg-primary-500 text-neutral-0 border-neutral-200 border-[1px] flex items-center rounded-md h-[26px] mb-[10px] hover:bg-primary-100 capitalize font-bold text-[14px]">
+                            class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md h-[32px] w-[96px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center">
                             <div>aanpassen</div>
                         </div>
                     </router-link>
-
                 </div>
             </div>
         </div>
@@ -25,7 +24,7 @@
 
     <div>
         <div>Expertise gebied</div>
-        <div>Financieel Administratief</div>
+        <div class="text-primary-500 bg-primary-100 rounded-full px-[11px] py-[4px] font-bold inline-block mt-2">Financieel Administratief</div>
     </div>
 </template>
   
