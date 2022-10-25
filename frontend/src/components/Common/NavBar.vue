@@ -63,10 +63,6 @@ export default {
           link: '/project-list'
         },
         {
-          name: 'Uren Registratie',
-          link: '/hour-registration'
-        },
-        {
           name: 'Admin',
           link: '/adminpanel'
         }
