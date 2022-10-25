@@ -65,6 +65,10 @@ export default {
         {
           name: 'hour-registration',
           link: '/hour-registration'
+        },
+        {
+          name: 'Admin Panel',
+          link: '/adminpanel'
         }
       ],
       staticLink: {
