@@ -1,7 +1,7 @@
 <template>
     <div class="input-container">
         <label v-bind:for="nameToId" class="mb-[8px]">{{ capitalizedName }}</label>
-        <input v-bind:type="type" v-bind:id="nameToId" v-bind:name="nameToId" v-bind:placeholder="capitalizedName" class="pl-[7px]">
+        <input v-bind:type="type" v-bind:id="nameToId" v-bind:name="nameToId" v-bind:placeholder="capitalizedName" :value="value" class="pl-[7px]">
     </div>
 </template>
     
@@ -13,6 +13,10 @@ export default {
         type: {
             type: String,
             default: "text"
+        },
+        value: {
+            type: [String, Number],
+            default: null
         }
     },
     computed : {
@@ -42,7 +46,7 @@ export default {
 
  .input-container input {
     width: 100%;
-    color: #BFBFBF;
+    color: #474747;
     border: 1px solid #BFBFBF;
     border-radius: 6px;
     font-family: 'Roboto', sans-serif;
