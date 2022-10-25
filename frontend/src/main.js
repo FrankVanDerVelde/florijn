@@ -1,6 +1,6 @@
 import {createApp} from 'vue'
-import {router} from './components/router/index';
-import './assets/css/input.css'
+import {router} from './router/index';
+import './assets/css/output.css'
 import App from './App.vue'
 import PrimaryButton from "./components/Common/PrimaryButton.vue";
 import SecondaryButton from "./components/Common/SecondaryButton.vue";
