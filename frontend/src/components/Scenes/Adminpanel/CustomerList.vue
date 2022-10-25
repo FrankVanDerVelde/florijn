@@ -6,8 +6,6 @@
       <div class="side-bar w-[121px] flex-col justify-between">
         <side-bar-nav :side-bar-items="sideBarLinks"></side-bar-nav>
       </div>
-
-
       <div class="profile-container flex flex-row w-4/5">
         <div class="container grow">
           <p class="" v-if="customers.length === 0">Geen klanten</p>
@@ -89,11 +87,12 @@ export default {
 
 .side-bar {
   margin-top: 50px;
+  margin-right: 80px;
 }
 
 .container {
   margin-left: 20px;
-  margin-top: 23px;
+  margin-top: 24px;
 }
 
 
