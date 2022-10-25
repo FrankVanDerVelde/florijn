@@ -2,7 +2,7 @@
   <div class="container main-container rounded-xl">
     <div class="flex mt-4 p-2 w-full justify-center">
 
-      <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container fa-border m-auto">
+      <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container">
 
       <div class="flex flex-col justify-between container ml-4">
         <div class="flex flex-col mb-3">
@@ -11,9 +11,9 @@
         </div>
 
         <div class="container flex justify-between m-1">
-          <stat class="relative bottom-0 ">
-            <stat :dot="false" icon="users">{{ project.participants }}</stat>
-          </stat>
+
+          <stat :dot="false" icon="users" class="bottom-0">{{ project.participants }}</stat>
+
           <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Wijzigen
           </button>
         </div>
