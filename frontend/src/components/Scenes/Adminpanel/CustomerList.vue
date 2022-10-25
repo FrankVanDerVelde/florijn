@@ -1,7 +1,7 @@
 <template>
   <div class="page-main-mw">
 
-    <div class="flex flex-row md:flex-row p-4">
+    <div class="flex flex-row md:flex-row p-4 ">
 
       <div class="side-bar w-[121px] flex-col justify-between">
         <side-bar-nav :side-bar-items="sideBarLinks"></side-bar-nav>
