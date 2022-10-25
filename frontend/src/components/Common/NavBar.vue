@@ -53,21 +53,21 @@ export default {
           name: 'Home',
           link: '/home'
         }, {
-          name: 'Profile',
+          name: 'Profiel',
           link: '/profile'
         }, {
-          name: 'Project Overview',
+          name: 'Project Overzicht',
           link: '/project-overview'
         }, {
-          name: 'Project List',
+          name: 'Projecten',
           link: '/project-list'
         },
         {
-          name: 'hour-registration',
+          name: 'Uren Registratie',
           link: '/hour-registration'
         },
         {
-          name: 'Admin Panel',
+          name: 'Admin',
           link: '/adminpanel'
         }
       ],
