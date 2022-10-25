@@ -1,17 +1,22 @@
 <template>
   <div class="container main-container rounded-xl">
-    <div class="flex  mt-4 p-2 w-full justify-center">
+    <div class="flex mt-4 p-2 w-full justify-center">
       <img v-bind:src="customer.logoSrc" alt="project logo" class="icon-container fa-border m-auto">
       <div class="flex flex-col justify-between container ml-2">
         <div class="flex flex-col mb-3">
-          <div class="font-bold">{{ customer.title }}</div>
-          <div class="text-neutral-500">{{ customer.description }}</div>
-          <button id="detailsbutton" class="bg-neutral-100 border-[1px] flex items-center rounded-md h-[31px] text-neutral-900">Details
-          </button>
+          <div class="container flex justify-between m-1">
+            <div class="relative bottom-0 ">
+              <div class="font-bold">{{ customer.title }}</div>
+              <div class="font-semibold text-neutral-500">{{ customer.description }}</div>
+            </div>
+            <button id="detailsbutton"
+                    class="bg-neutral-100 border-neutral-200 border-[1px] font-semibold rounded-md bold p-2 mr-2 h-[31px] flex items-center text-neutral-900">
+              Details
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 
 </template>
@@ -58,7 +63,8 @@ export default {
   background-color: #fff;
 }
 
-#detailsbutton:hover{
+
+#detailsbutton:hover {
   background-color: #F35627;
   color: white;
 }
