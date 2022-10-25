@@ -1,5 +1,3 @@
-
-
 import {createApp} from 'vue'
 import {router} from './router/index';
 import './assets/css/output.css'
@@ -12,13 +10,10 @@ import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import './PrototypeExtensions/Array+random.js';
 
-import moment from "moment/moment.js";
-moment.locale('nl');
-
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faEnvelope, faUsers, faWindowMinimize, faXmark, faShareNodes, faUser, faFile, faCalendarDays, faLightbulb, faClock} from '@fortawesome/free-solid-svg-icons'
+import {faBars, faCheck, faChevronRight, faEnvelope, faUsers, faWindowMinimize, faXmark, faShareNodes, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faUser, faFile, faCalendarDays, faLightbulb, faClock);
+library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)

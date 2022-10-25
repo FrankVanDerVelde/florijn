@@ -62,7 +62,7 @@ export default {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/avatars/avatar1.png",
+          logoSrc: "/src/assets/logo-small.png",
           participants: 6
         }, {
           id: 0,
