@@ -48,10 +48,10 @@ export default {
       projects: [
         {
           id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
+          title: "ING Banking Web Application",
+          description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+          logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+          participants: 3
         }, {
           id: 0,
           title: "Project EWA",

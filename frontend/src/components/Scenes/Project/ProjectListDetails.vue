@@ -1,6 +1,6 @@
 <template>
   <div class="container main-container rounded-xl">
-    <div class="flex mt-4 p-2 w-full justify-center">
+    <router-link to="Project-overview" class="flex mt-4 p-2 w-full justify-center">
 
       <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container">
 
@@ -22,7 +22,7 @@
         </div>
       </div>
 
-    </div>
+    </router-link>
 
   </div>
 
