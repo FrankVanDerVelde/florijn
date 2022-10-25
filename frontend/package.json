@@ -4,8 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch & vite",
+    "dev": "vite",
+    "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch",
     "build": "vite build",
+    "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "preview": "vite preview"
   },
   "dependencies": {

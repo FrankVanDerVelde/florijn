@@ -6,6 +6,9 @@ module.exports = {
       "./src/components/**/*.vue",
       "./src/components/**/**/*.vue",
       "./src/components/**/**/**/*.vue",
+      "./src/components/Scenes/**/*.vue",
+      "./src/components/Scenes/**/**/*.vue",
+      "./src/components/Scenes/**/**/**/*.vue",
   ],
   theme: {
     extend: {},

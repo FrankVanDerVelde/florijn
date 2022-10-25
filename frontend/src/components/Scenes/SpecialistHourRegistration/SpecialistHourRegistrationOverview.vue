@@ -21,8 +21,9 @@
           <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-2/3">
             <div class="py-[13px] pl-[12px] flex flex-col ">
               <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
-              <div class="flex">
-                <p class="text-neutral-800">{{ hourRegistration.formattedFromToTime() }}</p>
+              <div class="flex items-center gap-2 text-neutral-800">
+                <font-awesome-icon icon="clock"/>
+                <p>{{ hourRegistration.formattedFromToTime() }}</p>
               </div>
             </div>
           </div>
