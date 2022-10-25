@@ -2,7 +2,7 @@
   <div class="sticky top-0 z-50 h-[60px] bg-neutral-0 border-b border-b-neutral-200 shadow shadow">
     <div class="page-main-mw h-full hidden md:flex flex-row items-center justify-between">
       <div class="flex items-center h-full">
-        <img class="h-full p-4 mr-6" :src="logo" alt="Business Logo">
+        <img class="h-full p-4 mr-6 object-contain h-full" :src="logo" alt="Business Logo">
 
         <div class="flex gap-7 h-full flex items-center">
           <nav-item v-for="item in links" :key="item.name" :data="item"/>
@@ -61,6 +61,10 @@ export default {
         }, {
           name: 'Project List',
           link: '/project-list'
+        },
+        {
+          name: 'hour-registration',
+          link: '/hour-registration'
         }
       ],
       staticLink: {

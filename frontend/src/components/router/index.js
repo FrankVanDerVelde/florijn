@@ -8,6 +8,8 @@ import ForgotPassword from "../Scenes/Authentication/ForgotPassword.vue";
 import ProjectList from "../Scenes/Project/ProjectList.vue";
 import ChangePassword from "../Scenes/Authentication/ChangePassword.vue";
 import { info } from "autoprefixer";
+import SpecialistHourRegistrationOverview
+    from "../Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 
 // Profile components
 import Profile from "../Scenes/Profile/Profile.vue";
@@ -17,6 +19,7 @@ import Skills from "../Scenes/Profile/Skills.vue";
 import SkillsOverview from "../Scenes/Profile/SkillsOverview.vue";
 import SkillsForm from "../Scenes/Profile/SkillsForm.vue";
 import Resume from "../Scenes/Profile/Resume.vue";
+
 
 const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
@@ -76,7 +79,13 @@ const routes = [
         path: "/project-list",
         name: "project list",
         component: ProjectList
-    }
+    },
+    {
+        path: "/hour-registration",
+        name: "hour-registration",
+        component: SpecialistHourRegistrationOverview
+    },
+
 ];
 
 export const router = createRouter({
