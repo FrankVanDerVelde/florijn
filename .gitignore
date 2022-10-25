@@ -75,3 +75,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/frontend/src/assets/css/output.css
+/frontend/package-lock.json
