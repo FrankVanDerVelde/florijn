@@ -1,10 +1,8 @@
 <template>
-  <div class="page-main-mw p-4">
-    <div class="container">
-      <div class="login-form">
-        <div class="border-bottom">
-          <p class="header-text">Vul inloggegevens in</p>
-        </div>
+  <div class="container">
+    <div class="page-main-mw p-4 container-form">
+      <div class="change-password-form">
+        <p class="header-text">Welkom!</p>
         <div class="inputfield-mail">
           <div class="input-container">
             <label class="mb-[12px]">Emailadres</label>
@@ -15,17 +13,27 @@
           <div class="input-container">
             <label class="mb-[12px]">Wachtwoord</label>
             <input v-model="password" type="password" class="pl-[7px]">
-            <p class="wrongLogin">{{ validationText }}</p>
+            <div>
+              <div class="radio-button-container">
+                <label>Houd me ingelogd
+                  <input type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <p class="forgot-password" @click="forgotPassword()">Wachtwoord vergeten?</p>
+            </div>
           </div>
         </div>
         <div class="submit-button">
+          <p class="wrongLogin">{{ validationText }}</p>
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit" @click="submitButton()">Log in
+          text-sm leading-5 rounded-lg w-fit submit-button" @click="submitButton()">Log in
           </button>
         </div>
-        <div class="forgot-password" @click="forgotPassword()">Wachtwoord vergeten?</div>
       </div>
     </div>
+    <div class="login-picture">
+      <img src="../../../assets/picture_login.svg" alt="login-picture"/></div>
   </div>
 </template>
 
@@ -79,27 +87,38 @@ export default {
 
 .container {
   display: flex;
-  margin-top: 100px;
-  justify-content: center;
-  align-items: center;
 }
 
-.login-form {
-  border-radius: 6px;
-  width: 300px;
-  border: 2px solid #BFBFBF;
-  box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
+img {
+  width: 100vw;
+  height: 92vh;
+}
+
+.change-password-form {
+  margin-top: 20%;
+  margin-left: 30%;
+  width: 400px;
+}
+
+.container-form {
+  float: left;
+  width: 40%;
+  order: 1;
+}
+
+.login-picture {
+  position: relative;
+  float: right;
+  width: 60%;
+  margin: auto;
+  order: 2;
 }
 
 .header-text {
   font-weight: bold;
-  font-size: 20px;
+  font-size: 28px;
   margin: 3%;
   min-height: 50px;
-}
-
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
 }
 
 .inputfield-mail {
@@ -111,26 +130,25 @@ export default {
 }
 
 .submit-button {
-  justify-content: center;
-  align-items: center;
-  margin: 3%;
-  text-align: center;
+  width: 100%;
 }
 
 .forgot-password {
-  margin: 3% 3% 3%;
-  text-align: center;
-  color: #F35627;
+  margin: 1%;
+  float: right;
   font-weight: bold;
-  font-size: 17px;
+  color: var(--primary-500);
+  font-size: 14px;
+  order: 2;
 }
 
 .forgot-password:hover {
-  color: #C52707;
+  color: var(--primary-800);
 }
 
 .wrongLogin {
   color: red;
+  text-align: center;
 }
 
 .input-container {
@@ -142,18 +160,83 @@ export default {
 .input-container label {
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  color: #7B8794;
+  color: var(--neutral-400);
   font-size: 14px
 }
 
 .input-container input {
-  width: 100%;
-  color: #BFBFBF;
-  border: 1px solid #BFBFBF;
+  color: var(--neutral-200);
+  border: 1px solid var(--neutral-200);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
   height: 40px;
   font-size: 16px;
+}
+
+.radio-button-container {
+  margin: 1%;
+  float: left;
+  font-size: 14px;
+  color: var(--neutral-50);
+  order: 1;
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+}
+
+/* Hide the browser's default checkbox */
+.radio-button-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: var(--neutral-50);
+  border: 1px solid var(--neutral-300);;
+  border-radius: 25%;
+}
+
+/* On mouse-over, add a grey background color */
+.radio-button-container:hover input ~ .checkmark {
+  background-color: var(--primary-300);
+}
+
+/* When the checkbox is checked, add a background */
+.radio-button-container input:checked ~ .checkmark {
+  background-color: var(--primary-500);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.radio-button-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.radio-button-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--neutral-50);
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 </style>

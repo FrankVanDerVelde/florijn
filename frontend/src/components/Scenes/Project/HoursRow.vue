@@ -20,7 +20,7 @@
 
 <script>
 import Participant from "./Participant.vue";
-import HourRegistryStatus from "./hourRegistryStatus.vue";
+import HourRegistryStatus from "./HourRegistryStatus.vue";
 
 export default {
   name: "hoursRow",
@@ -84,6 +84,10 @@ export default {
 
 <style scoped>
 td {
-  padding: 4px 0;
+  padding: 4px 8px;
+  word-break: keep-all;
+  white-space: nowrap;
+  width: max-content;
+  width: -moz-max-content;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div class="login-form">
+      <div class="change-password-form">
         <div class="border-bottom">
           <p class="header-text">Wachtwoord vergeten?</p>
-          <p class="back-text" @click="backToInlogPage()"> &ltBack</p>
+          <p class="back-text" @click="backToInlogPage()"> &ltTerug</p>
         </div>
-        <p class="text-forgotpassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
+        <p class="text-changepassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
           account, dan ontvangt u van ons een link om uw wachtwoord opnieuw in te stellen.</p>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
@@ -60,10 +60,10 @@ export default {
   align-items: center;
 }
 
-.login-form {
+.change-password-form {
   border-radius: 6px;
   min-width: 300px;
-  border: 2px solid #BFBFBF;
+  border: 2px solid var(--neutral-200);
   box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
 }
 
@@ -88,14 +88,14 @@ export default {
   text-align: center;
 }
 
-.text-forgotpassword {
-  color: #7B8794;
+.text-changepassword {
+  color: var(--neutral-400);
   margin: 2% 2% 5%;
   max-width: 300px;
 }
 
 .back-text {
-  color: #F35627;
+  color: var(--primary-500);
   margin: 1%;
   font-weight: bold;
   font-size: 15px;
@@ -103,7 +103,7 @@ export default {
 }
 
 .back-text:hover {
-  color: #C52707;
+  color: var(--primary-800);
 }
 
 .input-container {
@@ -115,14 +115,14 @@ export default {
 .input-container label {
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  color: #7B8794;
+  color: var(--neutral-400);
   font-size: 14px
 }
 
 .input-container input {
   width: 100%;
-  color: #BFBFBF;
-  border: 1px solid #BFBFBF;
+  color: var(--neutral-200);
+  border: 1px solid var(--neutral-200);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
   height: 40px;
@@ -132,6 +132,5 @@ export default {
 .wrongText {
   color: red;
 }
-
 
 </style>

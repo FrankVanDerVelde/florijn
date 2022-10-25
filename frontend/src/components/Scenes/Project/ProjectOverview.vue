@@ -43,20 +43,22 @@
               <SummaryBlock label="Ontwikkelkosten" :value="totalCosts"/>
             </div>
 
-            <table class="w-full mt-4">
-              <thead>
-              <tr class="text-left">
-                <th>Deelnemer</th>
-                <th>Aantal uren</th>
-                <th>Kosten</th>
-                <th>Datum</th>
-                <th>Status</th>
-              </tr>
-              </thead>
-              <tbody>
-              <hours-row v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
-              </tbody>
-            </table>
+            <div class="overflow-x-auto">
+              <table class="w-full mt-4">
+                <thead>
+                <tr class="text-left">
+                  <th>Deelnemer</th>
+                  <th>Aantal uren</th>
+                  <th>Kosten</th>
+                  <th>Datum</th>
+                  <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <hours-row v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
+                </tbody>
+              </table>
+            </div>
           </section>
         </div>
       </div>
@@ -69,7 +71,7 @@ import Stats from "./Stats.vue";
 import Stat from "./Stat.vue";
 import Participant from "./Participant.vue";
 import SummaryBlock from "./SummaryBlock.vue";
-import HoursRow from "./hoursRow.vue";
+import HoursRow from "./HoursRow.vue";
 
 export default {
   name: "ProjectOverview",
@@ -95,31 +97,31 @@ export default {
 
   data() {
     return {
-      bannerSrc: "/src/assets/Barentszplein6B-voorkant.webp",
-      logoSrc: "/src/assets/logo-small.png",
-      title: "Een nieuw Florijn project",
+      bannerSrc: "/src/assets/ing-banner.jpg",
+      logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+      title: "ING Banking Web Application",
       description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
       participants: [
         {
           id: 0,
-          firstName: "Yuri",
-          lastName: "Schrieken",
+          firstName: "Andrew",
+          lastName: "Alfred",
           role: "Product Owner",
-          avatar: "/src/assets/avatars/avatar1.png",
-          email: "yuris@florijn.com"
+          avatar: "/src/assets/avatars/avatar1.avif",
+          email: "andrewa@florijn.com"
         }, {
           id: 1,
-          firstName: "Sophie",
+          firstName: "Withney",
           lastName: "Keulen",
           role: "Lead Developer",
-          avatar: "/src/assets/avatars/avatar2.png",
-          email: "sophiek@florijn.com"
+          avatar: "/src/assets/avatars/avatar2.avif",
+          email: "withneyk@florijn.com"
         }, {
           id: 2,
           firstName: "Jan",
           lastName: "Timmermans",
           role: "Designer",
-          avatar: "/src/assets/avatars/avatar3.png",
+          avatar: "/src/assets/avatars/avatar3.avif",
           email: "jant@florijn.com"
         }
       ],
@@ -128,11 +130,11 @@ export default {
           id: 0,
           participant: {
             id: 1,
-            firstName: "Sophie",
+            firstName: "Withney",
             lastName: "Keulen",
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.png",
-            email: "sophiek@florijn.com"
+            avatar: "/src/assets/avatars/avatar2.avif",
+            email: "withneyk@florijn.com"
           },
           startTime: "2022-10-14T12:00:00.000Z",
           endTime: "2022-10-14T14:45:00.000Z",
@@ -143,11 +145,11 @@ export default {
           id: 1,
           participant: {
             id: 1,
-            firstName: "Sophie",
+            firstName: "Withney",
             lastName: "Keulen",
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.png",
-            email: "sophiek@florijn.com"
+            avatar: "/src/assets/avatars/avatar2.avif",
+            email: "withneyk@florijn.com"
           },
           startTime: "2022-10-13T09:00:00.000Z",
           endTime: "2022-10-13T11:30:00.000Z",
@@ -161,7 +163,7 @@ export default {
             firstName: "Jan",
             lastName: "Timmermans",
             role: "Designer",
-            avatar: "/src/assets/avatars/avatar3.png",
+            avatar: "/src/assets/avatars/avatar3.avif",
             email: "jant@florijn.com"
           },
           startTime: "2022-10-11T14:00:00.000Z",
@@ -173,11 +175,11 @@ export default {
           id: 3,
           participant: {
             id: 1,
-            firstName: "Sophie",
+            firstName: "Withney",
             lastName: "Keulen",
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.png",
-            email: "sophiek@florijn.com"
+            avatar: "/src/assets/avatars/avatar2.avif",
+            email: "withneyk@florijn.com"
           },
           startTime: "2021-03-08T15:30:00.000Z",
           endTime: "2021-03-08T19:20:00.000Z",
@@ -275,5 +277,13 @@ th {
     border-radius: 24px;
   }
 }
-
+</style>
+<style>
+td, th {
+  padding: 4px 8px;
+  word-break: keep-all;
+  white-space: nowrap;
+  width: max-content;
+  width: -moz-max-content;
+}
 </style>

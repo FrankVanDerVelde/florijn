@@ -1,11 +1,11 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div class="login-form">
+      <div class="change-password-form">
         <div class="border-bottom">
           <p class="header-text">Wachtwoord veranderen</p>
         </div>
-        <p class="text-forgotpassword">Gelieve uw wachtwoord te herstellen in onderstaande invulvelden</p>
+        <p class="text-changepassword">Gelieve uw wachtwoord te herstellen in onderstaande invulvelden</p>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
             <label class="mb-[12px]">Wachtwoord</label>
@@ -39,6 +39,7 @@ export default {
         this.validationText = 'De velden zijn niet volledig ingevuld!';
       } else if (this.password !== this.repeatPassword) {
         this.validationText = 'De opgegeven wachtwoorden zijn niet gelijk!';
+        this.repeatPassword = '';
       } else {
         this.validationText = '';
         this.$router.push("/login");
@@ -65,10 +66,10 @@ export default {
   align-items: center;
 }
 
-.login-form {
+.change-password-form {
   border-radius: 6px;
   width: 300px;
-  border: 2px solid #BFBFBF;
+  border: 2px solid var(--neutral-200);
   box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
 }
 
@@ -93,8 +94,8 @@ export default {
   text-align: center;
 }
 
-.text-forgotpassword {
-  color: #7B8794;
+.text-changepassword {
+  color: var(--neutral-400);
   margin: 2% 2% 5%;
   max-width: 300px;
 }
@@ -108,14 +109,14 @@ export default {
 .input-container label {
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  color: #7B8794;
+  color: var(--neutral-400);
   font-size: 14px
 }
 
 .input-container input {
   width: 100%;
-  color: #BFBFBF;
-  border: 1px solid #BFBFBF;
+  color: var(--neutral-200);
+  border: 1px solid var(--neutral-200);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
   height: 40px;
