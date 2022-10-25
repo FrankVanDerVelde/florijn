@@ -41,12 +41,12 @@ export default {
                 name: 'skills',
                 href: '/profile/skills',
             },
-            {
-                icon: 'fa-solid fa-file',
-                name: 'resume',
-                href: '#'
-                // href: "/profile/resume"                
-            }]
+            // {
+            //     icon: 'fa-solid fa-file',
+            //     name: 'resume',
+            //     href: "/profile/resume"                
+            // }
+        ]
         }
     }
 }

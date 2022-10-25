@@ -14,6 +14,8 @@ import Profile from "../Scenes/Profile/Profile.vue";
 import PersonalInfo from "../Scenes/Profile/PersonalInfo.vue";
 import AvailableHours from "../Scenes/Profile/WorkingHours.vue";
 import Skills from "../Scenes/Profile/Skills.vue";
+import SkillsOverview from "../Scenes/Profile/SkillsOverview.vue";
+import SkillsForm from "../Scenes/Profile/SkillsForm.vue";
 import Resume from "../Scenes/Profile/Resume.vue";
 
 const routes = [
@@ -43,8 +45,22 @@ const routes = [
                 component: AvailableHours,
             },
             {
-                path: 'skills',
+                path: "skills",
                 component: Skills,
+                children: [
+                    {
+                        path: '/profile/skills',
+                        redirect: '/profile/skills/overview', // default child path
+                      },
+                    {
+                        path: 'overview',
+                        component: SkillsOverview,
+                    },
+                    {
+                        path: 'edit',
+                        component: SkillsForm,
+                    },
+                ]
             },
             {
                 path: 'resume',
