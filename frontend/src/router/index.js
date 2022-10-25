@@ -51,6 +51,11 @@ const routes = [
                 component: AvailableHours,
             },
             {
+                path: "/profile/hour-registration",
+                name: "hour-registration",
+                component: SpecialistHourRegistrationOverview
+            },
+            {
                 path: "skills",
                 component: Skills,
                 children: [
@@ -103,12 +108,6 @@ const routes = [
         name: "project list",
         component: ProjectList
     },
-    {
-        path: "/hour-registration",
-        name: "hour-registration",
-        component: SpecialistHourRegistrationOverview
-    },
-
 ];
 
 export const router = createRouter({

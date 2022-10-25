@@ -41,6 +41,11 @@ export default {
                 name: 'skills',
                 href: '/profile/skills',
             },
+              {
+                icon: 'fa-solid fa-calendar-week',
+                name: 'Uren registratie',
+                href: '/profile/hour-registration',
+              },
             // {
             //     icon: 'fa-solid fa-file',
             //     name: 'resume',

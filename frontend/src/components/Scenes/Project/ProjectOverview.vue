@@ -43,7 +43,7 @@
               <SummaryBlock label="Ontwikkelkosten" :value="totalCosts"/>
             </div>
 
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto mb-6">
               <table class="w-full mt-4">
                 <thead>
                 <tr class="text-left">
