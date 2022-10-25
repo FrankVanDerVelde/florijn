@@ -1,9 +1,11 @@
 module.exports = {
   content: [
-    "./src/*.{vue,js}",
-    "./src/**/*.{vue,js}",
-    "./src/components/*.{vue,js}",
-    "./src/components/**/*.{vue,js}",
+      "./index.html",
+      "./src/*.vue",
+      "./src/*.js",
+      "./src/components/**/*.vue",
+      "./src/components/**/**/*.vue",
+      "./src/components/**/**/**/*.vue",
   ],
   theme: {
     extend: {},
