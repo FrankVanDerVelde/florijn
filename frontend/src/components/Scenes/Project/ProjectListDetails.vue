@@ -14,8 +14,11 @@
 
           <stat :dot="false" icon="users" class="bottom-0">{{ project.participants }}</stat>
 
-          <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Wijzigen
-          </button>
+          <router-link to="Project-overview">
+            <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
+              Project
+            </button>
+          </router-link>
         </div>
       </div>
 
