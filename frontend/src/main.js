@@ -1,3 +1,6 @@
+import moment from "moment/moment.js";
+moment.locale('nl');
+
 import {createApp} from 'vue'
 import {router} from './router/index';
 import './assets/css/output.css'
@@ -8,6 +11,7 @@ import TextField from "./components/Common/TextField.vue";
 import NavBar from "./components/Common/NavBar.vue";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import './PrototypeExtensions/Array+random.js';
 
 // temporarily import all because single import won't work
 import {faBars, faCheck, faChevronRight, faEnvelope, faUsers, faWindowMinimize, faXmark, faShareNodes, faUser, faFile, faCalendarDays, faLightbulb} from '@fortawesome/free-solid-svg-icons'
@@ -22,4 +26,4 @@ const app = createApp(App).use(router)
     .component('NavBar', NavBar)
     .component('font-awesome-icon', FontAwesomeIcon)
 
-app.mount('#app')
+app.mount('#app');

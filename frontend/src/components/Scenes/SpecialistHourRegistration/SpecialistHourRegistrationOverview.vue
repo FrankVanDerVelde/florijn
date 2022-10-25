@@ -1,24 +1,28 @@
 <template>
   <div class="flex justify-center pt-20">
-    <div class="flex flex-col gap-[11px] w-2/3">
+    <div class="flex flex-col gap-[11px] w-2/3 justify-center items-center">
+      <p>{{year}}</p>
       <div class="flex justify-center gap-[11px]">
-        <div v-for="day in currentWeek">
+        <div @click="handlePrevWeekCLicked">prev</div>
+        <div v-for="day in week">
+<!--          <CalendarDayOption :day-name="'test'" :date="'test'" :is-selected="false" @date-clicked="handleDateClicked"></CalendarDayOption>-->
           <div @click="handleDateClicked(day)"
                :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
             <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
-              {{ day.dayName }}</p>
-            <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.formattedDate }}</p>
+              {{ day.day }}</p>
+            <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.date }}</p>
           </div>
         </div>
+        <div @click="handleNextWeekClicked">next</div>
       </div>
       <div class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
-      <div class="flex flex-col gap-4">
-        <div v-for="hourRegistration in hourRegistrations" class="">
-          <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500">
+      <div class="flex w-full flex-col gap-4 justify-center">
+        <div v-for="hourRegistration in hourRegistrations" :key="hourRegistration.id" class="flex justify-center">
+          <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-2/3">
             <div class="py-[13px] pl-[12px] flex flex-col ">
-              <p class="font-medium text-neutral-800">{{ hourRegistration.title }}</p>
+              <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
               <div class="flex">
-                <p class="text-neutral-800">{{ hourRegistration.time }}</p>
+                <p class="text-neutral-800">{{ hourRegistration.formattedFromToTime() }}</p>
               </div>
             </div>
           </div>
@@ -29,64 +33,56 @@
 </template>
 
 <script>
+import PrimaryButton from "../../Common/PrimaryButton.vue";
+import CalendarDayOption from "./elements/CalendarDayOption.vue";
 export default {
   name: "HourRegistrationOverview",
+  components: {PrimaryButton, CalendarDayOption},
+  inject: ['hourRegistrationRepository', 'dateService'],
   data() {
     return {
-      currentWeek: [
-        {
-          dayName: "Maandag",
-          formattedDate: "20 juni",
-        },
-        {
-          dayName: "Dinsdag",
-          formattedDate: "21 juni",
-        },
-        {
-          dayName: "Woensdag",
-          formattedDate: "22 juni",
-        },
-        {
-          dayName: "Donderdag",
-          formattedDate: "23 juni",
-        },
-        {
-          dayName: "vrijdag",
-          formattedDate: "24 juni",
-        },
-        {
-          dayName: "Zaterdag",
-          formattedDate: "25 juni",
-        },
-        {
-          dayName: "Zondag",
-          formattedDate: "26 juni",
-        }
-      ],
-      hourRegistrations: [
-        {
-          title: "Project EWA FLorijn",
-          time: "12:00 - 14:45"
-        },
-        {
-          title: "Project SMA",
-          time: "15:00 - 16:00"
-        },
-        {
-          title: "Project APL",
-          time: "16:00 - 17:00"
-        },
-      ],
-      selectedDayName: null
+      week: [],
+      hourRegistrations: [],
+      selectedDayName: null,
+      weekNumber: 0,
+      year: ""
     }
   },
+  created() {
+    this.loadHourRegistrationsList();
+    this.weekNumber = this.dateService.currentWeekOfYear();
+    this.loadWeekBar();
+  },
   methods: {
-    handleDateClicked(day) {
-      this.selectedDayName = day.dayName;
+    loadWeekBar() {
+      this.week = this.dateService.isoWeekDays(this.weekNumber).map(day => {
+        return {
+          day: day.format("dddd"),
+          date: day.format("DD MMM")
+        }
+      });
+      this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
+    loadHourRegistrationsList() {
+      this.hourRegistrations = this.hourRegistrationRepository.fetchAllFor(0);
+      console.log(this.hourRegistrations);
+    },
+
+    handleDateClicked(day) {
+      this.selectedDayName = day.day;
+    },
+
     isSelectedForDay(day) {
-      return this.selectedDayName === day.dayName;
-    }
+      return this.selectedDayName === day.day;
+    },
+    handleNextWeekClicked() {
+        this.weekNumber += 1;
+        this.loadWeekBar();
+    },
+    handlePrevWeekCLicked() {
+      this.weekNumber -= 1;
+      this.loadWeekBar();
+    },
   }
 }
 </script>
