@@ -1,35 +1,50 @@
 <template>
-  <div class="page-main-mw p-4">
-    <div class="flex justify-center">
-      <div class="profile-container flex flex-row self-center w-4/5">
-        <div class="side-bar w-1/6">
-          <div>Projecten</div>
-          <div>Uren registratie</div>
-          <div>Overeenkomsten</div>
-        </div>
-        <div class="container grow">
-
-          <p class="" v-if="projects.length === 0">No assigned projects</p>
-
-          <project-list-details v-for="project in projects" :key="project.id" :project="project"></project-list-details>
-
-        </div>
+  <div class="page-main-mw pt-[5em] flex">
+    <div class="list-container flex self-center w-full">
+      <div class="mr-[4em]">
+        <SideBarNav :sideBarItems="sideBarLinks"></SideBarNav>
       </div>
+
+      <div class="grow">
+        <project-list-details v-for="project in projects" :key="project.id" :project="project"></project-list-details>
+      </div>
+
+
     </div>
+
+
   </div>
+
+
 </template>
 
 <script>
 
 import ProjectListDetails from "./ProjectListDetails.vue";
+import SideBarNav from "../../Common/SideBarNav.vue";
 
 
 export default {
   name: "ProjectList",
-  components: {ProjectListDetails},
+  components: {ProjectListDetails, SideBarNav},
 
   data() {
     return {
+      sideBarLinks: [{
+        icon: 'fa-solid fa-user',
+        name: 'projecten',
+        href: '/project-list',
+      },
+        {
+          icon: 'fa-solid fa-calendar-days',
+          name: 'documenten',
+          href: '/unknown',
+        },
+        {
+          icon: 'fa-solid fa-calendar-days',
+          name: 'uren registratie',
+          href: '/hour-registration',
+        }],
       projects: [
         {
           id: 0,
@@ -37,31 +52,31 @@ export default {
           description: "Website ontwikkeling voor Florijn",
           logoSrc: "/src/assets/logo-small.png",
           participants: 6
-        },{
+        }, {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",
           logoSrc: "/src/assets/logo-small.png",
           participants: 6
-        },{
+        }, {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",
           logoSrc: "/src/assets/avatars/avatar1.png",
           participants: 6
-        },{
+        }, {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",
           logoSrc: "/src/assets/logo-small.png",
           participants: 6
-        },{
+        }, {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",
           logoSrc: "/src/assets/logo-small.png",
           participants: 6
-        },{
+        }, {
           id: 0,
           title: "Project EWA",
           description: "Website ontwikkeling voor Florijn",

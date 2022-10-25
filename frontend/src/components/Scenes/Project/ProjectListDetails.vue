@@ -1,10 +1,10 @@
 <template>
   <div class="container main-container rounded-xl">
-    <div class="flex  mt-4 w-full justify-center">
+    <div class="flex mt-4 p-2 w-full justify-center">
 
       <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container fa-border m-auto">
 
-      <div class="flex flex-col justify-between container ml-2">
+      <div class="flex flex-col justify-between container ml-4">
         <div class="flex flex-col mb-3">
           <div class="font-bold">{{ project.title }}</div>
           <div class="font-semibold text-neutral-500">{{ project.description }}</div>
@@ -46,7 +46,6 @@ export default {
 
 .main-container {
   background-color: #F5F7FA;
-  border-radius: ;
 }
 
 
