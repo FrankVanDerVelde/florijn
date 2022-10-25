@@ -1,29 +1,32 @@
 <template>
-  <div class="flex justify-center pt-20">
-    <div class="flex flex-col gap-[11px] w-2/3 justify-center items-center">
-      <p>{{year}}</p>
-      <div class="flex justify-center gap-[11px]">
-        <div @click="handlePrevWeekCLicked">prev</div>
-        <div v-for="day in week">
-<!--          <CalendarDayOption :day-name="'test'" :date="'test'" :is-selected="false" @date-clicked="handleDateClicked"></CalendarDayOption>-->
-          <div @click="handleDateClicked(day)"
-               :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
-            <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
-              {{ day.day }}</p>
-            <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.date }}</p>
+  <div>
+    <div class="font-bold text-[32px] mb-3">Uren Registratie</div>
+    <div class="flex justify-center">
+      <div class="flex flex-col gap-[11px] w-2/3 justify-center items-center">
+        <p>{{year}}</p>
+        <div class="flex justify-center gap-[11px]">
+          <div @click="handlePrevWeekCLicked">prev</div>
+          <div v-for="day in week">
+            <!--          <CalendarDayOption :day-name="'test'" :date="'test'" :is-selected="false" @date-clicked="handleDateClicked"></CalendarDayOption>-->
+            <div @click="handleDateClicked(day)"
+                 :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
+              <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
+                {{ day.day }}</p>
+              <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.date }}</p>
+            </div>
           </div>
+          <div @click="handleNextWeekClicked">next</div>
         </div>
-        <div @click="handleNextWeekClicked">next</div>
-      </div>
-      <div class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
-      <div class="flex w-full flex-col gap-4 justify-center">
-        <div v-for="hourRegistration in hourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-          <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-2/3">
-            <div class="py-[13px] pl-[12px] flex flex-col ">
-              <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
-              <div class="flex items-center gap-2 text-neutral-800">
-                <font-awesome-icon icon="clock"/>
-                <p>{{ hourRegistration.formattedFromToTime() }}</p>
+        <div class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
+        <div class="flex w-full flex-col gap-4 justify-center">
+          <div v-for="hourRegistration in hourRegistrations" :key="hourRegistration.id" class="flex justify-center">
+            <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-2/3">
+              <div class="py-[13px] pl-[12px] flex flex-col ">
+                <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
+                <div class="flex items-center gap-2 text-neutral-800">
+                  <font-awesome-icon icon="clock"/>
+                  <p>{{ hourRegistration.formattedFromToTime() }}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -31,6 +34,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
