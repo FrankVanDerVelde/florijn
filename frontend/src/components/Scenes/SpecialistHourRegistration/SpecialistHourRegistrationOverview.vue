@@ -42,12 +42,21 @@
         <div class="flex w-full flex-col gap-4 justify-center">
           <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
             <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full">
-              <div class="py-[13px] pl-[12px] flex flex-col ">
-                <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
-                <div class="flex items-center gap-2 text-neutral-800">
-                  <font-awesome-icon icon="clock"/>
-                  <p>{{ hourRegistration.formattedFromToTime() }}</p>
+              <div class="py-[13px] px-[12px] flex justify-between">
+                <div class="flex flex-col">
+                  <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
+                  <div class="flex items-center gap-2 text-neutral-800">
+                    <font-awesome-icon icon="clock"/>
+                    <p>{{ hourRegistration.formattedFromToTime() }}</p>
+                  </div>
                 </div>
+               <div class="flex">
+                 <div class="w-[26px] h-[26px]" @click="handleDeleteHourRegistrationClicked(hourRegistration.id)">
+                    <font-awesome-icon class="text-app_red-500 text-xl" icon="fa-solid fa-trash-can"/>
+                 </div>
+
+               </div>
+
               </div>
             </div>
           </div>
@@ -102,7 +111,6 @@ export default {
 
     loadHourRegistrationsList() {
       this.hourRegistrations = this.hourRegistrationRepository.fetchAllFor(0);
-      console.log(this.hourRegistrations);
     },
 
     handleDateClicked(dayIndex) {
@@ -135,11 +143,20 @@ export default {
 
     handleAddActivityClicked() {
       this.showingModel = true
+      x
     },
 
     handleModelBackgroundClicked() {
       this.showingModel = false
-    }
+    },
+
+    handleDeleteHourRegistrationClicked(id) {
+      console.log(id);
+      this.hourRegistrationRepository.deleteHourRegistration(id);
+      this.loadHourRegistrationsList();
+      this.filterHourRegistrations();
+    },
+
   }
 }
 </script>

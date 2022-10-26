@@ -11,9 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import './PrototypeExtensions/Array+random.js';
 
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faShareNodes, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek} from '@fortawesome/free-solid-svg-icons'
+import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faShareNodes, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek);
+library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faUser, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)
