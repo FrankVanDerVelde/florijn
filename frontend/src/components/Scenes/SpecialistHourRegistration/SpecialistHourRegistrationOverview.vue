@@ -12,9 +12,13 @@
 
     <div class="font-bold text-neutral-900 text-[32px] mb-0">Uren Registratie</div>
 
-    <div class="flex justify-center">
-      <div class="flex flex-col gap-[11px] justify-center">
-        <p class="text-3xl text-neutral-400 font-medium ">{{year}}</p>
+    <div class="flex">
+      <div class="flex flex-col gap-[11px]">
+        <div class="flex justify-between w-full">
+          <p class="text-3xl text-neutral-400 font-medium ">{{year}}</p>
+          <button @click="handleTodayClicked" class="primary-button">Vandaag</button>
+        </div>
+
         <div class="flex justify-center gap-[11px] pt-2">
           <div
               @click="handlePrevWeekCLicked"
@@ -61,7 +65,7 @@
             </div>
           </div>
           <div v-if="filteredHourRegistrations.length === 0" class="flex flex-col justify-center items-center border-dashed border-2 border-neutral-200 p-5 rounded-2xl">
-            <p class="font-semibold text-neutral-900">geen activiteit op deze dag</p>
+            <p class="font-semibold text-neutral-900">Geen activiteit op deze dag</p>
             <p class="text-neutral-600">Klik op "Toevoegen" om een nieuwe activiteit toe te voegen.</p>
           </div>
         </div>
@@ -91,11 +95,7 @@ export default {
   },
   created() {
     this.loadHourRegistrationsList();
-    this.weekNumber = this.dateService.currentWeekOfYear();
-    this.loadWeekBar();
-
-    this.selectedDayIndex = this.dateService.currentDayOfWeek();
-    this.filterHourRegistrations();
+    this.selectToday();
   },
   methods: {
     loadWeekBar() {
@@ -111,6 +111,17 @@ export default {
 
     loadHourRegistrationsList() {
       this.hourRegistrations = this.hourRegistrationRepository.fetchAllFor(0);
+    },
+
+    handleTodayClicked() {
+      this.selectToday();
+    },
+
+    selectToday() {
+      this.selectedDayIndex = this.dateService.currentDayOfWeek();
+      this.weekNumber = this.dateService.currentWeekOfYear();
+      this.filterHourRegistrations();
+      this.loadWeekBar();
     },
 
     handleDateClicked(dayIndex) {
@@ -143,7 +154,7 @@ export default {
 
     handleAddActivityClicked() {
       this.showingModel = true
-      
+
     },
 
     handleModelBackgroundClicked() {

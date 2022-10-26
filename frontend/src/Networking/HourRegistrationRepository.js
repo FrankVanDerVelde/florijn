@@ -119,6 +119,10 @@ export class HourRegistrationRepository {
         }
     }
 
+    create(projectId, from, to, description) {
+        new HourRegistration(id)
+    }
+
     /** helpers **/
 
     #getHourRegistrationFromSpecialistId(specialistId) {
