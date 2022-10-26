@@ -41,7 +41,6 @@ export default {
             elementActive: true,
         }
     }
-
 }
 
 
@@ -57,8 +56,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     height: 100%;
     opacity: 0;
     overflow: hidden;
-    
-    
 }
 
 input[type="time"] {

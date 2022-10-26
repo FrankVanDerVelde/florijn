@@ -1,13 +1,30 @@
 <template>
   <div>
-    <div class="font-bold text-[32px] mb-3">Uren Registratie</div>
+    <div v-if="this.showingModel" @click="handleModelBackgroundClicked" class="top-0 bottom-0 right-0 left-0 absolute">
+      <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
+      <div class="z-60 w-full h-full absolute flex justify-center items-center">
+        <div class="z-90 bg-neutral-0 p-[16px] rounded-[10px]">
+          <p class="text-xl font-medium">Nieuwe activiteit</p>
+          <hr>
+          <div class="input-container">
+            <label class="mb-[8px]">{{ capitalizedName }}</label>
+            <input class="pl-[7px]">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="font-bold text-neutral-900 text-[32px] mb-0">Uren Registratie</div>
     <div class="flex justify-center">
-      <div class="flex flex-col gap-[11px] w-2/3 justify-center items-center">
-        <p>{{year}}</p>
-        <div class="flex justify-center gap-[11px]">
-          <div @click="handlePrevWeekCLicked">prev</div>
+      <div class="flex flex-col gap-[11px] justify-center">
+        <p class="text-3xl text-neutral-400 font-medium ">{{year}}</p>
+        <div class="flex justify-center gap-[11px] pt-2">
+          <div
+              @click="handlePrevWeekCLicked"
+              class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
+          >
+            <font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-left"/>
+          </div>
           <div v-for="day in week">
-            <!--          <CalendarDayOption :day-name="'test'" :date="'test'" :is-selected="false" @date-clicked="handleDateClicked"></CalendarDayOption>-->
             <div @click="handleDateClicked(day)"
                  :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
               <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
@@ -15,12 +32,17 @@
               <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.date }}</p>
             </div>
           </div>
-          <div @click="handleNextWeekClicked">next</div>
+          <div
+              @click="handleNextWeekClicked"
+              class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
+          ><font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-right"/></div>
         </div>
-        <div class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
+
+        <div @click="handleAddActivityClicked" class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
+
         <div class="flex w-full flex-col gap-4 justify-center">
           <div v-for="hourRegistration in hourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-            <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-2/3">
+            <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full">
               <div class="py-[13px] pl-[12px] flex flex-col ">
                 <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
                 <div class="flex items-center gap-2 text-neutral-800">
@@ -50,7 +72,8 @@ export default {
       hourRegistrations: [],
       selectedDayName: null,
       weekNumber: 0,
-      year: ""
+      year: "",
+      showingModel: false
     }
   },
   created() {
@@ -88,6 +111,12 @@ export default {
       this.weekNumber -= 1;
       this.loadWeekBar();
     },
+    handleAddActivityClicked() {
+      this.showingModel = true
+    },
+    handleModelBackgroundClicked() {
+      this.showingModel = false
+    }
   }
 }
 </script>
