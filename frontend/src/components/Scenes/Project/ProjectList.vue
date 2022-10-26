@@ -43,7 +43,7 @@ export default {
         {
           icon: 'fa-solid fa-calendar-days',
           name: 'uren registratie',
-          href: '/hour-registration',
+          href: '/profile/hour-registration',
         }],
       projects: [
         {
