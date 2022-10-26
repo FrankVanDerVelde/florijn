@@ -8,6 +8,8 @@ import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.v
 import ProjectList from "../components/Scenes/Project/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
 import AdminPanel from "../components/Scenes/Adminpanel/CustomerList.vue";
+import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
+import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import { info } from "autoprefixer";
 import SpecialistHourRegistrationOverview
     from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
@@ -20,8 +22,6 @@ import Skills from "../components/Scenes/Profile/Skills.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
 import SkillsForm from "../components/Scenes/Profile/SkillsForm.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
-import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
-import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 
 
 const routes = [
@@ -81,9 +81,8 @@ const routes = [
     },
     {
         path: '/adminpanel',
-        name: "Admin panel",
+        name: "adminpanel",
         component: AdminPanel,
-
         children: [
             {
                 path: "/adminpanel",

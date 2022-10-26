@@ -35,19 +35,19 @@ export default {
       sideBarLinks: [{
         icon: 'fa-solid fa-share-nodes',
         name: 'Klanten',
-        href: '/adminpanel/customer-list',
+        href: 'customer-list',
       },
         {
           icon: 'fa-solid fa-user',
           name: 'Werknemers',
-          href: '/adminpanel/employee-list',
+          href: 'employee-list',
         }],
       customers: [
         {
           id: 0,
-          title: "Bedrijf EWA",
+          title: "ING Banking",
           description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
+          logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
         }, {
           id: 1,
           title: "Bedrijf EWA",
@@ -93,9 +93,6 @@ export default {
   margin-top: 24px;
 }
 
-.profile-container{
-  justify-content: flex-start;
-}
 
 
 </style>
