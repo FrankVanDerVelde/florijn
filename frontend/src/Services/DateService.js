@@ -6,6 +6,10 @@ export class DateService {
         return moment().week();
     }
 
+    currentDayOfWeek() {
+        return moment().isoWeekday();
+    }
+
     weekOfYear(weekNumber) {
         return moment().week(weekNumber);
     }

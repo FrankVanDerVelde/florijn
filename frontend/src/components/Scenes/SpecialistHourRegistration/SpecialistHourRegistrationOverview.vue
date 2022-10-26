@@ -51,6 +51,10 @@
               </div>
             </div>
           </div>
+          <div v-if="filteredHourRegistrations.length === 0" class="flex flex-col justify-center items-center border-dashed border-2 border-neutral-200 p-5 rounded-2xl">
+            <p class="font-semibold text-neutral-900">geen activiteit op deze dag</p>
+            <p class="text-neutral-600">Klik op "Toevoegen" om een nieuwe activiteit toe te voegen.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +84,9 @@ export default {
     this.loadHourRegistrationsList();
     this.weekNumber = this.dateService.currentWeekOfYear();
     this.loadWeekBar();
+
+    this.selectedDayIndex = this.dateService.currentDayOfWeek();
+    this.filterHourRegistrations();
   },
   methods: {
     loadWeekBar() {
@@ -140,7 +147,7 @@ export default {
 <style scoped>
 
 .day-container-item {
-  @apply flex flex-col items-center w-[121px]  rounded-[6px] transition-colors ease-in-out cursor-pointer;
+  @apply flex flex-col items-center w-[121px] rounded-[6px] transition-colors ease-in-out cursor-pointer;
 }
 
 .selected-day-container {
