@@ -6,14 +6,12 @@
         <div class="z-90 bg-neutral-0 p-[16px] rounded-[10px]">
           <p class="text-xl font-medium">Nieuwe activiteit</p>
           <hr>
-          <div class="input-container">
-            <label class="mb-[8px]">{{ capitalizedName }}</label>
-            <input class="pl-[7px]">
-          </div>
         </div>
       </div>
     </div>
+
     <div class="font-bold text-neutral-900 text-[32px] mb-0">Uren Registratie</div>
+
     <div class="flex justify-center">
       <div class="flex flex-col gap-[11px] justify-center">
         <p class="text-3xl text-neutral-400 font-medium ">{{year}}</p>
@@ -24,8 +22,9 @@
           >
             <font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-left"/>
           </div>
+
           <div v-for="day in week">
-            <div @click="handleDateClicked(day)"
+            <div @click="handleDateClicked(day.weekDayIndex)"
                  :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
               <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
                 {{ day.day }}</p>
@@ -41,7 +40,7 @@
         <div @click="handleAddActivityClicked" class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
 
         <div class="flex w-full flex-col gap-4 justify-center">
-          <div v-for="hourRegistration in hourRegistrations" :key="hourRegistration.id" class="flex justify-center">
+          <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
             <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full">
               <div class="py-[13px] pl-[12px] flex flex-col ">
                 <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
@@ -70,8 +69,9 @@ export default {
     return {
       week: [],
       hourRegistrations: [],
-      selectedDayName: null,
+      filteredHourRegistrations: [],
       weekNumber: 0,
+      selectedDayIndex: null,
       year: "",
       showingModel: false
     }
@@ -85,35 +85,51 @@ export default {
     loadWeekBar() {
       this.week = this.dateService.isoWeekDays(this.weekNumber).map(day => {
         return {
-          day: day.format("dddd"),
-          date: day.format("DD MMM")
+          day: day.date.format("dddd"),
+          date: day.date.format("DD MMM"),
+          weekDayIndex: day.weekDayIndex
         }
       });
       this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
+
     loadHourRegistrationsList() {
       this.hourRegistrations = this.hourRegistrationRepository.fetchAllFor(0);
       console.log(this.hourRegistrations);
     },
 
-    handleDateClicked(day) {
-      this.selectedDayName = day.day;
+    handleDateClicked(dayIndex) {
+      this.selectedDayIndex = dayIndex;
+      this.filterHourRegistrations();
+    },
+
+    filterHourRegistrations() {
+      const weekDayDate = this.dateService.dayOfWeek(this.weekNumber, this.selectedDayIndex).toDate();
+      this.filteredHourRegistrations = this.hourRegistrations.filter((hourReistration => {
+        return this.dateService.isSameDay(hourReistration.from, weekDayDate)
+      }));
     },
 
     isSelectedForDay(day) {
-      return this.selectedDayName === day.day;
+      return this.selectedDayIndex === day.weekDayIndex;
     },
+
     handleNextWeekClicked() {
         this.weekNumber += 1;
         this.loadWeekBar();
+        this.filterHourRegistrations();
     },
+
     handlePrevWeekCLicked() {
       this.weekNumber -= 1;
       this.loadWeekBar();
+      this.filterHourRegistrations();
     },
+
     handleAddActivityClicked() {
       this.showingModel = true
     },
+
     handleModelBackgroundClicked() {
       this.showingModel = false
     }

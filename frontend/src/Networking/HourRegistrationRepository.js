@@ -1,5 +1,6 @@
 import {HourRegistration} from "../components/models/HourRegistration.js";
 import {Project} from "../components/models/Project.js";
+import moment from "moment/moment.js";
 
 /**
  * Endpoint for retrieving hour registrations for a specialist
@@ -33,31 +34,39 @@ export class HourRegistrationRepository {
                 0,
                 this.#getRandomProject(),
                 0,
-                new Date(),
-                new Date(),
+                moment("2022-10-26T10:30:00").toDate(),
+                moment("2022-10-26 12:30").toDate(),
                 this.#randomBool()),
             new HourRegistration(
                 1,
                 this.#getRandomProject(),
                 0,
-                new Date(),
-                new Date(),
+                moment("2022-10-26 14:30").toDate(),
+                moment("2022-10-26 16:30").toDate(),
                 this.#randomBool()
             ),
             new HourRegistration(
                 2,
                 this.#getRandomProject(),
                 0,
-                new Date(),
-                new Date(),
+                moment("2022-10-25 08:30").toDate(),
+                moment("2022-10-25 10:00").toDate(),
                 this.#randomBool()
             ),
             new HourRegistration(
                 3,
                 this.#getRandomProject(),
                 0,
-                new Date(),
-                new Date(),
+                moment("2022-10-25 16:00").toDate(),
+                moment("2022-10-25 19:00").toDate(),
+                this.#randomBool()
+            ),
+            new HourRegistration(
+                4,
+                this.#getRandomProject(),
+                0,
+                moment("2022-10-24 16:00").toDate(),
+                moment("2022-10-24 19:00").toDate(),
                 this.#randomBool()
             ),
         ]
