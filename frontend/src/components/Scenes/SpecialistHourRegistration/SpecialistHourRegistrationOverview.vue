@@ -143,7 +143,7 @@ export default {
 
     handleAddActivityClicked() {
       this.showingModel = true
-      x
+      
     },
 
     handleModelBackgroundClicked() {
