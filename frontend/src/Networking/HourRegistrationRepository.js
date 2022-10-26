@@ -81,7 +81,15 @@ export class HourRegistrationRepository {
         }
     }
 
-    delete(specialistId) {
+    deleteHourRegistration(id) {
+        try {
+            this.#removeHourRegistration(id);
+        } catch (e) {
+            console.error()
+        }
+    }
+
+    deleteHourRegistrationForSpecialist(specialistId) {
         try {
             const hourRegistrationToDelete = this.#getHourRegistrationFromSpecialistId(specialistId);
             this.#removeHourRegistration(hourRegistrationToDelete.id);
@@ -111,6 +119,10 @@ export class HourRegistrationRepository {
         }
     }
 
+    create(projectId, from, to, description) {
+        new HourRegistration(id)
+    }
+
     /** helpers **/
 
     #getHourRegistrationFromSpecialistId(specialistId) {
@@ -118,11 +130,14 @@ export class HourRegistrationRepository {
     }
 
     #getHourRegistration(id) {
-        return this.#hourRegistrations.filter(hr => hr.id !== id)[0];
+        return this.#hourRegistrations.filter(hr => hr.id === id)[0];
     }
 
     #removeHourRegistration(id) {
+        console.log('removeHourRegistration');
+        console.log(this.#hourRegistrations);
         this.#hourRegistrations = this.#hourRegistrations.filter(hr => hr.id !== id);
+        console.log(this.#hourRegistrations);
     }
 
     #getRandomProject() {
