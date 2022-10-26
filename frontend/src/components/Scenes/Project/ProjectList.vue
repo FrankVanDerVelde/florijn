@@ -34,17 +34,7 @@ export default {
         icon: 'fa-solid fa-user',
         name: 'projecten',
         href: '/project-list',
-      },
-        {
-          icon: 'fa-solid fa-calendar-days',
-          name: 'documenten',
-          href: '/unknown',
-        },
-        {
-          icon: 'fa-solid fa-calendar-days',
-          name: 'uren registratie',
-          href: '/profile/hour-registration',
-        }],
+      }],
       projects: [
         {
           id: 0,
