@@ -10,7 +10,7 @@ public class Specialist {
     @Getter @Setter
     private final String name;
 
-    Specialist(int id, int projectId) {
+    public Specialist(int id, String name) {
         this.id = id;
         this.name = name;
     }
