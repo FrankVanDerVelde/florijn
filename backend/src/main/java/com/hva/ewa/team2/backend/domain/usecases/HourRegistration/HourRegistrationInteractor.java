@@ -1,10 +1,6 @@
 package com.hva.ewa.team2.backend.domain.usecases.HourRegistration;
 
-public class HourRegistrationInteractor implements HourRegistrationInputBoundary, HourRegistrationOutputBoundary {
+public class HourRegistrationInteractor implements HourRegistrationBusinessLogic {
 
 
-
-    @Override public void handleCreateHourRegistration(CreateHourRegistrationRequest request) {
-
-    }
 }
