@@ -15,5 +15,4 @@ public interface ProjectRepository {
     Project update();
 
     Project delete();
-
 }
