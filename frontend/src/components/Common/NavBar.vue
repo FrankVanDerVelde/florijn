@@ -65,6 +65,9 @@ export default {
         {
           name: 'Admin',
           link: '/adminpanel'
+        }, {
+        name: 'Deelnemer toevoegen',
+          link: '/add-participants'
         }
       ],
       staticLink: {
