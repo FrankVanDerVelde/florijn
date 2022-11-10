@@ -3,17 +3,15 @@ package com.hva.ewa.team2.backend.data.HourRegistration;
 import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
 import com.hva.ewa.team2.backend.domain.models.HourRegistration.HourRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.TemporalAdjuster;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Primary
 public class InMemoryHourRegistrationRepository implements HourRegistrationRepository {
 
     private ArrayList<HourRegistration> hourRegistrations;
@@ -31,6 +29,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     private void setupHourRegistrations() {
+        hourRegistrations = new ArrayList<>();
         hourRegistrations.addAll(List.of(
                 new HourRegistration(
                         0,
@@ -74,7 +73,6 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                 )
             )
         );
-
     }
 
     @Override

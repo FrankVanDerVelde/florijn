@@ -1,6 +1,7 @@
 package com.hva.ewa.team2.backend.data.HourRegistration;
 
 import com.hva.ewa.team2.backend.domain.models.HourRegistration.HourRegistration;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
