@@ -1,21 +1,18 @@
 package com.hva.ewa.team2.backend.data.Specialist;
 
-import com.hva.ewa.team2.backend.domain.models.Specialist.Specialist;
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpecialistRepositoryMock implements SpecialistRepository {
 
-    private ArrayList<Specialist> specialists;
+    private final ArrayList<Specialist> specialists;
 
     public SpecialistRepositoryMock() {
         List<Specialist> specialistList = List.of(
-                new Specialist(0, "Kees"),
-                new Specialist(0, "Henk"),
-                new Specialist(0, "Piet"),
-                new Specialist(0, "Judith"),
-                new Specialist(0, "Bea")
+                new Specialist(0, "withneyk@florijn.com", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"),
+                new Specialist(1, "jant@florijn.com", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans")
         );
 
         this.specialists = new ArrayList<>(specialistList);
