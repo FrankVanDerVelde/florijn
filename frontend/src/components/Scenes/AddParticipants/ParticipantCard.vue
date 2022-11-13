@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row mt-4 p-3 md:w-auto fa-border ">
+  <div class="flex flex-row mt-4 p-3 md:w-auto fa-border rounded-xl">
     <div class="flex">
 
       <div>
@@ -12,28 +12,19 @@
           <div class="font-medium text-neutral-500">{{ participant.role }}</div>
         </div>
         <div>
-
           <ul>
-            <li v-for="skill in skills.slice(0, 3)" :key="skill.id">{{ skill.name }}</li>
-
+            <li v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{ skills.name }}</li>
           </ul>
-
-
         </div>
       </div>
 
-      <div class="fa-border bottom-0 right-0 ">
-
-        <div class="flex" v-for="skill in skills.slice(0,3)" :key="skill">
-          <div v-for="level in skill.level" :key="level">
-            <font-awesome-icon icon="star" class="star-color"/>
+      <div class="flex m-0 p-0">
+        <div class="fa-border bottom-0 right-0 ml-3.5 self-end m-0 p-0">
+          <div class=" " v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
+            <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star" class="star-color"/>
           </div>
-
         </div>
-
-
       </div>
-
     </div>
   </div>
 </template>
@@ -54,35 +45,16 @@ export default {
   props: {
     participant: {
       type: Object,
+      required: false
+    },
+    skill: {
+      type: Object,
       required: true
     }
   },
 
   data() {
-    return {
-      skills: [{
-        id: 0,
-        name: "Microsoft Access",
-        level: 3
-      }, {
-        id: 1,
-        name: "Microsoft Access VBA",
-        level: 2
-      }, {
-        id: 2,
-        name: "Microsoft Excel",
-        level: 4
-      }, {
-        id: 3,
-        name: "Microsoft Access",
-        level: 1
-      }, {
-        id: 4,
-        name: "Microsoft Access",
-        level: 4
-      }
-      ]
-    }
+    return {}
   }
 }
 </script>
