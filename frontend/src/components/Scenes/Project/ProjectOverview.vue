@@ -1,38 +1,18 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="banner-container grid">
-      <img :src="bannerSrc" alt="banner">
+      <img :src="project.bannerSrc" alt="banner">
     </div>
 
     <div class="flex flex-col items-center">
       <div class="icon-container grid w-full">
-        <img :src="logoSrc" alt="project logo">
+        <img :src="project.logoSrc" alt="project logo">
       </div>
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <section class="border-bottom">
-            <h1>{{ title }}</h1>
-            <p class="description">{{ description }}</p>
-
-            <div class="flex items-center justify-between mb-[24px]">
-              <stats class="!pb-0">
-                <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
-              </stats>
-              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzig informatie</button>
-            </div>
-          </section>
-
-          <section class="pt-[24px]">
-            <div class="flex items-center justify-between mb-2">
-              <h2 class="!mb-0">Deelnemers</h2>
-              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzigen</button>
-            </div>
-
-            <div class="flex flex-row flex-wrap gap-8">
-              <participant v-for="participant in participants" :key="participant.id" :participant="participant"/>
-            </div>
-          </section>
+          <ProjectHeader :project="project" />
+          <ProjectParticipantList :edit-button="true" :participants="project.participants" />
 
           <section class="pt-[48px]">
             <h2>Uren</h2>
@@ -67,20 +47,16 @@
 </template>
 
 <script>
-import Stats from "./Stats.vue";
-import Stat from "./Stat.vue";
-import Participant from "./Participant.vue";
 import SummaryBlock from "./SummaryBlock.vue";
 import HoursRow from "./HoursRow.vue";
+import ProjectHeader from "./ProjectHeader.vue";
+import ProjectParticipantList from "./ProjectParticipantList.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {HoursRow, SummaryBlock, Stat, Stats, Participant},
+  components: {ProjectParticipantList, ProjectHeader, HoursRow, SummaryBlock},
 
   computed: {
-    participantCount() {
-      return this.participants.length;
-    },
     totalHours() {
       return 24.5;
     },
@@ -97,34 +73,36 @@ export default {
 
   data() {
     return {
-      bannerSrc: "/src/assets/ing-banner.jpg",
-      logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-      title: "ING Banking Web Application",
-      description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-      participants: [
-        {
-          id: 0,
-          firstName: "Andrew",
-          lastName: "Alfred",
-          role: "Product Owner",
-          avatar: "/src/assets/avatars/avatar1.avif",
-          email: "andrewa@florijn.com"
-        }, {
-          id: 1,
-          firstName: "Withney",
-          lastName: "Keulen",
-          role: "Lead Developer",
-          avatar: "/src/assets/avatars/avatar2.avif",
-          email: "withneyk@florijn.com"
-        }, {
-          id: 2,
-          firstName: "Jan",
-          lastName: "Timmermans",
-          role: "Designer",
-          avatar: "/src/assets/avatars/avatar3.avif",
-          email: "jant@florijn.com"
-        }
-      ],
+      project: {
+        bannerSrc: "/src/assets/ing-banner.jpg",
+        logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+        title: "ING Banking Web Application",
+        description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+        participants: [
+          {
+            id: 0,
+            firstName: "Andrew",
+            lastName: "Alfred",
+            role: "Product Owner",
+            avatar: "/src/assets/avatars/avatar1.avif",
+            email: "andrewa@florijn.com"
+          }, {
+            id: 1,
+            firstName: "Withney",
+            lastName: "Keulen",
+            role: "Lead Developer",
+            avatar: "/src/assets/avatars/avatar2.avif",
+            email: "withneyk@florijn.com"
+          }, {
+            id: 2,
+            firstName: "Jan",
+            lastName: "Timmermans",
+            role: "Designer",
+            avatar: "/src/assets/avatars/avatar3.avif",
+            email: "jant@florijn.com"
+          }
+        ]
+      },
       hourRegistry: [
         {
           id: 0,
@@ -192,6 +170,16 @@ export default {
 }
 </script>
 
+<style>
+h2 {
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 34px;
+  margin-bottom: 16px;
+  color: var(--neutral-700)
+}
+</style>
+
 <style scoped>
 .banner-container {
   margin-top: 40px;
@@ -223,33 +211,6 @@ export default {
   border-radius: 18px;
   border: 4px solid #fff;
   background-color: #fff;
-}
-
-h1 {
-  font-weight: 900;
-  font-size: 34px;
-  margin-bottom: 8px;
-  line-height: 40px;
-  color: var(--primary-500);
-}
-
-h2 {
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 34px;
-  margin-bottom: 16px;
-  color: var(--neutral-700)
-}
-
-.description {
-  color: var(--neutral-400);
-  font-size: 20px;
-  line-height: 28px;
-  margin-bottom: 24px;
-}
-
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
 }
 
 th {
