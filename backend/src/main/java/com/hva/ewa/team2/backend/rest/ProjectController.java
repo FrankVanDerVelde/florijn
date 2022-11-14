@@ -31,7 +31,7 @@ public class ProjectController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(new ArrayList<>()); // todo implement
+        return ResponseEntity.ok(projectBusinessLogic.getAllProjects()); // todo implement
     }
 
     // Project CRUD
