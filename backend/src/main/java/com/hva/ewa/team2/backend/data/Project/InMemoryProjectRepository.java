@@ -31,10 +31,12 @@ public class InMemoryProjectRepository implements ProjectRepository {
         this.projectList = new ArrayList<>(List.of(ING));
     }
 
+    @Override
     public List<Project> findAll() {
         return projectList;
     }
 
+    @Override
     public Project findById(long id) {
         return this.projectList.stream()
                 .filter(project -> project.getId() == id)
@@ -42,14 +44,26 @@ public class InMemoryProjectRepository implements ProjectRepository {
                 .orElse(null);
     }
 
-    public void addProject(Project project) {
+    @Override
+    public Project addProject(Project project) {
         if (findById(project.getId()) != null) {
             throw new IllegalArgumentException("A project with that ID already exists.");
         }
 
+        if (project.getId() <= 0) {
+            project.setId(this.projectList.size() + 1);
+        }
+
         this.projectList.add(project);
+        return project;
     }
 
+    @Override
+    public boolean projectExists(int id) {
+        return findById(id) != null;
+    }
+
+    @Override
     public void updateProject(Project project) {
         if (findById(project.getId()) == null) {
             throw new IllegalArgumentException("A project with that ID does not exist.");
@@ -59,10 +73,12 @@ public class InMemoryProjectRepository implements ProjectRepository {
         this.projectList.replaceAll(p -> p.getId() == project.getId() ? project : p);
     }
 
-    public boolean deleteProject(Project project) {
-        return this.projectList.removeIf(p -> p.getId() == project.getId());
+    @Override
+    public boolean deleteProject(int id) {
+        return this.projectList.removeIf(p -> p.getId() == id);
     }
 
+    @Override
     public List<Project> getProjectsByClient(int clientId) {
         return this.projectList.stream()
                 .filter(p -> p.getClient().getId() == clientId)

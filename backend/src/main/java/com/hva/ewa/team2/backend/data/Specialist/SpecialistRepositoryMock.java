@@ -1,10 +1,12 @@
 package com.hva.ewa.team2.backend.data.Specialist;
 
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class SpecialistRepositoryMock implements SpecialistRepository {
 
     private final ArrayList<Specialist> specialists;

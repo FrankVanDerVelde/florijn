@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
 
@@ -13,12 +14,16 @@ public interface ProjectBusinessLogic {
 
     boolean deleteProject(int id);
 
-    Project updateProject(Project project);
+    void updateProject(int pId, Project project);
 
     List<ProjectParticipant> getProjectParticipants(int id);
 
-    boolean removeProjectParticipant(int projectId, int userId);
+    ProjectParticipant getProjectParticipant(int projectId, int userId);
 
-    ProjectParticipant addProjectParticipant(int projectId, int userId, String role, double hourlyRate);
+    ProjectParticipant removeProjectParticipant(int projectId, int userId);
+
+    ProjectParticipant addProjectParticipant(int projectId, JsonNode jsonBody);
+
+    List<Project> getAllProjects();
 
 }

@@ -12,9 +12,9 @@ public class Project {
     @Getter
     private final Client client;
     @Getter @Setter
-    private final int id;
-    @Getter @Setter
     private final String title;
+    @Getter @Setter
+    private int id;
     @Getter @Setter
     private final String description;
     @Getter @Setter
@@ -32,12 +32,19 @@ public class Project {
         this.participants = specialists;
     }
 
+    public ProjectParticipant getParticipantById(int id) {
+        return participants.stream()
+                .filter(p -> p.getSpecialist().getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     public void addSpecialist(ProjectParticipant specialist) {
         participants.add(specialist);
     }
 
-    public void removeSpecialist(ProjectParticipant specialist) {
-        participants.remove(specialist);
+    public boolean removeSpecialist(ProjectParticipant specialist) {
+        return participants.remove(specialist);
     }
 
 }
