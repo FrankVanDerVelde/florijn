@@ -2,10 +2,12 @@ package com.hva.ewa.team2.backend.domain.usecases.project;
 
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public class ProjectLogic implements ProjectBusinessLogic{
+@Component
+public class ProjectInteractor implements ProjectBusinessLogic{
 
     // TODO: implement the project logic.
 
