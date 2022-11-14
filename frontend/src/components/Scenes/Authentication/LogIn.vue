@@ -1,29 +1,44 @@
 <template>
-  <div class="page-main-mw p-4">
-    <div class="container">
-      <div class="login-form">
-        <div class="border-bottom">
-          <p class="header-text">Log in</p>
-        </div>
-        <div class="inputfield-mail">
-          <div class="input-container">
-            <label class="mb-[12px]">Emailadres</label>
-            <input v-model="email" class="pl-[7px]">
+  <div class="grid grid-cols-12 absolute w-full h-full top-0 right-0 ">
+    <div class="flex justify-end col-span-6 row-start-1 h-full form-column">
+      <div class="flex w-full justify-center items-center h-full max-width">
+        <form class="w-140">
+          <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom!</h1>
+          <div class="inputfield">
+            <div class="input-container">
+              <label class="mb-[12px]">Emailadres</label>
+              <input v-model="email" class="pl-[7px] w-80">
+            </div>
           </div>
-        </div>
-        <div class="inputfield-wachtwoord">
-          <div class="input-container">
-            <label class="mb-[12px]">Wachtwoord</label>
-            <input v-model="password" type="password" class="pl-[7px]">
-            <p class="wrongLogin">{{ validationText }}</p>
+          <div class="inputfield">
+            <div class="input-container">
+              <label class="mb-[12px]">Wachtwoord</label>
+              <input v-model="password" type="password" class="pl-[7px] w-80">
+            </div>
+            <div class="grid grid-cols-12 mt-1 w-80">
+              <div class="col-span-6 row-start-1 radio-button-container">
+                <label class="text-neutral-400 font-semibold text-[12px]">Houd me ingelogd
+                  <input type="checkbox">
+                  <span class="checkmark"></span>
+                </label>
+              </div>
+              <div class="forgot-password col-span-6 row-start-1 text-primary-500 hover:text-primary-700"
+                   @click="forgotPassword()">Wachtwoord vergeten?
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="submit-button">
-          <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit" @click="submitButton()">Log in
-          </button>
-        </div>
-        <div class="forgot-password" @click="forgotPassword()">Wachtwoord vergeten?</div>
+          <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp {{ validationText }}</p>
+          <div class="submit-button">
+            <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 py-2.5
+          text-sm leading-5 rounded-lg w-80" @click="submitButton()">Log in
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-span-6 row-start-1 col-start-7 h-full bg-primary-300 hide-login-picture">
+      <div class="flex justify-center items-center h-full max-width ">
+        <img src="/src/assets/picture-login.svg" class="" alt="login-picture"/>
       </div>
     </div>
   </div>
@@ -49,8 +64,7 @@ export default {
           return;
         }
       }
-      this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het' +
-          ' nogmaals met een ander emailadres/wachtwoord.';
+      this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
       this.password = '';
     }
   },
@@ -81,36 +95,28 @@ export default {
 
 <style scoped>
 
-.container {
-  display: flex;
-  margin-top: 100px;
-  justify-content: center;
-  align-items: center;
+
+.max-width {
+  max-width: 720px;
 }
 
-.login-form {
-  border-radius: 6px;
-  width: 300px;
-  border: 2px solid #BFBFBF;
-  box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
+.grid img {
+  padding-top: 80px;
+  max-width: 600px;
+  width: 100%;
 }
 
-.header-text {
-  font-weight: bold;
-  font-size: 20px;
-  margin: 3%;
-  min-height: 50px;
+@media screen and (max-width: 768px) {
+  .hide-login-picture {
+    display: none;
+  }
+
+  .form-column {
+    grid-column: span 12;
+  }
 }
 
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
-}
-
-.inputfield-mail {
-  margin: 3% 3% 9%;
-}
-
-.inputfield-wachtwoord {
+.inputfield {
   margin: 3% 3% 9%;
 }
 
@@ -122,19 +128,10 @@ export default {
 }
 
 .forgot-password {
-  margin: 3% 3% 3%;
+  margin: 3% 0 3% 3%;
   text-align: center;
-  color: #F35627;
   font-weight: bold;
-  font-size: 17px;
-}
-
-.forgot-password:hover {
-  color: #C52707;
-}
-
-.wrongLogin {
-  color: red;
+  font-size: 12px;
 }
 
 .input-container {
@@ -146,191 +143,13 @@ export default {
 .input-container label {
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  color: #7B8794;
+  color: var(--neutral-300);
   font-size: 14px
 }
 
 .input-container input {
-  width: 100%;
-  color: #BFBFBF;
-  border: 1px solid #BFBFBF;
-  border-radius: 6px;
-  font-family: 'Roboto', sans-serif;
-  height: 40px;
-  font-size: 16px;
-}
-
-</style>
-<!--
-<template>
-  <div class="container">
-    <div class="page-main-mw p-4 container-form">
-      <div class="change-password-form">
-        <p class="header-text">Welkom!</p>
-        <div class="inputfield-mail">
-          <div class="input-container">
-            <label class="mb-[12px]">Emailadres</label>
-            <input v-model="email" class="pl-[7px]">
-          </div>
-        </div>
-        <div class="inputfield-wachtwoord">
-          <div class="input-container">
-            <label class="mb-[12px]">Wachtwoord</label>
-            <input v-model="password" type="password" class="pl-[7px]">
-            <div>
-              <div class="radio-button-container">
-                <label>Houd me ingelogd
-                  <input type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <p class="forgot-password" @click="forgotPassword()">Wachtwoord vergeten?</p>
-            </div>
-          </div>
-        </div>
-        <div class="submit-button">
-          <p class="wrongLogin">{{ validationText }}</p>
-          <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit submit-button" @click="submitButton()">Log in
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="login-picture">
-      <img src="../../../assets/picture_login.svg" alt="login-picture"/></div>
-  </div>
-</template>
-
-<script>
-
-export default {
-  name: "LogIn.vue",
-  methods: {
-    forgotPassword() {
-      this.$router.push(this.$route.matched[0].path + "/forgotpassword");
-    },
-    submitButton() {
-      if (this.email === '' || this.password === '') {
-        this.validationText = 'De velden zijn niet volledig ingevuld!';
-        return;
-      }
-      for (let i = 0; i < this.users.length; i++) {
-        if (this.email === this.users[i].emailadress && this.password === this.users[i].password) {
-          console.log("Ingelogd met het id: " + this.users[i].id);
-          this.$router.push("/project-overview");
-          return;
-        }
-      }
-      this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het' +
-          ' nogmaals met een ander emailadres/wachtwoord.';
-      this.password = '';
-    }
-  },
-  data() {
-    return {
-      email: '',
-      password: '',
-      validationText: '',
-      users: [
-        {
-          id: 0,
-          emailadress: "jveerman@outlook.com",
-          password: "GebakkenEieren10",
-        }, {
-          id: 1,
-          emailadress: "rtol@outlook.com",
-          password: "Vuurtoren10",
-        },
-      ],
-    };
-  },
-}
-</script>
-
-<style scoped>
-
-.container {
-  display: flex;
-}
-
-img {
-  width: 100vw;
-  height: 92vh;
-}
-
-.change-password-form {
-  margin-top: 20%;
-  margin-left: 30%;
-  width: 400px;
-}
-
-.container-form {
-  float: left;
-  width: 40%;
-  order: 1;
-}
-
-.login-picture {
-  position: relative;
-  float: right;
-  width: 60%;
-  margin: auto;
-  order: 2;
-}
-
-.header-text {
-  font-weight: bold;
-  font-size: 28px;
-  margin: 3%;
-  min-height: 50px;
-}
-
-.inputfield-mail {
-  margin: 3% 3% 9%;
-}
-
-.inputfield-wachtwoord {
-  margin: 3% 3% 9%;
-}
-
-.submit-button {
-  width: 100%;
-}
-
-.forgot-password {
-  margin: 1%;
-  float: right;
-  font-weight: bold;
-  color: var(&#45;&#45;primary-500);
-  font-size: 14px;
-  order: 2;
-}
-
-.forgot-password:hover {
-  color: var(&#45;&#45;primary-800);
-}
-
-.wrongLogin {
-  color: red;
-  text-align: center;
-}
-
-.input-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.input-container label {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 600;
-  color: var(&#45;&#45;neutral-400);
-  font-size: 14px
-}
-
-.input-container input {
-  color: var(&#45;&#45;neutral-200);
-  border: 1px solid var(&#45;&#45;neutral-200);
+  color: var(--neutral-200);
+  border: 1px solid var(--neutral-300);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
   height: 40px;
@@ -341,8 +160,7 @@ img {
   margin: 1%;
   float: left;
   font-size: 14px;
-  color: var(&#45;&#45;neutral-50);
-  order: 1;
+  color: var(--neutral-50);
   display: block;
   position: relative;
   padding-left: 35px;
@@ -354,6 +172,7 @@ img {
   position: absolute;
   opacity: 0;
   cursor: pointer;
+  display: none;
 }
 
 /* Create a custom checkbox */
@@ -363,19 +182,19 @@ img {
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: var(&#45;&#45;neutral-50);
-  border: 1px solid var(&#45;&#45;neutral-300);;
+  background-color: var(--neutral-50);
+  border: 1px solid var(--neutral-300);;
   border-radius: 25%;
 }
 
 /* On mouse-over, add a grey background color */
 .radio-button-container:hover input ~ .checkmark {
-  background-color: var(&#45;&#45;primary-300);
+  background-color: var(--primary-300);
 }
 
 /* When the checkbox is checked, add a background */
 .radio-button-container input:checked ~ .checkmark {
-  background-color: var(&#45;&#45;primary-500);
+  background-color: var(--primary-500);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -396,7 +215,7 @@ img {
   top: 5px;
   width: 5px;
   height: 10px;
-  border: solid var(&#45;&#45;neutral-50);
+  border: solid var(--neutral-50);
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -404,4 +223,3 @@ img {
 }
 
 </style>
--->
