@@ -2,9 +2,10 @@ package com.hva.ewa.team2.backend.domain.models.HourRegistration;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.expression.spel.ast.OpPlus;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class HourRegistration {
 
@@ -32,8 +33,7 @@ public class HourRegistration {
     private String description;
 
     @Getter
-    @Setter
-    private boolean isAccepted;
+    private Optional<Status> status;
 
     public HourRegistration(long id, long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
         this.id = id;
@@ -42,7 +42,7 @@ public class HourRegistration {
         this.from = from;
         this.to = to;
         this.description = description;
-        this.isAccepted = false;
+        this.status = Optional.empty();
     }
 
     public HourRegistration(long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
@@ -51,6 +51,23 @@ public class HourRegistration {
         this.from = from;
         this.to = to;
         this.description = description;
-        this.isAccepted = false;
+        this.status = Optional.empty();
+    }
+
+    public enum Status {
+        ACCEPTED(),
+        REJECTED
+    }
+
+    public void setStatus(Status status) {
+        this.status = Optional.of(status);
+    }
+
+    public boolean isAccepted() {
+        if (status.isPresent()) {
+            return this.status.get() == Status.ACCEPTED;
+        } else {
+            return false;
+        }
     }
 }

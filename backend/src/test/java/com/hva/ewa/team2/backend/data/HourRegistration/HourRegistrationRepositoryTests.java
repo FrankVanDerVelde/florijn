@@ -76,7 +76,7 @@ public class HourRegistrationRepositoryTests {
         HourRegistration fetchedHourRegistrationFromRepo = hourRegistrationRepository.fetchHourRegistrationById(0).get();
         Assert.isTrue(!fetchedHourRegistrationFromRepo.isAccepted(), "HourRegistration from repo should not be accepted.");
 
-        fetchedHourRegistrationFromRepo.setAccepted(true);
+        fetchedHourRegistrationFromRepo.setStatus(HourRegistration.Status.ACCEPTED);
 
         try {
             hourRegistrationRepository.updateHourRegistration(fetchedHourRegistrationFromRepo.getId(), fetchedHourRegistrationFromRepo);

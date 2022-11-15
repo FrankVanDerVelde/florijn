@@ -85,7 +85,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
     }
 
     private void updateStatusForHourRegistration(HourRegistration hr, boolean isAccepted) throws Exception {
-        hr.setAccepted(isAccepted);
+        hr.setStatus(isAccepted ? HourRegistration.Status.ACCEPTED : HourRegistration.Status.REJECTED);
         hourRegistrationRepository.updateHourRegistration(hr.getId(), hr);
     }
 }
