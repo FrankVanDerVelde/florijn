@@ -40,7 +40,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         "Gewerkt aan het project"
                         ),
                 new HourRegistration(
-                        0,
+                        1,
                         0,
                         0,
                         dateService.currentDay(-2, 8, 30),
@@ -48,7 +48,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         "Gewerkt aan het project"
                 ),
                 new HourRegistration(
-                        0,
+                        2,
                         0,
                         0,
                         dateService.currentDay(-1, 12, 15),
@@ -56,7 +56,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         "Gewerkt aan het project"
                 ),
                 new HourRegistration(
-                        0,
+                        3,
                         0,
                         0,
                         dateService.currentDay(8, 30),
@@ -64,7 +64,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         "Gewerkt aan het project"
                 ),
                 new HourRegistration(
-                        0,
+                        4,
                         0,
                         0,
                         dateService.currentDay(13, 0),

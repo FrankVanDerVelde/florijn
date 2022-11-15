@@ -8,24 +8,31 @@ import java.time.LocalDateTime;
 
 public class HourRegistration {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int id;
-    @Getter @Setter
+    @Getter
+    @Setter
     private int projectId;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int userId;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private LocalDateTime from;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private LocalDateTime to;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String description;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private boolean isAccepted;
 
     public HourRegistration(int id, int projectId, int userId, LocalDateTime from, LocalDateTime to, String description) {
