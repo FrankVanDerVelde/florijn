@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +67,7 @@ public class HourRegistrationController {
         }
     }
 
-    @DeleteMapping(path= "/hour-registrations/{id}")
+    @PutMapping(path= "/hour-registrations/{id}/update")
     public ResponseEntity<HourRegistration> updateHourRegistration(@PathVariable long id, @RequestBody HourRegistration hr) {
         try {
             HourRegistration createdHR = interactor.handleUpdateHourRegistration(id, hr);
@@ -76,25 +77,21 @@ public class HourRegistrationController {
         }
     }
 
-    @DeleteMapping(path= "/hour-registrations/{id}")
-    public ResponseEntity<HourRegistration> deleteHourRegistration(@PathVariable long id, @RequestBody HourRegistration hr) {
-        try {
-            HourRegistration createdHR = interactor.handleUpdateHourRegistration(id, hr);
-            return ResponseEntity.ok(createdHR);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @DeleteMapping(path= "/hour-registrations/{id}/delete")
+    public ResponseEntity<HourRegistration> deleteHourRegistration(@PathVariable long id) {
+        Optional<HourRegistration> deletedHR = interactor.handleDeleteHourRegistrationById(id);
+        return deletedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path= "/hour-registrations/{id}/accept")
     public ResponseEntity<HourRegistration> acceptHourRegistration(@PathVariable long id) {
-        HourRegistration acceptedHR = interactor.handleAcceptHourRegistration(id);
-        return ResponseEntity.ok(acceptedHR);
+        Optional<HourRegistration> acceptedHR = interactor.handleAcceptHourRegistration(id);
+        return acceptedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path= "/hour-registrations/{id}/reject")
     public ResponseEntity<HourRegistration> rejectHourRegistration(@PathVariable long id) {
-        HourRegistration acceptedHR = interactor.handleRejectHourRegistration(id);
-        return ResponseEntity.ok(acceptedHR);
+        Optional<HourRegistration> rejectedHR = interactor.handleRejectHourRegistration(id);
+        return rejectedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

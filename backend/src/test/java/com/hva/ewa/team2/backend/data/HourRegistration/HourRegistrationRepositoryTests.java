@@ -1,6 +1,7 @@
 package com.hva.ewa.team2.backend.data.HourRegistration;
 
 import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.domain.models.HourRegistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.HourRegistration.HourRegistration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,11 +107,11 @@ public class HourRegistrationRepositoryTests {
      **/
 
     private void deleteAllHourRegistrations() {
-        List<Integer> ids = hourRegistrationRepository.fetchAllHourRegistrations().stream()
+        List<Long> ids = hourRegistrationRepository.fetchAllHourRegistrations().stream()
                 .map(HourRegistration::getId)
                 .toList();
 
-        for (Integer id : ids) {
+        for (Long id : ids) {
             try {
                 hourRegistrationRepository.deleteHourRegistration(id);
             } catch (Exception e) {
@@ -121,8 +122,8 @@ public class HourRegistrationRepositoryTests {
     }
 
     private void addHourRegistrations() {
-        List<HourRegistration> testHourRegistrations = testHourRegistrations();
-        for (HourRegistration hourRegistration : testHourRegistrations) {
+        List<CreateHourRegistrationRequest> testHourRegistrations = testHourRegistrations();
+        for (CreateHourRegistrationRequest hourRegistration : testHourRegistrations) {
             try {
                 hourRegistrationRepository.createHourRegistration(hourRegistration);
             } catch (Exception e) {
@@ -131,43 +132,38 @@ public class HourRegistrationRepositoryTests {
         }
     }
 
-    private List<HourRegistration> testHourRegistrations() {
+    private List<CreateHourRegistrationRequest> testHourRegistrations() {
         return List.of(
                 // ** MARK: User 0 ** //
-                new HourRegistration(
-                        0,
+                new CreateHourRegistrationRequest(
                         0,
                         0,
                         dateService.currentDay(-3, 10, 0),
                         dateService.currentDay(-3, 12, 0),
                         "Gewerkt aan het project"
                 ),
-                new HourRegistration(
-                        1,
+                new CreateHourRegistrationRequest(
                         0,
                         0,
                         dateService.currentDay(-2, 8, 30),
                         dateService.currentDay(-2, 12, 0),
                         "Gewerkt aan het project"
                 ),
-                new HourRegistration(
-                        2,
+                new CreateHourRegistrationRequest(
                         0,
                         0,
                         dateService.currentDay(-1, 12, 15),
                         dateService.currentDay(-1, 16, 0),
                         "Gewerkt aan het project"
                 ),
-                new HourRegistration(
-                        3,
+                new CreateHourRegistrationRequest(
                         0,
                         0,
                         dateService.currentDay(8, 30),
                         dateService.currentDay(12, 0),
                         "Gewerkt aan het project"
                 ),
-                new HourRegistration(
-                        4,
+                new CreateHourRegistrationRequest(
                         0,
                         0,
                         dateService.currentDay(13, 0),
@@ -175,16 +171,14 @@ public class HourRegistrationRepositoryTests {
                         "Gewerkt aan het project"
                 ),
                 // ** MARK: User 1 ** //
-                new HourRegistration(
-                        5,
+                new CreateHourRegistrationRequest(
                         0,
                         1,
                         dateService.currentDay(8, 30),
                         dateService.currentDay(12, 0),
                         "Gewerkt aan het project"
                 ),
-                new HourRegistration(
-                        6,
+                new CreateHourRegistrationRequest(
                         0,
                         1,
                         dateService.currentDay(13, 0),

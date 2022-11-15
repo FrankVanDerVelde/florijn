@@ -29,4 +29,8 @@ public class CreateHourRegistrationRequest {
         this.to = to;
         this.description = description;
     }
+
+    public HourRegistration toDomainModel(long nextId) {
+        return new HourRegistration(nextId, projectId, userId, from, to, description);
+    }
 }

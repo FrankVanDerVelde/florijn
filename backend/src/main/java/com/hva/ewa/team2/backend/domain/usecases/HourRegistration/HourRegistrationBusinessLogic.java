@@ -16,6 +16,6 @@ public interface HourRegistrationBusinessLogic {
     HourRegistration handleCreateHourRegistration(CreateHourRegistrationRequest request) throws Exception;
     HourRegistration handleUpdateHourRegistration(long id, HourRegistration hourRegistration) throws Exception;
 
-    HourRegistration handleAcceptHourRegistration(long id);
-    HourRegistration handleRejectHourRegistration(long id);
+    Optional<HourRegistration> handleAcceptHourRegistration(long id);
+    Optional<HourRegistration> handleRejectHourRegistration(long id);
 }
