@@ -13,13 +13,13 @@
         </div>
         <div>
           <ul>
-            <li v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{ skills.name }}</li>
+            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{ skills.name }}</li>
           </ul>
         </div>
       </div>
 
       <div class="flex m-0 p-0">
-        <div class="fa-border bottom-0 right-0 ml-3.5 self-end m-0 p-0">
+        <div class=" bottom-0 right-0 ml-3.5 self-end m-0 p-0">
           <div class=" " v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star" class="star-color"/>
           </div>
