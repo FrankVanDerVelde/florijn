@@ -46,8 +46,8 @@ public class HourRegistrationController {
         return hourRegistrations.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping(path= "/users/{userId}/hour-registrations/")
-    public ResponseEntity<HourRegistration> deleteHourRegistrationById(
+    @PostMapping(path= "/users/{userId}/hour-registrations/")
+    public ResponseEntity<HourRegistration> createHourRegistration(
             @PathVariable long userId,
             @RequestBody CreateHourRegistrationRequestBody body)
     {

@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.HourRegistration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,9 +15,11 @@ public class CreateHourRegistrationRequest {
     private long userId;
 
     @Getter @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime from;
 
     @Getter @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime to;
 
     @Getter @Setter

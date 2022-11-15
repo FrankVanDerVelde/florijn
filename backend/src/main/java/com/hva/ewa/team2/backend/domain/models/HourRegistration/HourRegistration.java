@@ -1,8 +1,11 @@
 package com.hva.ewa.team2.backend.domain.models.HourRegistration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.expression.spel.ast.OpPlus;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -14,6 +17,7 @@ public class HourRegistration {
     private long id;
     @Getter
     @Setter
+    @JsonProperty("project_id")
     private long projectId;
 
     @Getter
@@ -22,10 +26,12 @@ public class HourRegistration {
 
     @Getter
     @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime from;
 
     @Getter
     @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime to;
 
     @Getter
@@ -54,8 +60,12 @@ public class HourRegistration {
         this.status = Optional.empty();
     }
 
+    public HourRegistration() {
+        this.status = Optional.empty();
+    }
+
     public enum Status {
-        ACCEPTED(),
+        ACCEPTED,
         REJECTED
     }
 
