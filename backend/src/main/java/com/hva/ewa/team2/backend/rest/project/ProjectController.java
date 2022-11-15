@@ -1,9 +1,10 @@
-package com.hva.ewa.team2.backend.rest;
+package com.hva.ewa.team2.backend.rest.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectBusinessLogic;
+import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
+import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,7 +37,7 @@ public class ProjectController {
     // Project CRUD
 
     @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+    public ResponseEntity<Project> createProject(@RequestBody JsonProjectInfo project) {
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
 
         return ResponseEntity.created(uri).body(projectBusinessLogic.createProject(project));
@@ -54,9 +54,8 @@ public class ProjectController {
     }
 
     @PutMapping(path = "/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateProject(@PathVariable int id, @RequestBody Project project) {
-        projectBusinessLogic.updateProject(id, project);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Project> updateProject(@PathVariable int id, @RequestBody JsonProjectInfo body) {
+        return ResponseEntity.ok(projectBusinessLogic.updateProjectInformation(id, body));
     }
 
     // Participants
@@ -67,7 +66,7 @@ public class ProjectController {
     }
 
     @PostMapping(path = "/{id}/participants/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProjectParticipant> addParticipant(@PathVariable int id, @RequestBody JsonNode body) {
+    public ResponseEntity<ProjectParticipant> addParticipant(@PathVariable int id, @RequestBody JsonProjectParticipantAddInfo body) {
         return ResponseEntity.ok(projectBusinessLogic.addProjectParticipant(id, body));
     }
 

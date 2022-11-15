@@ -32,7 +32,10 @@ public class SpecialistRepositoryMock implements SpecialistRepository {
 
     @Override
     public Specialist findById(long id) {
-        return this.specialists.get(0);
+        return this.specialists.stream()
+                .filter(specialist -> specialist.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

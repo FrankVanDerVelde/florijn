@@ -12,7 +12,7 @@ public interface ProjectRepository {
 
     Project addProject(Project project);
 
-    void updateProject(Project project);
+    Project updateProject(Project project);
 
     boolean deleteProject(int id);
 

@@ -64,13 +64,20 @@ public class InMemoryProjectRepository implements ProjectRepository {
     }
 
     @Override
-    public void updateProject(Project project) {
-        if (findById(project.getId()) == null) {
+    public Project updateProject(Project project) {
+        final Project found = findById(project.getId());
+        if (found == null) {
             throw new IllegalArgumentException("A project with that ID does not exist.");
         }
 
-        // replacing all projects with the given ID with the provided project, otherwise with themselves to change nothing.
-        this.projectList.replaceAll(p -> p.getId() == project.getId() ? project : p);
+        // updating only specific fields when found.
+        found.setTitle(project.getTitle());
+        found.setDescription(project.getDescription());
+        found.setClient(project.getClient());
+
+        return found;
+//        // replacing all projects with the given ID with the provided project, otherwise with themselves to change nothing.
+//        this.projectList.replaceAll(p -> p.getId() == project.getId() ? project : p);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.Project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.Specialist.SpecialistRepository;
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
+import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +16,6 @@ import java.util.List;
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic{
 
-    // TODO: implement the project logic.
     private final SpecialistRepository specialistRepo;
     private final ProjectRepository projectRepo;
 
@@ -25,11 +26,21 @@ public class ProjectInteractor implements ProjectBusinessLogic{
     }
 
     @Override
-    public Project createProject(Project project) {
-        if (project.getId() > 0) {
-            throw new IllegalArgumentException("It is not possible to create a project with a specific ID. Please leave the ID empty or set it to <0.");
-        }
-        validateProject(project);
+    public Project createProject(JsonProjectInfo projectInfo) {
+        final String title = projectInfo.getTitle();
+        final int clientId = projectInfo.getClient();
+        final String description = projectInfo.getDescription();
+
+        validateProjectInformation(title, clientId, description);
+
+        // TODO: fetch from client/user repo.
+        // TODO: check if the client exists.
+
+        // creating temp project to update.
+        Project project = new Project(
+                projectRepo.findAll().size() + 1, title, description,
+                new Client(clientId, "test-" + clientId + "@web.com", "/src/assets/avatars/avatar3.avif", "Client " + clientId)
+        );
 
         return projectRepo.addProject(project);
     }
@@ -58,14 +69,33 @@ public class ProjectInteractor implements ProjectBusinessLogic{
     }
 
     @Override
-    public void updateProject(int pId, Project project) {
+    public Project updateProjectInformation(int pId, JsonProjectInfo body) {
         if (pId < 0) {
             throw new IllegalArgumentException("The project ID cannot be negative.");
         }
-        validateProject(project);
+        final String title = body.getTitle();
+        final int client = body.getClient();
+        final String description = body.getDescription();
 
-        project.setId(pId);
-        projectRepo.updateProject(project);
+        validateProjectInformation(
+                title,
+                client,
+                description
+        );
+
+        if (projectRepo.findById(pId) == null) {
+            throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
+        }
+        // TODO: fetch from client/user repo.
+        // TODO: check if the client exists.
+
+        // creating temp project to update.
+        Project project = new Project(
+                pId, title, description,
+                new Client(client, "test-" + client + "@web.com", "/src/assets/avatars/avatar3.avif", "Client " + client)
+        );
+
+        return projectRepo.updateProject(project);
     }
 
     @Override
@@ -110,34 +140,36 @@ public class ProjectInteractor implements ProjectBusinessLogic{
     }
 
     @Override
-    public ProjectParticipant addProjectParticipant(int projectId, JsonNode body) {
+    public ProjectParticipant addProjectParticipant(int projectId, JsonProjectParticipantAddInfo body) {
         final Project project = projectRepo.findById(projectId);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
-        final int userId = body.get("userId").asInt(-1);
+        final int userId = body.getUserId();
         if (userId < 0) {
             throw new IllegalArgumentException("The provided user ID is invalid.");
         }
-        final String role = body.get("role").asText("");
+        final String role = body.getRole();
         if (role.isBlank()) {
             throw new IllegalArgumentException("The provided role is invalid (not provided/empty).");
         }
-        final double hourlyRate = body.get("hourlyRate").asDouble(-1);
+        final double hourlyRate = body.getHourlyRate();
         if (hourlyRate < 0) {
             throw new IllegalArgumentException("The provided hourly rate is invalid (not provided/negative number).");
         }
 
         final Specialist specialist = specialistRepo.findById(userId);
         if (specialist == null) {
-            // todo check if retrieved user is a specialist?
+            // TODO: check if retrieved user is a specialist?
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist or is not a specialist.");
         }
         if (project.getParticipantById(userId) != null) {
             throw new IllegalArgumentException("User " + userId + " is already participating this project.");
         }
 
-        return new ProjectParticipant(specialist, role, hourlyRate);
+        final ProjectParticipant created = new ProjectParticipant(specialist, role, hourlyRate);
+        project.addSpecialist(created);
+        return created;
     }
 
     @Override
@@ -145,14 +177,16 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         return projectRepo.findAll();
     }
 
-    private void validateProject(Project project) {
-        if (project.getTitle() == null || project.getTitle().isBlank()) {
+    private void validateProjectInformation(String title, int clientId, String description) {
+        if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");
-        } else if (project.getClient() == null) {
-            throw new IllegalArgumentException("The project must have a client.");
-        } else if (project.getDescription() == null || project.getDescription().isBlank()) {
+        } else if (clientId < 0) {
+            throw new IllegalArgumentException("The project client id is invalid.");
+        } else if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
+
+        // TODO: validate client here.
     }
 
 }

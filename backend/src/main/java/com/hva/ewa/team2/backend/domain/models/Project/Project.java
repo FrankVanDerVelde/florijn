@@ -9,14 +9,14 @@ import java.util.List;
 
 public class Project {
 
-    @Getter
-    private final Client client;
-    @Getter @Setter
-    private final String title;
     @Getter @Setter
     private int id;
     @Getter @Setter
-    private final String description;
+    private String title;
+    @Getter @Setter
+    private String description;
+    @Getter @Setter
+    private Client client;
     @Getter @Setter
     private List<ProjectParticipant> participants;
 
