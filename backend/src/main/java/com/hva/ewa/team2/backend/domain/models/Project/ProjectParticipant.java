@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.Project;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 public class ProjectParticipant {
 
     @Getter
+    @JsonProperty("user")
     private final Specialist specialist;
     @Getter @Setter
     private String role;

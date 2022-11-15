@@ -1,6 +1,6 @@
 <template>
   <div class="container main-container rounded-xl">
-    <router-link to="Project-overview" class="flex mt-4 p-2 w-full justify-center">
+    <router-link :to="{name: 'project-overview', params: {projectId: project.id}}" class="flex mt-4 p-2 w-full justify-center">
 
       <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container">
 
@@ -14,11 +14,9 @@
 
           <stat :dot="false" icon="users" class="bottom-0">{{ project.participants }}</stat>
 
-          <router-link to="Project-overview">
-            <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
-              Project
-            </button>
-          </router-link>
+          <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
+            Project
+          </button>
         </div>
       </div>
 

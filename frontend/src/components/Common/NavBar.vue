@@ -57,10 +57,10 @@ export default {
           link: '/profile'
         }, {
           name: 'Project Overzicht',
-          link: '/project-overview'
+          link: '/projects/1'
         }, {
           name: 'Projecten',
-          link: '/project-list'
+          link: '/projects'
         },
         {
           name: 'Admin',
