@@ -20,4 +20,5 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
     public List<HourRegistration> handleFetchHourRegistrationsByUser(long userId) {
         return hourRegistrationRepository.fetchAllHourRegistrationsByUser(userId);
     }
+
 }
