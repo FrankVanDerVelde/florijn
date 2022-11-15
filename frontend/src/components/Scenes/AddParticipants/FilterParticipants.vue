@@ -1,20 +1,39 @@
 <template>
-  <div >
+  <div>
 
 
     <div class="font-semibold my-2">{{ skillset.name }}</div>
 
-    <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skill" :key="selectedSkill">
+    <div v-if="expand">
+      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skill" :key="selectedSkill">
 
 
-      <label class="mark">
-        <input type="checkbox" :name="`${selectedSkill}`" :id="`${skill}`">
-        <span class="checkmark"></span>
-      </label>
+        <label class="mark">
+          <input type="checkbox" :name="`${selectedSkill}`" :id="`${skill}`">
+          <span class="checkmark"></span>
+        </label>
 
 
-      <div class="pl-7">{{ selectedSkill.name }}</div>
+        <div class="pl-7">{{ selectedSkill.name }}</div>
+
+      </div>
     </div>
+
+    <div v-else>
+      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skill.slice(0,3)" :key="selectedSkill">
+
+
+        <label class="mark">
+          <input type="checkbox" :name="`${selectedSkill}`" :id="`${skill}`">
+          <span class="checkmark"></span>
+        </label>
+
+
+        <div class="pl-7">{{ selectedSkill.name }}</div>
+
+      </div>
+    </div>
+    <div class="text-primary-500 font-bold pl-10" @click="expand = !expand">Uitbreiden</div>
 
   </div>
 </template>
@@ -24,8 +43,8 @@
 
 export default {
   name: "FilterParticipants",
-  components: {},
 
+  components: {},
   props: {
     skillset: {
       type: [Array, Object]
@@ -33,9 +52,15 @@ export default {
     index: {
       type: Number
     },
+  },
+  data() {
+    return {
+      expand: false
 
-
+    }
   }
+
+
 }
 </script>
 
@@ -66,10 +91,10 @@ export default {
   width: 18px;
   background-color: var(--neutral-50);
   border: 1px solid black;;
-  border-radius: 15% ;
+  border-radius: 15%;
 }
 
-.mark:hover input~.checkmark {
+.mark:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
@@ -96,10 +121,6 @@ export default {
   border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
-
-
-
-
 
 
 </style>

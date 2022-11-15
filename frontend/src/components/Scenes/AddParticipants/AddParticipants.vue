@@ -4,14 +4,14 @@
   <div class="page-main-mw p-4 ">
     <project-header :project="project"/>
 
-    <div class="flex ">
-      <div class="mb-3 w-1/5 ">
+    <div class="flex flex-row fa-border">
+      <div class=" w-1/5 ">
 
         <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
 
       </div>
 
-      <div class="flex flex-row flex-wrap justify-evenly ">
+      <div class="flex flex-row flex-wrap self-start justify-evenly ">
 
         <ParticipantCard v-for="participants in participants" :key="participants.id" :skill="skills"
                          :participant="participants"></ParticipantCard>
@@ -93,13 +93,17 @@ export default {
           name: "MS SQL Server",
           Rating: 3
         }, {
-          id: 0,
+          id: 1,
           name: "MS SQL-Server Stored Procedures",
           Rating: 2
         }, {
-          id: 0,
+          id: 2,
           name: "MS Office Excel",
           Rating: 5
+        }, {
+          id:3,
+          name: "Ms office Eccel pt 2",
+          rating: 3
         },]
       }],
       project: {
