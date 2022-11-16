@@ -2,7 +2,7 @@
   <div class="grid grid-cols-12 absolute w-full h-full top-0 right-0 ">
     <div class="flex justify-end col-span-6 row-start-1 h-full form-column">
       <div class="flex w-full justify-center items-center h-full max-width">
-        <form class="w-140">
+        <div class="w-140">
           <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom!</h1>
           <div class="inputfield">
             <div class="input-container">
@@ -33,7 +33,7 @@
           text-sm leading-5 rounded-lg w-80" @click="submitButton()">Log in
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <div class="col-span-6 row-start-1 col-start-7 h-full bg-primary-300 hide-login-picture">
@@ -62,8 +62,6 @@ export default {
 
       if (userData !== null) {
         console.log(userData)
-
-
         switch (userData.role) {
           case "admin": {
             this.$router.push("/admin/home");
@@ -149,7 +147,7 @@ export default {
 }
 
 .input-container input {
-  color: var(--neutral-200);
+  color: black;
   border: 1px solid var(--neutral-300);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
