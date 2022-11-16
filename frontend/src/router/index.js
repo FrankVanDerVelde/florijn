@@ -10,7 +10,7 @@ import ChangePassword from "../components/Scenes/Authentication/ChangePassword.v
 import AdminPanel from "../components/Scenes/Adminpanel/CustomerList.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
-import { info } from "autoprefixer";
+import {info} from "autoprefixer";
 import SpecialistHourRegistrationOverview
     from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 
@@ -22,6 +22,7 @@ import Skills from "../components/Scenes/Profile/Skills.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
 import SkillsForm from "../components/Scenes/Profile/SkillsForm.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
+import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 
 
 const routes = [
@@ -41,7 +42,7 @@ const routes = [
             {
                 path: '/profile',
                 redirect: '/profile/personal-info', // default child path
-              },
+            },
             {
                 path: 'personal-info',
                 component: PersonalInfo,
@@ -62,7 +63,7 @@ const routes = [
                     {
                         path: '/profile/skills',
                         redirect: '/profile/skills/overview', // default child path
-                      },
+                    },
                     {
                         path: 'overview',
                         component: SkillsOverview,
