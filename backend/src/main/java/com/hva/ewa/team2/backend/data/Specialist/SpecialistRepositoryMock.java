@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.data.Specialist;
 
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.User.Specialist;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ public class SpecialistRepositoryMock implements SpecialistRepository {
 
     public SpecialistRepositoryMock() {
         List<Specialist> specialistList = List.of(
-                new Specialist(0, "withneyk@florijn.com", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"),
-                new Specialist(1, "jant@florijn.com", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans")
+                new Specialist(0, "withneyk@florijn.com", "test", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"),
+                new Specialist(1, "jant@florijn.com","test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans")
         );
 
         this.specialists = new ArrayList<>(specialistList);

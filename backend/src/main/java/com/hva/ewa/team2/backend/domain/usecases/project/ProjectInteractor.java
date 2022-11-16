@@ -4,8 +4,8 @@ import com.hva.ewa.team2.backend.data.Project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.Specialist.SpecialistRepository;
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.User.Client;
+import com.hva.ewa.team2.backend.domain.models.User.Specialist;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         // creating temp project to update.
         Project project = new Project(
                 projectRepo.findAll().size() + 1, title, description,
-                new Client(clientId, "test-" + clientId + "@web.com", "/src/assets/avatars/avatar3.avif", "Client " + clientId)
+                new Client(clientId, "test-" + clientId + "@web.com", "test", "/src/assets/avatars/avatar3.avif", "Client " + clientId)
         );
 
         return projectRepo.addProject(project);
@@ -92,7 +92,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         // creating temp project to update.
         Project project = new Project(
                 pId, title, description,
-                new Client(client, "test-" + client + "@web.com", "/src/assets/avatars/avatar3.avif", "Client " + client)
+                new Client(client, "test-" + client + "@web.com", "test", "/src/assets/avatars/avatar3.avif", "Client " + client)
         );
 
         return projectRepo.updateProject(project);

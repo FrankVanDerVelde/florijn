@@ -1,6 +1,9 @@
 import {createRouter, createWebHashHistory} from "vue-router";
 
-import HelloWorld from "../components/Scenes/Welcome/WelcomeView.vue";
+import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
+import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
+import WelcomeSpecialistView from "../components/Scenes/Welcome/WelcomeSpecialistView.vue";
+import WelcomeClientView from "../components/Scenes/Welcome/WelcomeClientView.vue";
 
 import ProjectOverview from "../components/Scenes/Project/ProjectOverview.vue";
 import LogIn from "../components/Scenes/Authentication/LogIn.vue";
@@ -28,7 +31,10 @@ import AddParticipants from "../components/Scenes/AddParticipants/AddParticipant
 const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
     {path: '/', redirect: 'home'},
-    {path: '/home', component: HelloWorld},
+    {path: '/home', component: WelcomeView},
+    {path: '/admin/home', component: WelcomeAdminView},
+    {path: '/specialist/home', component: WelcomeSpecialistView},
+    {path: '/client/home', component: WelcomeClientView},
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
