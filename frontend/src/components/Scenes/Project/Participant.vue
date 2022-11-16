@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-row mt-4 w-full md:w-auto" v-if="!small">
-    <img :src="participant.avatar" alt="Avatar" class="w-[82px] h-[82px] rounded-full mr-4">
+    <img :src="participant.user.avatarUrl" alt="Avatar" class="w-[82px] h-[82px] rounded-full mr-4">
     <div class="flex flex-col justify-between relative pr-[34px] w-full md:w-auto">
-      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" :href="'mailto:' + participant.email">
+      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" :href="'mailto:' + participant.user.email">
         <font-awesome-icon icon="envelope"/>
       </a>
       <div class="flex flex-col">
@@ -10,12 +10,12 @@
         <div class="font-semibold text-neutral-500">{{ participant.role }}</div>
       </div>
       <div class="text-neutral-400">
-        {{ participant.email }}
+        {{ participant.user.email }}
       </div>
     </div>
   </div>
   <div class="flex flex-row items-center w-max" v-else>
-    <img :src="participant.avatar" alt="Avatar" class="w-[28px] h-[28px] rounded-full mr-2">
+    <img :src="participant.user.avatarUrl" alt="Avatar" class="w-[28px] h-[28px] rounded-full mr-2">
     <div class="flex flex-col justify-between">
       <div class="font-bold text-sm">{{ name }}</div>
       <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>
@@ -30,9 +30,15 @@ export default {
 
   computed: {
     name() {
-      let lastNameParts = this.participant.lastName.split(" ");
-      return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
-    }
+      // user is a client
+      if ('name' in this.participant.user) {
+        return this.participant.user.name;
+      }
+
+      // user is a specialist/admin
+      let lastNameParts = this.participant.user.lastName.split(" ");
+      return this.participant.user.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
+    },
   },
 
   props: {
@@ -41,6 +47,10 @@ export default {
       required: true
     },
     small: {
+      type: Boolean,
+      default: false
+    },
+    client: {
       type: Boolean,
       default: false
     }

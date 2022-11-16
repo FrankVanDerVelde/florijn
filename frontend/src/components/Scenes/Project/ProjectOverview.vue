@@ -11,8 +11,8 @@
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <ProjectHeader :project="project" />
-          <ProjectParticipantList :edit-button="true" :participants="project.participants" />
+          <ProjectHeader :project="project"/>
+          <ProjectParticipantList :edit-button="true" :participants="project.participants" :client="project.client"/>
 
           <section class="pt-[48px]">
             <h2>Uren</h2>
@@ -55,6 +55,7 @@ import ProjectParticipantList from "./ProjectParticipantList.vue";
 export default {
   name: "ProjectOverview",
   components: {ProjectParticipantList, ProjectHeader, HoursRow, SummaryBlock},
+  inject: ['projectFetchService'],
 
   computed: {
     totalHours() {
@@ -71,48 +72,74 @@ export default {
     }
   },
 
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    }
+  },
+
+  async created() {
+    this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
+
+    // when a non-existing project is requested, redirect to the /projects page.
+    if (this.project == null) {
+      this.$router.push({name: 'projects'});
+      return;
+    }
+
+    this.project.bannerSrc = "/src/assets/ing-banner.jpg";
+    this.project.logoSrc = "/src/assets/ING-Bankieren-icoon.webp";
+  },
+
+  methods: {},
+
   data() {
     return {
-      project: {
-        bannerSrc: "/src/assets/ing-banner.jpg",
-        logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-        title: "ING Banking Web Application",
-        description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-        participants: [
-          {
-            id: 0,
-            firstName: "Andrew",
-            lastName: "Alfred",
-            role: "Product Owner",
-            avatar: "/src/assets/avatars/avatar1.avif",
-            email: "andrewa@florijn.com"
-          }, {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
-            role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
-          }, {
-            id: 2,
-            firstName: "Jan",
-            lastName: "Timmermans",
-            role: "Designer",
-            avatar: "/src/assets/avatars/avatar3.avif",
-            email: "jant@florijn.com"
-          }
-        ]
-      },
+      project: {},
+      //
+      // project: {
+      //   bannerSrc: "/src/assets/ing-banner.jpg",
+      //   logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+      //   title: "ING Banking Web Application",
+      //   description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+      //   participants: [
+      //     {
+      //       id: 0,
+      //       firstName: "Andrew",
+      //       lastName: "Alfred",
+      //       role: "Product Owner",
+      //       avatar: "/src/assets/avatars/avatar1.avif",
+      //       email: "andrewa@florijn.com"
+      //     }, {
+      //       id: 1,
+      //       firstName: "Withney",
+      //       lastName: "Keulen",
+      //       role: "Lead Developer",
+      //       avatar: "/src/assets/avatars/avatar2.avif",
+      //       email: "withneyk@florijn.com"
+      //     }, {
+      //       id: 2,
+      //       firstName: "Jan",
+      //       lastName: "Timmermans",
+      //       role: "Designer",
+      //       avatar: "/src/assets/avatars/avatar3.avif",
+      //       email: "jant@florijn.com"
+      //     }
+      //   ]
+      // },
       hourRegistry: [
         {
           id: 0,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com"
+            },
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
           },
           startTime: "2022-10-14T12:00:00.000Z",
           endTime: "2022-10-14T14:45:00.000Z",
@@ -122,12 +149,14 @@ export default {
         {
           id: 1,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
-            role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com",
+            },
+            role: "Lead Developer"
           },
           startTime: "2022-10-13T09:00:00.000Z",
           endTime: "2022-10-13T11:30:00.000Z",
@@ -137,12 +166,14 @@ export default {
         {
           id: 2,
           participant: {
-            id: 2,
-            firstName: "Jan",
-            lastName: "Timmermans",
+            user: {
+              id: 2,
+              firstName: "Jan",
+              lastName: "Timmermans",
+              avatarUrl: "/src/assets/avatars/avatar3.avif",
+              email: "jant@florijn.com"
+            },
             role: "Designer",
-            avatar: "/src/assets/avatars/avatar3.avif",
-            email: "jant@florijn.com"
           },
           startTime: "2022-10-11T14:00:00.000Z",
           endTime: "2022-10-11T18:20:00.000Z",
@@ -152,12 +183,14 @@ export default {
         {
           id: 3,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com"
+            },
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
           },
           startTime: "2021-03-08T15:30:00.000Z",
           endTime: "2021-03-08T19:20:00.000Z",

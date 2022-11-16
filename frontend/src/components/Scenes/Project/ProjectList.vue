@@ -33,7 +33,7 @@ export default {
       sideBarLinks: [{
         icon: 'fa-solid fa-user',
         name: 'projecten',
-        href: '/project-list',
+        href: '/projects',
       }],
       projects: [
         {

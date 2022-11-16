@@ -9,6 +9,8 @@
     </div>
 
     <div class="flex flex-row flex-wrap gap-8">
+      <participant v-if="this.client != null" :participant="clientInfo" />
+
       <participant v-for="participant in participants" :key="participant.id" :participant="participant"/>
     </div>
   </section>
@@ -21,6 +23,15 @@ export default {
   name: "ProjectParticipantList",
   components: {Participant},
 
+  computed: {
+    clientInfo() {
+      return {
+        user: this.client,
+        role: "Project Owner"
+      }
+    }
+  },
+
   props: {
     participants: {
       type: Array,
@@ -29,6 +40,10 @@ export default {
     editButton: {
       type: Boolean,
       default: false,
+    },
+    client: {
+      type: Object,
+      default: null
     }
   }
 }

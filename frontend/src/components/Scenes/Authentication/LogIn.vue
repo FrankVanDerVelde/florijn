@@ -60,7 +60,7 @@ export default {
       for (let i = 0; i < this.users.length; i++) {
         if (this.email === this.users[i].emailadress && this.password === this.users[i].password) {
           console.log("Ingelogd met het id: " + this.users[i].id);
-          this.$router.push("/project-list");
+          this.$router.push("/projects");
           return;
         }
       }

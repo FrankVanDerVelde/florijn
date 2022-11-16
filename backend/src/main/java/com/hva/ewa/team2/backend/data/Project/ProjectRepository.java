@@ -10,9 +10,16 @@ public interface ProjectRepository {
 
     Project findById(long id);
 
-    Project insert();
+    Project addProject(Project project);
 
-    Project update();
+    Project updateProject(Project project);
 
-    Project delete();
+    boolean deleteProject(int id);
+
+    boolean projectExists(int id);
+
+    List<Project> getProjectsByClient(int clientId);
+
+    List<Project> getProjectsBySpecialist(int specialistId);
+
 }
