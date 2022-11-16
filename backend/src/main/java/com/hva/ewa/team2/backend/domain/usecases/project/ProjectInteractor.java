@@ -1,11 +1,11 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
-import com.hva.ewa.team2.backend.data.Project.ProjectRepository;
-import com.hva.ewa.team2.backend.data.Specialist.SpecialistRepository;
-import com.hva.ewa.team2.backend.domain.models.Project.Project;
-import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
-import com.hva.ewa.team2.backend.domain.models.User.Client;
-import com.hva.ewa.team2.backend.domain.models.User.Specialist;
+import com.hva.ewa.team2.backend.data.project.ProjectRepository;
+import com.hva.ewa.team2.backend.data.specialist.SpecialistRepository;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;

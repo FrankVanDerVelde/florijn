@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend;
 
-import com.hva.ewa.team2.backend.domain.models.Project.Project;
-import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectInteractor;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;

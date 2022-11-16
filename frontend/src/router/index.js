@@ -115,6 +115,10 @@ const routes = [
         name: "project-overview",
         component: ProjectOverview,
         props: true,
+        children: [{
+            path: "participants",
+            component: AddParticipants
+        }]
     }
 ];
 
