@@ -1,11 +1,9 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div class="change-password-form">
-        <div class="border-bottom">
-          <p class="header-text">Wachtwoord vergeten?</p>
-          <p class="back-text" @click="backToInlogPage()"> &ltTerug</p>
-        </div>
+      <div>
+        <p class="back-text" @click="backToInlogPage()"> &ltTerug naar inloggen</p>
+        <p class="header-text">Wachtwoord vergeten?</p>
         <p class="text-changepassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
           account, dan ontvangt u van ons een link om uw wachtwoord opnieuw in te stellen.</p>
         <div class="inputfield-wachtwoord">
@@ -13,11 +11,11 @@
             <label class="mb-[12px]">Emailadres</label>
             <input v-model="email" class="pl-[7px]">
           </div>
-          <p class="wrongText">{{ validationText }}</p>
         </div>
+        <p class="text-center mt-1 text-app_red-500">&nbsp {{ validationText }}</p>
         <div class="submit-button">
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit" @click="sendMailButton()">Verstuur email
+          text-sm leading-5 rounded-lg w-full" @click="sendMailButton()">Verstuur email
           </button>
         </div>
       </div>
@@ -60,12 +58,6 @@ export default {
   align-items: center;
 }
 
-.change-password-form {
-  border-radius: 6px;
-  min-width: 300px;
-  border: 2px solid var(--neutral-200);
-  box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
-}
 
 .header-text {
   font-weight: bold;
@@ -73,9 +65,6 @@ export default {
   margin: 2%;
 }
 
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
-}
 
 .inputfield-wachtwoord {
   margin: 3% 3% 9%;
@@ -90,6 +79,7 @@ export default {
 
 .text-changepassword {
   color: var(--neutral-400);
+  font-size: 14px;
   margin: 2% 2% 5%;
   max-width: 300px;
 }
@@ -98,8 +88,7 @@ export default {
   color: var(--primary-500);
   margin: 1%;
   font-weight: bold;
-  font-size: 15px;
-  min-height: 50px;
+  font-size: 14px;
 }
 
 .back-text:hover {
@@ -127,10 +116,6 @@ export default {
   font-family: 'Roboto', sans-serif;
   height: 40px;
   font-size: 16px;
-}
-
-.wrongText {
-  color: red;
 }
 
 </style>

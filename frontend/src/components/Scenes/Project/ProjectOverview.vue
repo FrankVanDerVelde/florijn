@@ -1,38 +1,18 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="banner-container grid">
-      <img :src="bannerSrc" alt="banner">
+      <img :src="project.bannerSrc" alt="banner">
     </div>
 
     <div class="flex flex-col items-center">
       <div class="icon-container grid w-full">
-        <img :src="logoSrc" alt="project logo">
+        <img :src="project.logoSrc" alt="project logo">
       </div>
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <section class="border-bottom">
-            <h1>{{ title }}</h1>
-            <p class="description">{{ description }}</p>
-
-            <div class="flex items-center justify-between mb-[24px]">
-              <stats class="!pb-0">
-                <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
-              </stats>
-              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzig informatie</button>
-            </div>
-          </section>
-
-          <section class="pt-[24px]">
-            <div class="flex items-center justify-between mb-2">
-              <h2 class="!mb-0">Deelnemers</h2>
-              <button class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzigen</button>
-            </div>
-
-            <div class="flex flex-row flex-wrap gap-8">
-              <participant v-for="participant in participants" :key="participant.id" :participant="participant"/>
-            </div>
-          </section>
+          <ProjectHeader :project="project"/>
+          <ProjectParticipantList :edit-button="true" :participants="project.participants" :client="project.client"/>
 
           <section class="pt-[48px]">
             <h2>Uren</h2>
@@ -67,20 +47,17 @@
 </template>
 
 <script>
-import Stats from "./Stats.vue";
-import Stat from "./Stat.vue";
-import Participant from "./Participant.vue";
 import SummaryBlock from "./SummaryBlock.vue";
 import HoursRow from "./HoursRow.vue";
+import ProjectHeader from "./ProjectHeader.vue";
+import ProjectParticipantList from "./ProjectParticipantList.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {HoursRow, SummaryBlock, Stat, Stats, Participant},
+  components: {ProjectParticipantList, ProjectHeader, HoursRow, SummaryBlock},
+  inject: ['projectFetchService'],
 
   computed: {
-    participantCount() {
-      return this.participants.length;
-    },
     totalHours() {
       return 24.5;
     },
@@ -95,46 +72,74 @@ export default {
     }
   },
 
+  props: {
+    projectId: {
+      type: Number,
+      required: true
+    }
+  },
+
+  async created() {
+    this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
+
+    // when a non-existing project is requested, redirect to the /projects page.
+    if (this.project == null) {
+      this.$router.push({name: 'projects'});
+      return;
+    }
+
+    this.project.bannerSrc = "/src/assets/ing-banner.jpg";
+    this.project.logoSrc = "/src/assets/ING-Bankieren-icoon.webp";
+  },
+
+  methods: {},
+
   data() {
     return {
-      bannerSrc: "/src/assets/ing-banner.jpg",
-      logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-      title: "ING Banking Web Application",
-      description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-      participants: [
-        {
-          id: 0,
-          firstName: "Andrew",
-          lastName: "Alfred",
-          role: "Product Owner",
-          avatar: "/src/assets/avatars/avatar1.avif",
-          email: "andrewa@florijn.com"
-        }, {
-          id: 1,
-          firstName: "Withney",
-          lastName: "Keulen",
-          role: "Lead Developer",
-          avatar: "/src/assets/avatars/avatar2.avif",
-          email: "withneyk@florijn.com"
-        }, {
-          id: 2,
-          firstName: "Jan",
-          lastName: "Timmermans",
-          role: "Designer",
-          avatar: "/src/assets/avatars/avatar3.avif",
-          email: "jant@florijn.com"
-        }
-      ],
+      project: {},
+      //
+      // project: {
+      //   bannerSrc: "/src/assets/ing-banner.jpg",
+      //   logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+      //   title: "ING Banking Web Application",
+      //   description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+      //   participants: [
+      //     {
+      //       id: 0,
+      //       firstName: "Andrew",
+      //       lastName: "Alfred",
+      //       role: "Product Owner",
+      //       avatar: "/src/assets/avatars/avatar1.avif",
+      //       email: "andrewa@florijn.com"
+      //     }, {
+      //       id: 1,
+      //       firstName: "Withney",
+      //       lastName: "Keulen",
+      //       role: "Lead Developer",
+      //       avatar: "/src/assets/avatars/avatar2.avif",
+      //       email: "withneyk@florijn.com"
+      //     }, {
+      //       id: 2,
+      //       firstName: "Jan",
+      //       lastName: "Timmermans",
+      //       role: "Designer",
+      //       avatar: "/src/assets/avatars/avatar3.avif",
+      //       email: "jant@florijn.com"
+      //     }
+      //   ]
+      // },
       hourRegistry: [
         {
           id: 0,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com"
+            },
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
           },
           startTime: "2022-10-14T12:00:00.000Z",
           endTime: "2022-10-14T14:45:00.000Z",
@@ -144,12 +149,14 @@ export default {
         {
           id: 1,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
-            role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com",
+            },
+            role: "Lead Developer"
           },
           startTime: "2022-10-13T09:00:00.000Z",
           endTime: "2022-10-13T11:30:00.000Z",
@@ -159,12 +166,14 @@ export default {
         {
           id: 2,
           participant: {
-            id: 2,
-            firstName: "Jan",
-            lastName: "Timmermans",
+            user: {
+              id: 2,
+              firstName: "Jan",
+              lastName: "Timmermans",
+              avatarUrl: "/src/assets/avatars/avatar3.avif",
+              email: "jant@florijn.com"
+            },
             role: "Designer",
-            avatar: "/src/assets/avatars/avatar3.avif",
-            email: "jant@florijn.com"
           },
           startTime: "2022-10-11T14:00:00.000Z",
           endTime: "2022-10-11T18:20:00.000Z",
@@ -174,12 +183,14 @@ export default {
         {
           id: 3,
           participant: {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
+            user: {
+              id: 1,
+              firstName: "Withney",
+              lastName: "Keulen",
+              avatarUrl: "/src/assets/avatars/avatar2.avif",
+              email: "withneyk@florijn.com"
+            },
             role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
           },
           startTime: "2021-03-08T15:30:00.000Z",
           endTime: "2021-03-08T19:20:00.000Z",
@@ -191,6 +202,16 @@ export default {
   },
 }
 </script>
+
+<style>
+h2 {
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 34px;
+  margin-bottom: 16px;
+  color: var(--neutral-700)
+}
+</style>
 
 <style scoped>
 .banner-container {
@@ -223,33 +244,6 @@ export default {
   border-radius: 18px;
   border: 4px solid #fff;
   background-color: #fff;
-}
-
-h1 {
-  font-weight: 900;
-  font-size: 34px;
-  margin-bottom: 8px;
-  line-height: 40px;
-  color: var(--primary-500);
-}
-
-h2 {
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 34px;
-  margin-bottom: 16px;
-  color: var(--neutral-700)
-}
-
-.description {
-  color: var(--neutral-400);
-  font-size: 20px;
-  line-height: 28px;
-  margin-bottom: 24px;
-}
-
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
 }
 
 th {

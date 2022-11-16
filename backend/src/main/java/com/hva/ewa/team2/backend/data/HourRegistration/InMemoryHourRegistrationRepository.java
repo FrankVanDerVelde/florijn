@@ -22,6 +22,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     @Autowired
     public InMemoryHourRegistrationRepository(DateServiceLogic dateService) {
         this.dateService = dateService;
+        this.hourRegistrations = new ArrayList<>();
         setup();
     }
 
