@@ -1,40 +1,83 @@
 package com.hva.ewa.team2.backend.domain.models.HourRegistration;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.expression.spel.ast.OpPlus;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class HourRegistration {
 
-    @Getter @Setter
-    private int id;
-    @Getter @Setter
-    private int projectId;
+    @Getter
+    @Setter
+    private long id;
+    @Getter
+    @Setter
+    @JsonProperty("project_id")
+    private long projectId;
 
-    @Getter @Setter
-    private int userId;
+    @Getter
+    @Setter
+    private long userId;
 
-    @Getter @Setter
+    @Getter
+    @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime from;
 
-    @Getter @Setter
+    @Getter
+    @Setter
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime to;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String description;
 
-    @Getter @Setter
-    private boolean isAccepted;
+    @Getter
+    private Optional<Status> status;
 
-    public HourRegistration(int id, int projectId, int userId, LocalDateTime from, LocalDateTime to, String description) {
+    public HourRegistration(long id, long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
         this.id = id;
         this.projectId = projectId;
         this.userId = userId;
         this.from = from;
         this.to = to;
         this.description = description;
-        this.isAccepted = false;
+        this.status = Optional.empty();
+    }
+
+    public HourRegistration(long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
+        this.projectId = projectId;
+        this.userId = userId;
+        this.from = from;
+        this.to = to;
+        this.description = description;
+        this.status = Optional.empty();
+    }
+
+    public HourRegistration() {
+        this.status = Optional.empty();
+    }
+
+    public enum Status {
+        ACCEPTED,
+        REJECTED
+    }
+
+    public void setStatus(Status status) {
+        this.status = Optional.of(status);
+    }
+
+    public boolean isAccepted() {
+        if (status.isPresent()) {
+            return this.status.get() == Status.ACCEPTED;
+        } else {
+            return false;
+        }
     }
 }
