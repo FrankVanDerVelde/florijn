@@ -8,13 +8,15 @@
 <script>
 import {HourRegistrationRepository} from "./Networking/HourRegistrationRepository.js";
 import {DateService} from "./Services/DateService.js";
+import {UserAdaptor} from "./Services/user-adaptor.js";
 
 export default {
   name: "App",
   provide() {
     return {
       hourRegistrationRepository: new HourRegistrationRepository(),
-      dateService: new DateService()
+      dateService: new DateService(),
+      userService: new UserAdaptor()
     }
   },
 }

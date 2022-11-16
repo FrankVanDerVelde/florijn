@@ -1,14 +1,16 @@
-package com.hva.ewa.team2.backend.domain.models.user;
+package com.hva.ewa.team2.backend.domain.models.User;
 
 public abstract class User {
 
     protected int id;
     protected String email;
+    protected String password;
     protected String profilePictureURL;
 
-    public User(int id, String email, String profilePictureURL) {
+    public User(int id, String email, String password, String profilePictureURL) {
         this.id = id;
         this.email = email;
+        this.password = password;
         this.profilePictureURL = profilePictureURL;
     }
 
@@ -18,6 +20,10 @@ public abstract class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getProfilePictureURL() {

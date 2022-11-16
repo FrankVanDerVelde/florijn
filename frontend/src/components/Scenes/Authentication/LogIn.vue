@@ -48,24 +48,40 @@
 
 export default {
   name: "LogIn.vue",
+  inject: ['userService'],
   methods: {
     forgotPassword() {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword");
     },
-    submitButton() {
+    async submitButton() {
       if (this.email === '' || this.password === '') {
         this.validationText = 'De velden zijn niet volledig ingevuld!';
         return;
       }
-      for (let i = 0; i < this.users.length; i++) {
-        if (this.email === this.users[i].emailadress && this.password === this.users[i].password) {
-          console.log("Ingelogd met het id: " + this.users[i].id);
-          this.$router.push("/project-list");
-          return;
+      const userData = await this.userService.asyncFindByCredentials(this.email, this.password);
+
+      if (userData !== null) {
+        console.log(userData)
+
+
+        switch (userData.role) {
+          case "admin": {
+            this.$router.push("/admin/home");
+            break;
+          }
+          case "specialist": {
+            this.$router.push("/specialist/home");
+            break;
+          }
+          case "client": {
+            this.$router.push("/client/home");
+            break;
+          }
         }
+      } else {
+        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
+        this.password = '';
       }
-      this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
-      this.password = '';
     }
   },
   data() {
@@ -73,21 +89,6 @@ export default {
       email: '',
       password: '',
       validationText: '',
-      users: [
-        {
-          id: 0,
-          emailadress: "jveerman@outlook.com",
-          password: "GebakkenEieren10",
-        }, {
-          id: 1,
-          emailadress: "rtol@outlook.com",
-          password: "Vuurtoren10",
-        }, {
-          id: 2,
-          emailadress: "test@test.com",
-          password: "test"
-        }
-      ],
     };
   },
 }

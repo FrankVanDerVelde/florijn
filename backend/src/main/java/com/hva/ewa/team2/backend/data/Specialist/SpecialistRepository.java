@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.data.Specialist;
 
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.User.Specialist;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ package com.hva.ewa.team2.backend.data.Project;
 import com.hva.ewa.team2.backend.data.Specialist.SpecialistRepositoryMock;
 import com.hva.ewa.team2.backend.domain.models.Project.Project;
 import com.hva.ewa.team2.backend.domain.models.Project.ProjectParticipant;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.User.Client;
+import com.hva.ewa.team2.backend.domain.models.User.Specialist;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
     public InMemoryProjectRepository() {
         List<Specialist> specialist = new SpecialistRepositoryMock().findAll();
-        Client client = new Client(48, "andrewa@florijn.com", "/src/assets/avatars/avatar1.avif", "ING");
+        Client client = new Client(48, "andrewa@florijn.com", "test", "/src/assets/avatars/avatar1.avif", "ING");
         // TODO: Get client(s) from repository instead of making one on the spot.
 
         Project ING = new Project(1,
