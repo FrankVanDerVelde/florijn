@@ -100,16 +100,15 @@ const routes = [
         ]
     },
     {
-        path: "/project-overview",
-        name: "project overview",
-        component: ProjectOverview
-    }, {
-        path: "/project-list",
-        name: "project list",
+        path: "/projects",
+        name: "projects",
         component: ProjectList
-    }, {
-        path: "/add-participants",
-        component: AddParticipants
+    },
+    {
+        path: "/projects/:projectId(\\d+)",
+        name: "project-overview",
+        component: ProjectOverview,
+        props: true,
     }
 ];
 

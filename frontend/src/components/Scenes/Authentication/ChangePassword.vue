@@ -1,10 +1,8 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div class="change-password-form">
-        <div class="border-bottom">
-          <p class="header-text">Wachtwoord veranderen</p>
-        </div>
+      <div class="w-[300px]">
+        <p class="header-text">Wachtwoord veranderen</p>
         <p class="text-changepassword">Gelieve uw wachtwoord te herstellen in onderstaande invulvelden</p>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
@@ -16,12 +14,12 @@
           <div class="input-container">
             <label class="mb-[12px]">Herhaal wachtwoord</label>
             <input v-model="repeatPassword" type="password" class="pl-[7px]">
-            <p class="wrongText">{{ validationText }}</p>
           </div>
         </div>
+        <p class="text-center min-h-[50px] w-100 text-app_red-500">&nbsp {{ validationText }}</p>
         <div class="submit-button">
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-fit" @click="saveButton()">Opslaan
+          text-sm leading-5 rounded-lg w-full" @click="saveButton()">Opslaan
           </button>
         </div>
       </div>
@@ -66,21 +64,10 @@ export default {
   align-items: center;
 }
 
-.change-password-form {
-  border-radius: 6px;
-  width: 300px;
-  border: 2px solid var(--neutral-200);
-  box-shadow: 0 7px 8px 2px rgba(0, 0, 0, 0.12);
-}
-
 .header-text {
   font-weight: bold;
   font-size: 20px;
   margin: 2%;
-}
-
-.border-bottom {
-  border-bottom: 1px solid var(--neutral-100);
 }
 
 .inputfield-wachtwoord {
@@ -121,10 +108,6 @@ export default {
   font-family: 'Roboto', sans-serif;
   height: 40px;
   font-size: 16px;
-}
-
-.wrongText {
-  color: red;
 }
 
 </style>
