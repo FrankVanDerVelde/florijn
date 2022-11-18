@@ -5,17 +5,22 @@ import lombok.Setter;
 
 public class Skill {
 
-    @Getter
-    @Setter
-    private final int id;
-    @Getter @Setter
-    private final String name;
-    @Getter @Setter
-    private final int rating_out_of_five;
+    private int id;
 
-    Skill(int id, String name, int rating_out_of_five) {
+    private String name;
+
+    private String description;
+
+    private int rating_out_of_five;
+
+    public int getId() {
+        return id;
+    }
+
+    public Skill(int id, String name, String description, int rating_out_of_five) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.rating_out_of_five = rating_out_of_five;
     }
 }
