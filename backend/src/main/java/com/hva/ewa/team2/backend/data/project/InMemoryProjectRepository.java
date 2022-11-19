@@ -17,13 +17,14 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
     public InMemoryProjectRepository() {
         List<Specialist> specialist = new SpecialistRepositoryMock().findAll();
-        Client client = new Client(48, "andrewa@florijn.com", "test", "/src/assets/avatars/avatar1.avif", "ING");
+        Client client = new Client(48, "contact@ing.nl", "test", "/src/assets/avatars/avatar1.avif", "ING", "/src/assets/ing-banner.jpg");
         // TODO: Get client(s) from repository instead of making one on the spot.
 
         Project ING = new Project(1,
                 "ING Banking Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-                client);
+                client,
+                "/src/assets/ING-Bankieren-icoon.webp");
         ING.addSpecialist(new ProjectParticipant(specialist.get(0), "Lead Developer", 60));
         ING.addSpecialist(new ProjectParticipant(specialist.get(1), "Designer", 40));
 
