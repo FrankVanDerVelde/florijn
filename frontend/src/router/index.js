@@ -19,9 +19,7 @@ import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistH
 import Profile from "../components/Scenes/Profile/Profile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
 import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
-import Skills from "../components/Scenes/Profile/Skills.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
-import SkillsForm from "../components/Scenes/Profile/SkillsForm.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
@@ -61,21 +59,7 @@ const routes = [
             },
             {
                 path: "skills",
-                component: Skills,
-                children: [
-                    {
-                        path: '',
-                        redirect: '/profile/skills/overview', // default child path
-                    },
-                    {
-                        path: 'overview',
-                        component: SkillsOverview,
-                    },
-                    {
-                        path: 'edit',
-                        component: SkillsForm,
-                    },
-                ]
+                component: SkillsOverview,
             },
             {
                 path: 'resume',

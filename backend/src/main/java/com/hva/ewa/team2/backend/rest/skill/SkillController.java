@@ -26,18 +26,18 @@ public class SkillController {
         this.skillBusinessLogic = skillBusinessLogic;
     }
 
-    @GetMapping(path = "/skill-groups", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SkillGroup>> getSkillGroups() {
         return ResponseEntity.ok(skillBusinessLogic.getAllSkillGroups());
     }
 
-    @GetMapping(path = "/{userId}/user-skills", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/user-skills/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserSkill>> getUserSkills(@PathVariable int userId) {
         return ResponseEntity.ok(skillBusinessLogic.getUserSkills(userId));
     }
 
-    @PutMapping(path = "/{userId}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserSkill> updateProject(@PathVariable int userId,  @RequestBody JsonUserSkill body) {
+    @PutMapping(path = "/update-user-skill/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserSkill> updateUserSkill(@PathVariable int userId,  @RequestBody JsonUserSkill body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkill(userId, body));
     }
 }

@@ -3,82 +3,62 @@
 <template>
     <div class="font-bold text-[32px] mb-3">Skills</div>
 
-    <div v-for="skill in skills">
-        <div class="border-[1px] border-neutral-100 bg-neutral-0 my-3 h-[58px] items-center rounded-lg">
-            <div class="grid grid-cols-4 gap-2 h-full items-center justify-center col-span-2 text-center">
-                <div class="font-bold capitalize text-[14px] text-left ml-[16px]">{{ skill.name }}</div>
-                <div>{{ skill.date}}</div>
-                <div>{{ skill.average}}</div>
-                <div class="flex justify-end mr-3">
-                    <!-- :to="this.iets" -->
-                    <router-link to="/profile/skills/edit">
-                        <div
-                            class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md h-[32px] w-[96px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center">
-                            <div>aanpassen</div>
-                        </div>
-                    </router-link>
-                </div>
-            </div>
-        </div>
+    <div v-for="group in this.skillGroups" class="shadow-lg rounded-lg mb-8">
+            <SkillGroup :group="group"/>
     </div>
+
 
     <div>
         <div>Expertise gebied</div>
-        <div class="text-primary-500 bg-primary-100 rounded-full px-[11px] py-[4px] font-bold inline-block mt-2">Financieel Administratief</div>
+        <div class="text-primary-500 bg-primary-100 rounded-full px-[11px] py-[4px] font-bold inline-block mt-2">
+            Financieel Administratief</div>
     </div>
 </template>
   
 <style scoped>
-
+    * {
+        font-family: 'Roboto';
+    }
 </style>
 
 <script>
+import SkillGroup from "./SkillsGroup.vue";
+
 export default {
     name: "Profile",
+    components: { SkillGroup },
+    inject: ['skillFetchService'],
+    async created() {
+        let skillGroups = await this.skillFetchService.fetchJson(`/groups`);
+        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/1`);
+
+        const userSkillIds = userSkills.map(userSkill => userSkill.skill.id);
+
+        skillGroups = skillGroups.map(group => {
+
+            return (
+                {
+                    ...group,
+                    skills: (
+                        group.skills.map(skill => {
+                            // Check if the skill is part of the users skillset
+                            if (userSkillIds.includes(skill.id)) {
+                                // Add user rating to the data
+                                return { ...skill, rating: userSkills.find(userSkill => userSkill.skill.id == skill.id).rating }
+                            }
+                            // Set user rating to null
+                            return ({ ...skill, rating: 0 })
+                        })
+                    )
+                }
+            )
+        })
+
+        this.skillGroups = skillGroups;
+    },
     data() {
         return {
-            skills: [
-                {
-                    name: "Html",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "Php",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "javascript",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "react",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "vue",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "css",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "node",
-                    date: "23/04/2022",
-                    average: "75%"
-                },
-                {
-                    name: "docker",
-                    date: "23/04/2022",
-                    average: "75%"
-                }
-            ]
+            skillGroups: [],
         }
     }
 }

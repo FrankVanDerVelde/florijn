@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
@@ -29,7 +30,16 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Client(2, "client@test.com", "test", null, "Client", "Test"));
 
         Specialist specialist = (new Specialist(1, "specialist@test.com", "test", null, "Specialist", "Test"));
+        Specialist specialist2 = (new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
 
+        setSkills(specialist);
+        setSkills(specialist2);
+
+
+
+    }
+
+    public void setSkills(Specialist specialist) {
         // Give specialist a random set of dummy skills
         ArrayList<Skill> allSkills = skillRepo.findAllSkills();
 
@@ -42,9 +52,10 @@ public class InMemoryUserRepository implements UserRepository {
         for(int i = 0; i < halfListSize; i++) {
             int randomRating = ThreadLocalRandom.current().nextInt(1, 5 + 1);
             // Add a skill to the specialist with a random rating
-           specialist.updateUserSkill(allSkills.get(i), randomRating);
+            specialist.updateUserSkill(allSkills.get(i), randomRating);
         }
 
+        users.add(specialist);
     }
 
     @Override
@@ -61,5 +72,10 @@ public class InMemoryUserRepository implements UserRepository {
                 .filter(user -> user.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        return users;
     }
 }

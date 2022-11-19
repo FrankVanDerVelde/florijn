@@ -66,6 +66,7 @@ public class SkillInteractor implements SkillBusinessLogic {
     }
     @Override
     public List<UserSkill> getUserSkills(int userId) {
+        System.out.println(userRepo.getAllUsers());
         User user = userRepo.findById(userId);
 
         if (user == null) {

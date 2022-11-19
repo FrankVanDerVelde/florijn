@@ -32,21 +32,17 @@ public class InMemorySkillRepository implements SkillRepository {
 
         int lastPosition = 0;
         for (int i = 0; i < groupNames.length; i++) {
-            SkillGroup tempSkillGroup = new SkillGroup(i, groupNames[i], "This is the group for  " + groupNames[i]);
+            SkillGroup tempSkillGroup = new SkillGroup(i, groupNames[i], "This is the group for " + groupNames[i]);
 
-            for (int i2 = lastPosition; i2 < skillPositions[i]; i2++) {
+            for (int i2 = 0; i2 < skillPositions[i]; i2++) {
                 tempSkillGroup.add(skills.get(lastPosition));
                 lastPosition++;
             }
 
             this.skillGroups.add(tempSkillGroup);
-
         }
 
-        System.out.println(skillGroups);
     }
-
-
 
     @Override
     public ArrayList<Skill> findAllSkills() {

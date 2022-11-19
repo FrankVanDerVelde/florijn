@@ -5,13 +5,14 @@ import lombok.Setter;
 
 public class Skill {
 
+    @Getter @Setter
     private int id;
 
+    @Getter @Setter
     private String name;
 
+    @Getter @Setter
     private String description;
-
-//    private SkillGroup group;
 
     public int getId() {
         return id;
@@ -21,7 +22,6 @@ public class Skill {
         this.id = id;
         this.name = name;
         this.description = description;
-//        this.group = group;
     }
 
     @Override
