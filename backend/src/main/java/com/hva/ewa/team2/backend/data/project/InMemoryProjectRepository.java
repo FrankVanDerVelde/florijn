@@ -37,6 +37,8 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1), "Designer", 40));
+
+        projectList.add(ingProject);
     }
 
     @Override

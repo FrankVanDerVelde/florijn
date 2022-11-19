@@ -19,7 +19,7 @@ public class InMemoryUserRepository implements UserRepository {
 
         this.users.add(new Admin(2, "admin@test.com", "test", null, "Admin", "Test"));
         this.users.add(new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
-        this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/avatars/avatar1.avif", "ING", "/src/assets/ing-banner.jpg"));
+        this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
     }
 
     @Override
