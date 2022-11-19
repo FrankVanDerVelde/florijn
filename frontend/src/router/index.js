@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -39,14 +39,12 @@ const routes = [
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
     {
-        // path: "/profile/:id",
         path: "/profile",
         name: "profile",
-        // IMPORTANT - UserParent contains `<router-view></router-view>`
         component: Profile,
         children: [
             {
-                path: '/profile',
+                path: '',
                 redirect: '/profile/personal-info', // default child path
             },
             {
@@ -58,7 +56,7 @@ const routes = [
                 component: AvailableHours,
             },
             {
-                path: "/profile/hour-registration",
+                path: "hour-registration",
                 name: "hour-registration",
                 component: SpecialistHourRegistrationOverview
             },
@@ -67,7 +65,7 @@ const routes = [
                 component: Skills,
                 children: [
                     {
-                        path: '/profile/skills',
+                        path: '',
                         redirect: '/profile/skills/overview', // default child path
                     },
                     {

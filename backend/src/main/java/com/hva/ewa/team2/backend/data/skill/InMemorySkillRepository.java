@@ -3,12 +3,14 @@ package com.hva.ewa.team2.backend.data.skill;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@Component
 public class InMemorySkillRepository implements SkillRepository {
 
     public static void main(String[] args) {
