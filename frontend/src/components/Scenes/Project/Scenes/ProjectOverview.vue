@@ -37,6 +37,12 @@ import HoursRow from "../HoursRow.vue";
 export default {
   name: "ProjectOverview",
   components: {HoursRow, ProjectParticipantList, SummaryBlock},
+  inject: ['fetchService'],
+
+  async created() {
+    this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations`);
+    console.log(this.hourRegistry);
+  },
 
   props: {
     project: {
@@ -62,76 +68,7 @@ export default {
 
   data() {
     return {
-      hourRegistry: [
-        {
-          id: 0,
-          participant: {
-            user: {
-              id: 1,
-              firstName: "Withney",
-              lastName: "Keulen",
-              avatarUrl: "/src/assets/avatars/avatar2.avif",
-              email: "withneyk@florijn.com"
-            },
-            role: "Lead Developer",
-          },
-          startTime: "2022-10-14T12:00:00.000Z",
-          endTime: "2022-10-14T14:45:00.000Z",
-          hourlyRate: 60,
-          status: 'AWAITING'
-        },
-        {
-          id: 1,
-          participant: {
-            user: {
-              id: 1,
-              firstName: "Withney",
-              lastName: "Keulen",
-              avatarUrl: "/src/assets/avatars/avatar2.avif",
-              email: "withneyk@florijn.com",
-            },
-            role: "Lead Developer"
-          },
-          startTime: "2022-10-13T09:00:00.000Z",
-          endTime: "2022-10-13T11:30:00.000Z",
-          hourlyRate: 60,
-          status: 'APPROVED'
-        },
-        {
-          id: 2,
-          participant: {
-            user: {
-              id: 2,
-              firstName: "Jan",
-              lastName: "Timmermans",
-              avatarUrl: "/src/assets/avatars/avatar3.avif",
-              email: "jant@florijn.com"
-            },
-            role: "Designer",
-          },
-          startTime: "2022-10-11T14:00:00.000Z",
-          endTime: "2022-10-11T18:20:00.000Z",
-          hourlyRate: 40,
-          status: 'APPROVED'
-        },
-        {
-          id: 3,
-          participant: {
-            user: {
-              id: 1,
-              firstName: "Withney",
-              lastName: "Keulen",
-              avatarUrl: "/src/assets/avatars/avatar2.avif",
-              email: "withneyk@florijn.com"
-            },
-            role: "Lead Developer",
-          },
-          startTime: "2021-03-08T15:30:00.000Z",
-          endTime: "2021-03-08T19:20:00.000Z",
-          hourlyRate: 60,
-          status: 'DECLINED'
-        }
-      ]
+      hourRegistry: []
     }
   }
 }

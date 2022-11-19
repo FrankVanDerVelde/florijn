@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Component
 @Primary
@@ -72,7 +70,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
         Optional<HourRegistration> hr = hourRegistrationRepository.fetchHourRegistrationById(id);
         if (hr.isPresent()) {
             try {
-                updateStatusForHourRegistration(hr.get(), true);
+                return Optional.of(updateStatusForHourRegistration(hr.get(), true));
             } catch (Exception e) {
                 return Optional.empty();
             }
@@ -87,7 +85,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
         Optional<HourRegistration> hr = hourRegistrationRepository.fetchHourRegistrationById(id);
         if (hr.isPresent()) {
             try {
-                updateStatusForHourRegistration(hr.get(), false);
+                return Optional.of(updateStatusForHourRegistration(hr.get(), false));
             } catch (Exception e) {
                 return Optional.empty();
             }
@@ -96,8 +94,8 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
         return Optional.empty();
     }
 
-    private void updateStatusForHourRegistration(HourRegistration hr, boolean isAccepted) throws Exception {
+    private HourRegistration updateStatusForHourRegistration(HourRegistration hr, boolean isAccepted) throws Exception {
         hr.setStatus(isAccepted ? HourRegistration.Status.ACCEPTED : HourRegistration.Status.REJECTED);
-        hourRegistrationRepository.updateHourRegistration(hr.getId(), hr);
+        return hourRegistrationRepository.updateHourRegistration(hr.getId(), hr);
     }
 }

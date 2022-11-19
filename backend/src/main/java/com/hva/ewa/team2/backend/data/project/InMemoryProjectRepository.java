@@ -47,7 +47,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
     }
 
     @Override
-    public Project findById(long id) {
+    public Project findById(int id) {
         return this.projectList.stream()
                 .filter(project -> project.getId() == id)
                 .findFirst()

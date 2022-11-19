@@ -107,7 +107,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
-        final ProjectParticipant participant = project.getParticipantById(userId);
+        final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a participant of the project with ID " + projectId + ".");
         }
@@ -122,7 +122,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
-        final ProjectParticipant participant = project.getParticipantById(userId);
+        final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a participant of the project with ID " + projectId + ".");
         }
@@ -150,7 +150,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         if (!(userRepo.findById(userId) instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist or is not a specialist.");
         }
-        if (project.getParticipantById(userId) != null) {
+        if (project.getParticipantByUserId(userId) != null) {
             throw new IllegalArgumentException("User " + userId + " is already participating this project.");
         }
 

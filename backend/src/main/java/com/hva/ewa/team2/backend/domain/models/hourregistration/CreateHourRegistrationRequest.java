@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 public class CreateHourRegistrationRequest {
 
     @Getter @Setter
-    private long projectId;
+    private int projectId;
 
     @Getter @Setter
-    private long userId;
+    private int userId;
 
     @Getter @Setter
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
@@ -26,7 +26,7 @@ public class CreateHourRegistrationRequest {
     @Getter @Setter
     private String description;
 
-    public CreateHourRegistrationRequest(long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
+    public CreateHourRegistrationRequest(int projectId, int userId, LocalDateTime from, LocalDateTime to, String description) {
         this.projectId = projectId;
         this.userId = userId;
         this.from = from;
@@ -35,6 +35,6 @@ public class CreateHourRegistrationRequest {
     }
 
     public HourRegistration toDomainModel(int nextId, Project project) {
-        return new HourRegistration(nextId, project, userId, from, to, description);
+        return new HourRegistration(nextId, project.getId(), project.getParticipantByUserId(userId), from, to, description);
     }
 }

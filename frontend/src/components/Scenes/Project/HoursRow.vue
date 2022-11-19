@@ -25,6 +25,8 @@ import HourRegistryStatus from "./HourRegistryStatus.vue";
 export default {
   name: "hoursRow",
   components: {HourRegistryStatus, Participant},
+  inject: ['fetchService'],
+
   props: {
     registry: {
       type: Object,
@@ -38,11 +40,11 @@ export default {
     },
     costs() {
       const time = this.calculateTimeSpent(this.registry)[2];
-      return Math.round(time * this.registry.hourlyRate * 100) / 100;
+      return Math.round(time * this.registry.participant.hourlyRate * 100) / 100;
     },
     formatDate() {
       const today = new Date();
-      const date = new Date(this.registry.startTime);
+      const date = new Date(this.registry.to);
 
       if (date.getDate() === today.getDate() &&
           date.getMonth() === today.getMonth() &&
@@ -61,8 +63,8 @@ export default {
 
   methods: {
     calculateTimeSpent() {
-      let start = new Date(this.registry.startTime);
-      let end = new Date(this.registry.endTime);
+      let start = new Date(this.registry.from);
+      let end = new Date(this.registry.to);
 
       // calculate time difference in hours and minutes
       let diff = end - start;
@@ -75,8 +77,12 @@ export default {
       if (short) return (timeSpent[2]).toFixed(2) + "h";
       return `${timeSpent[0]}h ${timeSpent[1]}m`;
     },
-    updateRegistryStatus(newStatus) {
-      this.registry.status = newStatus;
+    async updateRegistryStatus(accepted) {
+      const endpoint = accepted ? 'accept' : 'reject';
+
+      const response = await this.fetchService.fetchUrl(`/hour-registrations/${this.registry.id}/${endpoint}`, 'POST');
+      console.log(response);
+      this.registry.status = response.status;
     }
   }
 }

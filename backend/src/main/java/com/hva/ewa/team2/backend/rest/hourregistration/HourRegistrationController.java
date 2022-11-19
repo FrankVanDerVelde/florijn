@@ -21,13 +21,13 @@ public class HourRegistrationController {
         this.interactor = interactor;
     }
 
-    @GetMapping(path= "/users/{userId}/hour-registrations/")
+    @GetMapping(path= "/users/{userId}/hour-registrations")
     public ResponseEntity<List<HourRegistration>> getHourRegistrationsByUser(@PathVariable int userId) {
         List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsByUser(userId);
         return ResponseEntity.ok(hourRegistrations);
     }
 
-    @GetMapping(path= "/projects/{projectId}/hour-registrations/")
+    @GetMapping(path= "/projects/{projectId}/hour-registrations")
     public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId) {
         List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProject(projectId);
         return ResponseEntity.ok(hourRegistrations);
@@ -45,9 +45,9 @@ public class HourRegistrationController {
         return hourRegistrations.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping(path= "/users/{userId}/hour-registrations/")
+    @PostMapping(path= "/users/{userId}/hour-registrations")
     public ResponseEntity<HourRegistration> createHourRegistration(
-            @PathVariable long userId,
+            @PathVariable int userId,
             @RequestBody CreateHourRegistrationRequestBody body)
     {
         CreateHourRegistrationRequest request = new CreateHourRegistrationRequest(
