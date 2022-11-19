@@ -1,10 +1,10 @@
 package com.hva.ewa.team2.backend.data.hourregistration;
 
 import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -20,35 +20,25 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     private ArrayList<HourRegistration> hourRegistrations;
 
     private final DateServiceLogic dateService;
+    private final ProjectRepository projectRepository;
 
     private Project testProject;
-    private Client testClient;
 
     @Autowired
-    public InMemoryHourRegistrationRepository(DateServiceLogic dateService) {
+    public InMemoryHourRegistrationRepository(DateServiceLogic dateService, ProjectRepository projectRepository) {
         this.dateService = dateService;
+        this.projectRepository = projectRepository;
         this.hourRegistrations = new ArrayList<>();
         setup();
     }
 
     private void setup() {
-        setupTestClient();
         setupTestProject();
         setupHourRegistrations();
     }
 
-    private void setupTestClient() {
-        this.testClient = new Client(
-                0,
-                "test_client@florijn.nl",
-                "password",
-                "",
-                "Test"
-        );
-    }
-
     private void setupTestProject() {
-        testProject = new Project(0, "test", "a", testClient);
+        testProject = projectRepository.findById(1);
     }
 
     private void setupHourRegistrations() {
@@ -132,21 +122,21 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     @Override // Adding to an array will never crash, but the interface needs it
-    public HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) throws Exception {
+    public HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) {
         HourRegistration newHR = request.toDomainModel(nextId(), project);
         hourRegistrations.add(newHR);
         return newHR;
     }
 
     @Override
-    public HourRegistration updateHourRegistration(int id, HourRegistration hourRegistration) throws Exception {
+    public HourRegistration updateHourRegistration(int id, HourRegistration hourRegistration) {
         hourRegistrations.removeIf(h -> h.getId() == id);
         hourRegistrations.add(hourRegistration);
         return hourRegistration;
     }
 
     @Override
-    public Optional<HourRegistration> deleteHourRegistration(int id) throws Exception {
+    public Optional<HourRegistration> deleteHourRegistration(int id) {
         Optional<HourRegistration> hrToDelete = fetchHourRegistrationById(id);
         if (hrToDelete.isPresent()) {
             hourRegistrations.removeIf(h -> h.getId() == id);
