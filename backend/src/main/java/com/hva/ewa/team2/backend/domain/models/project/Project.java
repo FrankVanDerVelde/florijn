@@ -18,17 +18,24 @@ public class Project {
     @Getter @Setter
     private Client client;
     @Getter @Setter
+    private String logoSrc;
+    @Getter @Setter
     private List<ProjectParticipant> participants;
 
     public Project(int id, String title, String description, Client client) {
-        this(id, title, description, client, new ArrayList<>());
+        this(id, title, description, client, "/src/assets/logo-small.png", new ArrayList<>());
     }
 
-    public Project(int id, String title, String description, Client client, List<ProjectParticipant> specialists) {
+    public Project(int id, String title, String description, Client client, String logoSrc) {
+        this(id, title, description, client, logoSrc, new ArrayList<>());
+    }
+
+    public Project(int id, String title, String description, Client client, String logoSrc, List<ProjectParticipant> specialists) {
         this.id = id;
         this.title = title;
         this.client = client;
         this.description = description;
+        this.logoSrc = logoSrc;
         this.participants = specialists;
     }
 
