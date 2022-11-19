@@ -2,9 +2,13 @@ package com.hva.ewa.team2.backend.domain.usecases.hourregistration;
 
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -18,14 +22,17 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     private final HourRegistrationRepository hourRegistrationRepository;
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public HourRegistrationInteractor(
             HourRegistrationRepository hourRegistrationRepository,
-            ProjectRepository projectRepository
+            ProjectRepository projectRepository,
+            UserRepository userRepository
     ) {
         this.hourRegistrationRepository = hourRegistrationRepository;
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
     public List<HourRegistration> handleFetchHourRegistrationsByUser(int userId) {
@@ -35,6 +42,19 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
     @Override
     public List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId) {
         return hourRegistrationRepository.fetchAllHourRegistrationByProject(projectId);
+    }
+
+    @Override
+    public List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId) {
+        final User user = userRepository.findById(userId);
+        if (user instanceof Specialist specialist) {
+            return hourRegistrationRepository.fetchAllHourRegistrationByProjectUser(projectId, userId);
+        }
+
+        // todo check if user is admin
+        // todo check if user is client and member of the project.
+
+        return handleFetchHourRegistrationsForProject(projectId);
     }
 
     @Override

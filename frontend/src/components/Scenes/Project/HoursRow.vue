@@ -26,6 +26,7 @@ export default {
   name: "hoursRow",
   components: {HourRegistryStatus, Participant},
   inject: ['fetchService'],
+  emits: ['updateStatus'],
 
   props: {
     registry: {
@@ -81,8 +82,9 @@ export default {
       const endpoint = accepted ? 'accept' : 'reject';
 
       const response = await this.fetchService.fetchUrl(`/hour-registrations/${this.registry.id}/${endpoint}`, 'POST');
-      console.log(response);
       this.registry.status = response.status;
+
+      this.$emit('updateStatus', this.registry);
     }
   }
 }

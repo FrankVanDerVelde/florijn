@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class HourRegistration {
@@ -74,4 +75,9 @@ public class HourRegistration {
             return false;
         }
     }
+
+    public double getHoursSpent() {
+        return ChronoUnit.MINUTES.between(from, to) / 60d;
+    }
+
 }

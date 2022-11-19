@@ -1,13 +1,10 @@
 <template>
-  <ProjectParticipantList :edit-button="true" :participants="project.participants" :client="project.client"/>
+  <ProjectParticipantList :edit-button="userId >= 2" :participants="project.participants" :client="project.client"/>
 
   <section class="pt-[48px]">
     <h2 class="header-2">Uren</h2>
     <div class="grid grid-cols-12 gap-4">
-      <SummaryBlock label="Totaal gemaakte uren" :value="totalHours"/>
-      <SummaryBlock label="Gemaakte uren deze maand" :value="hoursThisMonth"/>
-      <SummaryBlock label="Gemaakte uren deze week" :value="hoursThisWeek"/>
-      <SummaryBlock label="Ontwikkelkosten" :value="totalCosts"/>
+      <SummaryBlock v-for="report in reports" :label="report.title" :value="report.value" :key="report.title"/>
     </div>
 
     <div class="overflow-x-auto mb-6">
@@ -22,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        <HoursRow v-for="registry in hourRegistry" :key="registry.id" :registry="registry"/>
+        <HoursRow v-for="registry in hourRegistry" :key="registry.id" :registry="registry" @updateStatus="fetchReports"/>
         </tbody>
       </table>
     </div>
@@ -40,35 +37,41 @@ export default {
   inject: ['fetchService'],
 
   async created() {
-    this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations`);
-    console.log(this.hourRegistry);
+    await Promise.all([this.fetchReports(), this.fetchHourRegistry()]);
   },
 
   props: {
     project: {
       type: Object,
       required: true
+    },
+  },
+
+  watch: {
+    '$route.query.userId': async function () {
+      await Promise.all([this.fetchReports(), this.fetchHourRegistry()]);
     }
   },
 
   computed: {
-    totalHours() {
-      return 24.5;
-    },
-    hoursThisMonth() {
-      return 16.75;
-    },
-    hoursThisWeek() {
-      return 8.25;
-    },
-    totalCosts() {
-      return "€" + 2058.80;
+    userId() {
+      return Number.parseInt(this.$route.query.userId ?? 2) // admin = 2, user = 1
     }
   },
 
   data() {
     return {
-      hourRegistry: []
+      hourRegistry: [],
+      reports: []
+    }
+  },
+
+  methods: {
+    async fetchReports() {
+      this.reports = await this.fetchService.fetchJsonPost(`/projects/${this.project.id}/reports`, {userId: this.userId});
+    },
+    async fetchHourRegistry() {
+      this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);
     }
   }
 }

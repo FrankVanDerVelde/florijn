@@ -1,9 +1,14 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -12,18 +17,28 @@ import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic{
 
     private final UserRepository userRepo;
     private final ProjectRepository projectRepo;
+    private final HourRegistrationRepository hourRegistrationRepo;
+    private final DateServiceLogic dateService;
 
     @Autowired
-    public ProjectInteractor(ProjectRepository projectRepository, UserRepository userRepo) {
+    public ProjectInteractor(ProjectRepository projectRepository,
+                             UserRepository userRepo,
+                             HourRegistrationRepository hourRegistrationRepo,
+                             DateServiceLogic dateService) {
         this.projectRepo = projectRepository;
         this.userRepo = userRepo;
+        this.hourRegistrationRepo = hourRegistrationRepo;
+        this.dateService = dateService;
     }
 
     @Override
@@ -157,6 +172,108 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         final ProjectParticipant created = new ProjectParticipant(specialist, role, hourlyRate);
         project.addSpecialist(created);
         return created;
+    }
+
+    @Override
+    public List<ProjectReport> getProjectReports(int projectId, JsonNode body) {
+        final Project project = projectRepo.findById(projectId);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
+        }
+
+        if (!body.has("userId")) {
+            throw new IllegalArgumentException("No user id was provided.");
+        }
+
+        final int userId = body.get("userId").asInt(-1);
+        final User user = userRepo.findById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
+        }
+
+        List<ProjectReport> reports = new ArrayList<>();
+
+        if (user instanceof Specialist specialist) {
+            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProjectUser(projectId, userId);
+
+            reports.add(new ProjectReport(
+                    "Totaal gemaakte uren",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze maand",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze week",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Verdiensten",
+                    String.format("€%,.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
+                            .sum()
+                    ).replace(".", ",")
+            ));
+        }
+        else {
+            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProject(projectId);
+
+            reports.add(new ProjectReport(
+                    "Totaal gemaakte uren",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze maand",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze week",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Ontwikkelkosten",
+                    String.format("€%,.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
+                            .sum()
+                    ).replace(".", ",")
+            ));
+        }
+
+        return reports;
     }
 
     @Override

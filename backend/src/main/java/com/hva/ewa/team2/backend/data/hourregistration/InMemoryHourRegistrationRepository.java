@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,24 +53,26 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         0,
                         testProject.getId(),
                         developer,
-                        dateService.currentDay(-3, 10, 0),
-                        dateService.currentDay(-3, 12, 0),
-                        "Gewerkt aan het project"
+                        dateService.currentDay(-42, 10, 0),
+                        dateService.currentDay(-42, 12, 0),
+                        "Gewerkt aan het project",
+                        HourRegistration.Status.ACCEPTED
                 ),
                 new HourRegistration(
                         1,
                         testProject.getId(),
                         designer,
-                        dateService.currentDay(-2, 8, 30),
-                        dateService.currentDay(-2, 12, 0),
-                        "Gewerkt aan het project"
+                        dateService.currentDay(-39, 8, 30),
+                        dateService.currentDay(-39, 12, 0),
+                        "Gewerkt aan het project",
+                        HourRegistration.Status.REJECTED
                 ),
                 new HourRegistration(
                         2,
                         testProject.getId(),
                         developer,
-                        dateService.currentDay(-1, 12, 15),
-                        dateService.currentDay(-1, 16, 0),
+                        dateService.currentDay(-36, 12, 15),
+                        dateService.currentDay(-36, 16, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.ACCEPTED
                 ),
@@ -79,8 +82,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         developer,
                         dateService.currentDay(8, 30),
                         dateService.currentDay(12, 0),
-                        "Gewerkt aan het project",
-                        HourRegistration.Status.REJECTED
+                        "Gewerkt aan het project"
                 ),
                 new HourRegistration(
                         4,
@@ -88,8 +90,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         designer,
                         dateService.currentDay(13, 0),
                         dateService.currentDay(17, 30),
-                        "Gewerkt aan het project",
-                        HourRegistration.Status.ACCEPTED
+                        "Gewerkt aan het project"
                 )
             )
         );
@@ -104,6 +105,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     public List<HourRegistration> fetchAllHourRegistrationsByUser(int userId) {
         return hourRegistrations.stream()
                 .filter(h -> h.getProjectParticipant().getSpecialist().getId() == userId)
+                .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }
 
@@ -118,6 +120,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     public List<HourRegistration> fetchAllHourRegistrationByProject(int projectId) {
         return hourRegistrations.stream()
                 .filter(h -> h.getProjectId() == projectId)
+                .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }
 
@@ -126,6 +129,16 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
         return hourRegistrations.stream()
                 .filter(h -> h.getProjectId() == projectId)
                 .filter(HourRegistration::isAccepted)
+                .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
+                .toList();
+    }
+
+    @Override
+    public List<HourRegistration> fetchAllHourRegistrationByProjectUser(int projectId, int userId) {
+        return hourRegistrations.stream()
+                .filter(h -> h.getProjectId() == projectId && h.getProjectParticipant().getSpecialist().getId() == userId)
+                .filter(HourRegistration::isAccepted)
+                .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }
 
