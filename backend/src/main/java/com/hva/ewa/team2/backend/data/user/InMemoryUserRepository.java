@@ -18,25 +18,26 @@ import java.util.concurrent.ThreadLocalRandom;
 @Component
 public class InMemoryUserRepository implements UserRepository {
 
-    private ArrayList<User> users = new ArrayList<>();
-
+    private final ArrayList<User> users = new ArrayList<>();
 
     private SkillRepository skillRepo;
 
     @Autowired
     public InMemoryUserRepository(SkillRepository skillRepo) {
         this.skillRepo = skillRepo;
-        this.users.add(new Admin(0, "admin@test.com", "test", null, "Admin", "Test"));
-        this.users.add(new Client(2, "client@test.com", "test", null, "Client", "Test"));
 
-        Specialist specialist = (new Specialist(1, "specialist@test.com", "test", null, "Specialist", "Test"));
-        Specialist specialist2 = (new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
+        this.users.add(new Specialist(0, "withneyk@florijn.com", "test", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"));
+        this.users.add(new Specialist(1, "jant@florijn.com", "test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans"));
+
+        this.users.add(new Admin(2, "admin@test.com", "test", null, "Admin", "Test"));
+        this.users.add(new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
+        this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
+
+        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", null, "Specialist", "Test"));
+        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", null, "Specialist", "Test"));
 
         setSkills(specialist);
         setSkills(specialist2);
-
-
-
     }
 
     public void setSkills(Specialist specialist) {

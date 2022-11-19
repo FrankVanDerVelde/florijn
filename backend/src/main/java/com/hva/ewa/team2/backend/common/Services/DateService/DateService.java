@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.Calendar;
+import java.util.Locale;
 
 @Component
 public class DateService implements DateServiceLogic {
@@ -14,16 +18,28 @@ public class DateService implements DateServiceLogic {
 
         if (dayOffset == 0) {
             return currentDay(hour, minute);
-        } else if (dayOffset > 0) {
-            return LocalDateTime.now().plusDays(dayOffset).with(time);
-        } else {
-            return LocalDateTime.now().minusDays(dayOffset).with(time);
         }
+        return LocalDateTime.now().plusDays(dayOffset).with(time);
     }
 
     @Override
     public LocalDateTime currentDay(int hour, int minute) {
         LocalTime time = LocalTime.of(hour, minute);
         return LocalDateTime.now().with(time);
+    }
+
+    @Override
+    public boolean isThisMonth(LocalDateTime date) {
+        LocalDateTime now = LocalDateTime.now();
+
+        return date.getMonth() == now.getMonth() && date.getYear() == now.getYear();
+    }
+
+    @Override
+    public boolean isThisWeek(LocalDateTime date) {
+        LocalDateTime now = LocalDateTime.now();
+        final TemporalField weekField = WeekFields.of(Locale.GERMANY).weekOfWeekBasedYear();
+
+        return date.get(weekField) == now.get(weekField) && date.getYear() == now.getYear();
     }
 }
