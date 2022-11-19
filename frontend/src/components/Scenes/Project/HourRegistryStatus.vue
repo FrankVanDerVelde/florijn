@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!editing" class="flex items-center hover:cursor-pointer" :class="status.toLowerCase()" @click="edit">
+  <div v-if="!editing" class="flex items-center" :class="[statusTypeLowerCase, canEdit ? 'hover:cursor-pointer' : '']" @click="edit">
     <div class="circle"></div>
     <div>{{ this.statusText }}</div>
   </div>
@@ -25,17 +25,24 @@ export default {
   name: "hourRegistryStatus",
 
   computed: {
+    statusType() {
+      return this.status == null ? "AWAITING" : this.status;
+    },
+    statusTypeLowerCase() {
+      return this.statusType.toLowerCase();
+    },
     statusText() {
-      switch (this.status) {
-        case "AWAITING":
-          return "In afwachting";
-        case "DECLINED":
+      switch (this.statusType) {
+        case "REJECTED":
           return "Afgewezen";
-        case "APPROVED":
+        case "ACCEPTED":
           return "Goedgekeurd";
         default:
-          return "Onbekend";
+          return "In afwachting";
       }
+    },
+    canEdit() {
+      return this.status == null;
     }
   },
 
@@ -47,17 +54,19 @@ export default {
 
   props: {
     status: {
-      type: String,
+      type: [String, null],
       required: true,
     },
   },
 
   methods: {
     edit() {
-      this.editing = true;
+      if (this.canEdit) {
+        this.editing = true;
+      }
     },
     submitChange(approved) {
-      this.$emit('updateRegistryStatus', approved ? 'APPROVED' : 'DECLINED');
+      this.$emit('updateRegistryStatus', approved);
       this.editing = false;
     }
   }
@@ -77,11 +86,11 @@ export default {
   background-color: var(--app_yellow-500);
 }
 
-.declined .circle {
+.rejected .circle {
   background-color: var(--app_red-500);
 }
 
-.approved .circle {
+.accepted .circle {
   background-color: var(--app_green-500);
 }
 
@@ -89,11 +98,11 @@ export default {
   color: var(--app_yellow-400)
 }
 
-.declined {
+.rejected {
   color: var(--app_red-400)
 }
 
-.approved {
+.accepted {
   color: var(--app_green-400)
 }
 

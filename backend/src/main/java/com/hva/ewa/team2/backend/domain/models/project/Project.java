@@ -39,9 +39,9 @@ public class Project {
         this.participants = specialists;
     }
 
-    public ProjectParticipant getParticipantById(int id) {
+    public ProjectParticipant getParticipantByUserId(int userId) {
         return participants.stream()
-                .filter(p -> p.getSpecialist().getId() == id)
+                .filter(p -> p.getSpecialist().getId() == userId)
                 .findFirst()
                 .orElse(null);
     }

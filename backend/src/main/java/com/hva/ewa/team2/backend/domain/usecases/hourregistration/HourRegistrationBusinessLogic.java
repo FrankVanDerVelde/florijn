@@ -10,6 +10,7 @@ public interface HourRegistrationBusinessLogic {
 
     List<HourRegistration> handleFetchHourRegistrationsByUser(int userId);
     List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId);
+    List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId);
     Optional<HourRegistration> handleFetchHourRegistrationById(int id);
     Optional<HourRegistration> handleDeleteHourRegistrationById(int id);
 

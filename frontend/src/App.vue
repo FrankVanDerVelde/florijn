@@ -18,6 +18,7 @@ export default {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),
       projectFetchService: new FetchService("projects"),
+      fetchService: new FetchService(""),
       userService: new UserAdaptor()
     }
   },

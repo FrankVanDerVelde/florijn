@@ -11,12 +11,15 @@ import java.util.ArrayList;
 @Component
 public class InMemoryUserRepository implements UserRepository {
 
-    private ArrayList<User> users = new ArrayList<>();
+    private final ArrayList<User> users = new ArrayList<>();
 
     public InMemoryUserRepository() {
-        this.users.add(new Admin(0, "admin@test.com", "test", null, "Admin", "Test"));
-        this.users.add(new Specialist(1, "specialist@test.com", "test", null, "Specialist", "Test"));
-        this.users.add(new Client(2, "client@test.com", "test", null, "Client", "Test"));
+        this.users.add(new Specialist(0, "withneyk@florijn.com", "test", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"));
+        this.users.add(new Specialist(1, "jant@florijn.com", "test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans"));
+
+        this.users.add(new Admin(2, "admin@test.com", "test", null, "Admin", "Test"));
+        this.users.add(new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
+        this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
     }
 
     @Override
@@ -24,6 +27,15 @@ public class InMemoryUserRepository implements UserRepository {
         return this.users.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .filter(user -> user.getPassword().equals(password))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public User findById(int id) {
+        return this.users.stream()
+                .filter(user -> user.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 }
