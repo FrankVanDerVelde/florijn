@@ -19,5 +19,4 @@ public class Client extends User {
         this.name = name;
         this.bannerSrc = bannerURL;
     }
-
 }
