@@ -1,32 +1,70 @@
 package com.hva.ewa.team2.backend.data.skill;
 
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class InMemorySkillRepository implements SkillRepository {
 
-    private ArrayList<Skill> skills = new ArrayList<>();
-
-    public InMemorySkillRepository() {
-        List<String> list = Arrays.asList(new String[]{"Javascript", "PHP", "HTML", "CSS", "React", "VueJS", "Node", "Git", "Python", "C++", "c#", "Lua", "Swift", "Angular", "Wordpress"});
-
-        for (String element : list) {
-            this.skills.add(new Skill(0, element, "Your ability to use " + element, 5));
-        }
+    public static void main(String[] args) {
+        new InMemorySkillRepository();
     }
 
+    private ArrayList<Skill> skills = new ArrayList<>();
+
+    private ArrayList<SkillGroup> skillGroups = new ArrayList<>();
+
+    public InMemorySkillRepository() {
+        String[] skillNames = new String[]{"HTML", "CSS", "Javascript", "PHP", "Node", "Python", "Swift", "C++", "c#", "React", "VueJS", "Angular", "Wordpress", "Lua","Git"};
+        String[] groupNames = new String[]{"Front-End", "Back-End", "Frameworks", "Other"};
+        Integer[] skillPositions = {3, 6, 4, 2};
+
+        for (int i = 0; i < skillNames.length; i++) {
+            this.skills.add(new Skill(i, skillNames[i], "Your ability to use " + skillNames[i]));
+        }
+
+        int lastPosition = 0;
+        for (int i = 0; i < groupNames.length; i++) {
+            SkillGroup tempSkillGroup = new SkillGroup(i, groupNames[i], "This is the group for  " + groupNames[i]);
+
+            for (int i2 = lastPosition; i2 < skillPositions[i]; i2++) {
+                tempSkillGroup.add(skills.get(lastPosition));
+                lastPosition++;
+            }
+
+            this.skillGroups.add(tempSkillGroup);
+
+        }
+
+        System.out.println(skillGroups);
+    }
+
+
+
     @Override
-    public ArrayList<Skill> findAll() {
+    public ArrayList<Skill> findAllSkills() {
         return this.skills;
     }
 
     @Override
-    public Skill findById(int id) {
+    public Skill findSkillById(int id) {
         return this.skills.stream().filter(skill -> skill.getId() == id)
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public ArrayList<SkillGroup> findAllSkillGroups() {
+        return skillGroups;
+    }
+
+    @Override
+    public SkillGroup findGroupById(int id) {
+        return this.skillGroups.stream().filter(group -> group.getId() == id)
                 .findFirst().orElse(null);
     }
 }

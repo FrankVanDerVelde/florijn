@@ -11,16 +11,25 @@ public class Skill {
 
     private String description;
 
-    private int rating_out_of_five;
+//    private SkillGroup group;
 
     public int getId() {
         return id;
     }
 
-    public Skill(int id, String name, String description, int rating_out_of_five) {
+    public Skill(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.rating_out_of_five = rating_out_of_five;
+//        this.group = group;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }
