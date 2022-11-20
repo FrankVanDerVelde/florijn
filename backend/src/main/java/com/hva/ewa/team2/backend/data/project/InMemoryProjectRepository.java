@@ -27,8 +27,15 @@ public class InMemoryProjectRepository implements ProjectRepository {
         ING.addSpecialist(new ProjectParticipant(specialist.get(0), "Lead Developer", 60));
         ING.addSpecialist(new ProjectParticipant(specialist.get(1), "Designer", 40));
 
+        Project KPN = new Project(2,
+                "KPN Network Web Application",
+                "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+                client);
+
+        KPN.addSpecialist(new ProjectParticipant(specialist.get(0), "Product Owner", 90));
+
         // TODO: Add more projects.
-        this.projectList = new ArrayList<>(List.of(ING));
+        this.projectList = new ArrayList<>(List.of(ING, KPN));
     }
 
     @Override

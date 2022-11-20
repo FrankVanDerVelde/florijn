@@ -2,7 +2,7 @@
   <div class="container main-container rounded-xl">
     <router-link :to="{name: 'project-overview', params: {projectId: project.id}}" class="flex mt-4 p-2 w-full justify-center">
 
-      <img v-bind:src="project.logoSrc" alt="project logo" class="icon-container">
+      <img :src="project.logoSrc" alt="project logo" class="icon-container">
 
       <div class="flex flex-col justify-between container ml-4">
         <div class="flex flex-col mb-3">
@@ -12,7 +12,7 @@
 
         <div class="container flex justify-between m-1">
 
-          <stat :dot="false" icon="users" class="bottom-0">{{ project.participants }}</stat>
+          <stat :dot="false" icon="users" class="bottom-0">{{ project.participants.length }}</stat>
 
           <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
             Project
@@ -21,7 +21,6 @@
       </div>
 
     </router-link>
-
   </div>
 
 </template>
@@ -37,9 +36,14 @@ export default {
   props: {
     project: {
       type: Object,
-      required: true
+      required: true,
     }
-  }
+  },
+
+ created() {
+    this.project.logoSrc = "/src/assets/ING-Bankieren-icoon.webp";
+
+ }
 }
 </script>
 

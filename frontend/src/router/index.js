@@ -115,10 +115,12 @@ const routes = [
         name: "project-overview",
         component: ProjectOverview,
         props: true,
-        children: [{
-            path: "participants",
-            component: AddParticipants
-        }]
+    },
+    {
+        path: "/projects/:projectId(\\d+)/participants",
+        name: "project-participants",
+        component: AddParticipants,
+        props: true
     }
 ];
 
