@@ -44,29 +44,9 @@
         <div @click="handleAddActivityClicked" class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
 
         <div class="flex w-full flex-col gap-4 justify-center">
+          <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0" />
           <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-            <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full">
-              <div class="py-[13px] px-[12px] flex justify-between">
-                <div class="flex flex-col">
-                  <p class="font-medium text-neutral-800">{{ hourRegistration.project.name }}</p>
-                  <div class="flex items-center gap-2 text-neutral-800">
-                    <font-awesome-icon icon="clock"/>
-                    <p>{{ hourRegistration.formattedFromToTime() }}</p>
-                  </div>
-                </div>
-               <div class="flex">
-                 <div class="w-[26px] h-[26px]" @click="handleDeleteHourRegistrationClicked(hourRegistration.id)">
-                    <font-awesome-icon class="text-app_red-500 text-xl" icon="fa-solid fa-trash-can"/>
-                 </div>
-
-               </div>
-
-              </div>
-            </div>
-          </div>
-          <div v-if="filteredHourRegistrations.length === 0" class="flex flex-col justify-center items-center border-dashed border-2 border-neutral-200 p-5 rounded-2xl">
-            <p class="font-semibold text-neutral-900">Geen activiteit op deze dag</p>
-            <p class="text-neutral-600">Klik op "Toevoegen" om een nieuwe activiteit toe te voegen.</p>
+            <HourRegistrationRow :hour-registration="hourRegistration" @hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
           </div>
         </div>
       </div>
@@ -78,9 +58,11 @@
 <script>
 import PrimaryButton from "../../Common/PrimaryButton.vue";
 import CalendarDayOption from "./elements/CalendarDayOption.vue";
+import HourRegistrationRow from "./elements/HourRegistrationRow.vue";
+import EmptyHourRegistrationRow from "./elements/EmptyHourRegistrationRow.vue";
 export default {
   name: "HourRegistrationOverview",
-  components: {PrimaryButton, CalendarDayOption},
+  components: { PrimaryButton, CalendarDayOption, HourRegistrationRow, EmptyHourRegistrationRow },
   inject: ['hourRegistrationRepository', 'dateService'],
   data() {
     return {
