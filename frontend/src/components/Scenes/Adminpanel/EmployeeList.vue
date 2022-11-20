@@ -1,19 +1,18 @@
 <template>
   <div class="page-main-mw">
-    <div class="flex flex-row md:flex-row p-4 ">
-      <div class="side-bar w-[121px] flex-col justify-between">
-        <side-bar-nav :side-bar-items="sideBarLinks"></side-bar-nav>
-      </div>
-      <div class="profile-container flex flex-row w-4/5">
-        <button id="addbutton"
-                class="bg-primary-500 font-bold border-[1px] h-[38px] md:w-auto rounded-md text-neutral-0">+ Werknemer
-          toevoegen
-        </button>
+    <div class="p-4 ">
+      <div class="profile-container flex-col">
+        <div class="buttoncontainer">
+          <router-link to="/adminpanel/add-employee">
+            <button id="addbutton" class="bg-primary-500 font-bold border-[1px] h-[38px] rounded-md text-neutral-0" @click="navigate" role="link">+ Werknemer toevoegen</button>
+          </router-link>
+        </div>
         <div class="container grow">
-          <employee-list-details v-for="employee in employees" :key="employee.id"
+          <employee-list-details v-for="employee in employee" :key="employee.id"
                                  :employee="employee"></employee-list-details>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -22,14 +21,12 @@
 
 <script>
 
-import SideBarNav from "../../Common/SideBarNav.vue";
 import EmployeeListDetails from "./EmployeeListDetails.vue";
 
 export default {
   name: "EmployeeList",
   components: {
     EmployeeListDetails,
-    SideBarNav,
   },
 
   data() {
@@ -44,7 +41,7 @@ export default {
           name: 'Werknemers',
           href: 'employee-list',
         }],
-      employee: [
+      employees: [
         {
           id: 0,
           name: "Yuri S.",
@@ -85,19 +82,18 @@ export default {
 
 <style scoped>
 
-.side-bar {
-  margin-top: 50px;
-  margin-right: 80px;
+
+
+.buttoncontainer{
+  display: flex;
+  justify-content: flex-end;
 }
 
-.container {
-  margin-left: 20px;
-  margin-top: 24px;
+#addbutton{
+  width: 190px;
 }
 
-.profile-container {
-  justify-content: flex-start;
-}
+
 
 
 </style>

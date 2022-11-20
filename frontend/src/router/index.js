@@ -10,7 +10,8 @@ import LogIn from "../components/Scenes/Authentication/LogIn.vue";
 import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.vue";
 import ProjectList from "../components/Scenes/Project/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
-import AdminPanel from "../components/Scenes/Adminpanel/CustomerList.vue";
+import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
+import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import {info} from "autoprefixer";
@@ -91,10 +92,10 @@ const routes = [
         name: "adminpanel",
         component: AdminPanel,
         children: [
-            {
-                path: "/adminpanel",
-                redirect: "/adminpanel/customer-list",
-            },
+            // {
+            //     path: "/adminpanel",
+            //     redirect: "/adminpanel/customer-list",
+            // },
             {
                 path: "customer-list",
                 component: CustomerList,
@@ -102,6 +103,10 @@ const routes = [
             {
                 path: "employee-list",
                 component: EmployeeList,
+            },
+            {
+                path: "add-client",
+                component: AddClient,
             }
         ]
     },
