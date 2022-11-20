@@ -1,8 +1,14 @@
 package com.hva.ewa.team2.backend.domain.usecases.hourregistration;
 
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
+import com.hva.ewa.team2.backend.data.project.ProjectRepository;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -15,28 +21,49 @@ import java.util.Optional;
 public class HourRegistrationInteractor implements HourRegistrationBusinessLogic {
 
     private final HourRegistrationRepository hourRegistrationRepository;
+    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public HourRegistrationInteractor(HourRegistrationRepository hourRegistrationRepository) {
+    public HourRegistrationInteractor(
+            HourRegistrationRepository hourRegistrationRepository,
+            ProjectRepository projectRepository,
+            UserRepository userRepository
+    ) {
         this.hourRegistrationRepository = hourRegistrationRepository;
+        this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
     }
 
-    public List<HourRegistration> handleFetchHourRegistrationsByUser(long userId) {
+    public List<HourRegistration> handleFetchHourRegistrationsByUser(int userId) {
         return hourRegistrationRepository.fetchAllHourRegistrationsByUser(userId);
     }
 
     @Override
-    public List<HourRegistration> handleFetchHourRegistrationsForProject(long projectId) {
+    public List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId) {
         return hourRegistrationRepository.fetchAllHourRegistrationByProject(projectId);
     }
 
     @Override
-    public Optional<HourRegistration> handleFetchHourRegistrationById(long id) {
+    public List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId) {
+        final User user = userRepository.findById(userId);
+        if (user instanceof Specialist specialist) {
+            return hourRegistrationRepository.fetchAllHourRegistrationByProjectUser(projectId, userId);
+        }
+
+        // todo check if user is admin
+        // todo check if user is client and member of the project.
+
+        return handleFetchHourRegistrationsForProject(projectId);
+    }
+
+    @Override
+    public Optional<HourRegistration> handleFetchHourRegistrationById(int id) {
         return hourRegistrationRepository.fetchHourRegistrationById(id);
     }
 
     @Override
-    public Optional<HourRegistration> handleDeleteHourRegistrationById(long id) {
+    public Optional<HourRegistration> handleDeleteHourRegistrationById(int id) {
         try {
             return hourRegistrationRepository.deleteHourRegistration(id);
         } catch (Exception e) {
@@ -46,21 +73,24 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     @Override
     public HourRegistration handleCreateHourRegistration(CreateHourRegistrationRequest request) throws Exception {
-        return hourRegistrationRepository.createHourRegistration(request);
+        Optional<Project> project = Optional.ofNullable(projectRepository.findById(request.getProjectId()));
+        if (project.isEmpty())
+            throw new Exception("Project not found for id: " + request.getProjectId());
+        return hourRegistrationRepository.createHourRegistration(request, project.get());
     }
 
     @Override
-    public HourRegistration handleUpdateHourRegistration(long id, HourRegistration hourRegistration) throws Exception {
+    public HourRegistration handleUpdateHourRegistration(int id, HourRegistration hourRegistration) throws Exception {
         return hourRegistrationRepository.updateHourRegistration(id, hourRegistration);
     }
 
     @Override
-    public Optional<HourRegistration> handleAcceptHourRegistration(long id) {
+    public Optional<HourRegistration> handleAcceptHourRegistration(int id) {
         // TODO: Check user permission, only admins or clients can accept.
         Optional<HourRegistration> hr = hourRegistrationRepository.fetchHourRegistrationById(id);
         if (hr.isPresent()) {
             try {
-                updateStatusForHourRegistration(hr.get(), true);
+                return Optional.of(updateStatusForHourRegistration(hr.get(), true));
             } catch (Exception e) {
                 return Optional.empty();
             }
@@ -70,12 +100,12 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
     }
 
     @Override
-    public Optional<HourRegistration> handleRejectHourRegistration(long id) {
+    public Optional<HourRegistration> handleRejectHourRegistration(int id) {
         // TODO: Check user permission, only admins or clients can reject.
         Optional<HourRegistration> hr = hourRegistrationRepository.fetchHourRegistrationById(id);
         if (hr.isPresent()) {
             try {
-                updateStatusForHourRegistration(hr.get(), false);
+                return Optional.of(updateStatusForHourRegistration(hr.get(), false));
             } catch (Exception e) {
                 return Optional.empty();
             }
@@ -84,8 +114,8 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
         return Optional.empty();
     }
 
-    private void updateStatusForHourRegistration(HourRegistration hr, boolean isAccepted) throws Exception {
+    private HourRegistration updateStatusForHourRegistration(HourRegistration hr, boolean isAccepted) throws Exception {
         hr.setStatus(isAccepted ? HourRegistration.Status.ACCEPTED : HourRegistration.Status.REJECTED);
-        hourRegistrationRepository.updateHourRegistration(hr.getId(), hr);
+        return hourRegistrationRepository.updateHourRegistration(hr.getId(), hr);
     }
 }

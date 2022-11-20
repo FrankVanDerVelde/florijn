@@ -1,28 +1,44 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
-import com.hva.ewa.team2.backend.data.specialist.SpecialistRepository;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic{
 
-    private final SpecialistRepository specialistRepo;
+    private final UserRepository userRepo;
     private final ProjectRepository projectRepo;
+    private final HourRegistrationRepository hourRegistrationRepo;
+    private final DateServiceLogic dateService;
 
     @Autowired
-    public ProjectInteractor(ProjectRepository projectRepository, SpecialistRepository specialistRepository) {
+    public ProjectInteractor(ProjectRepository projectRepository,
+                             UserRepository userRepo,
+                             HourRegistrationRepository hourRegistrationRepo,
+                             DateServiceLogic dateService) {
         this.projectRepo = projectRepository;
-        this.specialistRepo = specialistRepository;
+        this.userRepo = userRepo;
+        this.hourRegistrationRepo = hourRegistrationRepo;
+        this.dateService = dateService;
     }
 
     @Override
@@ -33,13 +49,10 @@ public class ProjectInteractor implements ProjectBusinessLogic{
 
         validateProjectInformation(title, clientId, description);
 
-        // TODO: fetch from client/user repo.
-        // TODO: check if the client exists.
-
         // creating temp project to update.
         Project project = new Project(
                 projectRepo.findAll().size() + 1, title, description,
-                new Client(clientId, "test-" + clientId + "@web.com", "test", "/src/assets/avatars/avatar3.avif", "Client " + clientId)
+                (Client) userRepo.findById(clientId)
         );
 
         return projectRepo.addProject(project);
@@ -47,10 +60,6 @@ public class ProjectInteractor implements ProjectBusinessLogic{
 
     @Override
     public Project getProjectInformation(int id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("The project ID cannot be negative.");
-        }
-
         final Project project = projectRepo.findById(id);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
@@ -86,13 +95,11 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         if (projectRepo.findById(pId) == null) {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
-        // TODO: fetch from client/user repo.
-        // TODO: check if the client exists.
 
         // creating temp project to update.
         Project project = new Project(
                 pId, title, description,
-                new Client(client, "test-" + client + "@web.com", "test", "/src/assets/avatars/avatar3.avif", "Client " + client)
+                (Client) userRepo.findById(client)
         );
 
         return projectRepo.updateProject(project);
@@ -115,7 +122,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
-        final ProjectParticipant participant = project.getParticipantById(userId);
+        final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a participant of the project with ID " + projectId + ".");
         }
@@ -130,7 +137,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
-        final ProjectParticipant participant = project.getParticipantById(userId);
+        final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a participant of the project with ID " + projectId + ".");
         }
@@ -145,10 +152,6 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
-        final int userId = body.getUserId();
-        if (userId < 0) {
-            throw new IllegalArgumentException("The provided user ID is invalid.");
-        }
         final String role = body.getRole();
         if (role.isBlank()) {
             throw new IllegalArgumentException("The provided role is invalid (not provided/empty).");
@@ -158,18 +161,119 @@ public class ProjectInteractor implements ProjectBusinessLogic{
             throw new IllegalArgumentException("The provided hourly rate is invalid (not provided/negative number).");
         }
 
-        final Specialist specialist = specialistRepo.findById(userId);
-        if (specialist == null) {
-            // TODO: check if retrieved user is a specialist?
+        final int userId = body.getUserId();
+        if (!(userRepo.findById(userId) instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist or is not a specialist.");
         }
-        if (project.getParticipantById(userId) != null) {
+        if (project.getParticipantByUserId(userId) != null) {
             throw new IllegalArgumentException("User " + userId + " is already participating this project.");
         }
 
         final ProjectParticipant created = new ProjectParticipant(specialist, role, hourlyRate);
         project.addSpecialist(created);
         return created;
+    }
+
+    @Override
+    public List<ProjectReport> getProjectReports(int projectId, JsonNode body) {
+        final Project project = projectRepo.findById(projectId);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
+        }
+
+        if (!body.has("userId")) {
+            throw new IllegalArgumentException("No user id was provided.");
+        }
+
+        final int userId = body.get("userId").asInt(-1);
+        final User user = userRepo.findById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
+        }
+
+        List<ProjectReport> reports = new ArrayList<>();
+
+        if (user instanceof Specialist specialist) {
+            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProjectUser(projectId, userId);
+
+            reports.add(new ProjectReport(
+                    "Totaal gemaakte uren",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze maand",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze week",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Verdiensten",
+                    String.format("€%,.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
+                            .sum()
+                    ).replace(".", ",")
+            ));
+        }
+        else {
+            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProject(projectId);
+
+            reports.add(new ProjectReport(
+                    "Totaal gemaakte uren",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze maand",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Gemaakte uren deze week",
+                    String.format("%.2f", projectRegistrations.stream()
+                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(HourRegistration::getHoursSpent)
+                            .sum()
+                    )
+            ));
+
+            reports.add(new ProjectReport(
+                    "Ontwikkelkosten",
+                    String.format("€%,.2f", projectRegistrations.stream()
+                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
+                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
+                            .sum()
+                    ).replace(".", ",")
+            ));
+        }
+
+        return reports;
     }
 
     @Override
@@ -180,13 +284,14 @@ public class ProjectInteractor implements ProjectBusinessLogic{
     private void validateProjectInformation(String title, int clientId, String description) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");
-        } else if (clientId < 0) {
-            throw new IllegalArgumentException("The project client id is invalid.");
         } else if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
 
-        // TODO: validate client here.
+        User client = userRepo.findById(clientId);
+        if (!(client instanceof Client)) {
+            throw new IllegalArgumentException("There is no user with that ID or the user is not a client.");
+        }
     }
 
 }

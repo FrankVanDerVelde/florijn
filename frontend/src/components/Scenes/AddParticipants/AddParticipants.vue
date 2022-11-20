@@ -1,38 +1,22 @@
 <template>
-
-
-<!--  <div class="page-main-mw p-4 ">-->
-<!--    <project-header :project="project"/>-->
-
-<!--    <div class="flex flex-row fa-border">-->
-<!--      <div class=" w-1/5 ">-->
-
-<!--        <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>-->
-
-<!--      </div>-->
-
-<!--      <div class="flex flex-row flex-wrap self-start justify-evenly ">-->
-
-<!--        <ParticipantCard v-for="participants in participants" :key="participants.id" :skill="skills"-->
-<!--                         :participant="participants"></ParticipantCard>-->
-
-<!--      </div>-->
-
-<!--    </div>-->
-<!--  </div>-->
-
-  {{project}}
-smash
+  <div class="flex flex-row fa-border">
+    <div class=" w-1/5 ">
+      <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
+    </div>
+    <div class="flex flex-row flex-wrap self-start justify-evenly ">
+      <ParticipantCard v-for="participants in participants" :key="participants.id" :skill="skills"
+                       :participant="participants"></ParticipantCard>
+    </div>
+  </div>
 </template>
 
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
-import ProjectHeader from "../Project/ProjectHeader.vue";
 
 export default {
   name: "AddParticipants",
-  // components: {ProjectHeader, FilterParticipants, ParticipantCard},
+  components: {FilterParticipants, ParticipantCard},
   inject: ['projectFetchService'],
 
   props: {
@@ -128,7 +112,7 @@ export default {
           name: "MS Office Excel",
           Rating: 5
         }, {
-          id:3,
+          id: 3,
           name: "Ms office Eccel pt 2",
           rating: 3
         },]

@@ -4,11 +4,11 @@ import lombok.Getter;
 
 public class JsonUserInfo {
     @Getter
-    private long id;
+    private final int id;
     @Getter
-    private String role;
+    private final String role;
 
-    public JsonUserInfo(long id, String role) {
+    public JsonUserInfo(int id, String role) {
         this.id = id;
         this.role = role;
     }

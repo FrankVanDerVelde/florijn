@@ -110,7 +110,7 @@ export default {
 
 .input-container input {
   width: 100%;
-  color: var(--neutral-200);
+  color: black;
   border: 1px solid var(--neutral-200);
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
