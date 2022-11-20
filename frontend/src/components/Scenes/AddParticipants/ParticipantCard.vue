@@ -1,9 +1,10 @@
 <template>
-  <div class="flex flex-row mt-4 p-3 md:w-auto fa-border rounded-xl">
+  <div class="flex flex-row mt-4 ml-5 p-3 md:w-auto fa-border rounded-xl">
     <div class="flex">
 
+
       <div>
-        <img :src="participant.avatar" alt="participant avatar" class="icon-container">
+        <img :src="participant.avatarUrl" alt="participant avatar" class="icon-container">
       </div>
 
       <div class="ml-3">
@@ -27,6 +28,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>

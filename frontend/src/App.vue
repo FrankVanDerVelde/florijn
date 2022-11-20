@@ -19,6 +19,7 @@ export default {
       dateService: new DateService(),
       projectFetchService: new FetchService("projects"),
       skillFetchService: new FetchService("skills"),
+      specialistFetchService: new FetchService("/specialists"),
       fetchService: new FetchService(""),
       userService: new UserAdaptor()
     }

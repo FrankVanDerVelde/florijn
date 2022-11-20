@@ -1,23 +1,29 @@
 <template>
-  <div class="flex flex-row fa-border">
+  <ProjectParticipantList :participants=project.participants class="cursor-pointer" ></ProjectParticipantList>
+
+  <h2 class=" mb-4 mt-10 header-2">Deelnemers toevoegen</h2>
+  <div class="flex flex-row ">
     <div class=" w-1/5 ">
       <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
     </div>
-    <div class="flex flex-row flex-wrap self-start justify-evenly ">
-      <ParticipantCard v-for="participants in participants" :key="participants.id" :skill="skills"
-                       :participant="participants"></ParticipantCard>
+    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly ">
+      <ParticipantCard class="cursor-pointer"  v-for="participants in specialists"  :key="participants.id" :skill="skills"
+                       :participant="participants" @click="addParticipant(participants)"/>
+
     </div>
   </div>
+
 </template>
 
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
+import ProjectParticipantList from "../Project/ProjectParticipantList.vue";
 
 export default {
   name: "AddParticipants",
-  components: {FilterParticipants, ParticipantCard},
-  inject: ['projectFetchService'],
+  components: {ProjectParticipantList, ParticipantCard, FilterParticipants},
+  inject: ['projectFetchService', 'specialistFetchService'],
 
   props: {
     projectId: {
@@ -26,53 +32,35 @@ export default {
     }
   },
 
+  methods : {
+    addParticipant(specialist) {
+
+      specialist.role = "Developer"
+      specialist.hourlyRate = 40
+      specialist.userId = specialist.id
+
+      this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
+      this.project.participants.push(specialist)
+    }
+  },
+
 
   async created() {
-    this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
+    this.project = await this.projectFetchService.fetchJson(`/${this.$route.params.projectId}`);
+    this.specialists = await this.specialistFetchService.fetchJson("")
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
       this.$router.push({name: 'projects'});
       return;
     }
-
-    this.project.bannerSrc = "/src/assets/ing-banner.jpg";
-    this.project.logoSrc = "/src/assets/ING-Bankieren-icoon.webp";
   },
 
 
   data() {
     return {
       project:{},
-      // participants: [
-      //   {
-      //     id: 0,
-      //     firstName: "Andrew",
-      //     lastName: "Alfred",
-      //     role: "Product Owner",
-      //     avatar: "/src/assets/avatars/avatar1.avif",
-      //     email: "andrewa@florijn.com",
-      //     assignedSkills: [{2: 4}]
-      //   }, {
-      //     id: 1,
-      //     firstName: "Withney",
-      //     lastName: "Keulen",
-      //     role: "Lead Developer",
-      //     avatar: "/src/assets/avatars/avatar2.avif",
-      //     email: "withneyk@florijn.com",
-      //     assignedSkills: [{2: 4}]
-      //
-      //   }, {
-      //     id: 2,
-      //     firstName: "Jan",
-      //     lastName: "Timmermans",
-      //     role: "Designer",
-      //     avatar: "/src/assets/avatars/avatar3.avif",
-      //     email: "jant@florijn.com",
-      //     assignedSkills: [{2: 4}]
-      //
-      //   }
-      // ],
+      specialists: {},
       skills: [{
         name: "Microsoft Office Front-end",
         skill: [{
@@ -116,37 +104,7 @@ export default {
           name: "Ms office Eccel pt 2",
           rating: 3
         },]
-      }],
-      // project: {
-      //   bannerSrc: "/src/assets/ing-banner.jpg",
-      //   logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-      //   title: "ING Banking Web Application",
-      //   description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-      //   participants: [
-      //     {
-      //       id: 0,
-      //       firstName: "Andrew",
-      //       lastName: "Alfred",
-      //       role: "Product Owner",
-      //       avatar: "/src/assets/avatars/avatar1.avif",
-      //       email: "andrewa@florijn.com"
-      //     }, {
-      //       id: 1,
-      //       firstName: "Withney",
-      //       lastName: "Keulen",
-      //       role: "Lead Developer",
-      //       avatar: "/src/assets/avatars/avatar2.avif",
-      //       email: "withneyk@florijn.com"
-      //     }, {
-      //       id: 2,
-      //       firstName: "Jan",
-      //       lastName: "Timmermans",
-      //       role: "Designer",
-      //       avatar: "/src/assets/avatars/avatar3.avif",
-      //       email: "jant@florijn.com"
-      //     }
-      //   ]
-      // }
+      }]
     }
   }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class InMemoryProjectRepository implements ProjectRepository {
 
-    private final ArrayList<Project> projectList;
+    private ArrayList<Project> projectList;
 
     private final UserRepository userRepo;
 
@@ -41,13 +41,13 @@ public class InMemoryProjectRepository implements ProjectRepository {
         projectList.add(ingProject);
         Project KPN = new Project(2,
                 "KPN Network Web Application",
-                "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-                client);
+                "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.", ingClient);
 
-        KPN.addSpecialist(new ProjectParticipant(specialist.get(0), "Product Owner", 90));
+        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
+
 
         // TODO: Add more projects.
-        this.projectList = new ArrayList<>(List.of(ING, KPN));
+        this.projectList = new ArrayList<>(List.of(ingProject, KPN));
     }
 
     @Override

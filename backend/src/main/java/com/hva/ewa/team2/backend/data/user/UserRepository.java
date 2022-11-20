@@ -11,4 +11,6 @@ public interface UserRepository {
 
     // The get all method is for testing
     List<User> getAllUsers();
+
+    List<User> getSpecialists();
 }

@@ -1,6 +1,6 @@
 <template>
 
-  <section class="pt-[24px]">
+  <section class="pt-[24px]" >
     <div class="flex items-center justify-between mb-2">
       <h2 class="!mb-0 header-2">Deelnemers</h2>
 

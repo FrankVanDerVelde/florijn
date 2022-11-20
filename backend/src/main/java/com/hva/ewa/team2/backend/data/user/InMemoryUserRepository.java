@@ -30,11 +30,11 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(1, "jant@florijn.com", "test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans"));
 
         this.users.add(new Admin(2, "admin@test.com", "test", null, "Admin", "Test"));
-        this.users.add(new Specialist(3, "specialist@test.com", "test", null, "Specialist", "Test"));
+        this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", null, "Specialist", "Test"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", null, "Specialist", "Test"));
+        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Matteo", "Clarke"));
+        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Layton", "Salter"));
 
         setSkills(specialist);
         setSkills(specialist2);
@@ -50,7 +50,7 @@ public class InMemoryUserRepository implements UserRepository {
         // Get the size of half the list
         int halfListSize = (int) Math.ceil((double) allSkills.size() / 2);
 
-        for(int i = 0; i < halfListSize; i++) {
+        for (int i = 0; i < halfListSize; i++) {
             int randomRating = ThreadLocalRandom.current().nextInt(1, 5 + 1);
             // Add a skill to the specialist with a random rating
             specialist.updateUserSkill(allSkills.get(i), randomRating);
@@ -78,5 +78,10 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getAllUsers() {
         return users;
+    }
+
+    @Override
+    public List<User> getSpecialists() {
+        return this.users.stream().filter(user -> user instanceof Specialist).toList();
     }
 }
