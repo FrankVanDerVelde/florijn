@@ -20,9 +20,14 @@ export default {
   components: {
     SideBarNav
   },
-
+  created() {
+    if (this.id === "null") {
+      this.$router.push("/home");
+    }
+  },
   data() {
     return {
+      id: localStorage.getItem("id"),
       sideBarLinks: [{
         icon: 'fa-solid fa-share-nodes',
         name: 'Klanten',
@@ -33,7 +38,7 @@ export default {
           name: 'Werknemers',
           href: '/adminpanel/employee-list',
         }],
-}
+    }
   }
 }
 

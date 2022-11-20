@@ -27,9 +27,14 @@ import SideBarNav from "../../Common/SideBarNav.vue";
 export default {
   name: "ProjectList",
   components: {ProjectListDetails, SideBarNav},
-
+  created() {
+    if (this.id === "null") {
+      this.$router.push("/home");
+    }
+  },
   data() {
     return {
+      id: localStorage.getItem("id"),
       sideBarLinks: [{
         icon: 'fa-solid fa-user',
         name: 'projecten',
