@@ -2,25 +2,27 @@ package com.hva.ewa.team2.backend.domain.models.hourregistration;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public class HourRegistration {
 
     @Getter
     @Setter
-    private long id;
-    @Getter
-    @Setter
-    @JsonProperty("project_id")
-    private long projectId;
+    private int id;
 
     @Getter
     @Setter
-    private long userId;
+    @JsonProperty("participant")
+    private ProjectParticipant projectParticipant;
+
+    @Getter
+    private int projectId;
 
     @Getter
     @Setter
@@ -39,23 +41,18 @@ public class HourRegistration {
     @Getter
     private Optional<Status> status;
 
-    public HourRegistration(long id, long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
-        this.id = id;
-        this.projectId = projectId;
-        this.userId = userId;
-        this.from = from;
-        this.to = to;
-        this.description = description;
-        this.status = Optional.empty();
+    public HourRegistration(int id, int projectId, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description) {
+        this(id, projectId, participant, from, to, description, null);
     }
 
-    public HourRegistration(long projectId, long userId, LocalDateTime from, LocalDateTime to, String description) {
+    public HourRegistration(int id, int projectId, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description, Status status) {
+        this.id = id;
         this.projectId = projectId;
-        this.userId = userId;
+        this.projectParticipant = participant;
         this.from = from;
         this.to = to;
         this.description = description;
-        this.status = Optional.empty();
+        this.status = status == null ? Optional.empty() : Optional.of(status);
     }
 
     public HourRegistration() {
@@ -78,4 +75,9 @@ public class HourRegistration {
             return false;
         }
     }
+
+    public double getHoursSpent() {
+        return ChronoUnit.MINUTES.between(from, to) / 60d;
+    }
+
 }

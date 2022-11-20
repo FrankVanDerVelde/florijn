@@ -1,10 +1,11 @@
 package com.hva.ewa.team2.backend.data.project;
 
-import com.hva.ewa.team2.backend.data.specialist.SpecialistRepositoryMock;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,20 +16,29 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
     private final ArrayList<Project> projectList;
 
-    public InMemoryProjectRepository() {
-        List<Specialist> specialist = new SpecialistRepositoryMock().findAll();
-        Client client = new Client(48, "andrewa@florijn.com", "test", "/src/assets/avatars/avatar1.avif", "ING");
-        // TODO: Get client(s) from repository instead of making one on the spot.
+    private final UserRepository userRepo;
 
-        Project ING = new Project(1,
+    @Autowired
+    public InMemoryProjectRepository(UserRepository userRepo) {
+        this.userRepo = userRepo;
+        this.projectList = new ArrayList<>();
+
+        setup();
+    }
+
+    private void setup() {
+        Client ingClient = (Client) userRepo.findById(4);
+
+        Project ingProject = new Project(1,
                 "ING Banking Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-                client);
-        ING.addSpecialist(new ProjectParticipant(specialist.get(0), "Lead Developer", 60));
-        ING.addSpecialist(new ProjectParticipant(specialist.get(1), "Designer", 40));
+                ingClient,
+                "/src/assets/ING-Bankieren-icoon.webp");
 
-        // TODO: Add more projects.
-        this.projectList = new ArrayList<>(List.of(ING));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1), "Designer", 40));
+
+        projectList.add(ingProject);
     }
 
     @Override
@@ -37,7 +47,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
     }
 
     @Override
-    public Project findById(long id) {
+    public Project findById(int id) {
         return this.projectList.stream()
                 .filter(project -> project.getId() == id)
                 .findFirst()

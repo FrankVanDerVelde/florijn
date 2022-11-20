@@ -1,7 +1,10 @@
 package com.hva.ewa.team2.backend.rest.project;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectBusinessLogic;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @ResponseBody
@@ -21,10 +26,12 @@ public class ProjectController {
 
 
     private final ProjectBusinessLogic projectBusinessLogic;
+    private final HourRegistrationRepository hourRegistrationRepo;
 
     @Autowired
-    public ProjectController(ProjectBusinessLogic projectBusinessLogic) {
+    public ProjectController(ProjectBusinessLogic projectBusinessLogic, HourRegistrationRepository hourRegistrationRepo) {
         this.projectBusinessLogic = projectBusinessLogic;
+        this.hourRegistrationRepo = hourRegistrationRepo;
     }
 
     // General
@@ -78,6 +85,13 @@ public class ProjectController {
     @DeleteMapping(path = "/{id}/participants/{userId}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProjectParticipant> removeParticipant(@PathVariable int id, @PathVariable int userId) {
         return ResponseEntity.ok(projectBusinessLogic.removeProjectParticipant(id, userId));
+    }
+
+    // Reports (summaries)
+
+    @PostMapping(path = "/{id}/reports")
+    public ResponseEntity<List<ProjectReport>> getReports(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(projectBusinessLogic.getProjectReports(id, body));
     }
 
 }

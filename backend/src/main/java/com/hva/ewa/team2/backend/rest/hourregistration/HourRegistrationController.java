@@ -21,33 +21,39 @@ public class HourRegistrationController {
         this.interactor = interactor;
     }
 
-    @GetMapping(path= "/users/{userId}/hour-registrations/")
-    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByUser(@PathVariable long userId) {
+    @GetMapping(path= "/users/{userId}/hour-registrations")
+    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByUser(@PathVariable int userId) {
         List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsByUser(userId);
         return ResponseEntity.ok(hourRegistrations);
     }
 
-    @GetMapping(path= "/projects/{projectId}/hour-registrations/")
-    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable long projectId) {
+    @GetMapping(path= "/projects/{projectId}/hour-registrations")
+    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId) {
         List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProject(projectId);
         return ResponseEntity.ok(hourRegistrations);
     }
 
+    @GetMapping(path= "/projects/{projectId}/hour-registrations/users/{userId}")
+    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId, @PathVariable int userId) {
+        List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProjectUser(projectId, userId);
+        return ResponseEntity.ok(hourRegistrations);
+    }
+
     @GetMapping(path= "/hour-registrations/{id}")
-    public ResponseEntity<HourRegistration> getHourRegistrationById(@PathVariable long id) {
+    public ResponseEntity<HourRegistration> getHourRegistrationById(@PathVariable int id) {
         Optional<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationById(id);
         return hourRegistrations.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping(path= "/hour-registrations/{id}")
-    public ResponseEntity<HourRegistration> deleteHourRegistrationById(@PathVariable long id) {
+    public ResponseEntity<HourRegistration> deleteHourRegistrationById(@PathVariable int id) {
         Optional<HourRegistration> hourRegistrations = interactor.handleDeleteHourRegistrationById(id);
         return hourRegistrations.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping(path= "/users/{userId}/hour-registrations/")
+    @PostMapping(path= "/users/{userId}/hour-registrations")
     public ResponseEntity<HourRegistration> createHourRegistration(
-            @PathVariable long userId,
+            @PathVariable int userId,
             @RequestBody CreateHourRegistrationRequestBody body)
     {
         CreateHourRegistrationRequest request = new CreateHourRegistrationRequest(
@@ -67,7 +73,7 @@ public class HourRegistrationController {
     }
 
     @PutMapping(path= "/hour-registrations/{id}/update")
-    public ResponseEntity<HourRegistration> updateHourRegistration(@PathVariable long id, @RequestBody HourRegistration hr) {
+    public ResponseEntity<HourRegistration> updateHourRegistration(@PathVariable int id, @RequestBody HourRegistration hr) {
         try {
             HourRegistration createdHR = interactor.handleUpdateHourRegistration(id, hr);
             return ResponseEntity.ok(createdHR);
@@ -77,20 +83,21 @@ public class HourRegistrationController {
     }
 
     @DeleteMapping(path= "/hour-registrations/{id}/delete")
-    public ResponseEntity<HourRegistration> deleteHourRegistration(@PathVariable long id) {
+    public ResponseEntity<HourRegistration> deleteHourRegistration(@PathVariable int id) {
         Optional<HourRegistration> deletedHR = interactor.handleDeleteHourRegistrationById(id);
         return deletedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path= "/hour-registrations/{id}/accept")
-    public ResponseEntity<HourRegistration> acceptHourRegistration(@PathVariable long id) {
+    public ResponseEntity<HourRegistration> acceptHourRegistration(@PathVariable int id) {
         Optional<HourRegistration> acceptedHR = interactor.handleAcceptHourRegistration(id);
         return acceptedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(path= "/hour-registrations/{id}/reject")
-    public ResponseEntity<HourRegistration> rejectHourRegistration(@PathVariable long id) {
+    public ResponseEntity<HourRegistration> rejectHourRegistration(@PathVariable int id) {
         Optional<HourRegistration> rejectedHR = interactor.handleRejectHourRegistration(id);
         return rejectedHR.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 }

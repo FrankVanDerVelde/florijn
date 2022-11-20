@@ -5,17 +5,31 @@ import lombok.Setter;
 
 public class Skill {
 
-    @Getter
-    @Setter
-    private final int id;
     @Getter @Setter
-    private final String name;
-    @Getter @Setter
-    private final int rating_out_of_five;
+    private int id;
 
-    Skill(int id, String name, int rating_out_of_five) {
+    @Getter @Setter
+    private String name;
+
+    @Getter @Setter
+    private String description;
+
+    public int getId() {
+        return id;
+    }
+
+    public Skill(int id, String name, String description) {
         this.id = id;
         this.name = name;
-        this.rating_out_of_five = rating_out_of_five;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

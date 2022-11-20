@@ -1,7 +1,7 @@
 
 
 <template>
-    <div class="page-main-mw pt-[5em] flex">
+    <div class="page-main-mw p-4 pt-[5em] flex">
         <div class="profile-container flex self-center w-4/5">
             <div class="mr-[4em]">
                 <SideBarNav :sideBarItems="sideBarLinks"></SideBarNav>
