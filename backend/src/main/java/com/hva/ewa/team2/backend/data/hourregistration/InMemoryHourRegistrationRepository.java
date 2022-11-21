@@ -53,8 +53,8 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         0,
                         testProject,
                         developer,
-                        dateService.currentDay(-42, 10, 0),
-                        dateService.currentDay(-42, 12, 0),
+                        dateService.currentDay(-2, 10, 0),
+                        dateService.currentDay(-2, 12, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.ACCEPTED
                 ),
@@ -62,8 +62,8 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         1,
                         testProject,
                         designer,
-                        dateService.currentDay(-39, 8, 30),
-                        dateService.currentDay(-39, 12, 0),
+                        dateService.currentDay(-1, 8, 30),
+                        dateService.currentDay(-1, 12, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.REJECTED
                 ),
@@ -71,8 +71,8 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                         2,
                         testProject,
                         developer,
-                        dateService.currentDay(-36, 12, 15),
-                        dateService.currentDay(-36, 16, 0),
+                        dateService.currentDay(12, 15),
+                        dateService.currentDay(16, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.ACCEPTED
                 ),
