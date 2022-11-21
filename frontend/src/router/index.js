@@ -37,11 +37,11 @@ const routes = [
     {path: '/login/forgotpassword/cp', component: ChangePassword},
     {
         path: "/profile",
-        name: "profile",
         component: Profile,
         children: [
             {
                 path: '',
+                name: "profile",
                 redirect: '/profile/personal-info', // default child path
             },
             {
@@ -93,12 +93,12 @@ const routes = [
     },
     {
         path: "/projects/:projectId(\\d+)",
-        name: "project-overview",
         component: ProjectLayout,
         props: true,
         children: [
             {
                 path: '',
+                name: "project-overview",
                 component: ProjectOverview
             }, {
                 path: "participants",
