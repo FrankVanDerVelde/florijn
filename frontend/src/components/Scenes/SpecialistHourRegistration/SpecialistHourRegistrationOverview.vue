@@ -4,7 +4,7 @@
     <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
-        <NewActivityPopup />
+        <NewActivityPopup @activity-added="handleActivityAdded"/>
       </div>
     </div>
 
@@ -150,6 +150,12 @@ export default {
       await this.loadHourRegistrationsList();
       this.filterHourRegistrations();
     },
+
+    async handleActivityAdded() {
+      await this.loadHourRegistrationsList();
+      this.filterHourRegistrations();
+      this.showingModel = false;
+    }
   }
 }
 </script>

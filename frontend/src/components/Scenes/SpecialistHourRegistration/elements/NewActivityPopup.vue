@@ -3,55 +3,81 @@
     <p class="text-xl font-medium">Nieuwe activiteit</p>
     <hr>
 
-    <div class="flex flex-col gap-4 pt-8">
-
+    <form @submit.prevent="handleSaveTapped" class="flex flex-col gap-4 pt-8">
       <div class="form-row">
         <label id="project" class="font-semibold">Project</label>
-        <select v-for="project in projects" name="projects" id="cars">
+        <select v-model="selectedProjectId" v-for="project in projects" name="projects" id="cars">
           <option :value="project.id">{{project.title}}</option>
         </select>
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Van</label>
-        <input type="datetime-local">
+        <input v-model="from" type="time">
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Tot</label>
-        <input type="datetime-local">
+        <input v-model="to" type="time">
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Beschrijving</label>
-        <textarea class="border-[1px] rounded p-2 border-neutral-100" type="text" placeholder="beschrijving"></textarea>
+        <textarea v-model="description" class="border-[1px] rounded p-2 border-neutral-100" type="text" placeholder="beschrijving"></textarea>
       </div>
+
       <div class="flex gap-2">
         <button @click="" class="secondary-button">Annuleren</button>
-        <button @click="" class="primary-button">Opslaan</button>
+        <button type="submit" class="primary-button">Opslaan</button>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
+import moment from "moment/moment.js";
+
 export default {
   name: "NewActivityPopup",
-  inject: ['projectFetchService'],
-  emits: ['dismiss-clicked'],
+  inject: ['projectFetchService', 'hourRegistrationRepository'],
+  emits: ['dismiss-clicked', 'activity-added'],
   data() {
     return {
-      projects: []
+      projects: [],
+      selectedProjectId: null,
+      from: null,
+      to: null,
+      description: null
     }
   },
   async created() {
     await this.loadProjects();
   },
+
   methods: {
     async loadProjects() {
       this.projects = await this.projectFetchService.fetchJson('/');
       console.log(this.projects);
     },
+    async handleSaveTapped() {
+      try {
+        await this.hourRegistrationRepository
+            .create(
+                this.selectedProjectId,
+                0,
+                this.convertTimeToDateString(this.from),
+                this.convertTimeToDateString(this.to),
+                this.description
+            );
+        this.$emit('activity-added');
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    convertTimeToDateString(timeStringInHoursMinutes) {
+      return moment(timeStringInHoursMinutes, 'hh:mm').format('yyyy-MM-DD HH:mm');
+    }
   }
 }
 </script>

@@ -61,7 +61,14 @@ export class HourRegistrationRepository {
         }
     }
 
-    create(projectId, from, to, description) {
-        new HourRegistration(id)
+    async create(projectId, userId, from, to, description) {
+        let body = {
+            project_id: projectId,
+            from: from,
+            to: to,
+            description: description
+        };
+
+        return await this.#fetcher.fetchJsonPost(`/users/${userId}/hour-registrations/`, body);
     }
 }
