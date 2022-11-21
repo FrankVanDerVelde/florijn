@@ -44,7 +44,7 @@
         <div class="flex w-full flex-col gap-4 justify-center">
           <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0" />
           <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-            <HourRegistrationRow :hour-registration="hourRegistration" @hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
+            <HourRegistrationRow :hour-registration="hourRegistration" @delete-hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
           </div>
         </div>
 
