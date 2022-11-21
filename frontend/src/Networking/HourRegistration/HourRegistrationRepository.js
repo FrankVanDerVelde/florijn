@@ -25,7 +25,7 @@ export class HourRegistrationRepository {
 
     async deleteHourRegistration(id) {
         try {
-            return await this.#fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}`);
+            return await this.#fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}/delete/`);
         } catch (e) {
             console.error(e);
             return e;
