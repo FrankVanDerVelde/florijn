@@ -8,6 +8,10 @@
     </div>
 
     <div class="overflow-x-auto mb-6">
+      <HoursInfoPopup v-if="selectedHourRegistry != null"
+                      :registry="selectedHourRegistry"
+                      @close="selectedHourRegistry = null"
+                      @changeStatus="updateRegistryStatus"/>
       <table class="w-full mt-4">
         <thead>
         <tr class="text-left">
@@ -19,7 +23,10 @@
         </tr>
         </thead>
         <tbody>
-        <HoursRow v-for="registry in hourRegistry" :key="registry.id" :registry="registry" @updateStatus="fetchReports"/>
+        <HoursRow v-for="registry in hourRegistry"
+                  :key="registry.id"
+                  :registry="registry"
+                  @select="reg => selectedHourRegistry = reg"/>
         </tbody>
       </table>
     </div>
@@ -30,10 +37,11 @@
 import SummaryBlock from "../SummaryBlock.vue";
 import ProjectParticipantList from "../ProjectParticipantList.vue";
 import HoursRow from "../HoursRow.vue";
+import HoursInfoPopup from "../HoursInfoPopup.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {HoursRow, ProjectParticipantList, SummaryBlock},
+  components: {HoursInfoPopup, HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
 
   async created() {
@@ -55,14 +63,15 @@ export default {
 
   computed: {
     userId() {
-      return Number.parseInt(this.$route.query.userId ?? 2) // admin = 2, user = 1
+      return Number.parseInt(localStorage.getItem('userId'));
     }
   },
 
   data() {
     return {
       hourRegistry: [],
-      reports: []
+      reports: [],
+      selectedHourRegistry: null
     }
   },
 
@@ -72,6 +81,15 @@ export default {
     },
     async fetchHourRegistry() {
       this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);
+    },
+    async updateRegistryStatus(accepted) {
+      const endpoint = accepted ? 'accept' : 'reject';
+
+      const response = await this.fetchService.fetchUrl(`/hour-registrations/${this.selectedHourRegistry.id}/${endpoint}`, 'POST');
+      this.selectedHourRegistry.status = response.status;
+
+      this.selectedHourRegistry = null;
+      await this.fetchReports();
     }
   }
 }
