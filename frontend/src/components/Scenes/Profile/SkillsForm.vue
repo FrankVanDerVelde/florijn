@@ -1,69 +1,37 @@
 
 
 <template>
-    <div class="font-bold text-[32px] mb-3">Skills</div>
-                
-                    <div class="grid grid-cols-3">
-                       <div class="uppercase text-neutral-400 font-bold text-[12px] col-span-1">Technische kennis</div>
-                        <div class="grid grid-cols-6 gap-2 text-center text-[14px] font-bold col-span-2">
-                            <div>NVT</div>
-                            <div>1</div>
-                            <div>2</div>
-                            <div>3</div>
-                            <div>4</div>
-                            <div>5</div>
+    <div>
+                    <div class="grid grid-cols-3 border-x-[1px] border-neutral-200">
+                       <div class="uppercase text-neutral-400 font-bold text-[12px] col-span-1 "></div>
+                        <div class="grid grid-cols-6 gap-2 text-center text-[14px] font-bold col-span-2 h-[38px] ">
+                            <div class="flex flex-col justify-center"><div>NVT</div></div>
+                            <div class="flex flex-col justify-center"><div>1</div></div>
+                            <div class="flex flex-col justify-center"><div>2</div></div>
+                            <div class="flex flex-col justify-center"><div>3</div></div>
+                            <div class="flex flex-col justify-center"><div>4</div></div>
+                            <div class="flex flex-col justify-center"><div>5</div></div>
                         </div>
                     </div>
-                    <div v-for="skill in skills">
-                        <div class="grid grid-cols-3 border-[1px] border-neutral-100 bg-neutral-0 my-3 h-[38px] items-center rounded-lg">
-                            <div class="font-bold capitalize text-[14px] ml-6 col-span-1">{{ skill }}</div>
+                    <div v-for="skill in skills" class="last:border-b-[1px] border-neutral-200">
+                        <div class="grid grid-cols-3 border-[1px] border-b-0 border-neutral-200 h-[38px] items-center">
+                            <div class="font-bold capitalize text-[14px] ml-6 col-span-1">{{ skill.name }}</div>
                             <div class="grid grid-cols-6 gap-2 justify-center h-[25px] col-span-2">
 
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-nvt`" class="radio-button">
-                                        <input :id="`${skill}-nvt`" type="radio" value="test" :name="`${skill}`">
+                                <div v-for="index in 6" :key="index">
+                                    <div class="flex justify-center">
+                                    <label :for="`${skill.id}-${index - 1}`" class="radio-button">
+                                        <input :id="`${skill.name}-${index - 1}`" type="radio" :value="`${index - 1}`" :name="`${skill.name}-${index - 1}`" :checked="skill.rating == index - 1">
                                         <span class="checkmark"></span>
                                     </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-1`" class="radio-button">
-                                        <input :id="`${skill}-1`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-2`" class="radio-button">
-                                        <input :id="`${skill}-2`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-3`" class="radio-button">
-                                        <input :id="`${skill}-3`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-4`" class="radio-button">
-                                        <input :id="`${skill}-4`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-
-                                <div class="flex justify-center">
-                                    <label :for="`${skill}-5`" class="radio-button">
-                                        <input :id="`${skill}-5`" type="radio" value="test" :name="`${skill}`">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
+                                    </div>
+                                </div>                               
 
                             </div>
-                        </div>
+                        </div>  
+                        
                     </div>
+                </div>
 </template>
   
 <style scoped>
@@ -134,11 +102,13 @@
 <script>
 export default {
     name: "Profile",
-    data() {
-        return {
-            skills: ["Html", "Php", "javascript", "react", "vue", "css", "html", "node", "docker"],
-        }
+    props: {
+    skills: {
+      type: Object,
+      required: true
     }
+  }
+    
 }
 
 </script>

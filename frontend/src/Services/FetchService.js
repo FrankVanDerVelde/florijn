@@ -9,6 +9,7 @@ export default class FetchService {
     }
 
     #getPath(path) {
+        if (this.#endpoint.length === 0) return `${this.#domain}${path}`;
         return `${this.#domain}/${this.#endpoint}${path}`;
     }
 
@@ -28,7 +29,7 @@ export default class FetchService {
     }
 
     async fetchJsonPost(path, body = {}, options = {}) {
-        return this.fetchJson(this.#getPath(path), {
+        return this.fetchJson(path, {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
@@ -39,7 +40,7 @@ export default class FetchService {
     }
 
     async fetchUrl(path, method = "GET", options = {}) {
-        return this.fetchJson(this.#getPath(path), {
+        return this.fetchJson(path, {
             method: method,
             ...options
         });

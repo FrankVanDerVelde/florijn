@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr @click="$emit('select', registry)">
     <td>
       <participant :participant="registry.participant" small/>
     </td>
@@ -25,6 +25,9 @@ import HourRegistryStatus from "./HourRegistryStatus.vue";
 export default {
   name: "hoursRow",
   components: {HourRegistryStatus, Participant},
+  inject: ['fetchService', 'dateService'],
+  emits: ['updateStatus', 'select'],
+
   props: {
     registry: {
       type: Object,
@@ -34,51 +37,17 @@ export default {
 
   computed: {
     formattedTimeSpent() {
-      return this.formatTimeSpent(this.calculateTimeSpent(this.registry));
+      return this.dateService.formatTimeSpent(this.dateService.calculateTimeSpent(this.registry.from, this.registry.to));
     },
     costs() {
-      const time = this.calculateTimeSpent(this.registry)[2];
-      return Math.round(time * this.registry.hourlyRate * 100) / 100;
+      const time = this.dateService.calculateTimeSpent(this.registry.from, this.registry.to)[2];
+      return Math.round(time * this.registry.participant.hourlyRate * 100) / 100;
     },
     formatDate() {
-      const today = new Date();
-      const date = new Date(this.registry.startTime);
-
-      if (date.getDate() === today.getDate() &&
-          date.getMonth() === today.getMonth() &&
-          date.getFullYear() === today.getFullYear()) {
-        return "Vandaag";
-      }
-      else {
-        const days = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
-        const months = ["Jan", "Feb", "Mrt", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
-        const sameYear = date.getFullYear() === today.getFullYear();
-
-        return days[date.getDay()] + ". " + date.getDate() + " " + months[date.getMonth()] + (sameYear ? "" : ", " + date.getFullYear());
-      }
+      const date = new Date(this.registry.to);
+      return this.dateService.formatDateRelatively(date);
     }
   },
-
-  methods: {
-    calculateTimeSpent() {
-      let start = new Date(this.registry.startTime);
-      let end = new Date(this.registry.endTime);
-
-      // calculate time difference in hours and minutes
-      let diff = end - start;
-      let hours = Math.floor(diff / 1000 / 60 / 60);
-      let minutes = Math.floor(diff / 1000 / 60) - (hours * 60);
-
-      return [hours, minutes, hours + (minutes / 60)];
-    },
-    formatTimeSpent(timeSpent = [0, 0, 0], short = false) {
-      if (short) return (timeSpent[2]).toFixed(2) + "h";
-      return `${timeSpent[0]}h ${timeSpent[1]}m`;
-    },
-    updateRegistryStatus(newStatus) {
-      this.registry.status = newStatus;
-    }
-  }
 }
 </script>
 
@@ -89,5 +58,22 @@ td {
   white-space: nowrap;
   width: max-content;
   width: -moz-max-content;
+}
+
+tr {
+  transition: background-color 0.2s ease-in-out;
+  cursor: pointer;
+}
+tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+tr:hover {
+  background-color: var(--neutral-75);
 }
 </style>

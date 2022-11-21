@@ -11,7 +11,7 @@ public class CreateHourRegistrationRequestBody {
 
     @Getter @Setter
     @JsonProperty("project_id")
-    private long projectId;
+    private int projectId;
 
     @Getter @Setter
     @JsonFormat(pattern="yyyy-MM-dd HH:mm")
@@ -24,13 +24,12 @@ public class CreateHourRegistrationRequestBody {
     @Getter @Setter
     private String description;
 
-    public CreateHourRegistrationRequestBody(long projectId, LocalDateTime from, LocalDateTime to, String description) {
+    public CreateHourRegistrationRequestBody(int projectId, LocalDateTime from, LocalDateTime to, String description) {
         this.projectId = projectId;
         this.from = from;
         this.to = to;
         this.description = description;
     }
 
-    public CreateHourRegistrationRequestBody() {
-    }
+    public CreateHourRegistrationRequestBody() { }
 }

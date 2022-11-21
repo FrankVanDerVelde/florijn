@@ -8,7 +8,7 @@ public interface ProjectRepository {
 
     List<Project> findAll();
 
-    Project findById(long id);
+    Project findById(int id);
 
     Project addProject(Project project);
 
