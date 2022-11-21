@@ -1,15 +1,12 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
-import com.hva.ewa.team2.backend.data.specialist.SpecialistRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

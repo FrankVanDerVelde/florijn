@@ -1,22 +1,7 @@
 <template>
-  <div v-if="!editing" class="flex items-center" :class="[statusTypeLowerCase, canEdit ? 'hover:cursor-pointer' : '']" @click="edit">
+  <div v-if="!editing" class="flex items-center" :class="[statusTypeLowerCase]">
     <div class="circle"></div>
     <div>{{ this.statusText }}</div>
-  </div>
-
-  <div v-else class="flex items-center gap-4">
-    <button
-        class="hover:bg-app_red-600 transition-all bg-app_red-400 text-neutral-0 rounded-sm p-2 h-[32px] w-[32px] flex items-center justify-center aspect-square"
-        @click="submitChange(false)"
-        title="Wijs deze registratie af.">
-      <font-awesome-icon icon="xmark"/>
-    </button>
-    <button
-        class="hover:bg-app_green-600 transition-all bg-app_green-400 text-neutral-0 rounded-sm p-2 h-[32px] w-[32px] flex items-center justify-center aspect-square"
-        @click="submitChange(true)"
-        title="Keur deze registratie goed.">
-      <font-awesome-icon icon="check"/>
-    </button>
   </div>
 </template>
 
@@ -46,28 +31,10 @@ export default {
     }
   },
 
-  data() {
-    return {
-      editing: false
-    }
-  },
-
   props: {
     status: {
       type: [String, null],
       required: true,
-    },
-  },
-
-  methods: {
-    edit() {
-      if (this.canEdit) {
-        this.editing = true;
-      }
-    },
-    submitChange(approved) {
-      this.$emit('updateRegistryStatus', approved);
-      this.editing = false;
     }
   }
 }
