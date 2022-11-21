@@ -9,7 +9,7 @@
 
 
         <label class="mark">
-          <input type="checkbox" :name="`${selectedSkill}`" :id="`${skill}`">
+          <input type="checkbox" :name="`${selectedSkill}`">
           <span class="checkmark"></span>
         </label>
 
