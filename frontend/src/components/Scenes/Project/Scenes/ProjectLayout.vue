@@ -11,7 +11,7 @@
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <ProjectHeader :project="project"/>
+          <ProjectHeader :project="project" :edit-button="userId >= 2"/>
 
           <router-view :project="project"/>
         </div>
@@ -28,14 +28,27 @@ export default {
   components: {ProjectHeader},
   inject: ['projectFetchService'],
 
+  watch: {
+    '$route.query.userId': async function () {
+      localStorage.setItem('userId', this.$route.query.userId);
+    }
+  },
+
+  computed: {
+    userId() {
+      return Number.parseInt(localStorage.getItem('userId'));
+    }
+  },
+
   props: {
     projectId: {
-      type: Number,
+      type: String,
       required: true
     }
   },
 
   async created() {
+    localStorage.setItem('userId', this.$route.query.userId ?? 2);
     this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
     // when a non-existing project is requested, redirect to the /projects page.
