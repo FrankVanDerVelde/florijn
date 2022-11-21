@@ -1,11 +1,12 @@
 <template>
   <div class="page-main-mw">
-    <div class="flex flex-row md:flex-row p-4 ">
-      <div class="side-bar w-[121px] flex-col justify-between">
-        <side-bar-nav :side-bar-items="sideBarLinks"></side-bar-nav>
-      </div>
-      <div class="profile-container flex flex-row w-4/5">
-          <button id="addbutton" class="bg-primary-500 font-bold border-[1px] h-[38px] w-[180px] rounded-md text-neutral-0">+ Klant toevoegen</button>
+    <div class="p-4 ">
+      <div class="profile-container flex-col">
+        <div class="buttoncontainer">
+          <router-link to="/adminpanel/add-client">
+            <button id="addbutton" class="bg-primary-500 font-bold border-[1px] h-[38px] w-[180px] rounded-md text-neutral-0" @click="navigate" role="link">+ Klant toevoegen</button>
+          </router-link>
+        </div>
         <div class="container grow">
           <customer-list-details v-for="customer in customers" :key="customer.id"
                                  :customer="customer"></customer-list-details>
@@ -21,12 +22,10 @@
 <script>
 
 import CustomerListDetails from "./CustomerListDetails.vue";
-import SideBarNav from "../../Common/SideBarNav.vue";
 
 export default {
   name: "CustomerList",
   components: {
-    SideBarNav,
     CustomerListDetails
   },
 
@@ -83,15 +82,13 @@ export default {
 
 <style scoped>
 
-.side-bar {
-  margin-top: 50px;
-  margin-right: 80px;
+
+
+.buttoncontainer{
+  display: flex;
+  justify-content: flex-end;
 }
 
-.container {
-  margin-left: 20px;
-  margin-top: 24px;
-}
 
 
 

@@ -1,6 +1,6 @@
 <template>
-  <div class="page-main-mw pt-[5em] flex">
-    <div class="profile-container flex self-center w-4/5">
+  <div class="page-main-mw pt-[5em] ">
+    <div class="profile-container flex self-center">
       <div class="side-bar w-[121px] flex-col justify-between">
         <SideBarNav :sideBarItems="sideBarLinks"></SideBarNav>
       </div>
@@ -42,7 +42,7 @@ export default {
 <style scoped>
 
 .side-bar {
-  margin-top: 50px;
+  margin-top: 71px;
   margin-right: 80px;
 }
 
