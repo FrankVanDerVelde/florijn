@@ -77,8 +77,8 @@ export default {
       showingModel: false
     }
   },
-  created() {
-    this.loadHourRegistrationsList();
+  async created() {
+    await this.loadHourRegistrationsList();
     this.selectToday();
   },
   methods: {
@@ -93,8 +93,8 @@ export default {
       this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
 
-    loadHourRegistrationsList() {
-      this.hourRegistrations = this.hourRegistrationRepository.fetchAllFor(0);
+    async loadHourRegistrationsList() {
+      this.hourRegistrations = await this.hourRegistrationRepository.fetchAllFor(0);
     },
 
     handleTodayClicked() {
@@ -144,10 +144,10 @@ export default {
       this.showingModel = false
     },
 
-    handleDeleteHourRegistrationClicked(id) {
+    async handleDeleteHourRegistrationClicked(id) {
       console.log(id);
-      this.hourRegistrationRepository.deleteHourRegistration(id);
-      this.loadHourRegistrationsList();
+      await this.hourRegistrationRepository.deleteHourRegistration(id);
+      await this.loadHourRegistrationsList();
       this.filterHourRegistrations();
     },
   }

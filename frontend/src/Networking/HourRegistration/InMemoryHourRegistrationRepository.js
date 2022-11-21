@@ -1,5 +1,5 @@
-import {HourRegistration} from "../components/models/HourRegistration.js";
-import {Project} from "../components/models/Project.js";
+import {HourRegistration} from "../../components/models/HourRegistration.js";
+import {Project} from "../../components/models/Project.js";
 import moment from "moment/moment.js";
 
 /**
@@ -7,7 +7,7 @@ import moment from "moment/moment.js";
  * (as of now this is a mock)
  *
  */
-export class HourRegistrationRepository {
+export class InMemoryHourRegistrationRepository {
     #hourRegistrations = [];
     #projects = [];
 
