@@ -5,6 +5,8 @@ import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
+import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
 
 import java.util.List;
 
@@ -19,11 +21,11 @@ public interface UserRepository {
 
     List<User> getUsersByRole(String role);
 
-    User saveClient(Client client);
+    User saveAdmin(JsonAdminInfo admin);
 
-    User saveSpecialist(Specialist specialist);
+    User saveSpecialist(JsonSpecialistInfo specialist);
 
-    User saveAdmin(Admin admin);
+    User saveClient(JsonClientInfo client);
 
     User deleteById(int id);
 }

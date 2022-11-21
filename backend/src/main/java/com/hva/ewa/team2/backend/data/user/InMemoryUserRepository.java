@@ -7,6 +7,8 @@ import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
+import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -108,7 +110,9 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User saveAdmin(Admin admin) {
+    public User saveAdmin(JsonAdminInfo body) {
+        Admin admin = new Admin(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
+                body.getFirstName(), body.getLastName());
         if (admin.getId() <= 0) {
             admin.setId(this.users.size());
         }
@@ -117,16 +121,16 @@ public class InMemoryUserRepository implements UserRepository {
             int index = this.users.indexOf(findById(admin.getId()));
             this.users.set(index, admin);
         } catch (Exception e) {
-            this.users.add(new Admin(admin.getId(), admin.getEmail(), admin.getPassword(), admin.getAvatarUrl(),
-                    admin.getFirstName(), admin.getLastName()));
-//            Also possible?
-//            this.users.add(admin);
+            this.users.add(admin);
         }
-        return admin;
+        return findById(admin.getId());
     }
 
     @Override
-    public User saveSpecialist(Specialist specialist) {
+    public User saveSpecialist(JsonSpecialistInfo body) {
+        Specialist specialist = new Specialist(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
+                body.getFirstName(), body.getLastName());
+
         if (specialist.getId() <= 0) {
             specialist.setId(this.users.size());
         }
@@ -135,16 +139,16 @@ public class InMemoryUserRepository implements UserRepository {
             int index = this.users.indexOf(findById(specialist.getId()));
             this.users.set(index, specialist);
         } catch (Exception e) {
-            this.users.add(new Specialist(specialist.getId(), specialist.getEmail(), specialist.getPassword(), specialist.getAvatarUrl(),
-                    specialist.getFirstName(), specialist.getLastName()));
-//            Also possible?
-//            this.users.add(specialist);
+            this.users.add(specialist);
         }
         return specialist;
     }
 
     @Override
-    public User saveClient(Client client) {
+    public User saveClient(JsonClientInfo body) {
+        Client client = new Client(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
+                body.getName(), body.getBannerSrc());
+
         if (client.getId() <= 0) {
             client.setId(this.users.size());
         }
@@ -153,10 +157,7 @@ public class InMemoryUserRepository implements UserRepository {
             int index = this.users.indexOf(findById(client.getId()));
             this.users.set(index, client);
         } catch (Exception e) {
-            this.users.add(new Client(client.getId(), client.getEmail(), client.getPassword(), client.getAvatarUrl(),
-                    client.getName(), client.getBannerSrc()));
-//            Also possible?
-//            this.users.add(client);
+            this.users.add(client);
         }
         return client;
     }

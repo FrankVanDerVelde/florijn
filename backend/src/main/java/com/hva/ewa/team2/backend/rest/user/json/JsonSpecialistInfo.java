@@ -3,7 +3,7 @@ package com.hva.ewa.team2.backend.rest.user.json;
 import lombok.Getter;
 import lombok.Setter;
 
-public class JsonAdminInfo {
+public class JsonSpecialistInfo {
     @Getter
     @Setter
     protected int id;
@@ -23,9 +23,9 @@ public class JsonAdminInfo {
     @Setter
     private String lastName;
 
-    public JsonAdminInfo(){}
+    public JsonSpecialistInfo(){}
 
-    public JsonAdminInfo(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
+    public JsonSpecialistInfo(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this.id = id;
         this.email = email;
         this.avatarUrl = profilePictureURL;
