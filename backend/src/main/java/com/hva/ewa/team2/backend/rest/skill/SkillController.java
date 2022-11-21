@@ -7,6 +7,7 @@ import com.hva.ewa.team2.backend.domain.usecases.project.ProjectBusinessLogic;
 import com.hva.ewa.team2.backend.domain.usecases.skill.SkillBusinessLogic;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
+import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,10 @@ public class SkillController {
     @PutMapping(path = "/update-user-skill/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserSkill> updateUserSkill(@PathVariable int userId,  @RequestBody JsonUserSkill body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkill(userId, body));
+    }
+
+    @PutMapping(path = "/update-user-skill-group/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId,  @RequestBody JsonUserSkillGroup body) {
+        return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
     }
 }

@@ -30,7 +30,7 @@ export default {
     inject: ['skillFetchService'],
     async created() {
         let skillGroups = await this.skillFetchService.fetchJson(`/groups`);
-        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/1`);
+        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/5`);
 
         const userSkillIds = userSkills.map(userSkill => userSkill.skill.id);
 
