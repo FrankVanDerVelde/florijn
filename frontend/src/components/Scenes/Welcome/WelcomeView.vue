@@ -12,11 +12,6 @@
 
 <script setup>
 
-if (localStorage.getItem("id") !== "null") {
-  location.reload()
-  localStorage.setItem("id", null);
-  localStorage.setItem("role", null)
-}
 
 </script>
 

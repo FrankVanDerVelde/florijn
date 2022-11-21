@@ -113,12 +113,13 @@ export default {
       }
     },
     confirmationLogOut() {
-
       if (this.staticLink.link === "/login") {
         return;
       }
-
-      alert("Je word nu uitgelogd")
+      alert("Je word nu uitgelogd");
+      location.reload();
+      localStorage.setItem("id", null);
+      localStorage.setItem("role", null);
     }
   }
 };
