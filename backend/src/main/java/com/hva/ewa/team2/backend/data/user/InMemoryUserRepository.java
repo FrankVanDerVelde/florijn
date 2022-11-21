@@ -1,21 +1,21 @@
 package com.hva.ewa.team2.backend.data.user;
 
-import com.hva.ewa.team2.backend.data.skill.InMemorySkillRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Component
+@Repository
 public class InMemoryUserRepository implements UserRepository {
 
     private final ArrayList<User> users = new ArrayList<>();
@@ -50,7 +50,7 @@ public class InMemoryUserRepository implements UserRepository {
         // Get the size of half the list
         int halfListSize = (int) Math.ceil((double) allSkills.size() / 2);
 
-        for(int i = 0; i < halfListSize; i++) {
+        for (int i = 0; i < halfListSize; i++) {
             int randomRating = ThreadLocalRandom.current().nextInt(1, 5 + 1);
             // Add a skill to the specialist with a random rating
             specialist.updateUserSkill(allSkills.get(i), randomRating);
@@ -68,6 +68,19 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public String findRoleByUser(User user) {
+        String role = null;
+        if (user instanceof Admin) {
+            role = "admin";
+        } else if (user instanceof Specialist) {
+            role = "specialist";
+        } else if (user instanceof Client) {
+            role = "client";
+        }
+        return role;
+    }
+
+    @Override
     public User findById(int id) {
         return this.users.stream()
                 .filter(user -> user.getId() == id)
@@ -77,6 +90,81 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public List<User> getAllUsers() {
-        return users;
+        return this.users;
+    }
+
+    @Override
+    public List<User> getUsersByRole(String role) {
+        List<User> userList = new ArrayList<>();
+
+        for (User user : this.users) {
+            String tempRole = this.findRoleByUser(user);
+
+            if (tempRole.equals(role)) {
+                userList.add(user);
+            }
+        }
+        return userList;
+    }
+
+    @Override
+    public User saveAdmin(Admin admin) {
+        if (admin.getId() <= 0) {
+            admin.setId(this.users.size());
+        }
+
+        try {
+            int index = this.users.indexOf(findById(admin.getId()));
+            this.users.set(index, admin);
+        } catch (Exception e) {
+            this.users.add(new Admin(admin.getId(), admin.getEmail(), admin.getPassword(), admin.getAvatarUrl(),
+                    admin.getFirstName(), admin.getLastName()));
+//            Also possible?
+//            this.users.add(admin);
+        }
+        return admin;
+    }
+
+    @Override
+    public User saveSpecialist(Specialist specialist) {
+        if (specialist.getId() <= 0) {
+            specialist.setId(this.users.size());
+        }
+
+        try {
+            int index = this.users.indexOf(findById(specialist.getId()));
+            this.users.set(index, specialist);
+        } catch (Exception e) {
+            this.users.add(new Specialist(specialist.getId(), specialist.getEmail(), specialist.getPassword(), specialist.getAvatarUrl(),
+                    specialist.getFirstName(), specialist.getLastName()));
+//            Also possible?
+//            this.users.add(specialist);
+        }
+        return specialist;
+    }
+
+    @Override
+    public User saveClient(Client client) {
+        if (client.getId() <= 0) {
+            client.setId(this.users.size());
+        }
+
+        try {
+            int index = this.users.indexOf(findById(client.getId()));
+            this.users.set(index, client);
+        } catch (Exception e) {
+            this.users.add(new Client(client.getId(), client.getEmail(), client.getPassword(), client.getAvatarUrl(),
+                    client.getName(), client.getBannerSrc()));
+//            Also possible?
+//            this.users.add(client);
+        }
+        return client;
+    }
+
+    @Override
+    public User deleteById(int id) {
+        User user = findById(id);
+        this.users.remove(user);
+        return user;
     }
 }
