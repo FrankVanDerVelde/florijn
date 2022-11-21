@@ -90,7 +90,7 @@ export default {
 }
 
 #addbutton{
-  width: 190px;
+  width: 198px;
 }
 
 

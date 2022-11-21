@@ -92,10 +92,10 @@ const routes = [
         name: "adminpanel",
         component: AdminPanel,
         children: [
-            // {
-            //     path: "/adminpanel",
-            //     redirect: "/adminpanel/customer-list",
-            // },
+            {
+                path: "/adminpanel",
+                redirect: "/adminpanel/customer-list",
+            },
             {
                 path: "customer-list",
                 component: CustomerList,
@@ -104,11 +104,11 @@ const routes = [
                 path: "employee-list",
                 component: EmployeeList,
             },
-            {
-                path: "add-client",
-                component: AddClient,
-            }
         ]
+    },
+    {
+        path: "/adminpanel/add-client",
+        component: AddClient,
     },
     {
         path: "/projects",
