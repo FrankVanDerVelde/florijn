@@ -10,7 +10,3 @@ export default {
   name: "EmptyHourRegistrationRow"
 }
 </script>
-
-<style scoped>
-
-</style>

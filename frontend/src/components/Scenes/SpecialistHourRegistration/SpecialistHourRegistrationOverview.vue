@@ -1,12 +1,10 @@
 <template>
   <div>
-    <div v-if="this.showingModel" @click="handleModelBackgroundClicked" class="top-0 bottom-0 right-0 left-0 absolute">
+
+    <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
-        <div class="z-90 bg-neutral-0 p-[16px] rounded-[10px]">
-          <p class="text-xl font-medium">Nieuwe activiteit</p>
-          <hr>
-        </div>
+        <NewActivityPopup />
       </div>
     </div>
 
@@ -49,6 +47,7 @@
             <HourRegistrationRow :hour-registration="hourRegistration" @hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
           </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -60,15 +59,18 @@ import PrimaryButton from "../../Common/PrimaryButton.vue";
 import CalendarDayOption from "./elements/CalendarDayOption.vue";
 import HourRegistrationRow from "./elements/HourRegistrationRow.vue";
 import EmptyHourRegistrationRow from "./elements/EmptyHourRegistrationRow.vue";
+import NewActivityPopup from "./elements/NewActivityPopup.vue";
+
 export default {
   name: "HourRegistrationOverview",
-  components: { PrimaryButton, CalendarDayOption, HourRegistrationRow, EmptyHourRegistrationRow },
-  inject: ['hourRegistrationRepository', 'dateService'],
+  components: { PrimaryButton, CalendarDayOption, HourRegistrationRow, EmptyHourRegistrationRow, NewActivityPopup },
+  inject: ['hourRegistrationRepository', 'dateService', 'projectFetchService'],
   data() {
     return {
       week: [],
       hourRegistrations: [],
       filteredHourRegistrations: [],
+      projects: [],
       weekNumber: 0,
       selectedDayIndex: null,
       year: "",
@@ -85,7 +87,7 @@ export default {
         return {
           day: day.date.format("dddd"),
           date: day.date.format("DD MMM"),
-          weekDayIndex: day.weekDayIndex
+          weekDayIndex: day.weekDayIndex,
         }
       });
       this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
@@ -136,7 +138,6 @@ export default {
 
     handleAddActivityClicked() {
       this.showingModel = true
-
     },
 
     handleModelBackgroundClicked() {
@@ -149,7 +150,6 @@ export default {
       this.loadHourRegistrationsList();
       this.filterHourRegistrations();
     },
-
   }
 }
 </script>
