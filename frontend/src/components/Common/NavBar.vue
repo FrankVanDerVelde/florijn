@@ -91,6 +91,9 @@ export default {
             }, {
               name: 'Profiel',
               link: '/profile'
+            }, {
+              name: 'Projecten',
+              link: '/projects'
             }]
             break;
           case "client":
