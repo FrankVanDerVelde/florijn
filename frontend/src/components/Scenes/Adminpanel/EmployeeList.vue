@@ -8,11 +8,10 @@
           </router-link>
         </div>
         <div class="container grow">
-          <employee-list-details v-for="employee in employee" :key="employee.id"
+          <employee-list-details v-for="employee in employees" :key="employee.id"
                                  :employee="employee"></employee-list-details>
         </div>
       </div>
-
     </div>
   </div>
 

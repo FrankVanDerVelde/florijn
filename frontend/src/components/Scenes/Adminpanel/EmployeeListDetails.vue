@@ -29,7 +29,7 @@ export default {
   name: "EmployeeListDetails",
 
   props: {
-    employees: {
+    employee: {
       type: Object,
       required: true
     }

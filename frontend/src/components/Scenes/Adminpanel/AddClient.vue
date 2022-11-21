@@ -1,5 +1,5 @@
 <template>
-  <div id="klanttoevoegen" class="text-[34px] font-bold mb-[10px]">Klant toevoegen</div>
+  <div id="klanttoevoegen" class="text-[34px] font-bold">Klant toevoegen</div>
   <div class="page-main-mw pt-[5em] flex">
     <div class="profile-container flex self-center w-4/5">
       <div class="grid grid-cols-3 gap-4">
@@ -49,7 +49,7 @@ export default {
 
 #klanttoevoegen{
   margin-left: 240px;
-  padding-top: 60px;
+  padding-top: 50px;
 }
 
 .page-main-mw {
@@ -59,6 +59,7 @@ export default {
 input{
   padding-top: 4px;
   padding-bottom: 4px;
+  margin: 2px;
   width: 400px;
 }
 
