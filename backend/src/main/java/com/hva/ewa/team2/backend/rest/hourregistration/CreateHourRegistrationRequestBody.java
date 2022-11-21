@@ -31,6 +31,5 @@ public class CreateHourRegistrationRequestBody {
         this.description = description;
     }
 
-    public CreateHourRegistrationRequestBody() {
-    }
+    public CreateHourRegistrationRequestBody() { }
 }
