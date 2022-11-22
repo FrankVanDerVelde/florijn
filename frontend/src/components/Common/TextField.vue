@@ -6,7 +6,7 @@
     >
       {{label}}
     </label>
-    <input type="text" id="first_name" class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5" placeholder="John" required>
+    <input type="text" id="first_name" class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5" :placeholder="placeholder" required>
   </div>
 </template>
 

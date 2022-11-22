@@ -1,19 +1,17 @@
 <template>
-  <ProjectParticipantList :participants=project.participants class="cursor-pointer"></ProjectParticipantList>
+  <ProjectParticipantList :participants=project.participants></ProjectParticipantList>
 
   <h2 class=" mb-4 mt-10 header-2">Deelnemers toevoegen</h2>
-  <div class="flex flex-row ">
-    <div class=" w-1/5 ">
+  <div class="flex flex-row participant-container">
+    <div class=" w-2/5 filter-container">
       <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
     </div>
-    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly ">
-      <ParticipantCard class="cursor-pointer" v-for="participants in specialists" :key="participants.id" :skill="skills"
-                       :participant="participants" @click="addParticipant(participants)"/>
+    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
+      <ParticipantCard class="cursor-pointer flex-grow-0" v-for="participants in specialists" :key="participants.id" :skill="skills"
+                       :participant="participants" @addParticipant="addParticipant" />
 
     </div>
   </div>
-
-  {{ project.participants[0] }}
 </template>
 
 <script>
@@ -35,23 +33,21 @@ export default {
 
 
   methods: {
-    addParticipant(specialist) {
+    addParticipant(specialist ) {
 
-      console.log(specialist)
+      console.log(this.project.participants)
 
-      specialist.role = "Developer"
-      specialist.hourlyRate = 40
-      specialist.userId = specialist.id
+      specialist.userId = specialist.participant.id
 
-      this.project.participants.push({
-        role: "Lead developper", hourlyRate: 39, user:
+     this.project.participants.push({
+        role: specialist.role, hourlyRate: specialist.hourlyRate, user:
             {
-              id: specialist.id,
-              email: specialist.email,
-              avatarUrl: specialist.avatarUrl,
-              password: specialist.password,
-              firstName: specialist.firstName,
-              lastName: specialist.lastName
+              id: specialist.participant.id,
+              email: specialist.participant.email,
+              avatarUrl: specialist.participant.avatarUrl,
+              password: specialist.participant.password,
+              firstName: specialist.participant.firstName,
+              lastName: specialist.participant.lastName
             }
       })
       this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
@@ -129,5 +125,18 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width: 768px) {
+  .participant-container {
+    flex-direction: column;
+  }
 
+  .filter-container {
+    width: 100%;
+  }
+
+  .participant-container {
+    margin: 0;
+  }
+
+}
 </style>

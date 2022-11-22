@@ -1,7 +1,6 @@
 <template>
-  <div class="flex flex-row mt-4 ml-5 p-3 md:w-auto fa-border rounded-xl">
+  <div class="flex flex-col mt-4 ml-5 p-3 md:w-auto fa-border rounded-xl" @click.once="inputFields = !inputFields">
     <div class="flex">
-
 
       <div>
         <img :src="participant.avatarUrl" alt="participant avatar" class="icon-container">
@@ -14,7 +13,10 @@
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{ skills.name }}</li>
+            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{
+                skills.name
+              }}
+            </li>
           </ul>
         </div>
       </div>
@@ -26,16 +28,38 @@
           </div>
         </div>
       </div>
+
     </div>
+    <div v-if="inputFields" class="mt-2">
+      <div class=" flex flex-col my-2">
+        <input v-model="roleInput" type="text" id="roleButton"
+               class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
+               :placeholder="rolePlaceholder" required>
+
+      </div>
+      <div>
+        <input v-model="hourInput" type="text" id="hourButton"
+               class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
+               :placeholder="hourPlaceholder" required>
+      </div>
+
+      <div class="mt-4">
+        <button class="accept cursor-pointer"
+                @click="$emit('addParticipant', {role: roleInput, hourlyRate: hourInput, participant: participant}); inputFields = !inputFields">
+          Toevoegen
+        </button>
+      </div>
+    </div>
+
   </div>
+
 
 </template>
 
 <script>
 export default {
   name: "ParticipantCard",
-  components: {},
-
+  emits: ['addParticipant'],
 
   computed: {
     name() {
@@ -56,7 +80,13 @@ export default {
   },
 
   data() {
-    return {}
+    return {
+      rolePlaceholder: "Voeg een rol toe",
+      hourPlaceholder: "Voeg een hourlyRate toe",
+      roleInput: "",
+      hourInput: "",
+      inputFields: false
+    }
   }
 }
 </script>
@@ -73,4 +103,20 @@ export default {
 .star-color {
   color: var(--primary-500)
 }
+
+button {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: Inter, sans-serif;
+  border-radius: 8px;
+  transition: all .3s;
+}
+
+button.accept {
+  background-color: var(--app_green-400);
+  color: black;
+}
+
 </style>
