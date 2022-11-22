@@ -12,11 +12,18 @@ public class Specialist extends User {
     private String lastName;
     private final List<UserSkill> skills;
 
+    private Address address;
+
     public Specialist(int id, String email,  String password, String profilePictureURL, String firstName, String lastName) {
+        this(id, email, password, profilePictureURL, firstName, lastName, new Address());
+        // TODO: implement new skill structure with UserSkill.
+    }
+    public Specialist(int id, String email,  String password, String profilePictureURL, String firstName, String lastName, Address address) {
         super(id, email, password, profilePictureURL);
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
+        this.address = address;
         // TODO: implement new skill structure with UserSkill.
     }
     public String getFirstName() {
@@ -48,4 +55,5 @@ public class Specialist extends User {
         skills.add(newSkill);
         return newSkill;
     }
+
 }

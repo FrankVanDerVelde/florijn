@@ -20,7 +20,7 @@
 
                                 <div v-for="index in 6" :key="index">
                                     <div class="flex justify-center">
-                                    <label :for="`${skill.id}-${index - 1}`" class="radio-button">
+                                    <label :for="`${skill.id}-${index - 1}`" class="radio-button" @click="() => { this.handleSkillUpdate(skill, index -1)}">
                                         <input :id="`${skill.name}-${index - 1}`" type="radio" :value="`${index - 1}`" :name="`${skill.name}-${index - 1}`" :checked="skill.rating == index - 1">
                                         <span class="checkmark"></span>
                                     </label>
@@ -102,11 +102,18 @@
 <script>
 export default {
     name: "Profile",
+    emits: ['updateSkill'],
     props: {
     skills: {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    handleSkillUpdate(skill, newValue){
+        // console.log(skill, newValue)
+            this.$emit("updateSkill", skill.id, newValue)
+        }
   }
     
 }

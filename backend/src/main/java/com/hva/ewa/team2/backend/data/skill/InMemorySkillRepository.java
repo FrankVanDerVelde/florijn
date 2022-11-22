@@ -65,4 +65,16 @@ public class InMemorySkillRepository implements SkillRepository {
         return this.skillGroups.stream().filter(group -> group.getId() == id)
                 .findFirst().orElse(null);
     }
+
+    @Override
+    public Skill getSkillById(int id) {
+        return skills.stream().filter(skill -> skill.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public SkillGroup getGroupBySkillId(int id) {
+        Skill skill = getSkillById(id);
+        return skillGroups.stream().filter(group -> group.getSkills().contains(skill)).findFirst().orElse(null);
+    }
+
 }

@@ -51,34 +51,34 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
         hourRegistrations.addAll(List.of(
                 new HourRegistration(
                         0,
-                        testProject.getId(),
+                        testProject,
                         developer,
-                        dateService.currentDay(-42, 10, 0),
-                        dateService.currentDay(-42, 12, 0),
+                        dateService.currentDay(-2, 10, 0),
+                        dateService.currentDay(-2, 12, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.ACCEPTED
                 ),
                 new HourRegistration(
                         1,
-                        testProject.getId(),
+                        testProject,
                         designer,
-                        dateService.currentDay(-39, 8, 30),
-                        dateService.currentDay(-39, 12, 0),
+                        dateService.currentDay(-1, 8, 30),
+                        dateService.currentDay(-1, 12, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.REJECTED
                 ),
                 new HourRegistration(
                         2,
-                        testProject.getId(),
+                        testProject,
                         developer,
-                        dateService.currentDay(-36, 12, 15),
-                        dateService.currentDay(-36, 16, 0),
+                        dateService.currentDay(12, 15),
+                        dateService.currentDay(16, 0),
                         "Gewerkt aan het project",
                         HourRegistration.Status.ACCEPTED
                 ),
                 new HourRegistration(
                         3,
-                        testProject.getId(),
+                        testProject,
                         developer,
                         dateService.currentDay(8, 30),
                         dateService.currentDay(12, 0),
@@ -86,7 +86,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
                 ),
                 new HourRegistration(
                         4,
-                        testProject.getId(),
+                        testProject,
                         designer,
                         dateService.currentDay(13, 0),
                         dateService.currentDay(17, 30),
@@ -119,7 +119,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     @Override
     public List<HourRegistration> fetchAllHourRegistrationByProject(int projectId) {
         return hourRegistrations.stream()
-                .filter(h -> h.getProjectId() == projectId)
+                .filter(h -> h.getProject().getId() == projectId)
                 .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }
@@ -127,7 +127,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     @Override
     public List<HourRegistration> fetchAllAcceptedHoursForProject(int projectId) {
         return hourRegistrations.stream()
-                .filter(h -> h.getProjectId() == projectId)
+                .filter(h -> h.getProject().getId() == projectId)
                 .filter(HourRegistration::isAccepted)
                 .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
@@ -136,7 +136,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     @Override
     public List<HourRegistration> fetchAllHourRegistrationByProjectUser(int projectId, int userId) {
         return hourRegistrations.stream()
-                .filter(h -> h.getProjectId() == projectId && h.getProjectParticipant().getSpecialist().getId() == userId)
+                .filter(h -> h.getProject().getId() == projectId && h.getProjectParticipant().getSpecialist().getId() == userId)
                 .filter(HourRegistration::isAccepted)
                 .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
@@ -168,7 +168,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     private int nextId() {
-        Optional<Integer> highestId = hourRegistrations.stream().map(HourRegistration::getId).sorted().findFirst();
+        Optional<Integer> highestId = hourRegistrations.stream().map(HourRegistration::getId).max(Integer::compareTo);
         return highestId.map(id -> id + 1).orElse(0);
     }
 }

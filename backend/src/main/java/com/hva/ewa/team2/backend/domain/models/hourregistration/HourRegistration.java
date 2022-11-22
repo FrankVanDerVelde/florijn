@@ -2,7 +2,10 @@ package com.hva.ewa.team2.backend.domain.models.hourregistration;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.rest.hourregistration.HourRegistrationViews;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,7 +25,8 @@ public class HourRegistration {
     private ProjectParticipant projectParticipant;
 
     @Getter
-    private int projectId;
+    @JsonView(HourRegistrationViews.HourRegistrationProject.class)
+    private Project project;
 
     @Getter
     @Setter
@@ -41,13 +45,13 @@ public class HourRegistration {
     @Getter
     private Optional<Status> status;
 
-    public HourRegistration(int id, int projectId, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description) {
-        this(id, projectId, participant, from, to, description, null);
+    public HourRegistration(int id, Project project, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description) {
+        this(id, project, participant, from, to, description, null);
     }
 
-    public HourRegistration(int id, int projectId, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description, Status status) {
+    public HourRegistration(int id, Project project, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description, Status status) {
         this.id = id;
-        this.projectId = projectId;
+        this.project = project;
         this.projectParticipant = participant;
         this.from = from;
         this.to = to;
