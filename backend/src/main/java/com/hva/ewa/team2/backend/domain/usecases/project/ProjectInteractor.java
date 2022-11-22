@@ -86,9 +86,6 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
     @Override
     public Project updateProjectInformation(int pId, JsonProjectInfo body) {
-        if (pId < 0) {
-            throw new IllegalArgumentException("The project ID cannot be negative.");
-        }
         final String title = body.getTitle();
         final int client = body.getClient();
         final String description = body.getDescription();
@@ -108,12 +105,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         Project project;
         if (logoSrc == null) {
             project = new Project(
-                    projectRepo.findAll().size() + 1, title, description,
+                    pId, title, description,
                     (Client) userRepo.findById(client)
             );
         } else {
             project = new Project(
-                    projectRepo.findAll().size() + 1, title, description,
+                    pId, title, description,
                     (Client) userRepo.findById(client), logoSrc
             );
         }

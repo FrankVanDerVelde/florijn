@@ -103,6 +103,7 @@ const routes = [
     }, {
         path: "/projects/:projectId(\\d+)",
         props: true,
+        name: "project",
         component: ProjectLayout,
         children: [
             {
@@ -115,6 +116,14 @@ const routes = [
                 component: AddParticipants,
             }
         ]
+    }, {
+        path: "/projects/:projectId(\\d+)/edit",
+        name: "edit-project",
+        component: CreateProject,
+        props: route => ({
+            newProject: false,
+            projectId: route.params.projectId,
+        }),
     }
 ];
 

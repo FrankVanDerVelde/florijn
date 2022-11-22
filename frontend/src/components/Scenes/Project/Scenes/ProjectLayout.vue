@@ -9,7 +9,7 @@
         <div class="md:pl-[48px] md:pr-[48px] w-full">
           <ProjectHeader :project="project" :edit-button="!preview && userId >= 2"/>
 
-          <router-view v-if="!preview" :project="project"/>
+          <router-view v-if="!preview && project != null" :project="project"/>
         </div>
       </div>
     </div>
@@ -72,8 +72,7 @@ export default {
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
-      this.$router.push({name: 'projects'});
-      return;
+      this.$router.redirect({name: 'projects'});
     }
   },
 }
