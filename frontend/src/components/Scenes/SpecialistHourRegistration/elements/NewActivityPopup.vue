@@ -3,7 +3,7 @@
     <p class="text-xl font-medium">Nieuwe activiteit</p>
     <hr>
 
-    <form @submit.prevent="handleSaveTapped" class="flex flex-col gap-4 pt-8">
+    <form @submit.stop class="flex flex-col gap-4 pt-8">
       <div class="form-row">
         <label id="project" class="font-semibold">Project</label>
         <select v-model="selectedProjectId" v-for="project in projects" name="projects" id="cars">
@@ -28,7 +28,7 @@
 
       <div class="flex gap-2">
         <button @click="" class="secondary-button">Annuleren</button>
-        <button type="submit" class="primary-button">Opslaan</button>
+        <button @click="handleSaveTapped" class="primary-button">Opslaan</button>
       </div>
     </form>
   </div>
@@ -36,11 +36,15 @@
 
 <script>
 import moment from "moment/moment.js";
+import {HourRegistration} from "../../../models/HourRegistration.js";
 
 export default {
   name: "NewActivityPopup",
   inject: ['projectFetchService', 'hourRegistrationRepository'],
   emits: ['dismiss-clicked', 'activity-added'],
+  props: {
+    hourRegistration: HourRegistration
+  },
   data() {
     return {
       projects: [],
@@ -52,6 +56,13 @@ export default {
   },
   async created() {
     await this.loadProjects();
+    if (this.hourRegistration) {
+      this.selectedProjectId = this.hourRegistration.id;
+      this.from = moment(this.hourRegistration.from).format('hh:mm');
+      this.to = moment(this.hourRegistration.to).format('hh:mm');
+      console.log(this.hourRegistration)
+      this.description = this.hourRegistration.description
+    }
   },
 
   methods: {

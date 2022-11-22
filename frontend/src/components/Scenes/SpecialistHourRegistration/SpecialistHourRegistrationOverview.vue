@@ -4,7 +4,7 @@
     <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
-        <NewActivityPopup @activity-added="handleActivityAdded"/>
+        <NewActivityPopup :hour-registration="selectedHourRegistration" @activity-added="handleActivityAdded"/>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
         <div class="flex w-full flex-col gap-4 justify-center">
           <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0" />
           <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-            <HourRegistrationRow :hour-registration="hourRegistration" @delete-hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
+            <HourRegistrationRow :hour-registration="hourRegistration" @click="handleHourRegistrationClicked(hourRegistration)" @delete-hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)" />
           </div>
         </div>
 
@@ -70,6 +70,7 @@ export default {
       week: [],
       hourRegistrations: [],
       filteredHourRegistrations: [],
+      selectedHourRegistration: null,
       projects: [],
       weekNumber: 0,
       selectedDayIndex: null,
@@ -155,6 +156,11 @@ export default {
       await this.loadHourRegistrationsList();
       this.filterHourRegistrations();
       this.showingModel = false;
+    },
+
+    handleHourRegistrationClicked(hr) {
+      this.selectedHourRegistration = hr;
+      this.showingModel = true;
     }
   }
 }
