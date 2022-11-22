@@ -9,13 +9,13 @@ export class HourRegistration {
     isApproved
     description
 
-    constructor(id, project, specialistId, from, to, isApproved, description) {
+    constructor(id, project, specialistId, from, to, description) {
         this.id = id;
         this.project = project;
         this.specialistId = specialistId;
         this.from = moment(from).toDate();
         this.to = moment(to).toDate();
-        this.isApproved = isApproved;
+        // this.isApproved = isApproved;
         this.description = description;
     }
 

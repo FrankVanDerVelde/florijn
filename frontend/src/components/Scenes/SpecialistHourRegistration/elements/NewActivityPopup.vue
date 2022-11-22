@@ -100,6 +100,7 @@ export default {
               .update(
                   this.hourRegistration.id,
                   this.hourRegistration.project.id,
+                  0,
                   this.convertTimeToDateString(this.from),
                   this.convertTimeToDateString(this.to),
                   this.description

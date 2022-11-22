@@ -1,8 +1,5 @@
 <template>
-  <div
-      class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full"
-
-  >
+  <div class="bg-neutral-0 rounded-[10px] hour-registration-row-shadow border-l-[12px] border-neutral-100 border-l-primary-500 w-full">
     <div class="py-[13px] px-[12px] flex justify-between">
       <div class="flex flex-col">
         <p class="font-medium text-neutral-800">{{ hourRegistration.project.title }}</p>

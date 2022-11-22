@@ -40,7 +40,7 @@ export class HourRegistrationRepository {
         }
     }
 
-    async update(hourRegistrationId, projectId, from, to, description) {
+    async update(hourRegistrationId, projectId, userId, from, to, description) {
         try {
             return await this.#fetcher.fetchJson(
                 `/hour-registrations/${hourRegistrationId}/update`,
@@ -48,6 +48,7 @@ export class HourRegistrationRepository {
                     method: 'PUT',
                     body: JSON.stringify({
                             project_id: projectId,
+                            user_id: userId,
                             from: from,
                             to: to,
                             description: description
