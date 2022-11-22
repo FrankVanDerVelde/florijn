@@ -168,7 +168,7 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     private int nextId() {
-        Optional<Integer> highestId = hourRegistrations.stream().map(HourRegistration::getId).sorted().findFirst();
+        Optional<Integer> highestId = hourRegistrations.stream().map(HourRegistration::getId).max(Integer::compareTo);
         return highestId.map(id -> id + 1).orElse(0);
     }
 }
