@@ -55,4 +55,11 @@ export default class FetchService {
         });
     }
 
+    async executeDeleteRequestForURL(path, options = {}) {
+        return this.fetchJson(path, {
+            method: "DELETE",
+            ...options
+        });
+    }
+
 }

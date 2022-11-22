@@ -4,7 +4,9 @@ import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +127,10 @@ public class HourRegistrationRepositoryTests {
                         "Test"
                 )
         );
+        Specialist specialist = new Specialist(0, "email@email.com", "abc", null, "test", "test");
+        Specialist specialist2 = new Specialist(1, "email2@email.com", "abc", null, "test", "test");
+        testProject.addSpecialist(new ProjectParticipant(specialist, "macOS Developer", 60));
+        testProject.addSpecialist(new ProjectParticipant(specialist2, "iOS Developer", 60));
     }
 
     private void deleteAllHourRegistrations() {

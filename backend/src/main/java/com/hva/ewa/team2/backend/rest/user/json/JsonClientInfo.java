@@ -1,10 +1,9 @@
-package com.hva.ewa.team2.backend.domain.models.user;
+package com.hva.ewa.team2.backend.rest.user.json;
 
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class User {
-
+public class JsonClientInfo {
     @Getter
     @Setter
     protected int id;
@@ -17,11 +16,19 @@ public abstract class User {
     @Getter
     @Setter
     protected String password;
+    @Getter @Setter
+    private String name;
+    @Getter @Setter
+    private String bannerSrc;
 
-    public User(int id, String email, String password, String profilePictureURL) {
+    public JsonClientInfo(){}
+
+    public JsonClientInfo(int id, String email, String password, String profilePictureURL, String name, String bannerSrc) {
         this.id = id;
         this.email = email;
         this.avatarUrl = profilePictureURL;
         this.password = password;
+        this.name = name;
+        this.bannerSrc = bannerSrc;
     }
 }

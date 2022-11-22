@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.domain.models.hourregistration;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +35,7 @@ public class CreateHourRegistrationRequest {
         this.description = description;
     }
 
-    public HourRegistration toDomainModel(int nextId, Project project) {
-        return new HourRegistration(nextId, project, project.getParticipantByUserId(userId), from, to, description);
+    public HourRegistration toDomainModel(int nextId, Project project, ProjectParticipant participant) {
+        return new HourRegistration(nextId, project, participant, from, to, description);
     }
 }

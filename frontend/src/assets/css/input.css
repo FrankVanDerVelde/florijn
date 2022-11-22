@@ -90,6 +90,14 @@
     max-width: 1230px;
 }
 
+.button {
+    @apply px-5 py-2.5 text-sm leading-5 rounded rounded-[4px] w-fit cursor-pointer;
+}
+
 .primary-button {
-    @apply bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5 text-sm leading-5 rounded-lg w-fit cursor-pointer;
+    @apply button bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700;
+}
+
+.secondary-button {
+    @apply button bg-neutral-100 text-neutral-900 font-semibold hover:bg-neutral-200;
 }

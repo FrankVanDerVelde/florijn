@@ -1,8 +1,6 @@
 <template>
   <div class="page-main-mw pt-[5em] flex">
     <div class="list-container flex self-center w-full">
-
-
       <div class="mr-[4em]">
         <SideBarNav :sideBarItems="sideBarLinks"></SideBarNav>
       </div>
@@ -12,11 +10,8 @@
 
         <project-list-details v-for="projects in project" :key="projects.id" :project="projects"></project-list-details>
       </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -32,12 +27,16 @@ export default {
 
   async created() {
     this.project = await this.projectFetchService.fetchJson(``)
+    if (this.id === "null") {
+      this.$router.push("/home");
+    }
   },
 
 
 
   data() {
     return {
+      id: localStorage.getItem("id"),
       project: {},
       sideBarLinks: [{
         icon: 'fa-solid fa-user',

@@ -2,7 +2,7 @@
   <div class="grid grid-cols-12 absolute w-full h-full top-0 right-0 ">
     <div class="flex justify-end col-span-6 row-start-1 h-full form-column">
       <div class="flex w-full justify-center items-center h-full max-width">
-        <div class="w-140">
+        <form @submit.prevent="submitButton()" class="w-140">
           <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom!</h1>
           <div class="inputfield">
             <div class="input-container">
@@ -30,10 +30,10 @@
           <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp {{ validationText }}</p>
           <div class="submit-button">
             <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 py-2.5
-          text-sm leading-5 rounded-lg w-80" @click="submitButton()">Log in
+          text-sm leading-5 rounded-lg w-80">Log in
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
     <div class="col-span-6 row-start-1 col-start-7 h-full bg-primary-300 hide-login-picture">
@@ -61,7 +61,10 @@ export default {
       const userData = await this.userService.asyncFindByCredentials(this.email, this.password);
 
       if (userData !== null) {
-        console.log(userData)
+
+        localStorage.setItem("id", userData.id);
+        localStorage.setItem("role", userData.role);
+
         switch (userData.role) {
           case "admin": {
             this.$router.push("/admin/home");
@@ -122,7 +125,7 @@ export default {
 .submit-button {
   justify-content: center;
   align-items: center;
-  margin: 3%;
+  margin: 0.5vh;
   text-align: center;
 }
 
@@ -156,7 +159,7 @@ export default {
 }
 
 .radio-button-container {
-  margin: 1%;
+  margin: 2px;
   float: left;
   font-size: 14px;
   color: var(--neutral-50);

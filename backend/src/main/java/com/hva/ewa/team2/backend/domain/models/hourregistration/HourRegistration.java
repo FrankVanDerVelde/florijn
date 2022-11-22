@@ -56,7 +56,7 @@ public class HourRegistration {
         this.from = from;
         this.to = to;
         this.description = description;
-        this.status = status == null ? Optional.empty() : Optional.of(status);
+        this.status = Optional.ofNullable(status);
     }
 
     public HourRegistration() {
@@ -69,7 +69,7 @@ public class HourRegistration {
     }
 
     public void setStatus(Status status) {
-        this.status = Optional.of(status);
+        this.status = Optional.ofNullable(status);
     }
 
     public boolean isAccepted() {

@@ -5,10 +5,12 @@ import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
+import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.rest.hourregistration.UpdateHourRegistrationRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -80,8 +82,18 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
     }
 
     @Override
-    public HourRegistration handleUpdateHourRegistration(int id, HourRegistration hourRegistration) throws Exception {
-        return hourRegistrationRepository.updateHourRegistration(id, hourRegistration);
+    public HourRegistration handleUpdateHourRegistration(int id, UpdateHourRegistrationRequest request) throws Exception {
+        Optional<HourRegistration> hr = hourRegistrationRepository.fetchHourRegistrationById(request.getId());
+
+        if (hr.isEmpty())
+            throw new Exception("HourRegistration not found for id: " + request.getId());
+
+        HourRegistration updatedHR = hr.get();
+        updatedHR.setFrom(request.getFrom());
+        updatedHR.setTo(request.getTo());
+        updatedHR.setDescription(request.getDescription());
+
+        return hourRegistrationRepository.updateHourRegistration(id, updatedHR);
     }
 
     @Override

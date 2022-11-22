@@ -143,8 +143,11 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     @Override // Adding to an array will never crash, but the interface needs it
-    public HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) {
-        HourRegistration newHR = request.toDomainModel(nextId(), project);
+    public HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) throws Exception {
+        Optional<ProjectParticipant> projectParticipant = Optional.ofNullable(project.getParticipantByUserId(request.getUserId()));
+        if (projectParticipant.isEmpty())
+            throw new Exception("no Project Participant found in project for userId: " + request.getUserId());
+        HourRegistration newHR = request.toDomainModel(nextId(), project, projectParticipant.get());
         hourRegistrations.add(newHR);
         return newHR;
     }
