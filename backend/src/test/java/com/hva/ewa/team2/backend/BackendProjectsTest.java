@@ -35,18 +35,18 @@ public class BackendProjectsTest {
     @Test
     public void canCreateProject() {
         final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("", "", -1)));
+                interactor.createProject(new JsonProjectInfo("", "", -1, null)));
         assertEquals("The project title cannot be empty.", ex1.getMessage());
 
         final IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("test", "", -1)));
+                interactor.createProject(new JsonProjectInfo("test", "", -1, null)));
         assertEquals("The project client id is invalid.", ex2.getMessage());
 
         final IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("test", "", 1)));
+                interactor.createProject(new JsonProjectInfo("test", "", 1, null)));
         assertEquals("The project description cannot be empty.", ex3.getMessage());
 
-        final Project createdProject = interactor.createProject(new JsonProjectInfo("test", "test2", 1));
+        final Project createdProject = interactor.createProject(new JsonProjectInfo("test", "test2", 1, null));
 
         assertNotNull(createdProject, "The created project should not be null");
         assertEquals(2, createdProject.getId(), "The created project should have an ID of 2");
@@ -79,7 +79,7 @@ public class BackendProjectsTest {
 
     @Test
     public void updateProjectInformation() {
-        JsonProjectInfo info = new JsonProjectInfo("ING Forever", "The future of ING.", 5);
+        JsonProjectInfo info = new JsonProjectInfo("ING Forever", "The future of ING.", 5, null);
 
         final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> interactor.updateProjectInformation(99, info));
         assertEquals("The project with ID 99 does not exist.", ex1.getMessage());

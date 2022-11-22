@@ -13,7 +13,7 @@
       {{ this.formatDate }}
     </td>
     <td class="status">
-      <hour-registry-status :status="registry.status" @updateRegistryStatus="updateRegistryStatus"/>
+      <hour-registry-status :status="registry.status"/>
     </td>
   </tr>
 </template>

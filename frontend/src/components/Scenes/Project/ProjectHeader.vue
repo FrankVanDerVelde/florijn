@@ -9,6 +9,7 @@
       </stats>
       <button
           v-if="editButton"
+          @click="$router.push({name: 'edit-project', params: {projectId: project.id}})"
           class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">Wijzig informatie</button>
     </div>
   </section>
@@ -23,7 +24,7 @@ export default {
 
   computed: {
     participantCount() {
-      return this.project.participants.length;
+      return this.project.participants?.length ?? 0;
     },
   },
 

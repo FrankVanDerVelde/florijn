@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!editing" class="flex items-center" :class="[statusTypeLowerCase]">
+  <div class="flex items-center" :class="[statusTypeLowerCase]">
     <div class="circle"></div>
     <div>{{ this.statusText }}</div>
   </div>
@@ -25,9 +25,6 @@ export default {
         default:
           return "In afwachting";
       }
-    },
-    canEdit() {
-      return this.status == null;
     }
   },
 
