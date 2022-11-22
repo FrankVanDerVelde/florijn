@@ -35,6 +35,6 @@ public class CreateHourRegistrationRequest {
     }
 
     public HourRegistration toDomainModel(int nextId, Project project) {
-        return new HourRegistration(nextId, project.getId(), project.getParticipantByUserId(userId), from, to, description);
+        return new HourRegistration(nextId, project, project.getParticipantByUserId(userId), from, to, description);
     }
 }

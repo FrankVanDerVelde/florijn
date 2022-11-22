@@ -15,7 +15,7 @@
     </div>
   </div>
   <div class="flex flex-row items-center w-max" v-else>
-    <img :src="participant.user.avatarUrl" alt="Avatar" class="w-[28px] h-[28px] rounded-full mr-2">
+    <img :src="participant.user.avatarUrl" alt="Avatar" class="w-[32px] h-[32px] rounded-full mr-2">
     <div class="flex flex-col justify-between">
       <div class="font-bold text-sm">{{ name }}</div>
       <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>

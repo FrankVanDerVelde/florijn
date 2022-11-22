@@ -10,7 +10,8 @@ import LogIn from "../components/Scenes/Authentication/LogIn.vue";
 import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.vue";
 import ProjectList from "../components/Scenes/Project/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
-import AdminPanel from "../components/Scenes/Adminpanel/CustomerList.vue";
+import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
+import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
@@ -37,11 +38,11 @@ const routes = [
     {path: '/login/forgotpassword/cp', component: ChangePassword},
     {
         path: "/profile",
-        name: "profile",
         component: Profile,
         children: [
             {
                 path: '',
+                name: "profile",
                 redirect: '/profile/personal-info', // default child path
             },
             {
@@ -83,8 +84,12 @@ const routes = [
             {
                 path: "employee-list",
                 component: EmployeeList,
-            }
+            },
         ]
+    },
+    {
+        path: "/adminpanel/add-client",
+        component: AddClient,
     },
     {
         path: "/projects",
@@ -93,12 +98,12 @@ const routes = [
     },
     {
         path: "/projects/:projectId(\\d+)",
-        name: "project-overview",
         component: ProjectLayout,
         props: true,
         children: [
             {
                 path: '',
+                name: "project-overview",
                 component: ProjectOverview
             }, {
                 path: "participants",
