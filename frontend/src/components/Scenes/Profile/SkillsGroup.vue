@@ -6,7 +6,7 @@
             <div></div>
             <div class="flex justify-end mr-3">
                 <div class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md h-[32px] w-[96px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center cursor-pointer"
-                    @click="this.active = !this.active">
+                    @click="handleFormButton">
                     <div>{{ this.active ? "save" : "aanpassen"}}</div>
                 </div>
             </div>
@@ -14,7 +14,7 @@
     </div>
 
     <transition name="collapse" @enter="enter" @after-enter="afterEnter" @leave="leave">
-        <SkillsForm :skills="group.skills" v-if="this.active" />
+        <SkillsForm :skills="group.skills" v-if="this.active" @updateSkill="handleSkillUpdate" />
     </transition>
 
 </template>
@@ -33,6 +33,7 @@ import SkillsForm from "./SkillsForm.vue";
 export default {
     name: "Profile",
     components: { SkillsForm },
+    inject: ['skillFetchService'],
     props: {
         group: {
             type: Object,
@@ -64,7 +65,44 @@ export default {
             setTimeout(() => {
                 element.style.height = 0;
             })
+        },
+        handleFormButton() {
+            this.active = !this.active;
+            if (!this.active) {
+                console.log(this.group)
+                this.skillFetchService.fetchJsonPut(`/update-user-skill-group/5`, this.group);
+            }
+        },
+        handleSkillUpdate(skillId, newValue) {
+            this.group.skills.find(skill => skill.id === skillId).rating = newValue;
         }
+
     }
 }
 </script>
+
+<!-- {
+    "id": 0,
+    "name": "Front-End",
+    "description": "This is the group for Front-End",
+    "skills": [
+        {
+            "id": 0,
+            "name": "HTML",
+            "description": "Your ability to use HTML",
+            "rating": 5
+        },
+        {
+            "id": 1,
+            "name": "CSS",
+            "description": "Your ability to use CSS",
+            "rating": 5
+        },
+        {
+            "id": 2,
+            "name": "Javascript",
+            "description": "Your ability to use Javascript",
+            "rating": 5
+        }
+    ]
+} -->

@@ -2,10 +2,7 @@ package com.hva.ewa.team2.backend.data.user;
 
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.user.Admin;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
-import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.domain.models.user.*;
 import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
 import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
 import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
@@ -37,6 +34,9 @@ public class InMemoryUserRepository implements UserRepository {
 
         Specialist specialist = (new Specialist(5, "specialist@test.com", "test", null, "Specialist", "Test"));
         Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", null, "Specialist", "Test"));
+
+        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53 ,"E", "1204EX");
+        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12 ,"", "1623AB");
 
         setSkills(specialist);
         setSkills(specialist2);
