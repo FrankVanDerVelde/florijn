@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<List<User>> findUserByRole() {
         List<User> users = this.repository.getSpecialists();
 
-        if (users != null) {
+        if (users.size() != 0) {
             return ResponseEntity.ok().body(users);
         }
         return null;
