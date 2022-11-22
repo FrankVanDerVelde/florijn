@@ -48,14 +48,11 @@ export default {
   props: {
     skillset: {
       type: [Array, Object]
-    },
-    index: {
-      type: Number
-    },
+    }
   },
   data() {
     return {
-      expand: false
+      expand: false,
 
     }
   }

@@ -4,11 +4,11 @@
   <h2 class=" mb-4 mt-10 header-2">Deelnemers toevoegen</h2>
   <div class="flex flex-row participant-container">
     <div class=" w-2/5 filter-container">
-      <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
+      <FilterParticipants v-for="skillset in skills" :skillset=skillset :key=skillset />
     </div>
     <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
-      <ParticipantCard class="cursor-pointer flex-grow-0" v-for="participants in specialists" :key="participants.id" :skill="skills"
-                       :participant="participants" @addParticipant="addParticipant" />
+      <ParticipantCard class="cursor-pointer flex-grow-0" v-for="participants in specialists" :key=participants.id :skill=skills
+                       :participant=participants @addParticipant="addParticipant" />
 
     </div>
   </div>
@@ -72,6 +72,7 @@ export default {
       project: {},
       specialists: {},
       assignedSpecialists: {},
+      skillset: {},
 
       skills: [{
         name: "Microsoft Office Front-end",
