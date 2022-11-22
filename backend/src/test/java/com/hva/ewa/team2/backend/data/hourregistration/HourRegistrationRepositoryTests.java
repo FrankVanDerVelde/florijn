@@ -3,12 +3,15 @@ package com.hva.ewa.team2.backend.data.hourregistration;
 import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.user.Client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +20,8 @@ public class HourRegistrationRepositoryTests {
 
     private final HourRegistrationRepository hourRegistrationRepository;
     private final DateServiceLogic dateService;
+
+    private Project testProject;
 
     @Autowired
     public HourRegistrationRepositoryTests(
@@ -28,6 +33,7 @@ public class HourRegistrationRepositoryTests {
 
     @BeforeEach
     void setupTestingData() {
+        setupTestProject();
         deleteAllHourRegistrations();
         addHourRegistrations();
     }
@@ -99,19 +105,34 @@ public class HourRegistrationRepositoryTests {
         }
 
         Optional<HourRegistration> deletedHourRegistration = hourRegistrationRepository.fetchHourRegistrationById(0);
-        Assert.isTrue(deletedHourRegistration.isEmpty(), "HourRegistration from repo should exist NOT exisit for id 0.");
+        Assert.isTrue(deletedHourRegistration.isEmpty(), "HourRegistration from repo should exist NOT exist for id 0.");
     }
 
     /**
      * MARK: Privates
      **/
 
+    private void setupTestProject() {
+        testProject = new Project(
+                0,
+                "test",
+                "a",
+                new Client(
+                        0,
+                        "test_client@florijn.nl",
+                        "password",
+                        "",
+                        "Test"
+                )
+        );
+    }
+
     private void deleteAllHourRegistrations() {
-        List<Long> ids = hourRegistrationRepository.fetchAllHourRegistrations().stream()
+        List<Integer> ids = hourRegistrationRepository.fetchAllHourRegistrations().stream()
                 .map(HourRegistration::getId)
                 .toList();
 
-        for (Long id : ids) {
+        for (Integer id : ids) {
             try {
                 hourRegistrationRepository.deleteHourRegistration(id);
             } catch (Exception e) {
@@ -125,7 +146,7 @@ public class HourRegistrationRepositoryTests {
         List<CreateHourRegistrationRequest> testHourRegistrations = testHourRegistrations();
         for (CreateHourRegistrationRequest hourRegistration : testHourRegistrations) {
             try {
-                hourRegistrationRepository.createHourRegistration(hourRegistration);
+                hourRegistrationRepository.createHourRegistration(hourRegistration, testProject);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

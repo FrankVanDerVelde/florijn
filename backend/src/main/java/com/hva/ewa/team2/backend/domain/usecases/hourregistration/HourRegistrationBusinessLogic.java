@@ -8,14 +8,15 @@ import java.util.Optional;
 
 public interface HourRegistrationBusinessLogic {
 
-    List<HourRegistration> handleFetchHourRegistrationsByUser(long userId);
-    List<HourRegistration> handleFetchHourRegistrationsForProject(long projectId);
-    Optional<HourRegistration> handleFetchHourRegistrationById(long id);
-    Optional<HourRegistration> handleDeleteHourRegistrationById(long id);
+    List<HourRegistration> handleFetchHourRegistrationsByUser(int userId);
+    List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId);
+    List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId);
+    Optional<HourRegistration> handleFetchHourRegistrationById(int id);
+    Optional<HourRegistration> handleDeleteHourRegistrationById(int id);
 
     HourRegistration handleCreateHourRegistration(CreateHourRegistrationRequest request) throws Exception;
-    HourRegistration handleUpdateHourRegistration(long id, HourRegistration hourRegistration) throws Exception;
+    HourRegistration handleUpdateHourRegistration(int id, HourRegistration hourRegistration) throws Exception;
 
-    Optional<HourRegistration> handleAcceptHourRegistration(long id);
-    Optional<HourRegistration> handleRejectHourRegistration(long id);
+    Optional<HourRegistration> handleAcceptHourRegistration(int id);
+    Optional<HourRegistration> handleRejectHourRegistration(int id);
 }
