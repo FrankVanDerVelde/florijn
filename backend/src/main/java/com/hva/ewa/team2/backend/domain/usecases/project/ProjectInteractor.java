@@ -17,13 +17,11 @@ import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Component
-public class ProjectInteractor implements ProjectBusinessLogic{
+public class ProjectInteractor implements ProjectBusinessLogic {
 
     private final UserRepository userRepo;
     private final ProjectRepository projectRepo;
@@ -46,14 +44,23 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         final String title = projectInfo.getTitle();
         final int clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
+        final String logoSrc = projectInfo.getLogoSrc();
 
         validateProjectInformation(title, clientId, description);
 
         // creating temp project to update.
-        Project project = new Project(
-                projectRepo.findAll().size() + 1, title, description,
-                (Client) userRepo.findById(clientId)
-        );
+        Project project;
+        if (logoSrc == null) {
+            project = new Project(
+                    projectRepo.findAll().size() + 1, title, description,
+                    (Client) userRepo.findById(clientId)
+            );
+        } else {
+            project = new Project(
+                    projectRepo.findAll().size() + 1, title, description,
+                    (Client) userRepo.findById(clientId), logoSrc
+            );
+        }
 
         return projectRepo.addProject(project);
     }
@@ -85,6 +92,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         final String title = body.getTitle();
         final int client = body.getClient();
         final String description = body.getDescription();
+        final String logoSrc = body.getLogoSrc();
 
         validateProjectInformation(
                 title,
@@ -97,10 +105,18 @@ public class ProjectInteractor implements ProjectBusinessLogic{
         }
 
         // creating temp project to update.
-        Project project = new Project(
-                pId, title, description,
-                (Client) userRepo.findById(client)
-        );
+        Project project;
+        if (logoSrc == null) {
+            project = new Project(
+                    projectRepo.findAll().size() + 1, title, description,
+                    (Client) userRepo.findById(client)
+            );
+        } else {
+            project = new Project(
+                    projectRepo.findAll().size() + 1, title, description,
+                    (Client) userRepo.findById(client), logoSrc
+            );
+        }
 
         return projectRepo.updateProject(project);
     }
@@ -232,8 +248,7 @@ public class ProjectInteractor implements ProjectBusinessLogic{
                             .sum()
                     ).replace(".", ",")
             ));
-        }
-        else {
+        } else {
             List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProject(projectId);
 
             reports.add(new ProjectReport(
