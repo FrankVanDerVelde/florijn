@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -24,6 +24,7 @@ import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
+import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue";
 
 
 const routes = [
@@ -67,8 +68,7 @@ const routes = [
                 component: Resume,
             },
         ]
-    },
-    {
+    }, {
         path: '/adminpanel',
         name: "adminpanel",
         component: AdminPanel,
@@ -86,20 +86,24 @@ const routes = [
                 component: EmployeeList,
             },
         ]
-    },
-    {
+    }, {
         path: "/adminpanel/add-client",
         component: AddClient,
-    },
-    {
+    }, {
         path: "/projects",
         name: "projects",
         component: ProjectList
-    },
-    {
+    }, {
+        path: "/projects/new",
+        name: "new-project",
+        component: CreateProject,
+        props: {
+            newProject: true,
+        }
+    }, {
         path: "/projects/:projectId(\\d+)",
-        component: ProjectLayout,
         props: true,
+        component: ProjectLayout,
         children: [
             {
                 path: '',
