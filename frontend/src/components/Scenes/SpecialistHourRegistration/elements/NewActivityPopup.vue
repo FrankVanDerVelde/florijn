@@ -59,8 +59,8 @@ export default {
     await this.loadProjects();
     if (this.hourRegistration) {
       this.selectedProjectId = this.hourRegistration.project.id;
-      this.from = moment(this.hourRegistration.from).format('hh:mm');
-      this.to = moment(this.hourRegistration.to).format('hh:mm');
+      this.from = moment(this.hourRegistration.from).format('HH:mm');
+      this.to = moment(this.hourRegistration.to).format('HH:mm');
       console.log(this.hourRegistration)
       this.description = this.hourRegistration.description
     }
