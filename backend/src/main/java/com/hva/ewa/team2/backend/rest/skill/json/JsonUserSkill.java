@@ -2,15 +2,20 @@ package com.hva.ewa.team2.backend.rest.skill.json;
 
 import lombok.Getter;
 
-public class JsonUserSkill {
+import java.io.Serializable;
+
+public class JsonUserSkill implements Serializable {
 
     @Getter
-    private int skillId;
+    private int id;
     @Getter
-    private int skillRating;
+    private int rating;
+
+    public JsonUserSkill() {}
 
     public JsonUserSkill(int skillId, int skillRating) {
-        this.skillId = skillId;
-        this.skillRating = skillRating;
+        this.id = skillId;
+        this.rating = skillRating;
     }
+
 }

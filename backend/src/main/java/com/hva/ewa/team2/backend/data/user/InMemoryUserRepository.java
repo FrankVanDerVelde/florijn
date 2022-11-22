@@ -3,10 +3,7 @@ package com.hva.ewa.team2.backend.data.user;
 import com.hva.ewa.team2.backend.data.skill.InMemorySkillRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.user.Admin;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
-import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.domain.models.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +30,11 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Matteo", "Clarke"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Layton", "Salter"));
+        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53 ,"E", "1204EX");
+        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12 ,"", "1623AB");
+
+        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "https://mytechguy.com/wp-content/uploads/2015/01/Lou-Face.jpg", "Martíno", "Manzana", dummyAddress1));
+        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "https://media.istockphoto.com/id/1197071216/photo/portrait-of-a-smart-and-handsome-it-specialist-wearing-glasses-smiles-behind-him-personal.jpg?s=612x612&w=0&k=20&c=Dy8TjvDmeXWhR6gAZ_OuqLu3ytUJmtycEYdVQenpWoI=", "John", "Johnson", dummyAddress2));
 
         setSkills(specialist);
         setSkills(specialist2);
