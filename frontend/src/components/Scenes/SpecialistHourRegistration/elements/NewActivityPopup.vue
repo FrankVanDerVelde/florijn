@@ -27,7 +27,7 @@
       </div>
 
       <div class="flex gap-2">
-        <button @click="" class="secondary-button">Annuleren</button>
+        <button @click="$emit('activity-cancel-clicked')" class="secondary-button">Annuleren</button>
         <button @click="handleSaveTapped" class="primary-button">Opslaan</button>
       </div>
     </form>
@@ -41,7 +41,7 @@ import {HourRegistration} from "../../../models/HourRegistration.js";
 export default {
   name: "NewActivityPopup",
   inject: ['projectFetchService', 'hourRegistrationRepository'],
-  emits: ['dismiss-clicked', 'activity-added'],
+  emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked'],
   props: {
     hourRegistration: HourRegistration
   },
@@ -71,6 +71,14 @@ export default {
       console.log(this.projects);
     },
     async handleSaveTapped() {
+      if (this.hourRegistration) {
+        await this.updateHourRegistration();
+      } else {
+        await this.createNewHR()
+      }
+    },
+
+    async createNewHR() {
       try {
         await this.hourRegistrationRepository
             .create(
@@ -84,6 +92,22 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+
+    async updateHourRegistration() {
+        try {
+          await this.hourRegistrationRepository
+              .update(
+                  this.hourRegistration.id,
+                  this.hourRegistration.project.id,
+                  this.convertTimeToDateString(this.from),
+                  this.convertTimeToDateString(this.to),
+                  this.description
+              );
+          this.$emit('activity-added');
+        } catch (e) {
+          console.error(e);
+        }
     },
 
     convertTimeToDateString(timeStringInHoursMinutes) {

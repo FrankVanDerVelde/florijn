@@ -52,7 +52,10 @@ export class HourRegistrationRepository {
                             to: to,
                             description: description
                         }
-                    )
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 }
             );
         } catch (e) {
