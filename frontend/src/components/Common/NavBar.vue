@@ -75,14 +75,19 @@ export default {
       } else {
         switch (localStorage.getItem("role")) {
           case "admin":
-            this.links = [{
-              name: 'Home',
-              link: '/admin/home'
-            },
+            this.links = [
+              {
+                name: 'Home',
+                link: '/admin/home'
+              },
               {
                 name: 'Admin',
                 link: '/adminpanel'
-              }]
+              }, {
+                name: 'Nieuw project',
+                link: '/projects/new'
+              }
+            ]
             break;
           case "specialist":
             this.links = [{

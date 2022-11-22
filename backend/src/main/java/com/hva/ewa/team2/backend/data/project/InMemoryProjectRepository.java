@@ -93,6 +93,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
         found.setTitle(project.getTitle());
         found.setDescription(project.getDescription());
         found.setClient(project.getClient());
+        found.setLogoSrc(project.getLogoSrc());
 
         return found;
 //        // replacing all projects with the given ID with the provided project, otherwise with themselves to change nothing.
