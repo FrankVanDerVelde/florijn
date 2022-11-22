@@ -39,7 +39,10 @@
           ><font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-right"/></div>
         </div>
 
-        <div @click="handleAddActivityClicked" class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-cente cursor-pointer">+ Toevoegen</div>
+        <div
+            @click="handleAddActivityClicked"
+            class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-center cursor-pointer"
+        >+ Toevoegen</div>
 
         <div class="flex w-full flex-col gap-4 justify-center">
           <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0" />

@@ -10,10 +10,10 @@
       </div>
       <div class="flex gap-4">
         <div class="w-[26px] h-[26px]" @click="handleRowClicked">
-          <font-awesome-icon class=" text-xl" icon="fa-solid fa-pen"/>
+          <font-awesome-icon class="text-xl text-neutral-900 cursor-pointer" icon="fa-solid fa-pen"/>
         </div>
         <div class="w-[26px] h-[26px]" @click="handleDeleteHourRegistrationClicked(hourRegistration.id)">
-          <font-awesome-icon class="text-app_red-500 text-xl" icon="fa-solid fa-trash-can"/>
+          <font-awesome-icon class="text-app_red-500 text-xl cursor-pointer" icon="fa-solid fa-trash-can"/>
         </div>
       </div>
     </div>
