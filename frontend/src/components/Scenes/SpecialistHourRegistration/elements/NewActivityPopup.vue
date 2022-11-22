@@ -6,8 +6,9 @@
     <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
       <div class="form-row">
         <label id="project" class="font-semibold">Project</label>
-        <select  v-model="selectedProjectId" v-for="project in projects" class="border border-neutral-300 p-2 rounded rounded-[4px]">
-          <option value="{{project.id}}">{{project.title}}</option>
+        <select v-model="selectedProjectId" class="border border-neutral-300 p-2 rounded rounded-[4px]" @change="onChanged($event.target.value)">
+          <option disabled :selected="selectedProjectId === null" :value="null">Kies een project</option>
+          <option :selected="project.id === selectedProjectId" v-for="project in projects" :key="project.id" :value="project.id">{{project.title}}</option>
         </select>
       </div>
 
@@ -57,7 +58,7 @@ export default {
   async created() {
     await this.loadProjects();
     if (this.hourRegistration) {
-      this.selectedProjectId = this.hourRegistration.id;
+      this.selectedProjectId = this.hourRegistration.project.id;
       this.from = moment(this.hourRegistration.from).format('hh:mm');
       this.to = moment(this.hourRegistration.to).format('hh:mm');
       console.log(this.hourRegistration)
