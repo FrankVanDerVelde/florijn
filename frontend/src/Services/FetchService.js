@@ -39,6 +39,17 @@ export default class FetchService {
         });
     }
 
+    async fetchJsonPut(path, body = {}, options = {}) {
+        return this.fetchJson(path, {
+            method: "PUT",
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            ...options
+        });
+    }
+
     async fetchUrl(path, method = "GET", options = {}) {
         return this.fetchJson(path, {
             method: method,
