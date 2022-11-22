@@ -1,34 +1,34 @@
 <template>
-  <div class="flex flex-col z-90 bg-neutral-0 p-[16px] rounded-[10px]">
-    <p class="text-xl font-medium">Nieuwe activiteit</p>
-    <hr>
+  <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px]">
+    <p class="text-xl font-semibold mb-2 px-[16px]">Nieuwe activiteit</p>
+    <hr class="text-neutral-300">
 
-    <form @submit.stop class="flex flex-col gap-4 pt-8">
+    <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
       <div class="form-row">
         <label id="project" class="font-semibold">Project</label>
-        <select v-model="selectedProjectId" v-for="project in projects" name="projects" id="cars">
-          <option :value="project.id">{{project.title}}</option>
+        <select  v-model="selectedProjectId" v-for="project in projects" class="border border-neutral-300 p-2 rounded rounded-[4px]">
+          <option value="{{project.id}}">{{project.title}}</option>
         </select>
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Van</label>
-        <input v-model="from" type="time">
+        <input v-model="from" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Tot</label>
-        <input v-model="to" type="time">
+        <input v-model="to" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
       </div>
 
       <div class="form-row">
         <label class="font-semibold">Beschrijving</label>
-        <textarea v-model="description" class="border-[1px] rounded p-2 border-neutral-100" type="text" placeholder="beschrijving"></textarea>
+        <textarea v-model="description" class="border-[1px] rounded p-2 border-neutral-300" type="text" placeholder="beschrijving"></textarea>
       </div>
 
-      <div class="flex gap-2">
-        <button @click="$emit('activity-cancel-clicked')" class="secondary-button">Annuleren</button>
-        <button @click="handleSaveTapped" class="primary-button">Opslaan</button>
+      <div class="flex gap-2 justify-center">
+        <button @click="$emit('activity-cancel-clicked')" class="secondary-button grow">Annuleren</button>
+        <button @click="handleSaveTapped" class="primary-button grow">Opslaan</button>
       </div>
     </form>
   </div>
