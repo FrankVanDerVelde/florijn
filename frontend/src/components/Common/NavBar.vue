@@ -8,12 +8,13 @@
           <nav-item v-for="item in links" :key="item.name" :data="item"/>
         </div>
       </div>
-      <div class="h-full pr-4 pl-4">
+      <div class="h-full pr-4 pl-4" @click="confirmationLogOut()">
         <nav-item class="w-fit" :data="this.staticLink"/>
       </div>
     </div>
     <div class="page-main-mw p-4 h-full flex md:hidden flex-row items-center justify-between">
-      <font-awesome-icon v-if="!menuExpanded" size="xl" fixed-width icon="bars" class="menuExpansionIcon" @click="toggleMenu"/>
+      <font-awesome-icon v-if="!menuExpanded" size="xl" fixed-width icon="bars" class="menuExpansionIcon"
+                         @click="toggleMenu"/>
       <font-awesome-icon v-else size="xl" icon="times" fixed-width class="menuExpansionIcon" @click="toggleMenu"/>
 
       <img class="h-full w-fit" :src="logo" alt="Business Logo">
@@ -21,7 +22,7 @@
     </div>
 
     <div v-if="menuExpanded" class="page-main-mw flex flex-col p-4 small-nav z-40 md:hidden">
-      <nav-item v-for="item in links" :key="item.name" :data="item" :small="true" />
+      <nav-item v-for="item in links" :key="item.name" :data="item" :small="true"/>
     </div>
   </div>
 </template>
@@ -42,31 +43,13 @@ export default {
   watch: {
     '$route'() {
       this.menuExpanded = false;
+      this.isLoggedIn();
     }
   },
-
   data() {
     return {
       menuExpanded: false,
-      links: [
-        {
-          name: 'Home',
-          link: '/home'
-        }, {
-          name: 'Profiel',
-          link: '/profile'
-        }, {
-          name: 'Project Overzicht',
-          link: '/projects/1'
-        }, {
-          name: 'Projecten',
-          link: '/projects'
-        },
-        {
-          name: 'Admin',
-          link: '/adminpanel'
-        }
-      ],
+      links: [],
       staticLink: {
         name: 'Log in',
         link: '/login'
@@ -77,8 +60,74 @@ export default {
   methods: {
     toggleMenu() {
       this.menuExpanded = !this.menuExpanded;
-
       document.body.style.overflow = this.menuExpanded ? 'hidden' : 'auto';
+    },
+    isLoggedIn() {
+      if (localStorage.getItem("id") && localStorage.getItem("role") === "null") {
+        this.links = [{
+          name: 'Home',
+          link: '/home'
+        }]
+        this.staticLink = {
+          name: 'Log in',
+          link: '/login'
+        }
+      } else {
+        switch (localStorage.getItem("role")) {
+          case "admin":
+            this.links = [
+              {
+                name: 'Home',
+                link: '/admin/home'
+              },
+              {
+                name: 'Admin',
+                link: '/adminpanel'
+              }, {
+                name: 'Nieuw project',
+                link: '/projects/new'
+              }
+            ]
+            break;
+          case "specialist":
+            this.links = [{
+              name: 'Home',
+              link: '/specialist/home'
+            }, {
+              name: 'Profiel',
+              link: '/profile'
+            }, {
+              name: 'Projecten',
+              link: '/projects'
+            }]
+            break;
+          case "client":
+            this.links = [{
+              name: 'Home',
+              link: '/client/home'
+            }, {
+              name: 'Project Overzicht',
+              link: '/projects/1'
+            }, {
+              name: 'Projecten',
+              link: '/projects'
+            },]
+            break;
+        }
+        this.staticLink = {
+          name: 'Log uit',
+          link: '/home'
+        }
+      }
+    },
+    confirmationLogOut() {
+      if (this.staticLink.link === "/login") {
+        return;
+      }
+      alert("Je word nu uitgelogd");
+      location.reload();
+      localStorage.setItem("id", null);
+      localStorage.setItem("role", null);
     }
   }
 };

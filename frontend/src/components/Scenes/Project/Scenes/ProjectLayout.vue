@@ -1,19 +1,15 @@
 <template>
-  <div class="page-main-mw p-4">
-    <div class="banner-container grid">
-      <img :src="project.client.bannerSrc" alt="banner">
-    </div>
+  <div :class="{'page-main-mw': !preview, 'p-4': !preview, 'mt-4': !preview}">
+    <ProjectBanner :project="project" :preview="preview"/>
 
     <div class="flex flex-col items-center">
-      <div class="icon-container grid w-full">
-        <img :src="project.logoSrc" alt="project logo">
-      </div>
+      <ProjectLogo :project="project"/>
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <ProjectHeader :project="project" :edit-button="userId >= 2"/>
+          <ProjectHeader :project="project" :edit-button="!preview && userId >= 2"/>
 
-          <router-view :project="project"/>
+          <router-view v-if="!preview && project != null" :project="project"/>
         </div>
       </div>
     </div>
@@ -22,10 +18,12 @@
 
 <script>
 import ProjectHeader from "../ProjectHeader.vue";
+import ProjectBanner from "../ProjectBanner.vue";
+import ProjectLogo from "../ProjectLogo.vue";
 
 export default {
-  name: "ProjectOverview",
-  components: {ProjectHeader},
+  name: "ProjectLayout",
+  components: {ProjectLogo, ProjectBanner, ProjectHeader},
   inject: ['projectFetchService'],
 
   watch: {
@@ -40,29 +38,41 @@ export default {
     }
   },
 
+  data() {
+    return {
+      project: {}
+    }
+  },
+
   props: {
     projectId: {
       type: String,
-      required: true
+      default: "-1"
+    },
+    projectInfo: {
+      type: Object,
+      default() {
+        return null;
+      }
+    },
+    preview: {
+      type: Boolean,
+      default: false
     }
   },
 
   async created() {
     localStorage.setItem('userId', this.$route.query.userId ?? 2);
-    this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
+
+    if (this.projectInfo == null && this.projectId >= 0) {
+      this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
+    } else {
+      this.project = this.projectInfo ?? {};
+    }
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
-      this.$router.push({name: 'projects'});
-      return;
-    }
-
-    console.log(this.project.client)
-  },
-
-  data() {
-    return {
-      project: {}
+      this.$router.redirect({name: 'projects'});
     }
   },
 }
@@ -79,61 +89,12 @@ h2, .header-2 {
 </style>
 
 <style scoped>
-.banner-container {
-  margin-top: 40px;
-  width: 100%;
-}
 
-.banner-container > img {
-  background-color: #d9d9d9;
-  grid-column: span 12;
-  width: 100%;
-  height: 218px;
-  object-fit: cover;
-  -o-object-fit: cover;
-  border-radius: 16px;
-}
-
-.icon-container {
-  margin-top: -32px;
-  z-index: 1;
-}
-
-.icon-container > img {
-  margin-left: auto;
-  margin-right: auto;
-  width: 68px;
-  height: 68px;
-  object-fit: cover;
-  -o-object-fit: cover;
-  border-radius: 18px;
-  border: 4px solid #fff;
-  background-color: #fff;
-}
 
 th {
   font-weight: 600;
   font-size: 18px;
   line-height: 26px;
   padding-bottom: 12px;
-}
-
-@media screen and (min-width: 1024px) {
-  .banner-container > img {
-    height: 400px;
-  }
-
-  .icon-container {
-    margin-top: -52px;
-  }
-
-  .icon-container > img {
-    margin-left: 48px;
-    margin-right: unset;
-    width: 88px;
-    height: 88px;
-    border-width: 8px;
-    border-radius: 24px;
-  }
 }
 </style>

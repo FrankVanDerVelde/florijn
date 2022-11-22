@@ -29,8 +29,12 @@ export default class FetchService {
     }
 
     async fetchJsonPost(path, body = {}, options = {}) {
+        return this.fetchJsonMethod(path, "POST", body, options);
+    }
+
+    async fetchJsonMethod(path, method = "GET", body = {}, options = {}) {
         return this.fetchJson(path, {
-            method: "POST",
+            method: method,
             body: JSON.stringify(body),
             headers: {
                 'Content-Type': 'application/json'

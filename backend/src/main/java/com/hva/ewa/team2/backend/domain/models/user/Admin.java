@@ -1,21 +1,19 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
-public class Admin extends User{
+import lombok.Getter;
+import lombok.Setter;
 
+public class Admin extends User{
+    @Getter
+    @Setter
     private String firstName;
+    @Getter
+    @Setter
     private String lastName;
 
     public Admin(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         super(id, email, password, profilePictureURL);
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
     }
 }

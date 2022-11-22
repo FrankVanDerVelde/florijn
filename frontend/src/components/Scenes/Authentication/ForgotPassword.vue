@@ -73,7 +73,7 @@ export default {
 .submit-button {
   justify-content: center;
   align-items: center;
-  margin: 3%;
+  margin: 0.5vh;
   text-align: center;
 }
 

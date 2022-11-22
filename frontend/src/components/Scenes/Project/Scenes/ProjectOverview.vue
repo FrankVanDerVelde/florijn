@@ -44,10 +44,6 @@ export default {
   components: {HoursInfoPopup, HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
 
-  async created() {
-    await Promise.all([this.fetchReports(), this.fetchHourRegistry()]);
-  },
-
   props: {
     project: {
       type: Object,
@@ -56,8 +52,8 @@ export default {
   },
 
   watch: {
-    '$route.query.userId': async function () {
-      await Promise.all([this.fetchReports(), this.fetchHourRegistry()]);
+    'project': async function () {
+      await Promise.all([this.fetchReports(), this.fetchHourRegistry()])
     }
   },
 
