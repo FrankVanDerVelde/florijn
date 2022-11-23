@@ -32,8 +32,8 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", null, "Specialist", "Test"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", null, "Specialist", "Test"));
+        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen"));
+        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen"));
 
         Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53 ,"E", "1204EX");
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12 ,"", "1623AB");

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mt-4 ml-5 p-3 md:w-auto fa-border rounded-xl" @click.once="inputFields = !inputFields">
+  <div class="flex flex-col h-fit mt-4 ml-5 p-3 fa-border rounded-xl" @click.once="inputFields = !inputFields">
     <div class="flex">
 
       <div>

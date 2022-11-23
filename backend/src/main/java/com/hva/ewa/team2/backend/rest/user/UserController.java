@@ -73,7 +73,7 @@ public class UserController {
 
     @GetMapping(path = "/specialists", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> findUserByRole() {
-        List<User> users = this.repository.getSpecialists();
+        List<User> users = this.userRepo.getSpecialists();
 
         if (users.size() != 0) {
             return ResponseEntity.ok().body(users);

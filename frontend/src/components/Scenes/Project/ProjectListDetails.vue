@@ -40,10 +40,6 @@ export default {
     }
   },
 
- created() {
-    this.project.logoSrc = "/src/assets/ING-Bankieren-icoon.webp";
-
- }
 }
 </script>
 
