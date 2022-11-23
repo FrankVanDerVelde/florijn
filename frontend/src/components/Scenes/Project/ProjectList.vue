@@ -6,16 +6,12 @@
       </div>
 
       <div class="grow">
-        <project-list-details v-for="project in projects" :key="project.id" :project="project"></project-list-details>
+        <div v-if="project.length === 0">Geen projecten gevonden</div>
+
+        <project-list-details v-for="projects in project" :key="projects.id" :project="projects"></project-list-details>
       </div>
-
-
     </div>
-
-
   </div>
-
-
 </template>
 
 <script>
@@ -27,58 +23,65 @@ import SideBarNav from "../../Common/SideBarNav.vue";
 export default {
   name: "ProjectList",
   components: {ProjectListDetails, SideBarNav},
-  created() {
+  inject: ['projectFetchService'],
+
+  async created() {
+    this.project = await this.projectFetchService.fetchJson(``)
     if (this.id === "null") {
       this.$router.push("/home");
     }
   },
+
+
+
   data() {
     return {
       id: localStorage.getItem("id"),
+      project: {},
       sideBarLinks: [{
         icon: 'fa-solid fa-user',
         name: 'projecten',
         href: '/projects',
       }],
-      projects: [
-        {
-          id: 0,
-          title: "ING Banking Web Application",
-          description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-          logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-          participants: 3
-        }, {
-          id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
-        }, {
-          id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
-        }, {
-          id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
-        }, {
-          id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
-        }, {
-          id: 0,
-          title: "Project EWA",
-          description: "Website ontwikkeling voor Florijn",
-          logoSrc: "/src/assets/logo-small.png",
-          participants: 6
-        }
-      ]
+      // project: [
+      //   {
+      //     id: 0,
+      //     title: "ING Banking Web Application",
+      //     description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+      //     logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
+      //     participants: 3
+      //   }, {
+      //     id: 0,
+      //     title: "Project EWA",
+      //     description: "Website ontwikkeling voor Florijn",
+      //     logoSrc: "/src/assets/logo-small.png",
+      //     participants: 6
+      //   }, {
+      //     id: 0,
+      //     title: "Project EWA",
+      //     description: "Website ontwikkeling voor Florijn",
+      //     logoSrc: "/src/assets/logo-small.png",
+      //     participants: 6
+      //   }, {
+      //     id: 0,
+      //     title: "Project EWA",
+      //     description: "Website ontwikkeling voor Florijn",
+      //     logoSrc: "/src/assets/logo-small.png",
+      //     participants: 6
+      //   }, {
+      //     id: 0,
+      //     title: "Project EWA",
+      //     description: "Website ontwikkeling voor Florijn",
+      //     logoSrc: "/src/assets/logo-small.png",
+      //     participants: 6
+      //   }, {
+      //     id: 0,
+      //     title: "Project EWA",
+      //     description: "Website ontwikkeling voor Florijn",
+      //     logoSrc: "/src/assets/logo-small.png",
+      //     participants: 6
+      //   }
+      // ]
     }
   }
 

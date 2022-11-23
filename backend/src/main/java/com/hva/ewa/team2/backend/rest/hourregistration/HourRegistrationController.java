@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.rest.hourregistration;
 
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
+import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.usecases.hourregistration.HourRegistrationBusinessLogic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -73,9 +74,10 @@ public class HourRegistrationController {
     }
 
     @PutMapping(path= "/hour-registrations/{id}/update")
-    public ResponseEntity<HourRegistration> updateHourRegistration(@PathVariable int id, @RequestBody HourRegistration hr) {
+    public ResponseEntity<HourRegistration> updateHourRegistration(@PathVariable int id, @RequestBody UpdateHourRegistrationRequestBody hrUpdateRequest) {
         try {
-            HourRegistration createdHR = interactor.handleUpdateHourRegistration(id, hr);
+            UpdateHourRegistrationRequest request = UpdateHourRegistrationRequest.fromBody(hrUpdateRequest, id);
+            HourRegistration createdHR = interactor.handleUpdateHourRegistration(id, request);
             return ResponseEntity.ok(createdHR);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();

@@ -38,7 +38,7 @@ export default {
       },
         {
           icon: 'fa-solid fa-user',
-          name: 'Werknemers',
+          name: 'Specialisten',
           href: 'employee-list',
         }],
       customers: [

@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import {HourRegistrationRepository} from "./Networking/HourRegistrationRepository.js";
 import {DateService} from "./Services/DateService.js";
 import FetchService from "./Services/FetchService.js";
 import {UserAdaptor} from "./Services/user-adaptor.js";
+import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegistrationRepository.js";
 
 export default {
   name: "App",
@@ -19,6 +19,7 @@ export default {
       dateService: new DateService(),
       projectFetchService: new FetchService("projects"),
       skillFetchService: new FetchService("skills"),
+      specialistFetchService: new FetchService("/specialists"),
       fetchService: new FetchService(""),
       userService: new UserAdaptor()
     }

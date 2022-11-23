@@ -20,6 +20,7 @@
       <div class="font-bold text-sm">{{ name }}</div>
       <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>
     </div>
+
   </div>
 
 </template>
