@@ -19,6 +19,8 @@ public interface UserRepository {
 
     List<User> getAllUsers();
 
+    List<User> getSpecialists();
+
     List<User> getUsersByRole(String role);
 
     User saveAdmin(JsonAdminInfo admin);

@@ -4,6 +4,7 @@ import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,4 +70,16 @@ public class UserController {
     public User deleteById(@PathVariable int id){
         return this.userRepo.deleteById(id);
     }
+
+    @GetMapping(path = "/specialists", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> findUserByRole() {
+        List<User> users = this.userRepo.getSpecialists();
+
+        if (users.size() != 0) {
+            return ResponseEntity.ok().body(users);
+        }
+        return null;
+    }
+
+
 }

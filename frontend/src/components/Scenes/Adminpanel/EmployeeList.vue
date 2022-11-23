@@ -4,7 +4,7 @@
       <div class="profile-container flex-col">
         <div class="buttoncontainer">
           <router-link to="/adminpanel/add-employee">
-            <button id="addbutton" class="bg-primary-500 font-bold border-[1px] h-[38px] rounded-md text-neutral-0" @click="navigate" role="link">+ Werknemer toevoegen</button>
+            <button id="addbutton" class="bg-primary-500 font-bold border-[1px] h-[38px] rounded-md text-neutral-0" @click="navigate" role="link">+ Specialist toevoegen</button>
           </router-link>
         </div>
         <div class="container grow">
@@ -37,7 +37,7 @@ export default {
       },
         {
           icon: 'fa-solid fa-user',
-          name: 'Werknemers',
+          name: 'Specialisten',
           href: 'employee-list',
         }],
       employees: [

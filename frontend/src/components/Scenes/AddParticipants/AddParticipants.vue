@@ -1,11 +1,15 @@
 <template>
-  <div class="flex flex-row fa-border">
-    <div class=" w-1/5 ">
-      <FilterParticipants v-for="(skillset, index) in skills" :index="index" :skillset="skillset" :key="skillset"/>
+  <ProjectParticipantList :participants=project.participants></ProjectParticipantList>
+
+  <h2 class=" mb-4 mt-10 header-2">Deelnemers toevoegen</h2>
+  <div class="flex flex-row participant-container">
+    <div class=" w-2/5 filter-container">
+      <FilterParticipants v-for="skillset in skills" :skillset=skillset :key=skillset />
     </div>
-    <div class="flex flex-row flex-wrap self-start justify-evenly ">
-      <ParticipantCard v-for="participants in participants" :key="participants.id" :skill="skills"
-                       :participant="participants"></ParticipantCard>
+    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
+      <ParticipantCard class="cursor-pointer flex-grow-0" v-for="participants in specialists" :key=participants.id :skill=skills
+                       :participant=participants @addParticipant="addParticipant" />
+
     </div>
   </div>
 </template>
@@ -13,41 +17,63 @@
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
+import ProjectParticipantList from "../Project/ProjectParticipantList.vue";
 
 export default {
   name: "AddParticipants",
-  components: {FilterParticipants, ParticipantCard},
+  components: {ProjectParticipantList, ParticipantCard, FilterParticipants},
+  inject: ['projectFetchService', 'specialistFetchService'],
+
+  props: {
+    projectId: {
+      type: String,
+      required: true
+    }
+  },
+
+
+  methods: {
+    addParticipant(specialist ) {
+
+      console.log(this.project.participants)
+
+      specialist.userId = specialist.participant.id
+
+     this.project.participants.push({
+        role: specialist.role, hourlyRate: specialist.hourlyRate, user:
+            {
+              id: specialist.participant.id,
+              email: specialist.participant.email,
+              avatarUrl: specialist.participant.avatarUrl,
+              password: specialist.participant.password,
+              firstName: specialist.participant.firstName,
+              lastName: specialist.participant.lastName
+            }
+      })
+      this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
+
+    }
+  },
+
+
+  async created() {
+    this.project = await this.projectFetchService.fetchJson(`/${this.$route.params.projectId}`);
+    this.specialists = await this.specialistFetchService.fetchJson("")
+
+    // when a non-existing project is requested, redirect to the /projects page.
+    if (this.project == null) {
+      this.$router.push({name: 'projects'});
+    }
+  },
+
+
   data() {
     return {
-      participants: [
-        {
-          id: 0,
-          firstName: "Andrew",
-          lastName: "Alfred",
-          role: "Product Owner",
-          avatar: "/src/assets/avatars/avatar1.avif",
-          email: "andrewa@florijn.com",
-          assignedSkills: [{2: 4}]
-        }, {
-          id: 1,
-          firstName: "Withney",
-          lastName: "Keulen",
-          role: "Lead Developer",
-          avatar: "/src/assets/avatars/avatar2.avif",
-          email: "withneyk@florijn.com",
-          assignedSkills: [{2: 4}]
+      project: {},
+      specialists: {},
+      assignedSpecialists: {},
+      skillset: {},
 
-        }, {
-          id: 2,
-          firstName: "Jan",
-          lastName: "Timmermans",
-          role: "Designer",
-          avatar: "/src/assets/avatars/avatar3.avif",
-          email: "jant@florijn.com",
-          assignedSkills: [{2: 4}]
-
-        }
-      ],
       skills: [{
         name: "Microsoft Office Front-end",
         skill: [{
@@ -91,37 +117,7 @@ export default {
           name: "Ms office Eccel pt 2",
           rating: 3
         },]
-      }],
-      project: {
-        bannerSrc: "/src/assets/ing-banner.jpg",
-        logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-        title: "ING Banking Web Application",
-        description: "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
-        participants: [
-          {
-            id: 0,
-            firstName: "Andrew",
-            lastName: "Alfred",
-            role: "Product Owner",
-            avatar: "/src/assets/avatars/avatar1.avif",
-            email: "andrewa@florijn.com"
-          }, {
-            id: 1,
-            firstName: "Withney",
-            lastName: "Keulen",
-            role: "Lead Developer",
-            avatar: "/src/assets/avatars/avatar2.avif",
-            email: "withneyk@florijn.com"
-          }, {
-            id: 2,
-            firstName: "Jan",
-            lastName: "Timmermans",
-            role: "Designer",
-            avatar: "/src/assets/avatars/avatar3.avif",
-            email: "jant@florijn.com"
-          }
-        ]
-      }
+      }]
     }
   }
 }
@@ -130,5 +126,18 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width: 768px) {
+  .participant-container {
+    flex-direction: column;
+  }
 
+  .filter-container {
+    width: 100%;
+  }
+
+  .participant-container {
+    margin: 0;
+  }
+
+}
 </style>
