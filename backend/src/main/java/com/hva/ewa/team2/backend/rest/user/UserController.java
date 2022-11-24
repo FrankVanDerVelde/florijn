@@ -67,15 +67,4 @@ public class UserController {
     public ResponseEntity<User> deleteById(@PathVariable int id) {
         return ResponseEntity.ok(this.userBusinessLogic.deleteById(id));
     }
-
-//    @GetMapping(path = "/specialists", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<User>> findUsersByRole() {
-//        List<User> users = this.userRepo.getSpecialists();
-//
-//        if (users.size() != 0) {
-//            return ResponseEntity.ok().body(users);
-//        }
-//        return null;
-//    }
-
 }
