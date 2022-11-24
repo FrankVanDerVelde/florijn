@@ -1,8 +1,5 @@
 package com.hva.ewa.team2.backend.data.user;
 
-import com.hva.ewa.team2.backend.domain.models.user.Admin;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
 import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
@@ -18,8 +15,6 @@ public interface UserRepository {
     User findById(int id);
 
     List<User> getAllUsers();
-
-    List<User> getSpecialists();
 
     List<User> getUsersByRole(String role);
 

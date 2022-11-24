@@ -3,7 +3,6 @@ export class UserAdaptor {
 
     constructor() {
         this.#resourcesUrl = "http://localhost:8086";
-        console.log("Created UserAdaptor " + this.#resourcesUrl);
     }
 
     async fetchJson(url, options = null) {
@@ -23,8 +22,7 @@ export class UserAdaptor {
     }
 
     async asyncFindByCredentials(email, password) {
-        console.log('OffersAdaptor.asyncFindByCredentials()...');
-        const userData = await this.fetchJson(this.#resourcesUrl + "/login", {
+        const userData = await this.fetchJson(this.#resourcesUrl + "/users/login", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

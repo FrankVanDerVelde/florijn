@@ -35,8 +35,8 @@ public class InMemoryUserRepository implements UserRepository {
         Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen"));
         Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen"));
 
-        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53 ,"E", "1204EX");
-        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12 ,"", "1623AB");
+        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
+        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
 
         setSkills(specialist);
         setSkills(specialist2);
@@ -167,10 +167,5 @@ public class InMemoryUserRepository implements UserRepository {
         User user = findById(id);
         this.users.remove(user);
         return user;
-    }
-
-    @Override
-    public List<User> getSpecialists() {
-        return this.users.stream().filter(user -> user instanceof Specialist).toList();
     }
 }
