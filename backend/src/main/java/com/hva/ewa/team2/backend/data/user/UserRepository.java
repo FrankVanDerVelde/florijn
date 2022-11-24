@@ -8,11 +8,11 @@ import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
 import java.util.List;
 
 public interface UserRepository {
-    User findUserByCredentials(String email, String password);
+    User getUserInfoByCredentials(String email, String password);
 
-    String findRoleByUser(User user);
+    User getUserById(int id);
 
-    User findById(int id);
+    String getRoleByUser(User user);
 
     List<User> getAllUsers();
 
@@ -24,5 +24,5 @@ public interface UserRepository {
 
     User saveClient(JsonClientInfo client);
 
-    User deleteById(int id);
+    User deleteUserById(int id);
 }

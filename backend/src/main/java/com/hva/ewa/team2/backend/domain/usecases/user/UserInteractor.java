@@ -18,25 +18,19 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public JsonUserInfo findUserInfoByCredentials(String email, String password) {
-        User user = this.userRepo.findUserByCredentials(email, password);
+    public JsonUserInfo getUserInfoByCredentials(String email, String password) {
+        User user = this.userRepo.getUserInfoByCredentials(email, password);
 
         if (user != null) {
-            String role = this.userRepo.findRoleByUser(user);
+            String role = this.userRepo.getRoleByUser(user);
             return new JsonUserInfo(user.getId(), role);
         }
         return null;
     }
 
     @Override
-    public JsonUserRole findRoleByUserId(int id) {
-        String role = this.userRepo.findRoleByUser(this.findById(id));
-        return new JsonUserRole(role);
-    }
-
-    @Override
-    public User findById(int id) {
-        return this.userRepo.findById(id);
+    public User getUserById(int id) {
+        return this.userRepo.getUserById(id);
     }
 
     @Override
@@ -65,7 +59,7 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User deleteById(int id) {
-        return this.userRepo.deleteById(id);
+    public User deleteUserById(int id) {
+        return this.userRepo.deleteUserById(id);
     }
 }

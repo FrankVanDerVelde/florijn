@@ -6,11 +6,9 @@ import com.hva.ewa.team2.backend.rest.user.json.*;
 import java.util.List;
 
 public interface UserBusinessLogic {
-    JsonUserInfo findUserInfoByCredentials(String email, String password);
+    JsonUserInfo getUserInfoByCredentials(String email, String password);
 
-    JsonUserRole findRoleByUserId(int id);
-
-    User findById(int id);
+    User getUserById(int id);
 
     List<User> getAllUsers();
 
@@ -22,5 +20,5 @@ public interface UserBusinessLogic {
 
     User saveClient(JsonClientInfo client);
 
-    User deleteById(int id);
+    User deleteUserById(int id);
 }

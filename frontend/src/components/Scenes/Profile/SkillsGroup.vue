@@ -71,7 +71,7 @@ export default {
             this.active = !this.active;
             if (!this.active) {
                 console.log(this.group)
-                this.skillFetchService.fetchJsonPut(`/update-user-skill-group/5`, this.group);
+                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/5`, "PUT", this.group);
             }
         },
         handleSkillUpdate(skillId, newValue) {

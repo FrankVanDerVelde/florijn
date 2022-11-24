@@ -27,25 +27,20 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
     }
 
-    @GetMapping(path = "/as/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonUserInfo> findUserInfoByCredentials(@RequestBody JsonCredentials credentials) {
-        return ResponseEntity.ok(this.userBusinessLogic.findUserInfoByCredentials(credentials.getEmail(),
+    public ResponseEntity<JsonUserInfo> getUserInfoByCredentials(@RequestBody JsonCredentials credentials) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUserInfoByCredentials(credentials.getEmail(),
                 credentials.getPassword()));
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> findById(@PathVariable int id) {
-        return ResponseEntity.ok(this.userBusinessLogic.findById(id));
-    }
-
-    @GetMapping(path = "/role/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonUserRole> findRoleByUserId(@PathVariable int id) {
-        return ResponseEntity.ok(this.userBusinessLogic.findRoleByUserId(id));
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUserById(id));
     }
 
     @PostMapping(path = "/save/admin", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,7 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteById(@PathVariable int id) {
-        return ResponseEntity.ok(this.userBusinessLogic.deleteById(id));
+    public ResponseEntity<User> deleteUserById(@PathVariable int id) {
+        return ResponseEntity.ok(this.userBusinessLogic.deleteUserById(id));
     }
 }

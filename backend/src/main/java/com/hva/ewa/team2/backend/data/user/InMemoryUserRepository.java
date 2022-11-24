@@ -62,7 +62,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findUserByCredentials(String email, String password) {
+    public User getUserInfoByCredentials(String email, String password) {
         return this.users.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .filter(user -> user.getPassword().equals(password))
@@ -70,7 +70,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public String findRoleByUser(User user) {
+    public String getRoleByUser(User user) {
         String role = null;
         if (user instanceof Admin) {
             role = "admin";
@@ -83,7 +83,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(int id) {
+    public User getUserById(int id) {
         return this.users.stream()
                 .filter(user -> user.getId() == id)
                 .findFirst()
@@ -100,7 +100,7 @@ public class InMemoryUserRepository implements UserRepository {
         List<User> userList = new ArrayList<>();
 
         for (User user : this.users) {
-            String tempRole = this.findRoleByUser(user);
+            String tempRole = this.getRoleByUser(user);
 
             if (tempRole.equals(role)) {
                 userList.add(user);
@@ -118,12 +118,12 @@ public class InMemoryUserRepository implements UserRepository {
         }
 
         try {
-            int index = this.users.indexOf(findById(admin.getId()));
+            int index = this.users.indexOf(getUserById(admin.getId()));
             this.users.set(index, admin);
         } catch (Exception e) {
             this.users.add(admin);
         }
-        return findById(admin.getId());
+        return getUserById(admin.getId());
     }
 
     @Override
@@ -136,7 +136,7 @@ public class InMemoryUserRepository implements UserRepository {
         }
 
         try {
-            int index = this.users.indexOf(findById(specialist.getId()));
+            int index = this.users.indexOf(getUserById(specialist.getId()));
             this.users.set(index, specialist);
         } catch (Exception e) {
             this.users.add(specialist);
@@ -154,7 +154,7 @@ public class InMemoryUserRepository implements UserRepository {
         }
 
         try {
-            int index = this.users.indexOf(findById(client.getId()));
+            int index = this.users.indexOf(getUserById(client.getId()));
             this.users.set(index, client);
         } catch (Exception e) {
             this.users.add(client);
@@ -163,8 +163,8 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User deleteById(int id) {
-        User user = findById(id);
+    public User deleteUserById(int id) {
+        User user = getUserById(id);
         this.users.remove(user);
         return user;
     }
