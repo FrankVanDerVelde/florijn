@@ -14,7 +14,6 @@ import java.util.List;
 @ResponseBody
 public class UserController {
 
-
     private UserRepository userRepo;
 
     @Autowired
@@ -33,12 +32,11 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<JsonUserInfo> findUserByCredentials(@RequestBody JsonCredentials credentials) {
+    public ResponseEntity<User> findUserByCredentials(@RequestBody JsonCredentials credentials) {
         User user = this.userRepo.findUserByCredentials(credentials.getEmail(), credentials.getPassword());
 
         if (user != null) {
-            String role = this.userRepo.findRoleByUser(user);
-            return ResponseEntity.ok().body(new JsonUserInfo(user.getId(), role));
+            return ResponseEntity.ok().body(user);
         }
         return null;
     }
