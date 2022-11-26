@@ -27,7 +27,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
     }
 
     private void setup() {
-        Client ingClient = (Client) userRepo.findById(4);
+        Client ingClient = (Client) userRepo.getUserById(4);
 
         Project ingProject = new Project(1,
                 "ING Banking Web Application",
@@ -35,15 +35,15 @@ public class InMemoryProjectRepository implements ProjectRepository {
                 ingClient,
                 "/src/assets/ING-Bankieren-icoon.webp");
 
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1), "Designer", 40));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(1), "Designer", 40));
 
         projectList.add(ingProject);
         Project KPN = new Project(2,
                 "KPN Network Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.", ingClient);
 
-        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
+        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
 
 
         // TODO: Add more projects.

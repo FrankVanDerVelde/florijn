@@ -7,13 +7,13 @@
           <div class="inputfield">
             <div class="input-container">
               <label class="mb-[12px]">Emailadres</label>
-              <input v-model="email" class="pl-[7px] w-80">
+              <input v-model="email" type="email" required class="pl-[7px] w-80">
             </div>
           </div>
           <div class="inputfield">
             <div class="input-container">
               <label class="mb-[12px]">Wachtwoord</label>
-              <input v-model="password" type="password" class="pl-[7px] w-80">
+              <input v-model="password" required type="password" class="pl-[7px] w-80">
             </div>
             <div class="grid grid-cols-12 mt-1 w-80">
               <div class="col-span-6 row-start-1 radio-button-container">
@@ -54,11 +54,16 @@ export default {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword");
     },
     async submitButton() {
-      if (this.email === '' || this.password === '') {
-        this.validationText = 'De velden zijn niet volledig ingevuld!';
-        return;
+      let userData;
+
+
+      try {
+        userData = await this.userService.asyncFindByCredentials(this.email.trim(), this.password);
+
+      } catch (e) {
+        console.error(e)
+        userData = null;
       }
-      const userData = await this.userService.asyncFindByCredentials(this.email, this.password);
 
       if (userData !== null) {
 

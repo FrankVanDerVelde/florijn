@@ -1,7 +1,8 @@
 package com.hva.ewa.team2.backend.rest.user;
 
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
 import com.hva.ewa.team2.backend.rest.user.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -12,72 +13,43 @@ import java.util.List;
 
 @RestController
 @ResponseBody
+@RequestMapping("/users")
 public class UserController {
 
-    private UserRepository userRepo;
+    private UserBusinessLogic userBusinessLogic;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepo = userRepository;
+    public UserController(UserBusinessLogic userBusinessLogic) {
+        this.userBusinessLogic = userBusinessLogic;
     }
 
-    @GetMapping(path = "/users")
-    public List<User> getAllUsers(){
-        return this.userRepo.getAllUsers();
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
     }
 
-    @GetMapping(path = "/users/{role}")
-    public List<User> getUsersByRole(@PathVariable String role){
-        return this.userRepo.getUsersByRole(role);
+    @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
     }
 
-    @PostMapping(path = "/login")
-    public ResponseEntity<User> findUserByCredentials(@RequestBody JsonCredentials credentials) {
-        User user = this.userRepo.findUserByCredentials(credentials.getEmail(), credentials.getPassword());
-
-        if (user != null) {
-            return ResponseEntity.ok().body(user);
-        }
-        return null;
+    @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUserById(id));
     }
 
-    @GetMapping("/user/{id}")
-    public User findById(@PathVariable int id){
-        return this.userRepo.findById(id);
+    @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
     }
 
-    @PostMapping("/users/save/admin")
-    public ResponseEntity<User> saveAdmin(@RequestBody JsonAdminInfo body){
-        User user = this.userRepo.saveAdmin(body);
-        return ResponseEntity.ok().body(user);
+    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));
     }
 
-    @PostMapping("/users/save/specialist")
-    public ResponseEntity<User> saveSpecialist(@RequestBody JsonSpecialistInfo body){
-        User user = this.userRepo.saveSpecialist(body);
-        return ResponseEntity.ok().body(user);
+    @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteUserById(@PathVariable int id) {
+        return ResponseEntity.ok(this.userBusinessLogic.deleteUserById(id));
     }
-
-    @PostMapping("/users/save/client")
-    public ResponseEntity<User> saveClient(@RequestBody JsonClientInfo body){
-        User user = this.userRepo.saveClient(body);
-        return ResponseEntity.ok().body(user);
-    }
-
-    @DeleteMapping("/user/{id}")
-    public User deleteById(@PathVariable int id){
-        return this.userRepo.deleteById(id);
-    }
-
-    @GetMapping(path = "/specialists", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> findUserByRole() {
-        List<User> users = this.userRepo.getSpecialists();
-
-        if (users.size() != 0) {
-            return ResponseEntity.ok().body(users);
-        }
-        return null;
-    }
-
-
 }
