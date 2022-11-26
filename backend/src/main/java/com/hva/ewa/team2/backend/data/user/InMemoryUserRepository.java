@@ -60,8 +60,8 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User getAuthInfoByCredentials(List<User> users, String email, String password) {
-        return users.stream()
+    public User getUserInfoByCredentials(String email, String password) {
+        return this.users.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .filter(user -> user.getPassword().equals(password))
                 .findFirst().orElse(null);
@@ -108,8 +108,9 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User updateUser(int index, User user) {
-        return this.users.set(index, user);
+    public User updateUser(User user) {
+        this.users.replaceAll(u -> u.getId() == user.getId() ? user : u);
+        return user;
     }
 
     @Override

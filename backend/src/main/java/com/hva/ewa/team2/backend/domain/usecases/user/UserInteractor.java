@@ -42,7 +42,6 @@ public class UserInteractor implements UserBusinessLogic {
         if (user == null)
             throw new IllegalStateException("There is no user found with that id!");
 
-        int index = this.getAllUsers().indexOf(user);
         user.setEmail(body.get("email").asText());
         user.setPassword(body.get("password").asText());
         user.setAvatarUrl(body.get("avatarUrl").asText());
@@ -63,7 +62,7 @@ public class UserInteractor implements UserBusinessLogic {
             client.setName(body.get("name").asText());
             client.setBannerSrc(body.get("bannerSrc").asText());
         }
-        return this.userRepo.updateUser(index, user);
+        return this.userRepo.updateUser(user);
     }
 
     @Override

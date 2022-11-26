@@ -19,9 +19,8 @@ public class AuthInteractor implements AuthBusinessLogic {
     }
 
     @Override
-    public JsonUserInfo getAuthInfoByCredentials(String email, String password) {
-        List<User> users = this.userRepo.getAllUsers();
-        User user = this.userRepo.getAuthInfoByCredentials(users, email, password);
+    public JsonUserInfo getUserInfoByCredentials(String email, String password) {
+        User user = this.userRepo.getUserInfoByCredentials(email, password);
 
         if (user != null) {
             String role = this.userRepo.getRoleByUser(user);

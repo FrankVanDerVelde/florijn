@@ -22,7 +22,7 @@ public class AuthController {
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JsonUserInfo> getUserInfoByCredentials(@RequestBody JsonCredentials credentials) {
-        return ResponseEntity.ok(this.authBusinessLogic.getAuthInfoByCredentials(credentials.getEmail(),
+        return ResponseEntity.ok(this.authBusinessLogic.getUserInfoByCredentials(credentials.getEmail(),
                 credentials.getPassword()));
     }
 }
