@@ -15,11 +15,11 @@ import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
@@ -290,13 +290,14 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(@Nullable String searchQuery) {
-        if (searchQuery == null || searchQuery.isBlank()) {
+    public List<Project> getAllProjects(Optional<String> searchQuery) {
+        if (searchQuery.orElse("").isBlank()) {
             return projectRepo.findAll();
         } else {
+            String search = searchQuery.get().toLowerCase();
             return projectRepo.findAll().stream()
-                    .filter(project -> project.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
-                            project.getDescription().toLowerCase().contains(searchQuery.toLowerCase())
+                    .filter(project -> project.getTitle().toLowerCase().contains(search) ||
+                            project.getDescription().toLowerCase().contains(search)
                     ).toList();
         }
     }

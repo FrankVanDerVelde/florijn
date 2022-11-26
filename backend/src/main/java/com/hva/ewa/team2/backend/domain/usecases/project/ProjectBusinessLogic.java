@@ -6,9 +6,9 @@ import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectBusinessLogic {
 
@@ -30,6 +30,6 @@ public interface ProjectBusinessLogic {
 
     List<ProjectReport> getProjectReports(int projectId, JsonNode body);
 
-    List<Project> getAllProjects(@Nullable String searchQuery);
+    List<Project> getAllProjects(Optional<String> searchQuery);
 
 }
