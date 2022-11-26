@@ -15,6 +15,7 @@ import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -289,8 +290,15 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects() {
-        return projectRepo.findAll();
+    public List<Project> getAllProjects(@Nullable String searchQuery) {
+        if (searchQuery == null || searchQuery.isBlank()) {
+            return projectRepo.findAll();
+        } else {
+            return projectRepo.findAll().stream()
+                    .filter(project -> project.getTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            project.getDescription().toLowerCase().contains(searchQuery.toLowerCase())
+                    ).toList();
+        }
     }
 
     private void validateProjectInformation(String title, int clientId, String description) {
