@@ -10,13 +10,14 @@
                     <div>{{ this.active ? "save" : "aanpassen"}}</div>
                 </div>
             </div>
+           
         </div>
     </div>
 
     <transition name="collapse" @enter="enter" @after-enter="afterEnter" @leave="leave">
         <SkillsForm :skills="group.skills" v-if="this.active" @updateSkill="handleSkillUpdate" />
     </transition>
-
+    <div class="h-[5px] bg-primary-500 rounded-b-lg"></div>
 </template>
 
 <style scoped>
@@ -70,7 +71,7 @@ export default {
             this.active = !this.active;
             if (!this.active) {
                 console.log(this.group)
-                this.skillFetchService.fetchJsonPut(`/update-user-skill-group/5`, this.group);
+                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/5`, "PUT", this.group);
             }
         },
         handleSkillUpdate(skillId, newValue) {

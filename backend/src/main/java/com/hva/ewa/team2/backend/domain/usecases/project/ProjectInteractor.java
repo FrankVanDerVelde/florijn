@@ -53,12 +53,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         if (logoSrc == null) {
             project = new Project(
                     projectRepo.findAll().size() + 1, title, description,
-                    (Client) userRepo.findById(clientId)
+                    (Client) userRepo.getUserById(clientId)
             );
         } else {
             project = new Project(
                     projectRepo.findAll().size() + 1, title, description,
-                    (Client) userRepo.findById(clientId), logoSrc
+                    (Client) userRepo.getUserById(clientId), logoSrc
             );
         }
 
@@ -106,12 +106,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         if (logoSrc == null) {
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.findById(client)
+                    (Client) userRepo.getUserById(client)
             );
         } else {
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.findById(client), logoSrc
+                    (Client) userRepo.getUserById(client), logoSrc
             );
         }
 
@@ -175,7 +175,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         final int userId = body.getUserId();
-        if (!(userRepo.findById(userId) instanceof Specialist specialist)) {
+        if (!(userRepo.getUserById(userId) instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist or is not a specialist.");
         }
         if (project.getParticipantByUserId(userId) != null) {
@@ -199,7 +199,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         final int userId = body.get("userId").asInt(-1);
-        final User user = userRepo.findById(userId);
+        final User user = userRepo.getUserById(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
@@ -300,7 +300,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
 
-        User client = userRepo.findById(clientId);
+        User client = userRepo.getUserById(clientId);
         if (!(client instanceof Client)) {
             throw new IllegalArgumentException("There is no user with that ID or the user is not a client.");
         }
