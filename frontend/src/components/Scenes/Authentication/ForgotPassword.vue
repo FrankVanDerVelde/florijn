@@ -1,7 +1,7 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div>
+      <form @submit.prevent=sendMailButton()>
         <p class="back-text" @click="backToInlogPage()"> &ltTerug naar inloggen</p>
         <p class="header-text">Wachtwoord vergeten?</p>
         <p class="text-changepassword">U kunt uw wachtwoord herstellen door uw e-mailadres in te voeren vanuit uw
@@ -9,16 +9,16 @@
         <div class="inputfield-wachtwoord">
           <div class="input-container">
             <label class="mb-[12px]">Emailadres</label>
-            <input v-model="email" class="pl-[7px]">
+            <input v-model="email" type="email" required class="pl-[7px]">
           </div>
         </div>
         <p class="text-center mt-1 text-app_red-500">&nbsp {{ validationText }}</p>
         <div class="submit-button">
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-full" @click="sendMailButton()">Verstuur email
+          text-sm leading-5 rounded-lg w-full">Verstuur email
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -35,8 +35,6 @@ export default {
       if (this.email !== '') {
         this.validationText = '';
         this.$router.push(this.$route.matched[0].path + "/cp");
-      } else {
-        this.validationText = 'Het invulveld is niet correct ingevuld!';
       }
     }
   },

@@ -2,23 +2,30 @@ package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Specialist extends User {
 
+    @Getter
+    @Setter
     private String firstName;
+    @Getter
+    @Setter
     private String lastName;
     private final List<UserSkill> skills;
 
     private Address address;
 
-    public Specialist(int id, String email,  String password, String profilePictureURL, String firstName, String lastName) {
+    public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this(id, email, password, profilePictureURL, firstName, lastName, new Address());
         // TODO: implement new skill structure with UserSkill.
     }
-    public Specialist(int id, String email,  String password, String profilePictureURL, String firstName, String lastName, Address address) {
+
+    public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
         super(id, email, password, profilePictureURL);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -26,12 +33,15 @@ public class Specialist extends User {
         this.address = address;
         // TODO: implement new skill structure with UserSkill.
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public List<UserSkill> getSkills() {
         return skills;
     }
@@ -48,7 +58,7 @@ public class Specialist extends User {
         if (userSkill != null) {
             // Update rating
             userSkill.setRating(rating);
-            return  userSkill;
+            return userSkill;
         }
         // Add new user skill
         UserSkill newSkill = new UserSkill(0, skill, rating);

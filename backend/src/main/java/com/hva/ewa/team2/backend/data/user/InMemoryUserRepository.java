@@ -1,11 +1,9 @@
 package com.hva.ewa.team2.backend.data.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.user.*;
-import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
-import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
-import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -62,14 +60,6 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User getUserInfoByCredentials(String email, String password) {
-        return this.users.stream()
-                .filter(user -> user.getEmail().equals(email))
-                .filter(user -> user.getPassword().equals(password))
-                .findFirst().orElse(null);
-    }
-
-    @Override
     public String getRoleByUser(User user) {
         String role = null;
         if (user instanceof Admin) {
@@ -110,56 +100,45 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User saveAdmin(JsonAdminInfo body) {
-        Admin admin = new Admin(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getFirstName(), body.getLastName());
-        if (admin.getId() <= 0) {
-            admin.setId(this.users.size());
-        }
+    public User updateUser(int id, JsonNode body) {
+        User user = this.getUserById(id);
+        int index = users.indexOf(user);
 
-        try {
-            int index = this.users.indexOf(getUserById(admin.getId()));
-            this.users.set(index, admin);
-        } catch (Exception e) {
-            this.users.add(admin);
+        user.setEmail(body.get("email").asText());
+        user.setPassword(body.get("password").asText());
+        user.setAvatarUrl(body.get("avatarUrl").asText());
+
+        if (user instanceof Admin) {
+            ((Admin) user).setFirstName(body.get("firstName").asText());
+            ((Admin) user).setLastName(body.get("lastName").asText());
+        } else if (user instanceof Specialist) {
+            ((Specialist) user).setFirstName(body.get("firstName").asText());
+            ((Specialist) user).setLastName(body.get("lastName").asText());
+        } else if (user instanceof Client) {
+            ((Client) user).setName(body.get("name").asText());
+            ((Client) user).setBannerSrc(body.get("bannerSrc").asText());
         }
-        return getUserById(admin.getId());
+        return this.users.set(index, user);
     }
 
     @Override
-    public User saveSpecialist(JsonSpecialistInfo body) {
-        Specialist specialist = new Specialist(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getFirstName(), body.getLastName());
+    public User addUser(String role, JsonNode body) {
+        User user = null;
+        int id = users.size();
+        String email = body.get("email").asText();
+        String password = body.get("password").asText();
+        String avatarUrl = body.get("avatarUrl").asText();
 
-        if (specialist.getId() <= 0) {
-            specialist.setId(this.users.size());
+        switch (role) {
+            case "admin" -> user = new Admin(id, email, password,
+                    avatarUrl, body.get("firstName").asText(), body.get("lastName").asText());
+            case "specialist" -> user = new Specialist(id, email, password,
+                    avatarUrl, body.get("firstName").asText(), body.get("lastName").asText());
+            case "client" -> user = new Client(id, email, password,
+                    avatarUrl, body.get("name").asText(), body.get("bannerSrc").asText());
         }
-
-        try {
-            int index = this.users.indexOf(getUserById(specialist.getId()));
-            this.users.set(index, specialist);
-        } catch (Exception e) {
-            this.users.add(specialist);
-        }
-        return specialist;
-    }
-
-    @Override
-    public User saveClient(JsonClientInfo body) {
-        Client client = new Client(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getName(), body.getBannerSrc());
-
-        if (client.getId() <= 0) {
-            client.setId(this.users.size());
-        }
-
-        try {
-            int index = this.users.indexOf(getUserById(client.getId()));
-            this.users.set(index, client);
-        } catch (Exception e) {
-            this.users.add(client);
-        }
-        return client;
+        users.add(user);
+        return user;
     }
 
     @Override

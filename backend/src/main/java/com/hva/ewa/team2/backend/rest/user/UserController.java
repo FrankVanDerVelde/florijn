@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.rest.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
 import com.hva.ewa.team2.backend.rest.user.json.*;
@@ -32,30 +33,19 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
     }
 
-    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JsonUserInfo> getUserInfoByCredentials(@RequestBody JsonCredentials credentials) {
-        return ResponseEntity.ok(this.userBusinessLogic.getUserInfoByCredentials(credentials.getEmail(),
-                credentials.getPassword()));
-    }
-
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         return ResponseEntity.ok(this.userBusinessLogic.getUserById(id));
     }
 
-    @PostMapping(path = "/save/admin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> saveAdmin(@RequestBody JsonAdminInfo body) {
-        return ResponseEntity.ok(this.userBusinessLogic.saveAdmin(body));
+    @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
     }
 
-    @PostMapping(path = "/save/specialist", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> saveSpecialist(@RequestBody JsonSpecialistInfo body) {
-        return ResponseEntity.ok(this.userBusinessLogic.saveSpecialist(body));
-    }
-
-    @PostMapping(path = "/save/client", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> saveClient(@RequestBody JsonClientInfo body) {
-        return ResponseEntity.ok(this.userBusinessLogic.saveClient(body));
+    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));
     }
 
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
