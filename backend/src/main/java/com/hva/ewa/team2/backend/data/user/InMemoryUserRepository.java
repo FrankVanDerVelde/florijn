@@ -60,6 +60,14 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
+    public User getAuthInfoByCredentials(List<User> users, String email, String password) {
+        return users.stream()
+                .filter(user -> user.getEmail().equals(email))
+                .filter(user -> user.getPassword().equals(password))
+                .findFirst().orElse(null);
+    }
+
+    @Override
     public String getRoleByUser(User user) {
         String role = null;
         if (user instanceof Admin) {
@@ -100,43 +108,13 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User updateUser(int id, JsonNode body) {
-        User user = this.getUserById(id);
-        int index = users.indexOf(user);
-
-        user.setEmail(body.get("email").asText());
-        user.setPassword(body.get("password").asText());
-        user.setAvatarUrl(body.get("avatarUrl").asText());
-
-        if (user instanceof Admin) {
-            ((Admin) user).setFirstName(body.get("firstName").asText());
-            ((Admin) user).setLastName(body.get("lastName").asText());
-        } else if (user instanceof Specialist) {
-            ((Specialist) user).setFirstName(body.get("firstName").asText());
-            ((Specialist) user).setLastName(body.get("lastName").asText());
-        } else if (user instanceof Client) {
-            ((Client) user).setName(body.get("name").asText());
-            ((Client) user).setBannerSrc(body.get("bannerSrc").asText());
-        }
+    public User updateUser(int index, User user) {
         return this.users.set(index, user);
     }
 
     @Override
-    public User addUser(String role, JsonNode body) {
-        User user = null;
-        int id = users.size();
-        String email = body.get("email").asText();
-        String password = body.get("password").asText();
-        String avatarUrl = body.get("avatarUrl").asText();
-
-        switch (role) {
-            case "admin" -> user = new Admin(id, email, password,
-                    avatarUrl, body.get("firstName").asText(), body.get("lastName").asText());
-            case "specialist" -> user = new Specialist(id, email, password,
-                    avatarUrl, body.get("firstName").asText(), body.get("lastName").asText());
-            case "client" -> user = new Client(id, email, password,
-                    avatarUrl, body.get("name").asText(), body.get("bannerSrc").asText());
-        }
+    public User addUser(String role, User user) {
+        user.setId(users.size());
         users.add(user);
         return user;
     }

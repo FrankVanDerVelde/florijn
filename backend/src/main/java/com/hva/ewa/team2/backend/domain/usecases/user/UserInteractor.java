@@ -42,17 +42,28 @@ public class UserInteractor implements UserBusinessLogic {
         if (user == null)
             throw new IllegalStateException("There is no user found with that id!");
 
-        if (user instanceof Admin) {
+        int index = this.getAllUsers().indexOf(user);
+        user.setEmail(body.get("email").asText());
+        user.setPassword(body.get("password").asText());
+        user.setAvatarUrl(body.get("avatarUrl").asText());
+
+        if (user instanceof Admin admin) {
             if (body.get("firstName") == null || body.get("lastName") == null)
                 throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-        } else if (user instanceof Specialist) {
+            admin.setFirstName(body.get("firstName").asText());
+            admin.setLastName(body.get("lastName").asText());
+        } else if (user instanceof Specialist specialist) {
             if (body.get("firstName") == null || body.get("lastName") == null)
                 throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-        } else if (user instanceof Client) {
+            specialist.setFirstName(body.get("firstName").asText());
+            specialist.setLastName(body.get("lastName").asText());
+        } else if (user instanceof Client client) {
             if (body.get("name") == null || body.get("bannerSrc") == null)
                 throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
+            client.setName(body.get("name").asText());
+            client.setBannerSrc(body.get("bannerSrc").asText());
         }
-        return this.userRepo.updateUser(id, body);
+        return this.userRepo.updateUser(index, user);
     }
 
     @Override
@@ -60,18 +71,32 @@ public class UserInteractor implements UserBusinessLogic {
         if (body.get("email") == null || body.get("password") == null || body.get("avatarUrl") == null)
             throw new IllegalStateException("The fields email and/or password and/or avatarUrl isn't found!");
 
+        String email = body.get("email").asText();
+        String password = body.get("password").asText();
+        String avatarUrl = body.get("avatarUrl").asText();
+        User user = null;
+
         switch (role) {
-            case "admin":
-            case "specialist":
+            case "admin" -> {
                 if (body.get("firstName") == null || body.get("lastName") == null)
                     throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                break;
-            case "client":
+                user = new Admin(-1, email, password, avatarUrl,
+                        body.get("firstName").asText(), body.get("lastName").asText());
+            }
+            case "specialist" -> {
+                if (body.get("firstName") == null || body.get("lastName") == null)
+                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
+                user = new Specialist(-1, email, password, avatarUrl, body.get("firstName").asText(),
+                        body.get("lastName").asText());
+            }
+            case "client" -> {
                 if (body.get("name") == null || body.get("bannerSrc") == null)
                     throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-                break;
+                user = new Client(-1, email, password, avatarUrl, body.get("name").asText(),
+                        body.get("bannerSrc").asText());
+            }
         }
-        return this.userRepo.addUser(role, body);
+        return this.userRepo.addUser(role, user);
     }
 
     @Override

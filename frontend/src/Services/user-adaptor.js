@@ -3,7 +3,7 @@ import FetchService from "./FetchService";
 export class UserAdaptor extends FetchService {
 
     constructor() {
-        super("");
+        super("auth");
     }
 
     async asyncFindByCredentials(email, password) {

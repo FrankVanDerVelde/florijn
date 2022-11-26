@@ -6,6 +6,8 @@ import com.hva.ewa.team2.backend.domain.models.user.User;
 import java.util.List;
 
 public interface UserRepository {
+    User getAuthInfoByCredentials(List<User> users, String email, String password);
+
     User getUserById(int id);
 
     String getRoleByUser(User user);
@@ -14,9 +16,9 @@ public interface UserRepository {
 
     List<User> getUsersByRole(String role);
 
-    User updateUser(int id, JsonNode body);
+    User updateUser(int index, User user);
 
-    User addUser(String role, JsonNode body);
+    User addUser(String role, User user);
 
     User deleteUserById(int id);
 }
