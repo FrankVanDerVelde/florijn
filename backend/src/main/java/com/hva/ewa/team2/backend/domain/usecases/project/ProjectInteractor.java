@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
@@ -289,8 +290,16 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects() {
-        return projectRepo.findAll();
+    public List<Project> getAllProjects(Optional<String> searchQuery) {
+        if (searchQuery.orElse("").isBlank()) {
+            return projectRepo.findAll();
+        } else {
+            String search = searchQuery.get().toLowerCase();
+            return projectRepo.findAll().stream()
+                    .filter(project -> project.getTitle().toLowerCase().contains(search) ||
+                            project.getDescription().toLowerCase().contains(search)
+                    ).toList();
+        }
     }
 
     private void validateProjectInformation(String title, int clientId, String description) {
