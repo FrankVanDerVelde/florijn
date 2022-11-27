@@ -50,6 +50,12 @@ export default class FetchService {
         });
     }
 
+    async fetchPostFile(path, formData, options = {}) {
+        return this.fetchUrl(path, "POST", {
+            body: formData
+        })
+    }
+
     async fetchJsonUrl(path, method = "GET", options = {}) {
         return this.fetchUrl(path, method, {
             headers: {

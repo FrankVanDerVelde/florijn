@@ -102,7 +102,7 @@ export default {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
       if (this.project == null) {
-        this.$router.redirect({name: 'projects'});
+        this.$router.push({name: 'projects'});
         return;
       }
 
@@ -111,7 +111,7 @@ export default {
       this.project = this.getSampleProject();
     }
 
-    this.clients = await this.fetchService.fetchJson(`/users/client`);
+    this.clients = await this.fetchService.fetchJson(`/users/role/client`);
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
@@ -189,6 +189,13 @@ export default {
         this.errors.logo = "Alleen afbeeldingen met de extensies .svg, .png, .webp, .jpg en .jpeg zijn toegestaan.";
         return;
       }
+
+      const formData = new FormData();
+      formData.append('file', event.target.files[0]);
+      formData.append('name', `projects/logo-${this.project.id}.${fileExtension}`);
+
+      const res = await this.fetchService.fetchPostFile(`/assets/upload`, formData);
+      console.log(res);
 
       this.logoSrc = `${await this.getBase64(event.target.files[0])}`;
       this.project.logoSrc = this.logoSrc;
