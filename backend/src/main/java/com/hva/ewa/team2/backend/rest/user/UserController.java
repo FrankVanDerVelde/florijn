@@ -1,6 +1,7 @@
 package com.hva.ewa.team2.backend.rest.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
 import com.hva.ewa.team2.backend.rest.user.json.*;
@@ -51,5 +52,10 @@ public class UserController {
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> deleteUserById(@PathVariable int id) {
         return ResponseEntity.ok(this.userBusinessLogic.deleteUserById(id));
+    }
+
+    @GetMapping(path = "/address/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Address> getUsersAddressById(@PathVariable int id) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUsersAddressById(id));
     }
 }

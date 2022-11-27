@@ -18,6 +18,8 @@ public class Specialist extends User {
     private String lastName;
     private final List<UserSkill> skills;
 
+    @Getter
+    @Setter
     private Address address;
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
@@ -65,4 +67,18 @@ public class Specialist extends User {
         return newSkill;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", skills=" + skills +
+                ", address=" + address +
+                ", id=" + id +
+                ", email='" + email + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

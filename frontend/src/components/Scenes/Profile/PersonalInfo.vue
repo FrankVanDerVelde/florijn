@@ -1,49 +1,47 @@
 
 
 <template>
-
+    	<form>
     <div class="text-[34px] font-bold mb-[10px]">Profiel</div>
     <div class="name-and-picture-container flex items-center mb-4">
-        <img class="rounded-full w-[80px] h-[80px] mr-4"
-            :src="user.profilePicture">
+        <img class="rounded-full w-[80px] h-[80px] mr-4" :src="user.profilePicture">
         <div>
-            <div class="text-[26px] font-bold">{{ user.firstName}} {{ user.lastName}} </div>
+            <div class="text-[26px] font-bold">{{ user.firstName }} {{ user.lastName }} </div>
             <div class="text-[14px] text-primary-400 font-bold">{{ user.title }}</div>
         </div>
     </div>
 
 
     <div class="grid grid-cols-2 gap-4 row-1">
-        <FormInput name="voornaam" :value="user.firstName"></FormInput>
-        <FormInput name="achternaam" :value="user.lastName"></FormInput>
-        <FormInput name="Email" type="email" :value="user.email"></FormInput>
+        <FormInput name="voornaam" v-model="user.firstName"></FormInput>
+        <FormInput name="achternaam" v-model="user.lastName"></FormInput>
+        <FormInput name="Email" type="email" v-model="user.email"></FormInput>
     </div>
 
     <span class="text-[18px] font-bold">Woongegevens</span>
-    
+
 
     <div class="grid grid-cols-2 gap-4 row-1">
-        <FormInput name="woonplaats" :value="user.place"></FormInput>
+        <FormInput name="woonplaats" v-model="address.place"></FormInput>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 row-1"> 
-        <FormInput name="Straat" :value="user.street"></FormInput>
+    <div class="grid grid-cols-2 gap-4 row-1">
+        <FormInput name="Straat" v-model="address.street"></FormInput>
     </div>
 
     <div class="grid grid-cols-3 gap-4">
-        <FormInput name="huisnummer" :value="user.houseNumber"></FormInput>
-        <FormInput name="toevoeging" :value="user.addition"></FormInput>
-        <FormInput name="postcode" :value="user.postalCode"></FormInput>
+        <FormInput name="huisnummer" v-model="address.houseNumber"></FormInput>
+        <FormInput name="toevoeging" v-model="address.houseNumberAddition"></FormInput>
+        <FormInput name="postcode" v-model="address.postalCode"></FormInput>
     </div>
 
     <div class="grid grid-cols-2 gap-4 row-1">
-        <SaveButton></SaveButton>
+        <SaveButton :onClick="handleProfileUpdate"></SaveButton>
     </div>
-
+</form>
 </template>
   
 <style scoped>
-
 .input-container {
     display: flex;
     margin-bottom: 1em;
@@ -54,32 +52,32 @@
 .input-container.duo>div:first-child {
     margin-right: 1em;
 }
-
 </style>
 
 <script>
 export default {
     name: "Profile",
     components: {
-    FormInput,
-    SaveButton
-},
+        FormInput,
+        SaveButton
+    },
+    inject: ['userFetchService'],
+    async created() {
+        this.address = await this.userFetchService.fetchJson(`/address/${this.user.id}`);
+    },
     data() {
         return {
-            user: {
-                profilePicture: "https://mytechguy.com/wp-content/uploads/2015/01/Lou-Face.jpg",
-                firstName: "Martíno",
-                lastName: "Manzana",
-                title: "iOS Developer",
-                email: "mmanzana@gmail.com",
-                place: "Amsterdam",
-                street: "Jan van Galenstraat",
-                houseNumber: 53,
-                addition: "E",
-                postalCode: "1204EX"
-            }
+            user: JSON.parse(localStorage.getItem("user")),
+            address: {}
         }
-    }
+    },
+    methods: {
+        async handleProfileUpdate(formData) {
+            this.user.address = this.address;
+            console.log(this.user)
+            this.userFetchService.fetchJsonMethod(`/${this.user.id}/edit`, "PUT", this.user);
+        },
+    },
 }
 
 import FormInput from "../../Common/FormInput.vue";
