@@ -217,6 +217,8 @@ export default {
     async saveProject() {
       if (!this.validate()) return;
 
+      console.log(this.logoFile);
+
       const formData = new FormData();
       formData.append('title', this.title);
       formData.append('description', this.description);

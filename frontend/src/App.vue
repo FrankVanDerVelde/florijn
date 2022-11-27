@@ -21,7 +21,7 @@ export default {
       skillFetchService: new FetchService("skills"),
       specialistFetchService: new FetchService("/specialists"),
       fetchService: new FetchService(""),
-      userService: new UserAdaptor()
+      userService: new UserAdaptor(),
     }
   },
 }

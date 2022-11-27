@@ -20,6 +20,7 @@ public class JsonProjectInfo {
     @Setter
     private int client;
     @Getter
+    @Setter
     private MultipartFile logoFile;
 
     public JsonProjectInfo() {}

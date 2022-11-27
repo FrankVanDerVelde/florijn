@@ -117,6 +117,8 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
 
+        System.out.println(logoUpload);
+
         // creating temp project to update.
         Project project;
         if (logoUpload == null) {
@@ -126,7 +128,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
                     existingProject.getLogoSrc()
             );
         } else {
-            String extension = FilenameUtils.getExtension(logoUpload.getName());
+            String extension = FilenameUtils.getExtension(logoUpload.getOriginalFilename());
             final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/logo-" + pId + "." + extension, true);
 
             project = new Project(

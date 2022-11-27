@@ -82,7 +82,7 @@ public class AssetService implements AssetServiceLogic {
 
             if (replaceSameNames) {
                 // delete all files with the same name but different extension in the folder of the file to upload
-                final String fileNameWithoutExtension = FilenameUtils.removeExtension(fileName);
+                final String fileNameWithoutExtension = FilenameUtils.removeExtension(destination.getFileName().toString());
 
                 try (Stream<Path> stream = Files.list(destination.getParent())) {
                     stream.filter(path -> isSameName(path, fileNameWithoutExtension))
@@ -105,7 +105,11 @@ public class AssetService implements AssetServiceLogic {
     }
 
     private boolean isSameName(Path path, String fileName) {
-        return FilenameUtils.removeExtension(path.getFileName().toString())
+        final String s = FilenameUtils.removeExtension(path.getFileName().toString());
+
+        System.out.println("Comparing " + s + " to " + fileName);
+
+        return s
                 .equals(fileName);
     }
 
