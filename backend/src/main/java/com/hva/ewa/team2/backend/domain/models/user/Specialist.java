@@ -26,12 +26,11 @@ public class Specialist extends User {
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
-        super(id, email, password, profilePictureURL);
+        super(id, email, password, profilePictureURL, Role.SPECIALIST);
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
         this.address = address;
-        // TODO: implement new skill structure with UserSkill.
     }
 
     public String getFirstName() {

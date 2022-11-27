@@ -27,7 +27,7 @@
               </div>
             </div>
           </div>
-          <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp {{ validationText }}</p>
+          <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp; {{ validationText }}</p>
           <div class="submit-button">
             <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 py-2.5
           text-sm leading-5 rounded-lg w-80">Log in
@@ -67,20 +67,22 @@ export default {
 
       if (userData !== null) {
 
+        localStorage.setItem("user", JSON.stringify(userData));
+
         localStorage.setItem("id", userData.id);
         localStorage.setItem("role", userData.role);
 
         switch (userData.role) {
-          case "admin": {
-            this.$router.push("/admin/home");
+          case "ADMIN": {
+            this.$router.push({name: "admin-home"});
             break;
           }
-          case "specialist": {
-            this.$router.push("/specialist/home");
+          case "SPECIALIST": {
+            this.$router.push({name: "specialist-home"});
             break;
           }
-          case "client": {
-            this.$router.push("/client/home");
+          case "CLIENT": {
+            this.$router.push({name: "client-home"});
             break;
           }
         }

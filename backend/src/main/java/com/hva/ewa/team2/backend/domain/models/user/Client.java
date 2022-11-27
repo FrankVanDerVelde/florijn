@@ -15,7 +15,7 @@ public class Client extends User {
     }
 
     public Client(int id, String email, String password, String profilePictureURL, String name, String bannerURL) {
-        super(id, email, password, profilePictureURL);
+        super(id, email, password, profilePictureURL, Role.CLIENT);
         this.name = name;
         this.bannerSrc = bannerURL;
     }
