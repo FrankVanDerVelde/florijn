@@ -73,7 +73,7 @@ export default {
       document.body.style.overflow = this.menuExpanded ? 'hidden' : 'auto';
     },
     isLoggedIn() {
-      if (localStorage.getItem("id") && localStorage.getItem("role") === "null") {
+      if (this.user == null) {
         this.links = [{
           name: 'Home',
           link: '/home'
@@ -83,8 +83,8 @@ export default {
           link: '/login'
         }
       } else {
-        switch (localStorage.getItem("role")) {
-          case "admin":
+        switch (this.user.role) {
+          case "ADMIN":
             this.links = [
               {
                 name: 'Home',
@@ -99,7 +99,7 @@ export default {
               }
             ]
             break;
-          case "specialist":
+          case "SPECIALIST":
             this.links = [{
               name: 'Home',
               link: '/specialist/home'
@@ -111,7 +111,7 @@ export default {
               link: '/projects'
             }]
             break;
-          case "client":
+          case "CLIENT":
             this.links = [{
               name: 'Home',
               link: '/client/home'
