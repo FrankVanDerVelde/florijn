@@ -27,7 +27,6 @@ public class AssetController {
 
     @PostMapping("/upload")
     public ResponseEntity<FileResult> uploadAsset(@RequestParam("file") MultipartFile file, @RequestParam("name") Optional<String> name) throws IOException {
-        System.out.println(name);
         final FileResult body = name.isEmpty() ? assetBusinessLogic.uploadFile(file) : assetBusinessLogic.uploadFile(file, name.get());
         return ResponseEntity.ok(body);
     }
@@ -35,7 +34,6 @@ public class AssetController {
     @GetMapping("/**")
     public ResponseEntity<Resource> getAsset(HttpServletRequest request) {
         String fileName = request.getRequestURI().split(request.getContextPath() + "/assets/")[1];
-        System.out.println("yas: " + fileName);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .body(assetBusinessLogic.getAsset(fileName));
