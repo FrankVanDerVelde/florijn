@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @ResponseBody
@@ -35,8 +36,8 @@ public class ProjectController {
     // General
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjects() {
-        return ResponseEntity.ok(projectBusinessLogic.getAllProjects());
+    public ResponseEntity<List<Project>> getAllProjects(@RequestParam("query") Optional<String> searchQuery) {
+        return ResponseEntity.ok(projectBusinessLogic.getAllProjects(searchQuery));
     }
 
     // Project CRUD
