@@ -1,6 +1,8 @@
 package com.hva.ewa.team2.backend.rest.project.json;
 
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Class with properties required to update a project.
@@ -9,20 +11,34 @@ import lombok.Getter;
 public class JsonProjectInfo {
 
     @Getter
-    private String title = "";
+    @Setter
+    private String title;
     @Getter
-    private String description = "";
+    @Setter
+    private String description;
     @Getter
-    private int client = -1;
+    @Setter
+    private int client;
     @Getter
-    private String logoSrc = null;
+    private MultipartFile logoFile;
 
     public JsonProjectInfo() {}
 
-    public JsonProjectInfo(String title, String description, int client, String logoSrc) {
+    public JsonProjectInfo(String title, String description, int client, MultipartFile logoFile) {
         this.title = title;
         this.description = description;
         this.client = client;
-        this.logoSrc = logoSrc;
+        this.logoFile = logoFile;
     }
+
+    @Override
+    public String toString() {
+        return "JsonProjectInfo{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", client=" + client +
+                ", logoFile=" + logoFile +
+                '}';
+    }
+
 }

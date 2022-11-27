@@ -136,7 +136,7 @@ export default {
       project: {},
       title: "",
       description: "",
-      logoSrc: "",
+      logoFile: null,
       clients: [],
       clientId: -1,
       errors: {}
@@ -180,6 +180,7 @@ export default {
     },
     async updateLogo(event) {
       if (event.target.files.length === 0) {
+        this.logoFile = null;
         delete this.project.logoSrc;
         return;
       }
@@ -190,21 +191,13 @@ export default {
         return;
       }
 
-      const formData = new FormData();
-      formData.append('file', event.target.files[0]);
-      formData.append('name', `projects/logo-${this.project.id}.${fileExtension}`);
-
-      const res = await this.fetchService.fetchPostFile(`/assets/upload`, formData);
-      console.log(res);
-
-      this.logoSrc = `${await this.getBase64(event.target.files[0])}`;
-      this.project.logoSrc = this.logoSrc;
+      this.logoFile = event.target.files[0];
+      this.project.logoSrc = `${await this.getBase64(event.target.files[0])}`;
     },
     injectProjectInfo() {
       this.title = this.project.title;
       this.description = this.project.description;
       this.clientId = this.project.client?.id ?? -1;
-      this.logoSrc = this.project.logoSrc;
     },
     validate() {
       this.errors = {};
@@ -224,18 +217,17 @@ export default {
     async saveProject() {
       if (!this.validate()) return;
 
-      const body = {
-        title: this.title,
-        description: this.description,
-        client: this.clientId,
-        logoSrc: this.logoSrc == null || this.logoSrc === "" ? null : this.logoSrc
-      };
+      const formData = new FormData();
+      formData.append('title', this.title);
+      formData.append('description', this.description);
+      formData.append('client', this.clientId);
+      if (this.logoFile != null) formData.append('logoFile', this.logoFile);
 
       let response;
       if (this.newProject) {
-        response = await this.projectFetchService.fetchJsonPost('/create', body);
+        response = await this.projectFetchService.fetchJsonFile('/create', "POST", formData);
       } else {
-        response = await this.projectFetchService.fetchJsonMethod(`/${this.projectId}/update`, "PUT", body);
+        response = await this.projectFetchService.fetchJsonFile(`/${this.projectId}/update`, "PUT", formData);
       }
 
       if (response == null) {

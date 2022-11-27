@@ -1,7 +1,6 @@
 package com.hva.ewa.team2.backend.rest.project;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
@@ -12,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +26,10 @@ public class ProjectController {
 
 
     private final ProjectBusinessLogic projectBusinessLogic;
-    private final HourRegistrationRepository hourRegistrationRepo;
 
     @Autowired
-    public ProjectController(ProjectBusinessLogic projectBusinessLogic, HourRegistrationRepository hourRegistrationRepo) {
+    public ProjectController(ProjectBusinessLogic projectBusinessLogic) {
         this.projectBusinessLogic = projectBusinessLogic;
-        this.hourRegistrationRepo = hourRegistrationRepo;
     }
 
     // General
@@ -42,8 +41,8 @@ public class ProjectController {
 
     // Project CRUD
 
-    @PostMapping(path = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> createProject(@RequestBody JsonProjectInfo project) {
+    @PostMapping(path = "/create")
+    public ResponseEntity<Project> createProject(@RequestBody JsonProjectInfo project) throws IOException {
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
 
         return ResponseEntity.created(uri).body(projectBusinessLogic.createProject(project));
@@ -59,9 +58,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectBusinessLogic.deleteProject(id));
     }
 
-    @PutMapping(path = "/{id}/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Project> updateProject(@PathVariable int id, @RequestBody JsonProjectInfo body) {
-        return ResponseEntity.ok(projectBusinessLogic.updateProjectInformation(id, body));
+    @PutMapping(path = "/{id}/update")
+    @ResponseBody
+    public ResponseEntity<Project> updateProject(@PathVariable int id,
+                                                 @ModelAttribute JsonProjectInfo project) throws IOException {
+        return ResponseEntity.ok(projectBusinessLogic.updateProjectInformation(id, project));
     }
 
     // Participants

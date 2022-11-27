@@ -33,9 +33,11 @@ export default class FetchService {
     }
 
     async fetchJsonMethod(path, method = "GET", body = {}, options = {}) {
+        if (body instanceof Object) body = JSON.stringify(body);
+
         return this.fetchJson(path, {
             method: method,
-            body: JSON.stringify(body),
+            body: body,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -50,8 +52,8 @@ export default class FetchService {
         });
     }
 
-    async fetchPostFile(path, formData, options = {}) {
-        return this.fetchUrl(path, "POST", {
+    async fetchJsonFile(path, method = "POST", formData, options = {}) {
+        return this.fetchUrl(path, method, {
             body: formData
         })
     }
