@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex m-0 p-0">
-        <div class=" bottom-0 right-0 ml-3.5 self-end m-0 p-0">
+        <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
           <div class=" " v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star" class="star-color"/>
           </div>
@@ -34,20 +34,23 @@
       <div class=" flex flex-col my-2">
         <input v-model="roleInput" type="text" id="roleButton"
                class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
-               :placeholder="rolePlaceholder" required>
+               :placeholder="rolePlaceholder" @change="deleteValidationText" required>
 
       </div>
       <div>
-        <input v-model="hourInput" type="text" id="hourButton"
+        <input v-model="hourInput" type="number" id="hourButton"
                class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
                :placeholder="hourPlaceholder" required>
       </div>
 
       <div class="mt-4">
         <button class="accept cursor-pointer"
-                @click="$emit('addParticipant', {role: roleInput, hourlyRate: hourInput, participant: participant}); inputFields = !inputFields">
+                @click="$emit('addParticipant', {role: roleInput, hourlyRate: hourInput, participant: participant})">
           Toevoegen
         </button>
+      </div>
+      <div v-if="validation" class="fa-border text-center validation">
+        Voer alle velden in
       </div>
     </div>
 
@@ -76,6 +79,10 @@ export default {
     skill: {
       type: Object,
       required: true
+    },
+    validation: {
+      type: Boolean,
+      required: false
     }
   },
 
@@ -85,13 +92,17 @@ export default {
       hourPlaceholder: "Voeg een hourlyRate toe",
       roleInput: "",
       hourInput: "",
-      inputFields: false
+      inputFields: false,
     }
   }
 }
 </script>
 
 <style scoped>
+.validation {
+  color: red
+}
+
 .icon-container {
   margin-left: auto;
   margin-right: auto;
