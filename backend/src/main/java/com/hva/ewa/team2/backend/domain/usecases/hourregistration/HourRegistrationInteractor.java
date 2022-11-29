@@ -7,10 +7,8 @@ import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegist
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
-import com.hva.ewa.team2.backend.rest.hourregistration.UpdateHourRegistrationRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -48,7 +46,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     @Override
     public List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId) {
-        final User user = userRepository.findById(userId);
+        final User user = userRepository.getUserById(userId);
         if (user instanceof Specialist specialist) {
             return hourRegistrationRepository.fetchAllHourRegistrationByProjectUser(projectId, userId);
         }

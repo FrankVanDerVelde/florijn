@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.data.hourregistration;
 
-import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

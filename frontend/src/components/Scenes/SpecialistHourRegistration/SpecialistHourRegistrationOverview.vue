@@ -91,7 +91,9 @@ export default {
   },
   methods: {
     loadWeekBar() {
-      this.week = this.dateService.isoWeekDays(this.weekNumber).filter(day => day.weekDayIndex < 6).map(day => {
+      this.week = this.dateService.isoWeekDays(this.weekNumber)
+          .filter(day => day.weekDayIndex < 6)
+          .map(day => {
         return {
           day: day.date.format("dddd"),
           date: day.date.format("DD MMM"),
