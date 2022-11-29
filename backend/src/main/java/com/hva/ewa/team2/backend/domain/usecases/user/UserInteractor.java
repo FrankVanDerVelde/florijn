@@ -2,10 +2,7 @@ package com.hva.ewa.team2.backend.domain.usecases.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.user.Admin;
-import com.hva.ewa.team2.backend.domain.models.user.Client;
-import com.hva.ewa.team2.backend.domain.models.user.Specialist;
-import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.domain.models.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,13 +34,14 @@ public class UserInteractor implements UserBusinessLogic {
 
     @Override
     public User updateUser(int id, JsonNode body) {
+        System.out.println(body);
         User user = this.userRepo.getUserById(id);
 
         if (user == null)
             throw new IllegalStateException("There is no user found with that id!");
 
         user.setEmail(body.get("email").asText());
-        user.setPassword(body.get("password").asText());
+//        user.setPassword(body.get("password").asText());
         user.setAvatarUrl(body.get("avatarUrl").asText());
 
         if (user instanceof Admin admin) {
@@ -56,6 +54,16 @@ public class UserInteractor implements UserBusinessLogic {
                 throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
             specialist.setFirstName(body.get("firstName").asText());
             specialist.setLastName(body.get("lastName").asText());
+            JsonNode newAddress = body.get("address");
+            Address address = new Address(
+                    newAddress.get("place").asText(),
+                    newAddress.get("street").asText(),
+                    newAddress.get("houseNumber").asInt(),
+                    newAddress.get("houseNumberAddition").asText(),
+                    newAddress.get("postalCode").asText()
+            );
+
+            specialist.setAddress(address);
         } else if (user instanceof Client client) {
             if (body.get("name") == null || body.get("bannerSrc") == null)
                 throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
@@ -102,4 +110,13 @@ public class UserInteractor implements UserBusinessLogic {
     public User deleteUserById(int id) {
         return this.userRepo.deleteUserById(id);
     }
+
+    @Override
+    public Address getUsersAddressById(int id) {
+        User user = this.userRepo.getUserById(id);
+        if (!(user instanceof Specialist specialist)) return null;
+
+        return specialist.getAddress();
+    }
+
 }

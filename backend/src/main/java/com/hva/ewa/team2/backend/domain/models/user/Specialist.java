@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
@@ -12,12 +13,16 @@ public class Specialist extends User {
 
     @Getter
     @Setter
+    @JsonView(EssentialInfo.class)
     private String firstName;
     @Getter
     @Setter
+    @JsonView(EssentialInfo.class)
     private String lastName;
     private final List<UserSkill> skills;
 
+    @Getter
+    @Setter
     private Address address;
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
@@ -65,4 +70,18 @@ public class Specialist extends User {
         return newSkill;
     }
 
+    @Override
+    public String toString() {
+        return "{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", skills=" + skills +
+                ", address=" + address +
+                ", id=" + id +
+                ", email='" + email + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }
