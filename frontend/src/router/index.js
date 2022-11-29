@@ -14,10 +14,12 @@ import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
 import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
-import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
+import SpecialistHourRegistrationOverview
+    from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
+import PublicProfile from "../components/Scenes/Profile/PublicProfile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
 import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
@@ -68,6 +70,10 @@ const routes = [
                 component: Resume,
             },
         ]
+    },
+    {
+        path: '/profile/public/:Id',
+        component: PublicProfile,
     }, {
         path: '/adminpanel',
         name: "adminpanel",
