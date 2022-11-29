@@ -7,18 +7,19 @@ import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProjectBusinessLogic {
 
-    Project createProject(JsonProjectInfo project);
+    Project createProject(JsonProjectInfo project) throws IOException;
 
     Project getProjectInformation(int id);
 
     boolean deleteProject(int id);
 
-    Project updateProjectInformation(int pId, JsonProjectInfo jsonBody);
+    Project updateProjectInformation(int pId, JsonProjectInfo jsonBody) throws IOException;
 
     List<ProjectParticipant> getProjectParticipants(int id);
 

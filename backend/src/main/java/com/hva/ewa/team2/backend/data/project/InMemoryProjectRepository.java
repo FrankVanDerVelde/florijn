@@ -33,7 +33,7 @@ public class InMemoryProjectRepository implements ProjectRepository {
                 "ING Banking Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
                 ingClient,
-                "/src/assets/ING-Bankieren-icoon.webp");
+                "projects/logo-1.png");
 
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(1), "Designer", 40));
@@ -96,8 +96,6 @@ public class InMemoryProjectRepository implements ProjectRepository {
         found.setLogoSrc(project.getLogoSrc());
 
         return found;
-//        // replacing all projects with the given ID with the provided project, otherwise with themselves to change nothing.
-//        this.projectList.replaceAll(p -> p.getId() == project.getId() ? project : p);
     }
 
     @Override

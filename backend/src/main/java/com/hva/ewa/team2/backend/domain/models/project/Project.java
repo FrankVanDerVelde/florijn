@@ -23,7 +23,7 @@ public class Project {
     private List<ProjectParticipant> participants;
 
     public Project(int id, String title, String description, Client client) {
-        this(id, title, description, client, "/src/assets/logo-small.png", new ArrayList<>());
+        this(id, title, description, client, "projects/sample-logo.png", new ArrayList<>());
     }
 
     public Project(int id, String title, String description, Client client, String logoSrc) {

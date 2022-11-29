@@ -1,12 +1,22 @@
 <template>
   <div class="icon-container grid w-full">
-    <img :src="project.logoSrc ?? '/src/assets/logo-small.png'" alt="project logo">
+    <img :src="logoSrc" alt="project logo">
   </div>
 </template>
 
 <script>
 export default {
   name: "ProjectLogo",
+  inject: ["fetchService"],
+
+  computed: {
+    logoSrc() {
+      if (this.project.logoSrc == null) return this.fetchService.getAsset('/projects/sample-logo.png');
+
+      if (this.project.logoSrc.startsWith("data:image")) return this.project.logoSrc;
+      return this.fetchService.getAsset(this.project.logoSrc);
+    }
+  },
 
   props: {
     project: {
