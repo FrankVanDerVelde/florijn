@@ -2,7 +2,7 @@
   <div class="container main-container rounded-xl">
     <router-link :to="{name: 'project-overview', params: {projectId: project.id}}" class="flex mt-4 p-2 w-full justify-center">
 
-      <img :src="project.logoSrc" alt="project logo" class="icon-container">
+      <img :src="logoSrc" alt="project logo" class="icon-container">
 
       <div class="flex flex-col justify-between container ml-4">
         <div class="flex flex-col mb-3">
@@ -30,8 +30,17 @@ import Stat from "./Stat.vue";
 
 export default {
   components: {Stat},
-
   name: "ProjectListDetails",
+  inject: ["fetchService"],
+
+  computed: {
+    logoSrc() {
+      if (this.project.logoSrc == null) return this.fetchService.getAsset('/projects/sample-logo.png');
+
+      if (this.project.logoSrc.startsWith("data:image")) return this.project.logoSrc;
+      return this.fetchService.getAsset(this.project.logoSrc);
+    }
+  },
 
   props: {
     project: {
