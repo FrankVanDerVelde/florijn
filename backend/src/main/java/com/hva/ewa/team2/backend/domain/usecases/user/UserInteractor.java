@@ -34,13 +34,14 @@ public class UserInteractor implements UserBusinessLogic {
 
     @Override
     public User updateUser(int id, JsonNode body) {
+        System.out.println(body);
         User user = this.userRepo.getUserById(id);
 
         if (user == null)
             throw new IllegalStateException("There is no user found with that id!");
 
         user.setEmail(body.get("email").asText());
-        user.setPassword(body.get("password").asText());
+//        user.setPassword(body.get("password").asText());
         user.setAvatarUrl(body.get("avatarUrl").asText());
 
         if (user instanceof Admin admin) {

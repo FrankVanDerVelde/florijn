@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.rest.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -34,6 +35,7 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
     }
 
+    @JsonView(User.EssentialInfo.class)
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         return ResponseEntity.ok(this.userBusinessLogic.getUserById(id));

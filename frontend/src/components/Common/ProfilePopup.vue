@@ -31,7 +31,6 @@ export default {
   computed: {
     user() {
       let item = localStorage.getItem("user");
-      console.log(item);
       return JSON.parse(item);
     },
   },

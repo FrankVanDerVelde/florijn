@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -109,8 +110,6 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        this.users.stream().filter(u -> u.getId() == user.getId()).forEach(System.out::println);
-        System.out.println(user);
         this.users.replaceAll(u -> u.getId() == user.getId() ? user : u);
         return user;
     }

@@ -1,8 +1,8 @@
 <template>
-    <div class="input-container">
+    <div class="input-container" :class="{'invalid': !valid}">
         <label v-bind:for="nameToId" class="mb-[8px]">{{ capitalizedName }}</label>
         <input v-bind:type="type" @input="updateInput($event.target.value)" v-bind:id="nameToId" v-bind:name="nameToId"
-            v-bind:placeholder="capitalizedName" :value="value" class="pl-[7px]">
+            v-bind:placeholder="capitalizedName" :value="modelValue" class="pl-[7px]" @blur="validateSelf">
     </div>
 </template>
     
@@ -10,10 +10,42 @@
 export default {
     name: "FormInput",
     emits: ['update:modelValue'],
+    data() {
+        return {
+            errors: []
+        }
+    },
     methods: {
         updateInput(value) {
             this.value = value;
             this.$emit('update:modelValue', this.value);
+        },
+        validateSelf() {
+            const newErrors = [];
+
+            this.validationRules.forEach(rule => {
+                switch (true) {
+                    case (rule === 'required'):
+                        !this.modelValue && newErrors.push("Vereist veld");
+                        break;
+                    case (rule === 'zipcode-dutch'):
+                        const dutchZipCodeRegex = new RegExp(/^[1-9][0-9]{3} ?(?!sa|sd|ss)[a-z]{2}$/i);
+                        !dutchZipCodeRegex.test(this.modelValue) && newErrors.push("Geen geldige postcode");
+                        break;
+                    case (rule === 'email'):
+                        const emailRegex = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+                        !emailRegex.test(this.modelValue) && newErrors.push("Geen geldig email");
+                        break;
+                    case (rule.type === "min-len"):
+                        this.modelValue.length < rule.len && newErrors.push(`Input should be at least ${rule.len} characters long`);
+                        break;
+
+                    case (rule.type === "max-len"):
+                        this.modelValue.length > rule.len && newErrors.push(`Input should be less than ${rule.len} characters long`);
+                        break;
+                }
+            });
+            this.errors = newErrors;
         }
     },
     props: {
@@ -22,11 +54,15 @@ export default {
             type: String,
             default: "text"
         },
-    modelValue: {
-      type: [String, Number, null],
-      required: false,
-      default: ""
-    }
+        modelValue: {
+            type: [String, Number, null],
+            required: false,
+            default: ""
+        },
+        validationRules: {
+            type: Array,
+            default: []
+        }
     },
     computed: {
         nameToId() {
@@ -34,11 +70,9 @@ export default {
         },
         capitalizedName() {
             return this.name.charAt(0).toUpperCase() + this.name.slice(1);
-        }
-    },
-    data() {
-        return {
-            value: this.modelValue,
+        },
+        valid() {
+            return this.errors.length === 0;
         }
     }
 }
@@ -66,5 +100,13 @@ export default {
     font-family: 'Roboto', sans-serif;
     height: 40px;
     font-size: 16px;
+}
+
+.invalid label {
+    color: red;
+}
+
+.invalid input {
+    border: 1px solid red;
 }
 </style>
