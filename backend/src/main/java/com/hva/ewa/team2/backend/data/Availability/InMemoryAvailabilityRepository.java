@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.data.Availability;
 
 
-import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
@@ -34,8 +34,8 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.findById(1);
-        User user2 = userRepository.findById(2);
+        User user1 = userRepository.getUserById(1);
+        User user2 = userRepository.getUserById(2);
 
         this.availabilities.addAll(List.of(
                 new Availability(
@@ -74,7 +74,7 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     @Override
     public Availability createAvailability(CreateAvailabilityRequest request) throws Exception {
         Availability availability = new Availability(nextId(),
-                userRepository.findById(request.getUserId()),
+                userRepository.getUserById(request.getUserId()),
                 request.getDate(),
                 request.getFrom(),
                 request.getTo());

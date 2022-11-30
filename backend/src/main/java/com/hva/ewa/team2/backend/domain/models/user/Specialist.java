@@ -65,7 +65,7 @@ public class Specialist extends User {
             return userSkill;
         }
         // Add new user skill
-        UserSkill newSkill = new UserSkill(0, skill, rating);
+        UserSkill newSkill = new UserSkill(skills.size(), skill, rating);
         skills.add(newSkill);
         return newSkill;
     }

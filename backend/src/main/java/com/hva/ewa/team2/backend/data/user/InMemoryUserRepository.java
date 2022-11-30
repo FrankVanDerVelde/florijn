@@ -46,7 +46,7 @@ public class InMemoryUserRepository implements UserRepository {
         ArrayList<Skill> allSkills = skillRepo.findAllSkills();
 
         // Shuffle skills
-        Collections.shuffle(allSkills);
+//        Collections.shuffle(allSkills);
 
         // Get the size of half the list
         int halfListSize = (int) Math.ceil((double) allSkills.size() / 2);

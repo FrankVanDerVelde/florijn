@@ -1,13 +1,14 @@
 <template>
   <ProjectParticipantList :participants=project.participants></ProjectParticipantList>
 
-  <h2 class=" mb-4 mt-10 header-2" v-if="specialists.length !== 0">Deelnemers toevoegen</h2>
+  <h2 class=" mb-4 mt-10 header-2" v-if="filteredParticipantsList.length !== 0">Deelnemers toevoegen</h2>
   <div class="flex flex-row participant-container" v-if="specialists.length !== 0">
     <div class=" w-2/5 filter-container">
-      <FilterParticipants v-for="skillset in skills" :skillset=skillset :key=skillset />
+      <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
+                          @selectedSkill="skillSelect"/>
     </div>
     <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
-      <ParticipantCard class="cursor-pointer flex-grow-0" v-for="participants in specialists" :key=participants.id :skill=skills
+      <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=skills
                        :participant=participants @addParticipant="addParticipant" :validation="validation"/>
     </div>
   </div>
@@ -21,18 +22,17 @@ import ProjectParticipantList from "../Project/ProjectParticipantList.vue";
 export default {
   name: "AddParticipants",
   components: {ProjectParticipantList, ParticipantCard, FilterParticipants},
-  inject: ['projectFetchService', 'specialistFetchService'],
+  inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
 
   props: {
     projectId: {
       type: String,
-      required: true
     }
   },
 
 
   methods: {
-    addParticipant(specialist ) {
+    addParticipant(specialist) {
 
       if (specialist.role === "" || specialist.hourlyRate === "") {
         console.log("role or hourlyRate is null");
@@ -41,7 +41,7 @@ export default {
       }
       specialist.userId = specialist.participant.id
 
-     this.project.participants.push({
+      this.project.participants.push({
         role: specialist.role, hourlyRate: specialist.hourlyRate, user:
             {
               id: specialist.participant.id,
@@ -54,14 +54,35 @@ export default {
       })
       this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
       this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+    },
+
+    skillSelect(selectedSkill) {
+      if (!selectedSkill.checked) {
+        this.selectedfilters.push(selectedSkill.selectedSkill)
+      } else {
+        this.selectedfilters = this.selectedfilters.filter(selectedfilters => selectedfilters.id !== selectedSkill.selectedSkill.id)
+      }
+
+      //if selectedFilters array is empty, show all specialists
+      if (this.selectedfilters.length === 0) {
+        this.filteredParticipantsList = this.specialists;
+        return
+      }
+
+      this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill => this.selectedfilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
+
     }
   },
 
 
   async created() {
     this.project = await this.projectFetchService.fetchJson(`/${this.$route.params.projectId}`);
-    this.specialists = await this.specialistFetchService.fetchJson("")
+    this.specialists = await this.fetchService.fetchJson("/users/role/specialist")
     this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+    this.skillGroup = await this.skillFetchService.fetchJson("/groups")
+    this.filteredParticipantsList = this.specialists;
+
+    this.skillGroup.forEach(skill => skill.skills.forEach(skill => skill.checked = false))
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
@@ -76,7 +97,11 @@ export default {
       specialists: {},
       assignedSpecialists: {},
       skillset: {},
+      selectedfilters: [],
+      filteredParticipantsList: {},
       validation: false,
+
+      skillGroup: {},
 
       skills: [{
         name: "Microsoft Office Front-end",

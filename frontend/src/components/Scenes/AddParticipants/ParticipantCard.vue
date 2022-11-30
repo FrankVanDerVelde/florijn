@@ -1,5 +1,5 @@
-<template>
-  <div class="flex flex-col h-fit mt-4 ml-5 p-3 fa-border rounded-xl" @click.once="inputFields = !inputFields">
+<template >
+  <div class="flex flex-col h-fit mt-4 ml-5 p-3 fa-border rounded-xl cursor-pointer " @click.once="inputFields = !inputFields">
     <div class="flex">
 
       <div>
@@ -13,9 +13,7 @@
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{
-                skills.name
-              }}
+            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{skills.name }}
             </li>
           </ul>
         </div>
@@ -23,8 +21,8 @@
 
       <div class="flex m-0 p-0">
         <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
-          <div class=" " v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
-            <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star" class="star-color"/>
+          <div class="star-color" v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
+            <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
         </div>
       </div>
@@ -34,7 +32,7 @@
       <div class=" flex flex-col my-2">
         <input v-model="roleInput" type="text" id="roleButton"
                class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
-               :placeholder="rolePlaceholder" @change="deleteValidationText" required>
+               :placeholder="rolePlaceholder" required>
 
       </div>
       <div>
