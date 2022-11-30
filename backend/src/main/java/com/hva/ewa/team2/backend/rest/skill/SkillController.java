@@ -46,4 +46,29 @@ public class SkillController {
     public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId,  @RequestBody JsonUserSkillGroup body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
     }
+
+  // Get all expertises
+    // get expertise by id
+    // get all users expertise
+    // update user expertise
+
+    @GetMapping(path = "/expertises/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserSkill>> getAllExpertises() {
+        return ResponseEntity.ok(skillBusinessLogic.getUserSkills());
+    }
+
+    @GetMapping(path = "/expertise/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserSkill>> getExpertise(@PathVariable int expertiseId) {
+        return ResponseEntity.ok(skillBusinessLogic.getUserSkills(expertiseId));
+    }
+
+    @GetMapping(path = "/user-expertises/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserSkill>> getUserExpertises(@PathVariable int userId) {
+        return ResponseEntity.ok(skillBusinessLogic.getUserSkills(userId));
+    }
+
+//    @PutMapping(path = "/update-user-expertise/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId,  @RequestBody JsonUserSkillGroup body) {
+//        return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
+//    }
 }
