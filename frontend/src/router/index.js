@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -14,7 +14,8 @@ import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
 import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
-import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
+import SpecialistHourRegistrationOverview
+    from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
@@ -32,9 +33,19 @@ const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
     {path: '/', redirect: 'home'},
     {path: '/home', component: WelcomeView},
-    {path: '/admin/home', component: WelcomeAdminView},
-    {path: '/specialist/home', component: WelcomeSpecialistView},
-    {path: '/client/home', component: WelcomeClientView},
+    {
+        path: '/admin/home',
+        component: WelcomeAdminView,
+        name: "admin-home"
+    },
+    {
+        path: '/specialist/home', component: WelcomeSpecialistView,
+        name: "specialist-home"
+    },
+    {
+        path: '/client/home', component: WelcomeClientView,
+        name: "client-home"
+    },
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
@@ -134,6 +145,6 @@ const routes = [
 ];
 
 export const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 });

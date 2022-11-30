@@ -30,7 +30,7 @@ export default {
     inject: ['skillFetchService'],
     async created() {
         let skillGroups = await this.skillFetchService.fetchJson(`/groups`);
-        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/5`);
+        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/${this.user.id}`);
 
         const userSkillIds = userSkills.map(userSkill => userSkill.skill.id);
 
@@ -59,6 +59,7 @@ export default {
     data() {
         return {
             skillGroups: [],
+            user: JSON.parse(localStorage.getItem("user")),
         }
     }
 }

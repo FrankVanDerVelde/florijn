@@ -20,8 +20,9 @@ export default {
       projectFetchService: new FetchService("projects"),
       skillFetchService: new FetchService("skills"),
       specialistFetchService: new FetchService("/specialists"),
+      userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),
-      userService: new UserAdaptor()
+      userService: new UserAdaptor(),
     }
   },
 }

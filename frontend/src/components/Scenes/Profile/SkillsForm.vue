@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <div v-for="skill in skills" class="last:border-b-[1px] border-neutral-200">
-                        <div class="grid grid-cols-3 border-[1px] border-b-0 border-neutral-200 h-[38px] items-center">
+                        <div class="grid grid-cols-3 border-[1px] border-b-0 border-neutral-200 min-h-[44px] items-center">
                             <div class="font-bold capitalize text-[14px] ml-6 col-span-1">{{ skill.name }}</div>
                             <div class="grid grid-cols-6 gap-2 justify-center h-[25px] col-span-2">
 
