@@ -9,34 +9,46 @@ import java.util.List;
 
 public class Project {
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int id;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String title;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String description;
-    @Getter @Setter
+    @Getter
+    @Setter
     private Client client;
-    @Getter @Setter
+    @Getter
+    @Setter
     private String logoSrc;
-    @Getter @Setter
+
+    @Getter
+    @Setter
+    private boolean archived;
+
+    @Getter
+    @Setter
     private List<ProjectParticipant> participants;
 
     public Project(int id, String title, String description, Client client) {
-        this(id, title, description, client, "projects/sample-logo.png", new ArrayList<>());
+        this(id, title, description, client, "projects/sample-logo.png", new ArrayList<>(), false);
     }
 
     public Project(int id, String title, String description, Client client, String logoSrc) {
-        this(id, title, description, client, logoSrc, new ArrayList<>());
+        this(id, title, description, client, logoSrc, new ArrayList<>(), false);
     }
 
-    public Project(int id, String title, String description, Client client, String logoSrc, List<ProjectParticipant> specialists) {
+    public Project(int id, String title, String description, Client client, String logoSrc, List<ProjectParticipant> specialists, boolean archived) {
         this.id = id;
         this.title = title;
         this.client = client;
         this.description = description;
         this.logoSrc = logoSrc;
         this.participants = specialists;
+        this.archived = archived;
     }
 
     public ProjectParticipant getParticipantByUserId(int userId) {
