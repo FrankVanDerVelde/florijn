@@ -1,13 +1,13 @@
 <template>
   <div class="container main-container rounded-xl">
     <div class="flex mt-4 p-2 w-full justify-center">
-      <img v-bind:src="employee.logoSrc" alt="project logo" class="icon-container fa-border m-auto">
+      <img v-bind:src="employee.profilePictureURL" alt="project logo" class="icon-container fa-border m-auto">
       <div class="flex flex-col justify-between container ml-2">
         <div class="flex flex-col mb-3">
           <div class="container flex justify-between m-1">
             <div class="relative bottom-0 ">
-              <div class="font-bold">{{ employee.name }}</div>
-              <div class="font-semibold text-neutral-500">{{ employee.description }}</div>
+              <div class="font-bold">{{ employee.firstName + " " + employee.lastName }}</div>
+              <div class="font-semibold text-neutral-500">{{ employee.email }}</div>
             </div>
             <button id="detailsbutton"
                     class="bg-neutral-100 border-neutral-200 border-[1px] font-semibold rounded-md bold p-2 mr-2 h-[31px] flex items-center text-neutral-900">

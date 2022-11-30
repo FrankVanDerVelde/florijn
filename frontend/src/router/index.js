@@ -25,6 +25,7 @@ import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
 import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue";
+import AddSpecialist from "../components/Scenes/Adminpanel/AddSpecialist.vue";
 
 
 const routes = [
@@ -89,7 +90,12 @@ const routes = [
     }, {
         path: "/adminpanel/add-client",
         component: AddClient,
-    }, {
+    },
+    {
+        path: "/adminpanel/add-specialist",
+        component: AddSpecialist
+    },
+    {
         path: "/projects",
         name: "projects",
         component: ProjectList

@@ -172,5 +172,4 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> getSpecialists() {
         return this.users.stream().filter(user -> user instanceof Specialist).toList();
-    }
-}
+    }}

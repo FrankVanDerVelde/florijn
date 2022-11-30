@@ -8,8 +8,8 @@
           </router-link>
         </div>
         <div class="container grow">
-          <customer-list-details v-for="customer in customers" :key="customer.id"
-                                 :customer="customer"></customer-list-details>
+          <customer-list-details v-for="client in clients" :key="client.id"
+                                 :client="client"></customer-list-details>
         </div>
       </div>
 
@@ -28,9 +28,15 @@ export default {
   components: {
     CustomerListDetails
   },
+  inject: ['fetchService'],
+
+  async created() {
+    this.clients = await this.fetchService.fetchJson(`/users/client`)
+  },
 
   data() {
     return {
+      clients: {},
       sideBarLinks: [{
         icon: 'fa-solid fa-share-nodes',
         name: 'Klanten',
@@ -41,39 +47,6 @@ export default {
           name: 'Specialisten',
           href: 'employee-list',
         }],
-      customers: [
-        {
-          id: 0,
-          title: "ING Banking",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/ING-Bankieren-icoon.webp",
-        }, {
-          id: 1,
-          title: "Bedrijf EWA",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
-        }, {
-          id: 2,
-          title: "Bedrijf EWA",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
-        }, {
-          id: 3,
-          title: "Bedrijf EWA",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
-        }, {
-          id: 4,
-          title: "Bedrijf EWA",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
-        }, {
-          id: 5,
-          title: "Bedrijf EWA",
-          description: "Bedrijf informatie komt hier te staan",
-          logoSrc: "/src/assets/logo-small.png",
-        }
-      ]
     }
   }
 
