@@ -1,4 +1,4 @@
-package com.hva.ewa.team2.backend.common.Services.DateService;
+package com.hva.ewa.team2.backend.common.services.date;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.hva.ewa.team2.backend.common.Services.DateService;
+package com.hva.ewa.team2.backend.common.services.date;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.util.Calendar;
 import java.util.Locale;
 
 @Component

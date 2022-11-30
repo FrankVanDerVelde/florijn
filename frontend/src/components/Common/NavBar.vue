@@ -8,20 +8,27 @@
           <nav-item v-for="item in links" :key="item.name" :data="item"/>
         </div>
       </div>
-      <div class="h-full pr-4 pl-4" @click="confirmationLogOut()">
-        <nav-item class="w-fit" :data="this.staticLink"/>
+      <div class="h-full pr-4 pl-4 flex items-center">
+        <nav-item v-if="user == null" class="w-fit" :data="this.staticLink"/>
+        <ProfilePopup v-else/>
       </div>
     </div>
     <div class="page-main-mw p-4 h-full flex md:hidden flex-row items-center justify-between">
-      <font-awesome-icon v-if="!menuExpanded" size="xl" fixed-width icon="bars" class="menuExpansionIcon"
-                         @click="toggleMenu"/>
-      <font-awesome-icon v-else size="xl" icon="times" fixed-width class="menuExpansionIcon" @click="toggleMenu"/>
+      <div v-if="this.links.length > 0">
+        <font-awesome-icon v-if="!menuExpanded" size="xl" fixed-width icon="bars" class="menuExpansionIcon"
+                           @click="toggleMenu"/>
+        <font-awesome-icon v-else size="xl" icon="times" fixed-width class="menuExpansionIcon" @click="toggleMenu"/>
+      </div>
 
       <img class="h-full w-fit" :src="logo" alt="Business Logo">
-      <nav-item :data="this.staticLink"/>
+
+      <nav-item v-if="user == null" class="w-fit" :data="this.staticLink"/>
+      <ProfilePopup v-else/>
+
+      <!--      <nav-item :data="this.staticLink"/>-->
     </div>
 
-    <div v-if="menuExpanded" class="page-main-mw flex flex-col p-4 small-nav z-40 md:hidden">
+    <div v-if="menuExpanded && links.length > 0" class="page-main-mw flex flex-col p-4 small-nav z-40 md:hidden">
       <nav-item v-for="item in links" :key="item.name" :data="item" :small="true"/>
     </div>
   </div>
@@ -30,10 +37,11 @@
 <script>
 import logo from '../../assets/florijn_logo.png';
 import NavItem from "./NavItem.vue";
+import ProfilePopup from "./ProfilePopup.vue";
 
 export default {
   name: 'NavBar',
-  components: {NavItem},
+  components: {ProfilePopup, NavItem},
   setup() {
     return {
       logo,
@@ -43,6 +51,7 @@ export default {
   watch: {
     '$route'() {
       this.menuExpanded = false;
+      this.user = JSON.parse(localStorage.getItem("user"));
       this.isLoggedIn();
     }
   },
@@ -53,7 +62,8 @@ export default {
       staticLink: {
         name: 'Log in',
         link: '/login'
-      }
+      },
+      user: JSON.parse(localStorage.getItem("user")),
     }
   },
 
@@ -63,7 +73,7 @@ export default {
       document.body.style.overflow = this.menuExpanded ? 'hidden' : 'auto';
     },
     isLoggedIn() {
-      if (localStorage.getItem("id") && localStorage.getItem("role") === "null") {
+      if (this.user == null) {
         this.links = [{
           name: 'Home',
           link: '/home'
@@ -73,8 +83,8 @@ export default {
           link: '/login'
         }
       } else {
-        switch (localStorage.getItem("role")) {
-          case "admin":
+        switch (this.user.role) {
+          case "ADMIN":
             this.links = [
               {
                 name: 'Home',
@@ -89,7 +99,7 @@ export default {
               }
             ]
             break;
-          case "specialist":
+          case "SPECIALIST":
             this.links = [{
               name: 'Home',
               link: '/specialist/home'
@@ -101,7 +111,7 @@ export default {
               link: '/projects'
             }]
             break;
-          case "client":
+          case "CLIENT":
             this.links = [{
               name: 'Home',
               link: '/client/home'
@@ -120,15 +130,6 @@ export default {
         }
       }
     },
-    confirmationLogOut() {
-      if (this.staticLink.link === "/login") {
-        return;
-      }
-      alert("Je word nu uitgelogd");
-      location.reload();
-      localStorage.setItem("id", null);
-      localStorage.setItem("role", null);
-    }
   }
 };
 

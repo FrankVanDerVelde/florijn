@@ -1,28 +1,28 @@
 <template>
   <div class="page-main-mw p-4">
     <div class="container">
-      <div class="w-[300px]">
+      <form class="w-[300px]" @submit.prevent=saveButton()>
         <p class="header-text">Wachtwoord veranderen</p>
         <p class="text-changepassword">Gelieve uw wachtwoord te herstellen in onderstaande invulvelden</p>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
             <label class="mb-[12px]">Wachtwoord</label>
-            <input v-model="password" type="password" class="pl-[7px]">
+            <input v-model="password" type="password" required class="pl-[7px]">
           </div>
         </div>
         <div class="inputfield-wachtwoord">
           <div class="input-container">
             <label class="mb-[12px]">Herhaal wachtwoord</label>
-            <input v-model="repeatPassword" type="password" class="pl-[7px]">
+            <input v-model="repeatPassword" required type="password" class="pl-[7px]">
           </div>
         </div>
         <p class="text-center min-h-[50px] w-100 text-app_red-500">&nbsp {{ validationText }}</p>
         <div class="submit-button">
           <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 px-5 py-2.5
-          text-sm leading-5 rounded-lg w-full" @click="saveButton()">Opslaan
+          text-sm leading-5 rounded-lg w-full">Opslaan
           </button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
@@ -33,9 +33,7 @@ export default {
   name: "ChangePassword",
   methods: {
     saveButton() {
-      if (this.password === '' || this.repeatPassword === '') {
-        this.validationText = 'De velden zijn niet volledig ingevuld!';
-      } else if (this.password !== this.repeatPassword) {
+      if (this.password !== this.repeatPassword) {
         this.validationText = 'De opgegeven wachtwoorden zijn niet gelijk!';
         this.repeatPassword = '';
       } else {
