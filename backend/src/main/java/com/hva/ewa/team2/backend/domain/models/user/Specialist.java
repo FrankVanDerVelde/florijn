@@ -1,13 +1,17 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Specialist extends User {
 
@@ -19,7 +23,9 @@ public class Specialist extends User {
     @Setter
     @JsonView(EssentialInfo.class)
     private String lastName;
+
     private final List<UserSkill> skills;
+    private List<UserExpertise> expertises;
 
     @Getter
     @Setter
@@ -35,6 +41,7 @@ public class Specialist extends User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
+        this.expertises = new ArrayList<>();
         this.address = address;
     }
 
@@ -68,6 +75,15 @@ public class Specialist extends User {
         UserSkill newSkill = new UserSkill(0, skill, rating);
         skills.add(newSkill);
         return newSkill;
+    }
+
+    public List<UserExpertise> updateUserExpertise(List<Expertise> expertises) {
+        List<UserExpertise> userExpertises = expertises.stream()
+                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
+                .collect(Collectors.toList());
+
+        this.expertises = userExpertises;
+        return userExpertises;
     }
 
     @Override

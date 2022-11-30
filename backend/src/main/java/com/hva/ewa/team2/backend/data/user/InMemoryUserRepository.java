@@ -2,7 +2,9 @@ package com.hva.ewa.team2.backend.data.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -39,6 +41,9 @@ public class InMemoryUserRepository implements UserRepository {
 
         setSkills(specialist);
         setSkills(specialist2);
+
+        setExpertises(specialist);
+        setExpertises(specialist2);
     }
 
     public void setSkills(Specialist specialist) {
@@ -58,6 +63,21 @@ public class InMemoryUserRepository implements UserRepository {
         }
 
         users.add(specialist);
+    }
+
+    public void setExpertises(Specialist specialist) {
+        ArrayList<Expertise> allExpertises = skillRepo.getAllExpertises();
+
+        for (int i = 0; i < allExpertises.size(); i++) {
+            boolean randomBool = ThreadLocalRandom.current().nextBoolean();
+
+            List<Expertise> expertises = allExpertises.stream()
+                    .filter(expertise -> (randomBool == true))
+                    .collect(Collectors.toList());
+
+            specialist.updateUserExpertise(expertises);
+        }
+
     }
 
     @Override
