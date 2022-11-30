@@ -3,6 +3,7 @@ package com.hva.ewa.team2.backend.domain.usecases.availability;
 import com.hva.ewa.team2.backend.data.Availability.AvailabilityRepository;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
+import com.hva.ewa.team2.backend.domain.models.availability.UpdateAvailabilityRequest;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -50,13 +51,18 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic{
     }
 
     @Override
-    public Availability handleUpdateAvailability(int id, Availability availability) throws Exception {
-        Optional<Availability> av = availabilityRepository.fetchAvailabilityById(availability.getId());
+    public Availability handleUpdateAvailability(int id, UpdateAvailabilityRequest request) throws Exception {
+        Optional<Availability> availability = availabilityRepository.fetchAvailabilityById(id);
 
-        if (av.isEmpty()) {
-            throw new Exception("Availability not found for id: " + availability.getId());
-        }
-        return availabilityRepository.updateAvailability(id, availability);
+        if (availability.isEmpty())
+            throw new Exception("Could not find availability by given id: " + id);
+
+        Availability updatedAvailability = availability.get();
+        updatedAvailability.setDate(request.getDate());
+        updatedAvailability.setFrom(request.getFrom());
+        updatedAvailability.setTo(request.getTo());
+
+        return availabilityRepository.updateAvailability(id, updatedAvailability);
     }
 
     @Override

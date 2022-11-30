@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -32,9 +32,19 @@ const routes = [
     // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
     {path: '/', redirect: 'home'},
     {path: '/home', component: WelcomeView},
-    {path: '/admin/home', component: WelcomeAdminView},
-    {path: '/specialist/home', component: WelcomeSpecialistView},
-    {path: '/client/home', component: WelcomeClientView},
+    {
+        path: '/admin/home',
+        component: WelcomeAdminView,
+        name: "admin-home"
+    },
+    {
+        path: '/specialist/home', component: WelcomeSpecialistView,
+        name: "specialist-home"
+    },
+    {
+        path: '/client/home', component: WelcomeClientView,
+        name: "client-home"
+    },
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},

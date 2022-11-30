@@ -102,7 +102,7 @@ export default {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
       if (this.project == null) {
-        this.$router.redirect({name: 'projects'});
+        this.$router.push({name: 'projects'});
         return;
       }
 
@@ -111,7 +111,7 @@ export default {
       this.project = this.getSampleProject();
     }
 
-    this.clients = await this.fetchService.fetchJson(`/users/client`);
+    this.clients = await this.fetchService.fetchJson(`/users/role/client`);
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
@@ -136,7 +136,7 @@ export default {
       project: {},
       title: "",
       description: "",
-      logoSrc: "",
+      logoFile: null,
       clients: [],
       clientId: -1,
       errors: {}
@@ -180,6 +180,7 @@ export default {
     },
     async updateLogo(event) {
       if (event.target.files.length === 0) {
+        this.logoFile = null;
         delete this.project.logoSrc;
         return;
       }
@@ -190,14 +191,13 @@ export default {
         return;
       }
 
-      this.logoSrc = `${await this.getBase64(event.target.files[0])}`;
-      this.project.logoSrc = this.logoSrc;
+      this.logoFile = event.target.files[0];
+      this.project.logoSrc = `${await this.getBase64(event.target.files[0])}`;
     },
     injectProjectInfo() {
       this.title = this.project.title;
       this.description = this.project.description;
       this.clientId = this.project.client?.id ?? -1;
-      this.logoSrc = this.project.logoSrc;
     },
     validate() {
       this.errors = {};
@@ -217,18 +217,19 @@ export default {
     async saveProject() {
       if (!this.validate()) return;
 
-      const body = {
-        title: this.title,
-        description: this.description,
-        client: this.clientId,
-        logoSrc: this.logoSrc == null || this.logoSrc === "" ? null : this.logoSrc
-      };
+      console.log(this.logoFile);
+
+      const formData = new FormData();
+      formData.append('title', this.title);
+      formData.append('description', this.description);
+      formData.append('client', this.clientId);
+      if (this.logoFile != null) formData.append('logoFile', this.logoFile);
 
       let response;
       if (this.newProject) {
-        response = await this.projectFetchService.fetchJsonPost('/create', body);
+        response = await this.projectFetchService.fetchJsonFile('/create', "POST", formData);
       } else {
-        response = await this.projectFetchService.fetchJsonMethod(`/${this.projectId}/update`, "PUT", body);
+        response = await this.projectFetchService.fetchJsonFile(`/${this.projectId}/update`, "PUT", formData);
       }
 
       if (response == null) {

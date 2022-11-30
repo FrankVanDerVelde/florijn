@@ -2,10 +2,10 @@ import FetchService from "../../Services/FetchService.js";
 
 export class AvailabilityRepository {
 
-    #fetcher;
+    fetcher;
 
     constructor() {
-        this.#fetcher = new FetchService('');
+        this.fetcher = new FetchService('');
     }
 
     /**
@@ -16,7 +16,7 @@ export class AvailabilityRepository {
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
         try {
-            return await this.#fetcher.fetchJson(`/users/${userId}/availability`);
+            return await this.fetcher.fetchJson(`/users/${userId}/availability`);
         } catch (e) {
             console.error(e);
             return e;
@@ -33,7 +33,7 @@ export class AvailabilityRepository {
      */
     async createAvailability(userId, date, fromTime, toTime) {
         try {
-            return await this.#fetcher.fetchJsonMethod(
+            return await this.fetcher.fetchJsonMethod(
                 `/users/${userId}/availability`,
                 HttpMethods.POST,
                 {
@@ -58,7 +58,7 @@ export class AvailabilityRepository {
      */
     async updateAvailability(id, date, fromTime, toTime) {
         try {
-            return await this.#fetcher.fetchJsonMethod(
+            return await this.fetcher.fetchJsonMethod(
                 `/availability/${id}/update`,
                 HttpMethods.PUT,
                 {
@@ -80,7 +80,7 @@ export class AvailabilityRepository {
      */
     async deleteAvailability(id) {
         try {
-            return await this.#fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
+            return await this.fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
         } catch (e) {
             console.error(e);
             return e;
@@ -94,7 +94,7 @@ export class AvailabilityRepository {
      */
     async getAvailability(id) {
         try {
-            return await this.#fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
+            return await this.fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
         } catch (e) {
             console.error(e);
             return e;

@@ -44,6 +44,7 @@ export default {
     data() {
         return {
             active: false,
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     methods: {
@@ -70,8 +71,7 @@ export default {
         handleFormButton() {
             this.active = !this.active;
             if (!this.active) {
-                console.log(this.group)
-                this.skillFetchService.fetchJsonPut(`/update-user-skill-group/5`, this.group);
+                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/${this.user.id}`, "PUT", this.group);
             }
         },
         handleSkillUpdate(skillId, newValue) {
