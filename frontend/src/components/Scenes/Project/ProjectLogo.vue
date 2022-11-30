@@ -1,12 +1,23 @@
 <template>
   <div class="icon-container grid w-full">
-    <img :src="project.logoSrc ?? '/src/assets/logo-small.png'" alt="project logo">
+    <Asset :src="logoSrc" alt="project logo"/>
   </div>
 </template>
 
 <script>
+import Asset from "../../Common/Asset.vue";
+
 export default {
   name: "ProjectLogo",
+  components: {Asset},
+  inject: ["fetchService"],
+
+  computed: {
+    logoSrc() {
+      if (this.project.logoSrc == null) return '/projects/sample-logo.png';
+      return this.project.logoSrc;
+    }
+  },
 
   props: {
     project: {

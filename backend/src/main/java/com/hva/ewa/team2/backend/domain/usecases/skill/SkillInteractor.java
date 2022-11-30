@@ -40,7 +40,7 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public UserSkill updateUserSkill(int userId, JsonUserSkill jsonBody) {
-        User user = userRepo.findById(userId);
+        User user = userRepo.getUserById(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
@@ -68,7 +68,7 @@ public class SkillInteractor implements SkillBusinessLogic {
      */
     @Override
     public SkillGroup updateUserSkillGroup(int userId, JsonUserSkillGroup jsonBody) {
-        User user = userRepo.findById(userId);
+        User user = userRepo.getUserById(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
@@ -97,7 +97,7 @@ public class SkillInteractor implements SkillBusinessLogic {
     @Override
     public List<UserSkill> getUserSkills(int userId) {
         System.out.println(userRepo.getAllUsers());
-        User user = userRepo.findById(userId);
+        User user = userRepo.getUserById(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");

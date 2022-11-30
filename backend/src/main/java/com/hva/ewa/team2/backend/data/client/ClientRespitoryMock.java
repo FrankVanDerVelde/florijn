@@ -1,4 +1,4 @@
-package com.hva.ewa.team2.backend.data.Client;
+package com.hva.ewa.team2.backend.data.client;
 
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 
