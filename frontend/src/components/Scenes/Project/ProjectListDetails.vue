@@ -1,24 +1,25 @@
 <template>
   <div class="container main-container rounded-xl">
-    <router-link :to="{name: 'project-overview', params: {projectId: project.id}}" class="flex mt-4 p-2 w-full justify-center">
+    <router-link :to="{name: 'project-overview', params: {projectId: project.id}}"
+                 class="flex mt-4 p-2 w-full justify-center">
 
-      <img :src="logoSrc" alt="project logo" class="icon-container">
+      <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-      <div class="flex flex-col justify-between container ml-4">
-        <div class="flex flex-col mb-3">
-          <div class="font-bold">{{ project.title }}</div>
-          <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+        <div class="flex flex-col justify-between container ml-4">
+          <div class="flex flex-col mb-3">
+            <div class="font-bold">{{ project.title }}</div>
+            <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+          </div>
+
+          <div class="container flex justify-between m-1">
+
+            <stat :dot="false" icon="users" class="bottom-0">{{ project.participants.length }}</stat>
+
+            <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
+              Project
+            </button>
+          </div>
         </div>
-
-        <div class="container flex justify-between m-1">
-
-          <stat :dot="false" icon="users" class="bottom-0">{{ project.participants.length }}</stat>
-
-          <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
-             Project
-          </button>
-        </div>
-      </div>
 
     </router-link>
   </div>
@@ -27,18 +28,17 @@
 
 <script>
 import Stat from "./Stat.vue";
+import Asset from "../../Common/Asset.vue";
 
 export default {
-  components: {Stat},
+  components: {Asset, Stat},
   name: "ProjectListDetails",
   inject: ["fetchService"],
 
   computed: {
     logoSrc() {
-      if (this.project.logoSrc == null) return this.fetchService.getAsset('/projects/sample-logo.png');
-
-      if (this.project.logoSrc.startsWith("data:image")) return this.project.logoSrc;
-      return this.fetchService.getAsset(this.project.logoSrc);
+      if (this.project.logoSrc == null) return '/projects/sample-logo.png';
+      return this.project.logoSrc;
     }
   },
 
