@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.data.Availability;
 
 
-import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
@@ -34,20 +34,20 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.findById(1);
-        User user2 = userRepository.findById(2);
+        User user1 = userRepository.getUserById(1);
+        User user2 = userRepository.getUserById(2);
 
         this.availabilities.addAll(List.of(
                 new Availability(
                         0,
                         user1,
-                        LocalDate.of(2022, 3, 4),
+                        LocalDate.now(),
                         dateService.currentDay(3, 0).toLocalTime(),
-                        dateService.currentDay(4, 0).toLocalTime()
+                        dateService.currentDay(8, 0).toLocalTime()
                 ), new Availability(
                         1,
                         user2,
-                        LocalDate.of(2022, 3, 4),
+                        LocalDate.now(),
                         dateService.currentDay(6, 0).toLocalTime(),
                         dateService.currentDay(9, 0).toLocalTime()
                 )
@@ -60,7 +60,6 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     public List<Availability> fetchAllAvailabilityByUser(int userId, int weekNumber) {
         return availabilities.stream()
                 .filter(a -> a.getUser().getId() == userId)
-                //TODO filter weeknumber
                 .toList();
     }
 
@@ -74,7 +73,7 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     @Override
     public Availability createAvailability(CreateAvailabilityRequest request) throws Exception {
         Availability availability = new Availability(nextId(),
-                userRepository.findById(request.getUserId()),
+                userRepository.getUserById(request.getUserId()),
                 request.getDate(),
                 request.getFrom(),
                 request.getTo());
