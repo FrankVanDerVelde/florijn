@@ -33,7 +33,8 @@ public class InMemoryProjectRepository implements ProjectRepository {
                 "ING Banking Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
                 ingClient,
-                "projects/logo-1.png");
+                "projects/logo-1.png",
+                new ArrayList<>(), true);
 
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
         ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(1), "Designer", 40));
