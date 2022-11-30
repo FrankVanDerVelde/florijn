@@ -1,14 +1,12 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +31,6 @@ public class Specialist extends User {
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this(id, email, password, profilePictureURL, firstName, lastName, new Address());
-        // TODO: implement new skill structure with UserSkill.
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
@@ -57,6 +54,10 @@ public class Specialist extends User {
         return skills;
     }
 
+    public List<UserExpertise> getExpertises() {
+        return expertises;
+    }
+
     public UserSkill getUserSkill(Skill skill) {
         return skills.stream()
                 .filter(us -> us.getSkill().equals(skill))
@@ -77,13 +78,13 @@ public class Specialist extends User {
         return newSkill;
     }
 
-    public List<UserExpertise> updateUserExpertise(List<Expertise> expertises) {
-        List<UserExpertise> userExpertises = expertises.stream()
-                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
-                .collect(Collectors.toList());
+    public List<UserExpertise> updateUserExpertise(ArrayList<UserExpertise> expertises) {
+//        List<UserExpertise> userExpertises = expertises.stream()
+//                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
+//                .collect(Collectors.toList());
 
-        this.expertises = userExpertises;
-        return userExpertises;
+        this.expertises = expertises;
+        return expertises;
     }
 
     @Override

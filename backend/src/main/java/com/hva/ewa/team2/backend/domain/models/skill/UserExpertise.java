@@ -20,4 +20,12 @@ public class UserExpertise {
         this.id = id;
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", userId=" + userId +
+                '}';
+    }
 }

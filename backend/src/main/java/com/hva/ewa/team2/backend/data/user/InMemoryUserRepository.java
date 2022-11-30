@@ -33,17 +33,14 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen"));
-
         Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
 
+        Specialist specialist = (new Specialist(5, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
+        Specialist specialist2 = (new Specialist(6, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
+
         setSkills(specialist);
         setSkills(specialist2);
-
-        setExpertises(specialist);
-        setExpertises(specialist2);
     }
 
     public void setSkills(Specialist specialist) {
@@ -62,22 +59,22 @@ public class InMemoryUserRepository implements UserRepository {
             specialist.updateUserSkill(allSkills.get(i), randomRating);
         }
 
-        users.add(specialist);
-    }
-
-    public void setExpertises(Specialist specialist) {
         ArrayList<Expertise> allExpertises = skillRepo.getAllExpertises();
 
-        for (int i = 0; i < allExpertises.size(); i++) {
+        ArrayList<UserExpertise> userExpertises = new ArrayList<>();
+        int specialistId = specialist.getId();
+        for (Expertise expertise: allExpertises) {
             boolean randomBool = ThreadLocalRandom.current().nextBoolean();
-
-            List<Expertise> expertises = allExpertises.stream()
-                    .filter(expertise -> (randomBool == true))
-                    .collect(Collectors.toList());
-
-            specialist.updateUserExpertise(expertises);
+            if (randomBool == true) {
+                userExpertises.add(new UserExpertise(expertise.getId(), specialistId));
+            }
         }
 
+        System.out.println(userExpertises);
+
+        specialist.updateUserExpertise(userExpertises);
+
+        users.add(specialist);
     }
 
     @Override
