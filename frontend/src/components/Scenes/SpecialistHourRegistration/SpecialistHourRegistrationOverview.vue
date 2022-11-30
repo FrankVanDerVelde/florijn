@@ -58,7 +58,6 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -91,13 +90,14 @@ export default {
   },
   methods: {
     loadWeekBar() {
-      this.week = this.dateService.isoWeekDays(this.weekNumber).filter(day => day.weekDayIndex < 6).map(day => {
-        return {
-          day: day.date.format("dddd"),
-          date: day.date.format("DD MMM"),
-          weekDayIndex: day.weekDayIndex,
-        }
-      });
+      this.week = this.dateService.isoWeekDays(this.weekNumber)
+            .map(day => {
+                return {
+                    day: day.date.format("dddd"),
+                    date: day.date.format("DD MMM"),
+                    weekDayIndex: day.weekDayIndex,
+                }
+            });
       this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
 

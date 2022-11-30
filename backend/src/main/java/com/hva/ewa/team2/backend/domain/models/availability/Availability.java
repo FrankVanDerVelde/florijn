@@ -28,7 +28,7 @@ public class Availability {
     @Setter
     private LocalTime to;
 
-    public Availability(int id, User user, LocalDate date, LocalTime from, LocalTime to) {
+    public dAvailability(int id, User user, LocalDate date, LocalTime from, LocalTime to) {
         this.id = id;
         this.user = user;
         this.date = date;

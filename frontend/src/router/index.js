@@ -15,6 +15,7 @@ import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
+import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvailibility/SpecialistAvailibilityOverview.vue";
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
@@ -52,7 +53,7 @@ const routes = [
             },
             {
                 path: 'available-hours',
-                component: AvailableHours,
+                component: SpecialistAvailibilityOverview,
             },
             {
                 path: "hour-registration",

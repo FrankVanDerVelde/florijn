@@ -38,25 +38,20 @@ export default {
                 href: '/profile/personal-info',
             },
             {
-                icon: 'fa-solid fa-calendar-days',
-                name: 'available hours',
-                href: '/profile/available-hours',
-            },
-            {
                 icon: 'fa-solid fa-lightbulb',
                 name: 'skills',
                 href: '/profile/skills',
             },
-              {
+            {
+                icon: 'fa-solid fa-calendar-days',
+                name: 'Beschikbaarheid',
+                href: '/profile/available-hours',
+            },
+            {
                 icon: 'fa-solid fa-calendar-week',
                 name: 'Uren registratie',
                 href: '/profile/hour-registration',
-              },
-            // {
-            //     icon: 'fa-solid fa-file',
-            //     name: 'resume',
-            //     href: "/profile/resume"                
-            // }
+            },
         ]
         }
     }
