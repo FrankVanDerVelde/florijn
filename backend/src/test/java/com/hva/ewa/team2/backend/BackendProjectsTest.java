@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class BackendProjectsTest {
 
-    @Autowired
-    private MockMvc mvc;
+//    @Autowired
+//    private MockMvc mvc;
     @Autowired
     private ProjectInteractor interactor;
 
