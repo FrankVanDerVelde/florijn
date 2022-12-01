@@ -1,7 +1,7 @@
 <template>
 <div class="flex -space-x-2 overflow-hidden">
   <img :src="client.avatarUrl" alt="test"
-       class="inline-block h-8 w-8 rounded-full border mr-4">
+       class="inline-block h-8 w-8 rounded-full border">
 
   <img v-for="participant in participants.slice(0,4)" :key="participant" :src="participant.user.avatarUrl" alt="test"
        class="inline-block h-8 w-8 rounded-full border">
