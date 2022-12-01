@@ -1,8 +1,6 @@
 <template>
   <div>
-
-
-    <div class="font-semibold my-2">{{ skillset.name }}</div>
+    <div class="font-semibold mb-2 mt-4">{{ skillset.name }}</div>
 
     <div v-if="expand">
       <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skills" :key="selectedSkill">

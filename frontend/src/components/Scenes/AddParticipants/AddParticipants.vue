@@ -1,7 +1,7 @@
 <template>
   <ProjectParticipantList :participants=project.participants></ProjectParticipantList>
 
-  <h2 class=" mb-4 mt-10 header-2" v-if="filteredParticipantsList.length !== 0">Deelnemers toevoegen</h2>
+  <h2 class=" mb-4 mt-10 header-2" >Deelnemers toevoegen</h2>
   <div class="flex flex-row participant-container" v-if="specialists.length !== 0">
     <div class=" w-2/5 filter-container">
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
@@ -53,7 +53,7 @@ export default {
             }
       })
       this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
-      this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+      this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
     },
 
     skillSelect(selectedSkill) {
