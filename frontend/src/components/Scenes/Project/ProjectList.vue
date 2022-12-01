@@ -10,7 +10,7 @@
                    v-model="searchQuery"
                    @submit="fetchProjects"/>
 
-        <div v-if="projects.length === 0" class="text-app_red-400">Er konden geen projecten gevonden met de gegeven zoekopdracht.</div>
+        <div v-if="projects.length === 0" class="text-app_red-400">Er konden geen projecten worden gevonden met het gegeven zoekopdracht.</div>
 
         <project-list-details v-for="project in projects" :key="project.id" :project="project"/>
       </div>

@@ -5,20 +5,21 @@
 
       <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-        <div class="flex flex-col justify-between container ml-4">
-          <div class="flex flex-col mb-3">
-            <div class="font-bold">{{ project.title }}</div>
-            <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+      <div class="flex flex-col justify-between container ml-4 fa-border">
+        <div class="flex flex-col mb-3">
+          <div class="font-bold">{{ project.title }}</div>
+          <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+        </div>
+
+        <div class="container flex justify-between m-1">
+
+          <div>
+            <AvatarStack :participants="this.project.participants" :client="this.project.client"/>
           </div>
-
-          <div class="container flex justify-between m-1">
-
-            <stat :dot="false" icon="users" class="bottom-0">{{ project.participants.length }}</stat>
-
-            <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
-              Project
-            </button>
-          </div>
+          <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
+            Project
+          </button>
+        </div>
         </div>
 
     </router-link>
@@ -27,11 +28,11 @@
 </template>
 
 <script>
-import Stat from "./Stat.vue";
 import Asset from "../../Common/Asset.vue";
+import AvatarStack from "./AvatarStack.vue";
 
 export default {
-  components: {Asset, Stat},
+  components: {AvatarStack, Asset},
   name: "ProjectListDetails",
   inject: ["fetchService"],
 
