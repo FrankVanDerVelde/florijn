@@ -5,7 +5,7 @@
 
       <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-      <div class="flex flex-col justify-between container ml-4 fa-border">
+      <div class="flex flex-col justify-between container ml-4 ">
         <div class="flex flex-col mb-3">
           <div class="font-bold">{{ project.title }}</div>
           <div class="font-semibold text-neutral-500">{{ project.description }}</div>
