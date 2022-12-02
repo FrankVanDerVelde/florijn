@@ -23,8 +23,8 @@ public class AvailabilityController {
     }
 
     @GetMapping(path = "/users/{userId}/availability")
-    public ResponseEntity<List<Availability>> getAvailabilityByUser(@PathVariable int userId, @RequestParam Optional<Integer> weeknumber) {
-        List<Availability> availabilities = interactor.handleFetchAvailabilityByUser(userId, weeknumber);
+    public ResponseEntity<List<Availability>> getAvailabilityByUser(@PathVariable int userId, @RequestParam Optional<Integer> weekNumber) {
+        List<Availability> availabilities = interactor.handleFetchAvailabilityByUser(userId, weekNumber);
         return ResponseEntity.ok(availabilities);
     }
 
@@ -48,7 +48,7 @@ public class AvailabilityController {
 
     @PutMapping(path = "availability/{id}/update")
     public ResponseEntity<Availability> updateAvailability(@PathVariable int id, @RequestBody UpdateAvailabilityRequestBody body) throws Exception {
-        System.out.println(body);
+
         UpdateAvailabilityRequest request = new UpdateAvailabilityRequest(
                 id,
                 body.getDate(),
@@ -73,6 +73,12 @@ public class AvailabilityController {
     public ResponseEntity<Availability> getAvailabilityById(@PathVariable int id) throws Exception {
         Availability availability = interactor.handleGetAvailabilityById(id);
         return availability != null ? ResponseEntity.ok(availability) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("users/{userId}/availability/weeks/{weekNumber}/set-on-next-week")
+    public ResponseEntity<List<Availability>> copyAvailabilityToNextWeek(@PathVariable int userId, @PathVariable int weekNumber) throws Exception {
+        List<Availability> availabilities = interactor.handleCopyAvailabilityToNextWeek(userId, weekNumber);
+        return ResponseEntity.ok(availabilities);
     }
 
 

@@ -21,5 +21,6 @@ public interface AvailabilityBusinessLogic {
 
     Availability handleGetAvailabilityById(int id) throws Exception;
 
+    List<Availability> handleCopyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception;
 
 }

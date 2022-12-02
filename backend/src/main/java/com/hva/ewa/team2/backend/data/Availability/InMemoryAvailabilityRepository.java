@@ -47,9 +47,27 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
                 ), new Availability(
                         1,
                         user2,
-                        LocalDate.now(),
+                        LocalDate.now().minusDays(7),
                         dateService.currentDay(6, 0).toLocalTime(),
                         dateService.currentDay(9, 0).toLocalTime()
+                ), new Availability(
+                        2,
+                        user2,
+                        LocalDate.now(),
+                        dateService.currentDay(10, 0).toLocalTime(),
+                        dateService.currentDay(12, 0).toLocalTime()
+                ), new Availability(
+                        3,
+                        user2,
+                        LocalDate.now(),
+                        dateService.currentDay(14, 0).toLocalTime(),
+                        dateService.currentDay(16, 0).toLocalTime()
+                ), new Availability(
+                        4,
+                        user2,
+                        LocalDate.now(),
+                        dateService.currentDay(20, 0).toLocalTime(),
+                        dateService.currentDay(22, 0).toLocalTime()
                 )
         ));
 
@@ -58,8 +76,10 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     @Override
     public List<Availability> fetchAllAvailabilityByUser(int userId, int weekNumber) {
+
+        List<LocalDate> datesThisWeek = dateService.getAllDaysOfTheWeek(weekNumber);
         return availabilities.stream()
-                .filter(a -> a.getUser().getId() == userId)
+                .filter(a -> a.getUser().getId() == userId && datesThisWeek.contains(a.getDate()))
                 .toList();
     }
 
@@ -93,6 +113,32 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
         Availability availability = availabilities.get(id);
         availabilities.remove(availability);
         return availability;
+    }
+
+    @Override
+    public List<Availability> copyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception {
+
+        List<Availability> availabilitiesThisWeek = fetchAllAvailabilityByUser(userId, weekNumber);
+        List<Availability> oldAvailabilitiesNextWeek = fetchAllAvailabilityByUser(userId, weekNumber + 1);
+        List<Availability> newAvailabilitiesNextWeek = new ArrayList<>();
+
+        oldAvailabilitiesNextWeek.forEach(a -> {
+            availabilities.remove(a);
+        });
+
+        for (Availability availability : availabilitiesThisWeek) {
+            Availability availabilityNextWeek = new Availability(
+                    nextId(),
+                    availability.getUser(),
+                    availability.getDate().plusDays(7),
+                    availability.getFrom(),
+                    availability.getTo()
+            );
+            newAvailabilitiesNextWeek.add(availabilityNextWeek);
+            availabilities.add(availabilityNextWeek);
+        }
+
+        return newAvailabilitiesNextWeek;
     }
 
     private int nextId() {
