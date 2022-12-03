@@ -62,11 +62,37 @@
 
             <div class="mt-2 border border-app_red-200 rounded-md">
               <ul>
-                <DangerZoneRow title="Eigendom overdragen" button="Overdragen" description="Draag het eigendom van dit project over naar een andere klant."/>
-                <DangerZoneRow title="Archiveer dit project" button="Archiveer"
+                <DangerZoneRow @click="modals.ownership=true" title="Eigendom overdragen" button="Overdragen"
+                               description="Draag het eigendom van dit project over aan een andere klant."/>
+                <DangerZoneRow @click="modals.archive=true" title="Archiveer dit project" button="Archiveer"
                                description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden weergegeven en bepaalde rechten zullen worden gelimiteerd."/>
               </ul>
             </div>
+
+            <Modal @close="modals.ownership=false" title="Eigendom overdragen" :is-open="modals.ownership">
+              <p class="text-sm text-gray-600">
+                Draag het eigendom van dit project over aan een andere klant.
+              </p>
+              <p v-if="true" class="text-sm mt-2 text-gray-600 italic">
+                Let op: je bent eigenaar van dit project. Project eigendom overdragen naar een andere klant zal je rechten tot dit project intrekken.
+              </p>
+
+              <label class="mt-3">Nieuwe klant</label>
+              <ClientSelect :clients="clients" v-model="project.client"/>
+            </Modal>
+
+            <Modal @close="modals.archive=false" title="Project archiveren" :is-open="modals.archive">
+              <p class="text-sm text-gray-600">
+                Markeer dit project als gearchiveerd.
+              </p>
+              <p class="text-sm text-gray-600 mt-2">
+                Gearchiveerde projecten zullen niet worden weergegeven in project lijsten en bepaalde rechten zullen
+                worden gelimiteerd.
+              </p>
+
+              <label class="mt-3">Nieuwe klant</label>
+              <ClientSelect :clients="clients" v-model="project.client"/>
+            </Modal>
 
           </div>
         </form>
@@ -93,11 +119,18 @@ import ProjectLayout from "./ProjectLayout.vue";
 import PrimaryButton from "../../../Common/PrimaryButton.vue";
 import ClientSelect from "../ClientSelect.vue";
 import DangerZoneRow from "../DangerZoneRow.vue";
+import Modal from "../../../Common/Modal.vue";
 
 export default {
   name: "CreateProject",
-  components: {DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
+  components: {Modal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
   inject: ['projectFetchService', 'fetchService'],
+
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user'));
+    }
+  },
 
   async created() {
     if (!this.newProject) {
@@ -141,6 +174,10 @@ export default {
       logoFile: null,
       clients: [],
       errors: {},
+      modals: {
+        ownership: false,
+        archive: false,
+      }
     }
   },
 
