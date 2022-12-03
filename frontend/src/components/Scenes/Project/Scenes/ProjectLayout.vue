@@ -62,13 +62,13 @@ export default {
   },
 
   async created() {
-    localStorage.setItem('userId', this.$route.query.userId ?? 2);
-
     if (this.projectInfo == null && this.projectId >= 0) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
     } else {
       this.project = this.projectInfo ?? {};
     }
+
+    console.log("layout:", this.project)
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {

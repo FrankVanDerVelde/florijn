@@ -1,9 +1,9 @@
 <template>
   <div class="page-main-mw">
     <div class="flex gap-3 md:flex-row flex-col-reverse md:flex-row mt-4">
-      <div class="w-full sm:pt-0 md:pt-4 p-4">
+      <div class="w-full p-4 pt-0 sm:pt-4 sm:pb-0 md:pt-4">
         <div class="hidden md:block">
-          <h1>{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
+          <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
           <hr>
           <router-link :to="{name: 'project-overview'}"
                        class="muted error !mt-[-10px] block mb-2"
@@ -31,22 +31,11 @@
           </label>
           <div class="muted error" v-if="'description' in errors">{{ errors.description }}</div>
 
-          <label class="w-full mt-3">
+          <div v-if="newProject" class="label w-full mt-3">
             <div>Klant</div>
-            <select
-                class="w-full"
-                :class="{'error': 'client' in errors}"
-                @change="e => updateClient(e)"
-                required>
-              <option v-if="!('id' in project?.client ?? {})" :value="null" disabled :selected="projectId == -1">Selecteer een klant</option>
-              <option v-for="client in clients"
-                      :key="client.id"
-                      :value="client.id"
-                      :selected="client.id === clientId">
-                {{ client.name }}
-              </option>
-            </select>
-          </label>
+
+            <ClientSelect :clients="clients" v-model="project.client"/>
+          </div>
           <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
           <label class="w-full mt-3">
@@ -67,11 +56,24 @@
             <PrimaryButton type="submit" :title="newProject ? 'Maak project aan' : 'Update project'"/>
             <div class="muted error" v-if="'updating' in errors">{{ errors.updating }}</div>
           </div>
+
+          <div v-if="!newProject" class="mt-6">
+            <h2 class="font-normal text-app_red-400 text-2xl mb">Danger Zone</h2>
+
+            <div class="mt-2 border border-app_red-200 rounded-md">
+              <ul>
+                <DangerZoneRow title="Eigendom overdragen" button="Overdragen" description="Draag het eigendom van dit project over naar een andere klant."/>
+                <DangerZoneRow title="Archiveer dit project" button="Archiveer"
+                               description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden weergegeven en bepaalde rechten zullen worden gelimiteerd."/>
+              </ul>
+            </div>
+
+          </div>
         </form>
       </div>
       <div class="w-full p-4">
-        <div class="md:hidden">
-          <h1>{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
+        <div class="md:hidden mb-4">
+          <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
           <hr>
           <router-link :to="{name: 'project-overview'}"
                        class="muted error !mt-[-10px] block mb-2"
@@ -79,8 +81,8 @@
             &#60; Terug naar project overzicht
           </router-link>
         </div>
-        <h2>Preview</h2>
-        <ProjectLayout :project-info="project" :preview="true"/>
+        <h2 class="font-semibold uppercase tracking-widest text-[20px] mb-2">Preview</h2>
+        <ProjectLayout v-if="project != null" :project-info="project" :preview="true"/>
       </div>
     </div>
   </div>
@@ -89,15 +91,15 @@
 <script>
 import ProjectLayout from "./ProjectLayout.vue";
 import PrimaryButton from "../../../Common/PrimaryButton.vue";
+import ClientSelect from "../ClientSelect.vue";
+import DangerZoneRow from "../DangerZoneRow.vue";
 
 export default {
   name: "CreateProject",
-  components: {PrimaryButton, ProjectLayout},
+  components: {DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
   inject: ['projectFetchService', 'fetchService'],
 
   async created() {
-    console.log("projectId:", this.projectId);
-
     if (!this.newProject) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
@@ -106,12 +108,12 @@ export default {
         return;
       }
 
-      this.injectProjectInfo();
     } else {
       this.project = this.getSampleProject();
     }
 
     this.clients = await this.fetchService.fetchJson(`/users/role/client`);
+    if (!this.newProject) this.injectProjectInfo();
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
@@ -133,13 +135,12 @@ export default {
 
   data() {
     return {
-      project: {},
+      project: null,
       title: "",
       description: "",
       logoFile: null,
       clients: [],
-      clientId: -1,
-      errors: {}
+      errors: {},
     }
   },
 
@@ -168,16 +169,6 @@ export default {
 
       this.project.description = this.description.length > 0 ? this.description : "Hier komt de beschrijving van het project.";
     },
-    async updateClient(event) {
-      this.clientId = event.target.value;
-
-      this.project.client = await this.fetchService.fetchJson(`/user/${this.clientId}`);
-      if (this.project.client == null) {
-        this.errors.client = "Klant kon niet gevonden worden.";
-      } else {
-        delete this.errors.client;
-      }
-    },
     async updateLogo(event) {
       if (event.target.files.length === 0) {
         this.logoFile = null;
@@ -197,7 +188,13 @@ export default {
     injectProjectInfo() {
       this.title = this.project.title;
       this.description = this.project.description;
-      this.clientId = this.project.client?.id ?? -1;
+
+      if (this.project.client != null) {
+        let filter = this.clients.filter(c => c.id === this.project.client?.id);
+        console.log(this.clients)
+        if (filter.length > 0) this.project.client = filter[0];
+      }
+
     },
     validate() {
       this.errors = {};
@@ -208,7 +205,7 @@ export default {
       if (this.description.trim().length === 0) {
         this.errors.description = "De omschrijving mag niet leeg zijn.";
       }
-      if (this.clientId === -1) {
+      if (this.project.client?.id == null) {
         this.errors.client = "Er is geen klant geselecteerd.";
       }
 
@@ -222,7 +219,7 @@ export default {
       const formData = new FormData();
       formData.append('title', this.title);
       formData.append('description', this.description);
-      formData.append('client', this.clientId);
+      formData.append('client', this.project.client.id);
       if (this.logoFile != null) formData.append('logoFile', this.logoFile);
 
       let response;
@@ -252,17 +249,6 @@ export default {
 </script>
 
 <style scoped>
-h1, h2 {
-  font-weight: bold;
-  color: var(--neutral-900);
-  font-size: 32px;
-  margin-bottom: 18px;
-  line-height: 1.2;
-}
-
-h2 {
-  font-size: 26px;
-}
 
 hr {
   color: var(--neutral-100);
@@ -282,7 +268,7 @@ hr {
   color: var(--app_red-400)
 }
 
-label {
+label, .label {
   display: block;
   font-size: 1rem;
   line-height: 1.25rem;
