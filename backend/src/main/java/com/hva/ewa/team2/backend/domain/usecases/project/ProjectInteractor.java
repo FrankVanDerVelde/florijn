@@ -312,15 +312,23 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery) {
-        if (searchQuery.orElse("").isBlank()) {
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<Integer> userId) {
+        if (searchQuery.orElse("").isBlank() && userId.isEmpty()) {
             return projectRepo.findAll();
-        } else {
+        } else if (searchQuery.isPresent()) {
             String search = searchQuery.get().toLowerCase();
             return projectRepo.findAll().stream()
                     .filter(project -> project.getTitle().toLowerCase().contains(search) ||
                             project.getDescription().toLowerCase().contains(search)
                     ).toList();
+        } else {
+            User user = userRepo.getUserById(userId.get());
+            if (user.getRole() == User.Role.SPECIALIST) {
+                return projectRepo.findAll().stream()
+                        .filter(p -> p.getParticipants().stream().anyMatch(pp -> pp.getSpecialist().getId() == userId.get()))
+                        .toList();
+            }
+            throw new IllegalArgumentException("The given ID is from an admin/client, not a specialist!");
         }
     }
 

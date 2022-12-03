@@ -34,8 +34,8 @@ public class ProjectController {
     // General
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjects(@RequestParam("query") Optional<String> searchQuery) {
-        return ResponseEntity.ok(projectBusinessLogic.getAllProjects(searchQuery));
+    public ResponseEntity<List<Project>> getAllProjects(@RequestParam("query") Optional<String> searchQuery, @RequestParam("user") Optional<Integer> userId) {
+        return ResponseEntity.ok(projectBusinessLogic.getAllProjects(searchQuery, userId));
     }
 
     // Project CRUD

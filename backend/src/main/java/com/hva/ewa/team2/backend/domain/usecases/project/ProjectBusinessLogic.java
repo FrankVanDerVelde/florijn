@@ -31,6 +31,6 @@ public interface ProjectBusinessLogic {
 
     List<ProjectReport> getProjectReports(int projectId, JsonNode body);
 
-    List<Project> getAllProjects(Optional<String> searchQuery);
+    List<Project> getAllProjects(Optional<String> searchQuery, Optional<Integer> userId);
 
 }

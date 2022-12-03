@@ -23,7 +23,7 @@ export default {
     SideBarNav
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "admin" || localStorage.getItem("role") === "client") {
+    if (this.id === "null" || localStorage.getItem("role") === "ADMIN" || localStorage.getItem("role") === "CLIENT") {
       this.$router.push("/home");
     }
   },

@@ -1,64 +1,59 @@
 <template>
   <div class="page-main-mw px-20 pt-[4em]">
     <div class="container flex flex-col">
-      <div class="py-1">
+      <div class="py-0.5">
         <p class="back-text" @click="buttonBackPage()">&lt Terug</p>
       </div>
       <div class="flex grid grid-cols-16">
-        <div class="box flex justify-end col-span-7 p-2 w-full justify-center h-[120px]">
-          <img :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4">
-          <div class="flex flex-col justify-between container ml-2">
-            <div class="flex flex-col mb-3">
-              <div class="container flex justify-between m-1">
-                <div class="relative bottom-0">
-                  <div class="font-bold flex">{{ this.userData.firstName + " " + this.userData.lastName }}</div>
-                  <div class="flex font-semibold text-neutral-500">Developer</div>
-                  <div class="flex mt-2">{{ this.userData.email }}</div>
-                </div>
-                <div>
-                  <button id="addbutton"
-                          class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md mr-2 text-neutral-0">
-                    Op project zetten
-                  </button>
-                  <button
-                      class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">
-                    CV downloaden
-                  </button>
+        <div class="flex flex-col row-start-1 col-span-7 p-2 w-full">
+          <div class="box flex  p-2 justify-center h-[120px]">
+            <img :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4">
+            <div class="flex flex-col justify-between container ml-2">
+              <div class="flex flex-col mb-3">
+                <div class="container flex justify-between m-1">
+                  <div class="relative bottom-0">
+                    <div class="font-bold flex">{{ this.userData.firstName + " " + this.userData.lastName }}</div>
+                    <div class="flex font-semibold text-neutral-500">Developer</div>
+                    <div class="flex mt-2">{{ this.userData.email }}</div>
+                  </div>
+                  <div>
+                    <button class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
+                    mr-2 text-neutral-0">Op project zetten</button>
+                    <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
+                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV downloaden</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="box flex-col col-span-7 row-start-2 p-2 w-full mt-2">
-          <div class="font-bold">Skills</div>
-          <div class="my-2">
-            <div class="flex-row ">Skill 1</div>
-            <div class="flex-row ">Skill 2</div>
-            <div class="flex-row ">Skill 3</div>
-            <div class="flex-row ">Skill 4</div>
+          <div class="box flex-col p-2 w-full mt-3">
+            <div>
+              <div class="back-text float-right">Meer weergeven</div>
+              <div class="font-bold ml-2">Skills</div>
+            </div>
+            <div class="my-2 ml-2">
+              <div class="flex-row ">Skill 1</div>
+              <div class="flex-row ">Skill 2</div>
+              <div class="flex-row ">Skill 3</div>
+              <div class="flex-row ">Skill 4</div>
+            </div>
           </div>
         </div>
-
-        <div class="box flex flex-col row-start-1 col-start-9 col-span-4 p-2 w-full h-full ">
-          <div class="font-bold">Projecten</div>
-          <div class="my-2">
-            <div class="flex-row ">Project 1</div>
-            <div class="flex-row ">Project 2</div>
-            <div class="flex-row ">Project 3</div>
-            <div class="flex-row ">Project 4</div>
-            <div class="flex-row ">Project 5</div>
-            <div class="flex-row ">Project 6</div>
-            <div class="flex-row ">Project 7</div>
+        <div class="flex flex-col row-start-1 col-start-9 col-span-4 p-2 w-full h-full">
+          <div class="box flex flex-col p-2">
+            <div class="font-bold">Projecten</div>
+            <project-list-details-summary v-for="project in projects" :key="project.id" :project="project"/>
+            <div class="my-2">{{ noProjectsFoundText }}</div>
           </div>
-        </div>
-        <div class="box flex flex-col col-start-9 mt-2 col-span-4 p-2 w-full h-full ">
-          <div class="font-bold">Beschikbaarheid</div>
-          <div class="my-2 flex-row text-sm ">
-            <div class="font-bold">Maandag:</div>
-            <div class="font-bold">Dinsdag:</div>
-            <div class="font-bold">Woensdag:</div>
-            <div class="font-bold">Donderdag:</div>
-            <div class="font-bold">Vrijdag:</div>
+          <div class="box flex flex-col mt-3 p-2">
+            <div class="font-bold">Beschikbaarheid</div>
+            <div class="my-2 flex-row text-sm ">
+              <div class="font-bold">Maandag:</div>
+              <div class="font-bold">Dinsdag:</div>
+              <div class="font-bold">Woensdag:</div>
+              <div class="font-bold">Donderdag:</div>
+              <div class="font-bold">Vrijdag:</div>
+            </div>
           </div>
         </div>
       </div>
@@ -67,30 +62,42 @@
 </template>
 
 <script>
+
+import ProjectListDetailsSummary from "../../Scenes/Project/ProjectsListDetailsSummary.vue";
+
 export default {
   name: "PublicProfile",
   inject: ['fetchService'],
+  components: {ProjectListDetailsSummary},
   data() {
     return {
       specialistId: '',
       userData: '',
+      projects: [],
+      noProjectsFoundText: ''
     }
   },
   created() {
-    console.log(this.userData)
-    if (this.id === "null" || localStorage.getItem("role") === "specialist") {
+    if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
       this.$router.push("/home");
     }
     this.specialistId = this.$route.params.Id;
     this.getUserInfo();
-    console.log(this.userData)
+    this.fetchProjects();
   },
   methods: {
     async getUserInfo() {
-      this.userData = await this.fetchService.fetchUrl("/user/" + this.specialistId);
+      this.userData = await this.fetchService.fetchUrl("/users/" + this.specialistId);
+    },
+    async fetchProjects() {
+      this.projects = await this.fetchService.fetchJson("/projects?user=" + this.specialistId);
+
+      if (this.projects.length === 0) {
+        this.noProjectsFoundText = "Er zijn geen projecten gevonden voor " + this.userData.firstName;
+      }
     },
     buttonBackPage() {
-      if (localStorage.getItem("role") === "admin") {
+      if (localStorage.getItem("role") === "ADMIN") {
         this.$router.push("/adminpanel/employee-list");
       } else {
         this.$router.push("/client/home");
@@ -110,7 +117,6 @@ export default {
 
 .back-text {
   color: var(--primary-500);
-  width: 50px;
   margin: 1%;
   font-weight: bold;
   font-size: 14px;
