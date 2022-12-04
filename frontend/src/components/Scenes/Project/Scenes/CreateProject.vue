@@ -1,7 +1,7 @@
 <template>
   <div class="page-main-mw">
     <div class="flex gap-3 md:flex-row flex-col-reverse md:flex-row mt-4">
-      <div class="w-full p-4 pt-0 sm:pt-4 sm:pb-0 md:pt-4">
+      <div class="w-full p-4 pt-0 sm:pt-4 md:pt-4">
         <div class="hidden md:block">
           <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
           <hr>
@@ -12,7 +12,7 @@
           </router-link>
         </div>
         <form class="pt-2" @submit.prevent="saveProject">
-          <label class="w-full">
+          <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
             <div>Titel</div>
             <input @input="e => updateTitle(e)"
                    :value="title"
@@ -22,7 +22,7 @@
           </label>
           <div class="muted error" v-if="'title' in errors">{{ errors.title }}</div>
 
-          <label class="w-full mt-3">
+          <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
             <div>Omschrijving</div>
             <input @input="e => updateDescription(e)" :value="description"
                    type="text"
@@ -31,14 +31,14 @@
           </label>
           <div class="muted error" v-if="'description' in errors">{{ errors.description }}</div>
 
-          <div v-if="newProject" class="label w-full mt-3">
+          <div v-if="newProject" class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
             <div>Klant</div>
 
             <ClientSelect :clients="clients" v-model="project.client"/>
           </div>
           <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
-          <label class="w-full mt-3">
+          <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
             <div>Logo</div>
             <input @change="e => updateLogo(e)"
                    type="file"
@@ -62,37 +62,22 @@
 
             <div class="mt-2 border border-app_red-200 rounded-md">
               <ul>
-                <DangerZoneRow @click="modals.ownership=true" title="Eigendom overdragen" button="Overdragen"
+                <DangerZoneRow @click="$refs.ownershipModal.open = true" title="Eigendom overdragen" button="Overdragen"
                                description="Draag het eigendom van dit project over aan een andere klant."/>
-                <DangerZoneRow @click="modals.archive=true" title="Archiveer dit project" button="Archiveer"
-                               description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden weergegeven en bepaalde rechten zullen worden gelimiteerd."/>
+
+                <DangerZoneRow v-if="!project.archived" @click="$refs.archiveModal.open = true" title="Archiveer dit project" button="Archiveer"
+                               description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden
+                               weergegeven en bepaalde rechten zullen worden gelimiteerd."/>
+                <DangerZoneRow v-else @click="$refs.unarchiveModal.open = true" title="Dearchiveer dit project" button="Dearchiveer"
+                               description="Dit project is momenteel gearchiveerd. Dit project zal niet actief in project lijsten worden weergegeven en
+                               bepaalde rechten zijn gelimiteerd. Door het project te dearchiveren, hef je deze beperkingen op."/>
               </ul>
             </div>
 
-            <Modal @close="modals.ownership=false" title="Eigendom overdragen" :is-open="modals.ownership">
-              <p class="text-sm text-gray-600">
-                Draag het eigendom van dit project over aan een andere klant.
-              </p>
-              <p v-if="true" class="text-sm mt-2 text-gray-600 italic">
-                Let op: je bent eigenaar van dit project. Project eigendom overdragen naar een andere klant zal je rechten tot dit project intrekken.
-              </p>
+            <TransferOwnershipModal ref="ownershipModal" :clients="clients" :project="project"/>
 
-              <label class="mt-3">Nieuwe klant</label>
-              <ClientSelect :clients="clients" v-model="project.client"/>
-            </Modal>
-
-            <Modal @close="modals.archive=false" title="Project archiveren" :is-open="modals.archive">
-              <p class="text-sm text-gray-600">
-                Markeer dit project als gearchiveerd.
-              </p>
-              <p class="text-sm text-gray-600 mt-2">
-                Gearchiveerde projecten zullen niet worden weergegeven in project lijsten en bepaalde rechten zullen
-                worden gelimiteerd.
-              </p>
-
-              <label class="mt-3">Nieuwe klant</label>
-              <ClientSelect :clients="clients" v-model="project.client"/>
-            </Modal>
+            <ArchiveProjectModal v-if="!project.archived" ref="archiveModal" :project="project"/>
+            <ArchiveProjectModal v-else ref="unarchiveModal" :project="project"/>
 
           </div>
         </form>
@@ -119,11 +104,12 @@ import ProjectLayout from "./ProjectLayout.vue";
 import PrimaryButton from "../../../Common/PrimaryButton.vue";
 import ClientSelect from "../ClientSelect.vue";
 import DangerZoneRow from "../DangerZoneRow.vue";
-import Modal from "../../../Common/Modal.vue";
+import TransferOwnershipModal from "../Modals/TransferOwnershipModal.vue";
+import ArchiveProjectModal from "../Modals/ArchiveProjectModal.vue";
 
 export default {
   name: "CreateProject",
-  components: {Modal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
+  components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
   inject: ['projectFetchService', 'fetchService'],
 
   computed: {
@@ -174,10 +160,6 @@ export default {
       logoFile: null,
       clients: [],
       errors: {},
-      modals: {
-        ownership: false,
-        archive: false,
-      }
     }
   },
 
@@ -303,15 +285,6 @@ hr {
 .muted.error {
   margin-top: 4px;
   color: var(--app_red-400)
-}
-
-label, .label {
-  display: block;
-  font-size: 1rem;
-  line-height: 1.25rem;
-  color: rgb(55, 65, 81);
-  font-family: Inter, sans-serif;
-  font-weight: bold;
 }
 
 input, select {

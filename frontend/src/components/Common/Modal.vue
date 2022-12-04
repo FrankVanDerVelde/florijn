@@ -36,9 +36,11 @@
               </div>
 
               <div v-if="buttons" class="bg-gray-50 px-4 py-3 flex flex-col sm:flex-row justify-end gap-2 sm:px-6 rounded-b-2xl">
-                <button v-for="(val, prop) in buttons" :key="prop" type="button" @click="onButtonClick(val, prop)"
+                <button v-for="(val, prop) in buttons" :key="prop" type="button" @click="onButtonClick(val, prop)" :disabled="val.disabled"
                         :class="['inline-flex w-full justify-center rounded-md border px-4 py-2 text-base font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto sm:text-sm',
-                val.type == 'secondary' ? 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-app_indigo-500' : val.type == 'danger' ? 'border-transparent bg-app_red-600 text-white hover:bg-app_red-700 focus:ring-app_red-500' : '']">
+                val.type == 'secondary' ? 'border-gray-300 bg-white text-gray-700  focus:ring-app_indigo-500' :
+                val.type == 'danger' ? 'border-transparent bg-app_red-600 text-white focus:ring-app_red-500' : '',
+                val.disabled ? 'bg-opacity-50 cursor-not-allowed' : (val.type=='danger' ? 'hover:bg-app_red-700' : 'hover:bg-gray-50')]">
                   {{ val.title }}
                 </button>
               </div>
@@ -79,6 +81,7 @@ export default {
           },
           submit: {
             type: 'danger',
+            disabled: true,
             title: 'Overdragen'
           },
         }
