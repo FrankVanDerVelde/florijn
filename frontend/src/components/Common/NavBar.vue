@@ -74,10 +74,6 @@ export default {
     },
     isLoggedIn() {
       if (this.user == null) {
-        this.links = [{
-          name: 'Home',
-          link: '/home'
-        }]
         this.staticLink = {
           name: 'Log in',
           link: '/login'

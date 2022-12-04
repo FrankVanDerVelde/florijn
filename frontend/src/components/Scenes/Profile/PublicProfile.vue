@@ -124,11 +124,7 @@ export default {
       }
     },
     buttonBackPage() {
-      if (localStorage.getItem("role") === "ADMIN") {
-        this.$router.push("/adminpanel/employee-list");
-      } else {
-        this.$router.push("/client/home");
-      }
+      this.$router.back();
     },
     toggleSkillList() {
       this.showTempSkills = !this.showTempSkills;

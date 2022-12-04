@@ -30,9 +30,8 @@ import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue
 
 
 const routes = [
-    // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
-    {path: '/', redirect: 'home'},
-    {path: '/home', component: WelcomeView},
+    {path: '/', redirect: 'login'},
+    {path: '/home', redirect: 'login'},
     {
         path: '/admin/home',
         component: WelcomeAdminView,
@@ -140,7 +139,8 @@ const routes = [
             newProject: false,
             projectId: route.params.projectId,
         }),
-    }
+    },
+    { path: '/:pathMatch(.*)*', redirect: '/login'},
 ];
 
 export const router = createRouter({
