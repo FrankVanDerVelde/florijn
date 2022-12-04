@@ -8,6 +8,7 @@ import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
@@ -349,15 +350,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery) {
-        if (searchQuery.orElse("").isBlank()) {
-            return projectRepo.findAll();
-        } else {
-            String search = searchQuery.get().toLowerCase();
-            return projectRepo.findAll().stream()
-                    .filter(project -> project.getTitle().toLowerCase().contains(search) ||
-                            project.getDescription().toLowerCase().contains(search)
-                    ).toList();
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter) {
+        String projectFilter = filter.orElse("ALL");
+        try {
+            return projectRepo.findAll(ProjectFilter.valueOf(projectFilter), searchQuery.orElse(""));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An invalid filter was entered.");
         }
     }
 

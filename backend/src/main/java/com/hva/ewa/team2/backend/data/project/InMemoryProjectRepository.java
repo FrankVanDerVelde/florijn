@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.data.project;
 
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class InMemoryProjectRepository implements ProjectRepository {
@@ -54,6 +56,27 @@ public class InMemoryProjectRepository implements ProjectRepository {
     @Override
     public List<Project> findAll() {
         return projectList;
+    }
+
+    @Override
+    public List<Project> findAll(ProjectFilter filter) {
+        return findAll(filter, "");
+    }
+
+    @Override
+    public List<Project> findAll(ProjectFilter filter, String query) {
+        if (filter == ProjectFilter.ALL) return projectList;
+
+        Stream<Project> stream = projectList.stream()
+                .filter(p -> (filter == ProjectFilter.ARCHIVED) == p.isArchived());
+        if (query != null && !query.isBlank()) {
+            final String lowercaseQuery = query.toLowerCase();
+            stream = stream.filter(p -> p.getTitle().toLowerCase().contains(lowercaseQuery) ||
+                    p.getDescription().toLowerCase().contains(lowercaseQuery)
+            );
+        }
+
+        return stream.toList();
     }
 
     @Override
