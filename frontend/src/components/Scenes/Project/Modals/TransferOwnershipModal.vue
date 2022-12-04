@@ -9,16 +9,19 @@
 
     <label class="block text-base leading-5 text-gray-600 font-bold mt-3">Nieuwe klant</label>
     <ClientSelect :clients="clients" v-model="project.client"/>
+
+    <ProjectConfirmationInput v-model="projectTitle" :needed="project.title"/>
   </Modal>
 </template>
 
 <script>
 import Modal from "../../../Common/Modal.vue";
 import ClientSelect from "../ClientSelect.vue";
+import ProjectConfirmationInput from "../ProjectConfirmationInput.vue";
 
 export default {
   name: "TransferOwnershipModal",
-  components: {ClientSelect, Modal},
+  components: {ProjectConfirmationInput, ClientSelect, Modal},
   inject: ['projectFetchService'],
 
   data() {
@@ -26,12 +29,13 @@ export default {
       open: false,
       originalClient: this.project.client,
       busy: false,
+      projectTitle: ''
     }
   },
 
   computed: {
     disabled() {
-      return this.project.client === this.originalClient;
+      return this.projectTitle.toLowerCase() !== this.project.title.toLowerCase() || this.project.client.id === this.originalClient.id;
     },
     buttons() {
       return {
@@ -63,6 +67,7 @@ export default {
   methods: {
     cancel() {
       this.open = false;
+      this.projectTitle = "";
       this.project.client = this.originalClient;
     },
     async submit() {
@@ -70,10 +75,16 @@ export default {
       this.busy = true;
 
       this.originalClient = this.project.client;
-      this.project.client = await this.projectFetchService.fetchJsonPost(`/${this.project.id}/transfer-ownership`, {
-            clientId: this.project.client.id
+      const res = await this.projectFetchService.fetchJsonPost(`/${this.project.id}/transfer-ownership`, {
+            clientId: this.project.client.id,
+            title: this.projectTitle
           }
       );
+
+      if (res == null) {
+        console.error("Something went wrong whilst transferring ownership.")
+        return;
+      }
 
       const user = JSON.parse(localStorage.getItem('user'));
 

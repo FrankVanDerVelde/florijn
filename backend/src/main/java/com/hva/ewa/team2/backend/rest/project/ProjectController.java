@@ -47,10 +47,27 @@ public class ProjectController {
         return ResponseEntity.created(uri).body(projectBusinessLogic.createProject(project));
     }
 
+
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> getProjectInformation(@PathVariable int id) {
         return ResponseEntity.ok(projectBusinessLogic.getProjectInformation(id));
     }
+
+    @PostMapping(path = "/{id}/archive")
+    public ResponseEntity<Project> archiveProject(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(projectBusinessLogic.archiveProject(id, body, false));
+    }
+
+    @PostMapping(path = "/{id}/unarchive")
+    public ResponseEntity<Project> unarchiveProject(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(projectBusinessLogic.archiveProject(id, body, true));
+    }
+
+    @PostMapping(path = "/{id}/transfer-ownership")
+    public ResponseEntity<Project> transferOwnership(@PathVariable int id, @RequestBody JsonNode body) {
+        return ResponseEntity.ok(projectBusinessLogic.transferOwnership(id, body));
+    }
+
 
     @DeleteMapping(path = "/{id}/delete")
     public ResponseEntity<Boolean> deleteProject(@PathVariable int id) {

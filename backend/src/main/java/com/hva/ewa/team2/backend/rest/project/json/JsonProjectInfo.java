@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
+
 /**
  * Class with properties required to update a project.
  * Used for deserializing JSON.
@@ -18,14 +20,14 @@ public class JsonProjectInfo {
     private String description;
     @Getter
     @Setter
-    private int client;
+    private Optional<Integer> client;
     @Getter
     @Setter
     private MultipartFile logoFile;
 
     public JsonProjectInfo() {}
 
-    public JsonProjectInfo(String title, String description, int client, MultipartFile logoFile) {
+    public JsonProjectInfo(String title, String description, Optional<Integer> client, MultipartFile logoFile) {
         this.title = title;
         this.description = description;
         this.client = client;

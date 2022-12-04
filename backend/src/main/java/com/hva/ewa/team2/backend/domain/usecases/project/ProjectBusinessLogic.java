@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 
@@ -20,6 +21,10 @@ public interface ProjectBusinessLogic {
     boolean deleteProject(int id);
 
     Project updateProjectInformation(int pId, JsonProjectInfo jsonBody) throws IOException;
+
+    Project archiveProject(int pId, JsonNode body, boolean unarchive);
+
+    Project transferOwnership(int pId, JsonNode body);
 
     List<ProjectParticipant> getProjectParticipants(int id);
 

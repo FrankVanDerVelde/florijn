@@ -51,30 +51,24 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     @Override
     public Project createProject(JsonProjectInfo projectInfo) throws IOException {
         final String title = projectInfo.getTitle();
-        final int clientId = projectInfo.getClient();
+        final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
         final MultipartFile logoUpload = projectInfo.getLogoFile();
 
-        validateProjectInformation(title, clientId, description);
+        validateProjectInformation(title, description);
+        final Client client = validateClient(clientId.orElse(-1));
 
         // creating temp project to update.
         Project project;
         final int id = projectRepo.findAll().size() + 1;
         if (logoUpload == null) {
-            project = new Project(
-                    id, title, description,
-                    (Client) userRepo.getUserById(clientId)
-            );
+            project = new Project(id, title, description, client);
         } else {
             // uploading the logo to the assets.
             String extension = FilenameUtils.getExtension(logoUpload.getName());
             final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/" + id + "." + extension);
 
-            project = new Project(
-                    id, title, description,
-                    (Client) userRepo.getUserById(clientId),
-                    fileResult.getPath()
-            );
+            project = new Project(id, title, description, client, fileResult.getPath());
         }
 
         return projectRepo.addProject(project);
@@ -102,13 +96,11 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     @Override
     public Project updateProjectInformation(int pId, JsonProjectInfo body) throws IOException {
         final String title = body.getTitle();
-        final int client = body.getClient();
         final String description = body.getDescription();
         final MultipartFile logoUpload = body.getLogoFile();
 
         validateProjectInformation(
                 title,
-                client,
                 description
         );
 
@@ -117,14 +109,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
 
-        System.out.println(logoUpload);
-
         // creating temp project to update.
         Project project;
         if (logoUpload == null) {
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.getUserById(client),
+                    existingProject.getClient(),
                     existingProject.getLogoSrc()
             );
         } else {
@@ -133,12 +123,59 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.getUserById(client),
+                    existingProject.getClient(),
                     fileResult.getPath()
             );
         }
 
         return projectRepo.updateProject(project);
+    }
+
+    @Override
+    public Project archiveProject(int id, JsonNode body, boolean unarchive) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        String archiveWord = unarchive ? "unarchive" : "archive";
+
+        if (!body.has("title") || !project.getTitle().equalsIgnoreCase(body.get("title").asText())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        if (project.isArchived() != unarchive) {
+            throw new IllegalArgumentException("Could not " + archiveWord + " project because it is already " + archiveWord + "d.");
+        }
+
+        project.setArchived(!unarchive);
+        return project;
+    }
+
+    @Override
+    public Project transferOwnership(int id, JsonNode body) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        if (!body.has("title") || !project.getTitle().equalsIgnoreCase(body.get("title").asText())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        if (!body.has("clientId") || !body.get("clientId").canConvertToInt()) {
+            throw new IllegalArgumentException("No client id was provided or it was not a number");
+        }
+
+        int clientId = body.get("clientId").asInt();
+        if (project.getClient().getId() == clientId) {
+            throw new IllegalArgumentException("That client is already assigned to this project.");
+        }
+
+        final Client client = validateClient(clientId);
+        project.setClient(client);
+
+        return project;
     }
 
     @Override
@@ -324,17 +361,20 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
     }
 
-    private void validateProjectInformation(String title, int clientId, String description) {
+    private void validateProjectInformation(String title, String description) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");
         } else if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
+    }
 
+    private Client validateClient(int clientId) {
         User client = userRepo.getUserById(clientId);
-        if (!(client instanceof Client)) {
+        if (!(client instanceof Client casted)) {
             throw new IllegalArgumentException("There is no user with that ID or the user is not a client.");
         }
+        return casted;
     }
 
 }

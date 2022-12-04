@@ -1,5 +1,5 @@
 <template>
-  <Modal @close="cancel" @click:submit="submit" title="Project archiveren" :is-open="open" :buttons="buttons">
+  <Modal @close="cancel" @click:submit="submit" :title="title" :is-open="open" :buttons="buttons">
     <p class="text-sm text-gray-600">
       {{ shortDescription }}
     </p>
@@ -7,27 +7,22 @@
       {{ bigDescription }}
     </p>
 
-    <div class="mt-3">
-      <label class="block text-base leading-5 text-gray-600 font-bold mt-3">Bevestiging</label>
-      <p class="text-sm text-gray-600 block mb-1">Typ de project titel in het invoerveld om te bevestigen dat je dit project wilt
-        {{ archive ? "archiveren" : "dearchiveren" }}: "<kbd>{{ project.title }}</kbd>"</p>
-      <input :placeholder="project.title" v-model="projectTitle"/>
-    </div>
+    <ProjectConfirmationInput v-model="projectTitle" :needed="project.title"/>
   </Modal>
 </template>
 
 <script>
 import Modal from "../../../Common/Modal.vue";
+import ProjectConfirmationInput from "../ProjectConfirmationInput.vue";
 
 export default {
   name: "ArchiveProjectModal",
-  components: {Modal},
+  components: {ProjectConfirmationInput, Modal},
   inject: ['projectFetchService'],
 
   data() {
     return {
       open: false,
-      originalClient: this.project.client,
       busy: false,
       projectTitle: ''
     }
@@ -78,7 +73,7 @@ export default {
   methods: {
     cancel() {
       this.open = false;
-      this.project.client = this.originalClient;
+      this.projectTitle = "";
     },
     async submit() {
       if (this.disabled || this.busy) return;
@@ -101,21 +96,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-input {
-  width: 100%;
-  border-color: rgb(209, 213, 219);
-  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --tw-shadow-colored: 0 1px 2px 0 0 0 #0000;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), 0 0 #0000, var(--tw-shadow);
-  border-radius: 0.375rem;
-  margin-top: .25rem;
-  background: #fff;
-  border-width: 1px;
-  padding: 0.5rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-weight: 400;
-}
-</style>

@@ -77,7 +77,7 @@
             <TransferOwnershipModal ref="ownershipModal" :clients="clients" :project="project"/>
 
             <ArchiveProjectModal v-if="!project.archived" ref="archiveModal" :project="project"/>
-            <ArchiveProjectModal v-else ref="unarchiveModal" :project="project"/>
+            <ArchiveProjectModal v-else ref="unarchiveModal" :project="project" :archive="false"/>
 
           </div>
         </form>
