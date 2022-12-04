@@ -1,7 +1,7 @@
 <template>
   <div v-for="item in sideBarItems">
     <router-link :to="item.href">
-      <div class="text-primary-500 p-2 bg-neutral-0 border-neutral-200 border-[1px] flex items-center rounded-md h-[38px] w-[180px] mb-[10px] hover:bg-primary-100 capitalize font-bold text-[14px]">
+      <div class="text-primary-500 p-2 bg-neutral-0 border-neutral-200 border-[1px] flex items-center rounded-md h-[38px] w-full md:w-[180px] mb-[10px] hover:bg-primary-100 capitalize font-bold text-[14px]">
         <div class="ml-[12px]">
           <font-awesome-icon :icon="item.icon"></font-awesome-icon>
         </div>

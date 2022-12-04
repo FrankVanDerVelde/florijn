@@ -2,9 +2,7 @@ package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
-import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
+import com.hva.ewa.team2.backend.domain.models.skill.*;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
@@ -94,9 +92,9 @@ public class SkillInteractor implements SkillBusinessLogic {
 
         return skillRepo.getGroupBySkillId(jsonBody.getSkills().get(0).getId());
     }
+
     @Override
     public List<UserSkill> getUserSkills(int userId) {
-        System.out.println(userRepo.getAllUsers());
         User user = userRepo.getUserById(userId);
 
         if (user == null) {
@@ -109,5 +107,48 @@ public class SkillInteractor implements SkillBusinessLogic {
 
         return specialist.getSkills();
     }
+
+    @Override
+    public List<Expertise> getAllExpertises() {
+        return skillRepo.getAllExpertises();
+    }
+
+    @Override
+    public Expertise getExpertise(int id) {
+        return null;
+    }
+
+    @Override
+    public List<UserExpertise> getUserExpertises(int userId) {
+        User user = userRepo.getUserById(userId);
+        System.out.println(user);
+        if (user == null) {
+            throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
+        }
+
+        if (!(user instanceof Specialist specialist)) {
+            throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
+        }
+        System.out.println(specialist.getExpertises());
+        return specialist.getExpertises();
+    }
+
+    @Override
+    public ArrayList<UserExpertise> updateUserExpertise(int userId, ArrayList<UserExpertise> userExpertises) {
+        User user = userRepo.getUserById(userId);
+
+        if (user == null) {
+            throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
+        }
+
+        if (!(user instanceof Specialist specialist) ) {
+            throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
+        }
+
+        specialist.updateUserExpertise(userExpertises);
+
+        return userExpertises;
+    }
+
 
 }
