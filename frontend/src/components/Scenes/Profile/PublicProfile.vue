@@ -12,15 +12,17 @@
               <div class="flex flex-col mb-3">
                 <div class="container flex justify-between m-1">
                   <div class="relative bottom-0">
-                    <div class="font-bold flex">{{ this.userData.firstName + " " + this.userData.lastName }}</div>
+                    <div class="font-bold flex">{{ userData.firstName + " " + userData.lastName }}</div>
                     <div class="flex font-semibold text-neutral-500">Developer</div>
-                    <div class="flex mt-2">{{ this.userData.email }}</div>
+                    <div class="flex mt-2">{{ userData.email }}</div>
                   </div>
                   <div>
                     <button class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
-                    mr-2 text-neutral-0">Op project zetten</button>
+                    mr-2 text-neutral-0">Op project zetten
+                    </button>
                     <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
-                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV downloaden</button>
+                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV downloaden
+                    </button>
                   </div>
                 </div>
               </div>
@@ -28,14 +30,14 @@
           </div>
           <div class="box flex-col p-2 w-full mt-3">
             <div>
-              <div class="back-text float-right">Meer weergeven</div>
+              <div class="back-text float-right" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
               <div class="font-bold ml-2">Skills</div>
             </div>
             <div class="my-2 ml-2">
-              <div class="flex-row ">Skill 1</div>
-              <div class="flex-row ">Skill 2</div>
-              <div class="flex-row ">Skill 3</div>
-              <div class="flex-row ">Skill 4</div>
+              <div>{{noSkillsFoundText}}</div>
+              <skill-list-summary v-if="showTempSkills === true" v-for="skill in tempSkills" :key="skill.id"
+                                  :skill="skill"/>
+              <skill-list-summary v-else v-for="skill in skills" :key="skill.id" :skill="skill"/>
             </div>
           </div>
         </div>
@@ -64,17 +66,23 @@
 <script>
 
 import ProjectListDetailsSummary from "../../Scenes/Project/ProjectsListDetailsSummary.vue";
+import SkillListSummary from "../../Scenes/Project/SkillListSummary.vue";
 
 export default {
   name: "PublicProfile",
   inject: ['fetchService'],
-  components: {ProjectListDetailsSummary},
+  components: {ProjectListDetailsSummary, SkillListSummary},
   data() {
     return {
       specialistId: '',
       userData: '',
       projects: [],
-      noProjectsFoundText: ''
+      skills: [],
+      tempSkills: [],
+      showTempSkills: true,
+      showSkillsTitle: 'Meer weergeven',
+      noProjectsFoundText: '',
+      noSkillsFoundText: ''
     }
   },
   created() {
@@ -82,18 +90,37 @@ export default {
       this.$router.push("/home");
     }
     this.specialistId = this.$route.params.Id;
-    this.getUserInfo();
+    this.fetchUserInfo();
     this.fetchProjects();
+    this.fetchSkills();
   },
   methods: {
-    async getUserInfo() {
+    async fetchUserInfo() {
       this.userData = await this.fetchService.fetchUrl("/users/" + this.specialistId);
     },
     async fetchProjects() {
       this.projects = await this.fetchService.fetchJson("/projects?user=" + this.specialistId);
 
+      if (this.projects == null) {
+        this.projects = [];
+      }
+
       if (this.projects.length === 0) {
         this.noProjectsFoundText = "Er zijn geen projecten gevonden voor " + this.userData.firstName;
+      }
+    },
+    async fetchSkills() {
+      this.skills = await this.fetchService.fetchJson("/skills/user-skills/" + this.specialistId);
+      if (this.skills == null) {
+        this.skills = [];
+      }
+
+      if (this.skills.length > 8) {
+        this.tempSkills = this.skills.slice(0, 8);
+      }
+
+      if (this.skills.length === 0) {
+        this.noSkillsFoundText = "Er zijn geen skills gevonden " + this.userData.firstName;
       }
     },
     buttonBackPage() {
@@ -101,6 +128,15 @@ export default {
         this.$router.push("/adminpanel/employee-list");
       } else {
         this.$router.push("/client/home");
+      }
+    },
+    toggleSkillList() {
+      this.showTempSkills = !this.showTempSkills;
+
+      if (this.showTempSkills === true) {
+        this.showSkillsTitle = 'Meer weegeven';
+      } else {
+        this.showSkillsTitle = 'Minder weegeven';
       }
     }
   }
