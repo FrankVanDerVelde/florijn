@@ -1,5 +1,5 @@
 <template >
-  <div class="flex flex-col h-fit mt-4 ml-5 p-3 fa-border rounded-xl cursor-pointer " @click.once="inputFields = !inputFields">
+  <div class="flex flex-col h-fit mt-4 ml-2 p-3 fa-border rounded-xl cursor-pointer " @click.once="inputFields = !inputFields">
     <div class="flex">
 
       <div>
@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="flex m-0 ml-9 p-0">
+      <div class="flex m-0 ml-2 p-0">
         <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
           <div class="star-color" v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>

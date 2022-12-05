@@ -7,7 +7,7 @@
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
                           @selectedSkill="skillSelect"/>
     </div>
-    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
+    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container fa-border">
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=skills
                        :participant=participants @addParticipant="addParticipant" :validation="validation"/>
     </div>
