@@ -11,9 +11,9 @@ import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import './PrototypeExtensions/Array+random.js';
 
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faCircleXmark, faMagnifyingGlass, faShareNodes, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage} from '@fortawesome/free-solid-svg-icons'
+import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faCircleXmark, faMagnifyingGlass, faShareNodes, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPlus} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage);
+library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPlus)
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)

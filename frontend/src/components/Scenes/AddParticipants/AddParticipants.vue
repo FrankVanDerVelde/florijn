@@ -1,5 +1,9 @@
 <template>
-  <ProjectParticipantList :participants=project.participants></ProjectParticipantList>
+  <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
+
+  <div class="flex flex-row flex-wrap gap-8">
+    <participant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true" @selectedParticipant="deleteParticipant"/>
+  </div>
 
   <h2 class=" mb-4 mt-10 header-2" >Deelnemers toevoegen</h2>
   <div class="flex flex-row participant-container" v-if="specialists.length !== 0">
@@ -7,7 +11,7 @@
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
                           @selectedSkill="skillSelect"/>
     </div>
-    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container fa-border">
+    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=skills
                        :participant=participants @addParticipant="addParticipant" :validation="validation"/>
     </div>
@@ -17,11 +21,11 @@
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
-import ProjectParticipantList from "../Project/ProjectParticipantList.vue";
+import Participant from "../Project/Participant.vue";
 
 export default {
   name: "AddParticipants",
-  components: {ProjectParticipantList, ParticipantCard, FilterParticipants},
+  components: {Participant, ParticipantCard, FilterParticipants},
   inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
 
   props: {
@@ -54,6 +58,8 @@ export default {
       })
       this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
       this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+      this.validation = false;
+
     },
 
     skillSelect(selectedSkill) {
@@ -70,8 +76,15 @@ export default {
       }
 
       this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill => this.selectedfilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
-
+    },
+    deleteParticipant(selectedParticipant) {
+      const participant = selectedParticipant.participant;
+      this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)
+      this.projectFetchService.fetchJsonMethod(`/${this.$route.params.projectId}/participants/${participant.user.id}/delete`, "DELETE")
+      this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.user.id))
     }
+
+
   },
 
 

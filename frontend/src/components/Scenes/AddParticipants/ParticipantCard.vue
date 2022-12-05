@@ -1,5 +1,5 @@
 <template >
-  <div class="flex flex-col h-fit mt-4 ml-2 p-3 fa-border rounded-xl cursor-pointer " @click.once="inputFields = !inputFields">
+  <div class="flex flex-col h-fit mt-4 ml-2 p-3 fa-border rounded-xl ">
     <div class="flex">
 
       <div>
@@ -19,13 +19,20 @@
         </div>
       </div>
 
-      <div class="flex m-0 ml-2 p-0">
+      <div class="flex m-0 ml-2 p-0 relative">
+        <div class="add-button hover:border-primary-500 cursor-pointer">
+          <font-awesome-icon icon="plus" @click.once="inputFields = !inputFields"/>
+        </div>
+        <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
+          <font-awesome-icon icon="user"/>
+        </div>
         <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
           <div class="star-color" v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
         </div>
       </div>
+
 
     </div>
     <div v-if="inputFields" class="mt-2">
@@ -58,8 +65,11 @@
 </template>
 
 <script>
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
 export default {
   name: "ParticipantCard",
+  components: {FontAwesomeIcon},
   emits: ['addParticipant'],
 
   computed: {
@@ -97,6 +107,29 @@ export default {
 </script>
 
 <style scoped>
+
+.add-button {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  color: var(--primary-500);
+  border: 1px solid var(--neutral-200);
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.profile-button {
+  position: absolute;
+  top: 0;
+  right: 30px;
+  color: var(--neutral-500);
+  border: 1px solid var(--neutral-200);
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
 .validation {
   color: red
 }
