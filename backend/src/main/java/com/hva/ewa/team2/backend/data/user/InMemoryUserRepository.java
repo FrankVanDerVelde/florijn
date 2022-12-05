@@ -2,7 +2,9 @@ package com.hva.ewa.team2.backend.data.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,11 +33,11 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen"));
-
         Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
+
+        Specialist specialist = (new Specialist(5, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
+        Specialist specialist2 = (new Specialist(6, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
 
         setSkills(specialist);
         setSkills(specialist2);
@@ -56,6 +58,21 @@ public class InMemoryUserRepository implements UserRepository {
             // Add a skill to the specialist with a random rating
             specialist.updateUserSkill(allSkills.get(i), randomRating);
         }
+
+        ArrayList<Expertise> allExpertises = skillRepo.getAllExpertises();
+
+        ArrayList<UserExpertise> userExpertises = new ArrayList<>();
+        int specialistId = specialist.getId();
+        for (Expertise expertise: allExpertises) {
+            boolean randomBool = ThreadLocalRandom.current().nextBoolean();
+            if (randomBool == true) {
+                userExpertises.add(new UserExpertise(expertise.getId(), specialistId));
+            }
+        }
+
+        System.out.println(userExpertises);
+
+        specialist.updateUserExpertise(userExpertises);
 
         users.add(specialist);
     }
