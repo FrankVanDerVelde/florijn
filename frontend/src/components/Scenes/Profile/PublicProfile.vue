@@ -143,6 +143,8 @@ export default {
     async fetchAvailability() {
       this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
 
+      //TODO: when the availibility per week is fixed, replace the api call with the added weeknumber as param
+
       for (let i = 0; i < this.availability.length; i++) {
         try {
           const fromHour = this.availability[i].from[0].toString();
