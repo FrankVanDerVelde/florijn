@@ -15,8 +15,10 @@ import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectParticipantAddInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectTransferRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +52,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project createProject(JsonProjectInfo projectInfo) throws IOException {
+    public Project createProject(ProjectInfoRequest projectInfo) throws IOException {
         final String title = projectInfo.getTitle();
         final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
@@ -95,7 +97,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project updateProjectInformation(int pId, JsonProjectInfo body) throws IOException {
+    public Project updateProjectInformation(int pId, ProjectInfoRequest body) throws IOException {
         final String title = body.getTitle();
         final String description = body.getDescription();
         final MultipartFile logoUpload = body.getLogoFile();
@@ -133,7 +135,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project archiveProject(int id, JsonNode body, boolean unarchive) {
+    public Project archiveProject(int id, ProjectEditVerificationRequest body, boolean unarchive) {
         final Project project = projectRepo.findById(id);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
@@ -141,7 +143,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
         String archiveWord = unarchive ? "unarchive" : "archive";
 
-        if (!body.has("title") || !project.getTitle().equalsIgnoreCase(body.get("title").asText())) {
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
             throw new IllegalArgumentException("Confirmation title does not match the project title.");
         }
 
@@ -154,21 +156,17 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project transferOwnership(int id, JsonNode body) {
+    public Project transferOwnership(int id, ProjectTransferRequest body) {
         final Project project = projectRepo.findById(id);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
         }
 
-        if (!body.has("title") || !project.getTitle().equalsIgnoreCase(body.get("title").asText())) {
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
             throw new IllegalArgumentException("Confirmation title does not match the project title.");
         }
 
-        if (!body.has("clientId") || !body.get("clientId").canConvertToInt()) {
-            throw new IllegalArgumentException("No client id was provided or it was not a number");
-        }
-
-        int clientId = body.get("clientId").asInt();
+        int clientId = body.getClientId();
         if (project.getClient().getId() == clientId) {
             throw new IllegalArgumentException("That client is already assigned to this project.");
         }
@@ -221,7 +219,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public ProjectParticipant addProjectParticipant(int projectId, JsonProjectParticipantAddInfo body) {
+    public ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest body) {
         final Project project = projectRepo.findById(projectId);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
@@ -255,6 +253,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
+        // TODO: Integrate backend authorisation here.
         if (!body.has("userId")) {
             throw new IllegalArgumentException("No user id was provided.");
         }

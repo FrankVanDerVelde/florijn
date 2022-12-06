@@ -1,4 +1,4 @@
-package com.hva.ewa.team2.backend.rest.project.json;
+package com.hva.ewa.team2.backend.rest.project.request;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.Optional;
  * Class with properties required to update a project.
  * Used for deserializing JSON.
  */
-public class JsonProjectInfo {
+public class ProjectInfoRequest {
 
     @Getter
     @Setter
@@ -25,9 +25,9 @@ public class JsonProjectInfo {
     @Setter
     private MultipartFile logoFile;
 
-    public JsonProjectInfo() {}
+    public ProjectInfoRequest() {}
 
-    public JsonProjectInfo(String title, String description, Optional<Integer> client, MultipartFile logoFile) {
+    public ProjectInfoRequest(String title, String description, Optional<Integer> client, MultipartFile logoFile) {
         this.title = title;
         this.description = description;
         this.client = client;

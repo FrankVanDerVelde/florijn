@@ -10,13 +10,6 @@
             class="rounded-md bg-neutral-50 px-3 py-1 font-medium text-app_red-500 border border-neutral-200 hover:bg-app_red-700 hover:text-neutral-0 hover:border-app_red-700 transition">
       {{button}}
     </button>
-
-<!--    <button type="button"-->
-<!--            @click="$emit('click')"-->
-<!--            class="rounded-md bg-app_red-500 px-4 py-2 font-medium text-neutral-0 hover:bg-app_red-600 focus:outline-none-->
-<!--                          focus:ring-2 focus:ring-app_red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">-->
-<!--      {{button}}-->
-<!--    </button>-->
   </li>
 </template>
 
