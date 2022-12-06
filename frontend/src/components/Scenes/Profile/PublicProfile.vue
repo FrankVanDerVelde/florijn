@@ -34,7 +34,7 @@
               <div class="font-bold ml-2">Skills</div>
             </div>
             <div class="my-2 ml-2">
-              <div>{{noSkillsFoundText}}</div>
+              <div v-if="this.skills.length === 0">Er zijn geen skills gevonden voor {{ this.userData.firstName }}</div>
               <skill-list-summary v-if="showTempSkills === true" v-for="skill in tempSkills" :key="skill.id"
                                   :skill="skill"/>
               <skill-list-summary v-else v-for="skill in skills" :key="skill.id" :skill="skill"/>
@@ -45,16 +45,36 @@
           <div class="box flex flex-col p-2">
             <div class="font-bold">Projecten</div>
             <project-list-details-summary v-for="project in projects" :key="project.id" :project="project"/>
-            <div class="my-2">{{ noProjectsFoundText }}</div>
+            <div class="my-2" v-if="this.projects.length === 0">Er zijn geen projecten gevonden voor
+              {{ this.userData.firstName }}
+            </div>
           </div>
           <div class="box flex flex-col mt-3 p-2">
             <div class="font-bold">Beschikbaarheid</div>
-            <div class="my-2 flex-row text-sm ">
-              <div class="font-bold">Maandag:</div>
-              <div class="font-bold">Dinsdag:</div>
-              <div class="font-bold">Woensdag:</div>
-              <div class="font-bold">Donderdag:</div>
-              <div class="font-bold">Vrijdag:</div>
+            <div class="my-2" v-if="this.availability.length === 0">Er is geen beschikbaarheid gevonden voor
+              {{ this.userData.firstName }}
+            </div>
+            <div class="my-2 flex-row text-sm" v-else>
+              <div>
+                <div class="font-bold float-left w-[96px]">Maandag:</div>
+                <div>{{ this.monAv }}</div>
+              </div>
+              <div>
+                <div class="font-bold float-left w-[96px]">Dinsdag:</div>
+                <div>{{ this.tueAv }}</div>
+              </div>
+              <div>
+                <div class="font-bold float-left w-[96px]">Woensdag:</div>
+                <div>{{ this.wedAv }}</div>
+              </div>
+              <div>
+                <div class="font-bold float-left w-[96px]">Donderdag:</div>
+                <div>{{ this.thuAv }}</div>
+              </div>
+              <div>
+                <div class="font-bold float-left w-[96px]">Vrijdag:</div>
+                <div>{{ this.friAv }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -79,10 +99,14 @@ export default {
       projects: [],
       skills: [],
       tempSkills: [],
+      availability: [],
+      monAv: '-',
+      tueAv: '-',
+      wedAv: '-',
+      thuAv: '-',
+      friAv: '-',
       showTempSkills: true,
       showSkillsTitle: 'Meer weergeven',
-      noProjectsFoundText: '',
-      noSkillsFoundText: ''
     }
   },
   created() {
@@ -93,6 +117,7 @@ export default {
     this.fetchUserInfo();
     this.fetchProjects();
     this.fetchSkills();
+    this.fetchAvailability();
   },
   methods: {
     async fetchUserInfo() {
@@ -104,10 +129,6 @@ export default {
       if (this.projects == null) {
         this.projects = [];
       }
-
-      if (this.projects.length === 0) {
-        this.noProjectsFoundText = "Er zijn geen projecten gevonden voor " + this.userData.firstName;
-      }
     },
     async fetchSkills() {
       this.skills = await this.fetchService.fetchJson("/skills/user-skills/" + this.specialistId);
@@ -118,10 +139,52 @@ export default {
       if (this.skills.length > 8) {
         this.tempSkills = this.skills.slice(0, 8);
       }
+    },
+    async fetchAvailability() {
+      this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
 
-      if (this.skills.length === 0) {
-        this.noSkillsFoundText = "Er zijn geen skills gevonden " + this.userData.firstName;
+      for (let i = 0; i < this.availability.length; i++) {
+        try {
+          const fromHour = this.availability[i].from[0].toString();
+          let fromMin = this.availability[i].from[1].toString();
+          const toHour = this.availability[i].to[0].toString();
+          let toMin = this.availability[i].to[1].toString();
+
+          if (fromMin.length === 1) {
+            fromMin = "0" + fromMin;
+          }
+
+          if (toMin.length === 1) {
+            toMin = "0" + toMin;
+          }
+
+          const availability = fromHour + ":" + fromMin + "-" + toHour + ":" + toMin;
+          this.availibilityHelper(i, availability)
+        } catch (e) {
+          console.log("Could not convert availability to time" + e)
+          return;
+        }
       }
+    },
+    availibilityHelper(index, availability) {
+      switch (index) {
+        case 0:
+          this.monAv = availability;
+          break;
+        case 1:
+          this.tueAv = availability;
+          break;
+        case 2:
+          this.wedAv = availability;
+          break;
+        case 3:
+          this.thuAv = availability;
+          break;
+        case 4:
+          this.friAv = availability;
+          break;
+      }
+
     },
     buttonBackPage() {
       this.$router.back();
