@@ -139,6 +139,6 @@ const routes = [
 ];
 
 export const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 });

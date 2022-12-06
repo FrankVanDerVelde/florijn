@@ -57,7 +57,7 @@
             <div class="muted error" v-if="'updating' in errors">{{ errors.updating }}</div>
           </div>
 
-          <div v-if="!newProject" class="mt-6">
+          <div v-if="!newProject && project != null" class="mt-6">
             <h2 class="font-normal text-app_red-400 text-2xl mb">Danger Zone</h2>
 
             <div class="mt-2 border border-app_red-200 rounded-md">
@@ -170,6 +170,7 @@ export default {
         description: "Hier komt de beschrijving van het project.",
         participants: [],
         client: {},
+        archived: false,
       }
     },
     updateTitle(event) {
