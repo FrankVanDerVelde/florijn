@@ -13,19 +13,23 @@
     </div>
     <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=skills
-                       :participant=participants @addParticipant="addParticipant" :validation="validation"/>
+                       :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
     </div>
   </div>
+  <AddParticipantModal v-if="this.selectedSpecialist != null" :participant="selectedSpecialist" :project="this.project"
+                       @accept="addParticipant" @reject="this.selectedSpecialist = null"/>
+
 </template>
 
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
 import Participant from "../Project/Participant.vue";
+import AddParticipantModal from "./AddParticipantModal.vue";
 
 export default {
   name: "AddParticipants",
-  components: {Participant, ParticipantCard, FilterParticipants},
+  components: {AddParticipantModal, Participant, ParticipantCard, FilterParticipants},
   inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
 
   props: {
@@ -37,6 +41,7 @@ export default {
 
   methods: {
     addParticipant(specialist) {
+      this.selectedSpecialist = null;
 
       if (specialist.role === "" || specialist.hourlyRate === "") {
         console.log("role or hourlyRate is null");
@@ -113,6 +118,7 @@ export default {
       selectedfilters: [],
       filteredParticipantsList: {},
       validation: false,
+      selectedSpecialist : null,
 
       skillGroup: {},
 

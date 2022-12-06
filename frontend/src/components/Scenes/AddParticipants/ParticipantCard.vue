@@ -21,7 +21,7 @@
 
       <div class="flex m-0 ml-2 p-0 relative">
         <div class="add-button hover:border-primary-500 cursor-pointer">
-          <font-awesome-icon icon="plus" @click.once="inputFields = !inputFields"/>
+          <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
         </div>
         <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
           <font-awesome-icon icon="user"/>
@@ -32,33 +32,7 @@
           </div>
         </div>
       </div>
-
-
     </div>
-    <div v-if="inputFields" class="mt-2">
-      <div class=" flex flex-col my-2">
-        <input v-model="roleInput" type="text" id="roleButton"
-               class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
-               :placeholder="rolePlaceholder" required>
-
-      </div>
-      <div>
-        <input v-model="hourInput" type="number" id="hourButton"
-               class="bg-neutral-50 border border-neutral-200 text-neutral-900 text-sm rounded-lg focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
-               :placeholder="hourPlaceholder" required>
-      </div>
-
-      <div class="mt-4">
-        <button class="accept cursor-pointer"
-                @click="$emit('addParticipant', {role: roleInput, hourlyRate: hourInput, participant: participant})">
-          Toevoegen
-        </button>
-      </div>
-      <div v-if="validation" class="fa-border text-center validation">
-        Voer alle velden in
-      </div>
-    </div>
-
   </div>
 
 
@@ -100,7 +74,6 @@ export default {
       hourPlaceholder: "Voeg een hourlyRate toe",
       roleInput: "",
       hourInput: "",
-      inputFields: false,
     }
   }
 }
@@ -130,9 +103,6 @@ export default {
   border-radius: 6px;
 }
 
-.validation {
-  color: red
-}
 
 .icon-container {
   margin-left: auto;
@@ -156,9 +126,5 @@ button {
   transition: all .3s;
 }
 
-button.accept {
-  background-color: var(--app_green-400);
-  color: black;
-}
 
 </style>
