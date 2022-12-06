@@ -1,13 +1,10 @@
 package com.hva.ewa.team2.backend.rest.skill;
 
-import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
-import com.hva.ewa.team2.backend.domain.usecases.project.ProjectBusinessLogic;
 import com.hva.ewa.team2.backend.domain.usecases.skill.SkillBusinessLogic;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
 import org.springframework.beans.factory.annotation.Autowired;

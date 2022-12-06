@@ -1,12 +1,8 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.domain.models.skill.*;
-import com.hva.ewa.team2.backend.domain.models.user.User;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;

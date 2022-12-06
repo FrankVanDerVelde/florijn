@@ -39,6 +39,8 @@ public class InMemoryUserRepository implements UserRepository {
         Specialist specialist = (new Specialist(5, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
         Specialist specialist2 = (new Specialist(6, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
 
+        this.users.add(new Client(7, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
+
         setSkills(specialist);
         setSkills(specialist2);
     }

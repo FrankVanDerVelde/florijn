@@ -8,14 +8,17 @@ import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectParticipantAddInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectTransferRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,32 +52,26 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project createProject(JsonProjectInfo projectInfo) throws IOException {
+    public Project createProject(ProjectInfoRequest projectInfo) throws IOException {
         final String title = projectInfo.getTitle();
-        final int clientId = projectInfo.getClient();
+        final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
         final MultipartFile logoUpload = projectInfo.getLogoFile();
 
-        validateProjectInformation(title, clientId, description);
+        validateProjectInformation(title, description);
+        final Client client = validateClient(clientId.orElse(-1));
 
         // creating temp project to update.
         Project project;
         final int id = projectRepo.findAll().size() + 1;
         if (logoUpload == null) {
-            project = new Project(
-                    id, title, description,
-                    (Client) userRepo.getUserById(clientId)
-            );
+            project = new Project(id, title, description, client);
         } else {
             // uploading the logo to the assets.
             String extension = FilenameUtils.getExtension(logoUpload.getName());
             final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/" + id + "." + extension);
 
-            project = new Project(
-                    id, title, description,
-                    (Client) userRepo.getUserById(clientId),
-                    fileResult.getPath()
-            );
+            project = new Project(id, title, description, client, fileResult.getPath());
         }
 
         return projectRepo.addProject(project);
@@ -100,15 +97,13 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project updateProjectInformation(int pId, JsonProjectInfo body) throws IOException {
+    public Project updateProjectInformation(int pId, ProjectInfoRequest body) throws IOException {
         final String title = body.getTitle();
-        final int client = body.getClient();
         final String description = body.getDescription();
         final MultipartFile logoUpload = body.getLogoFile();
 
         validateProjectInformation(
                 title,
-                client,
                 description
         );
 
@@ -117,14 +112,12 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
 
-        System.out.println(logoUpload);
-
         // creating temp project to update.
         Project project;
         if (logoUpload == null) {
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.getUserById(client),
+                    existingProject.getClient(),
                     existingProject.getLogoSrc()
             );
         } else {
@@ -133,12 +126,55 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.getUserById(client),
+                    existingProject.getClient(),
                     fileResult.getPath()
             );
         }
 
         return projectRepo.updateProject(project);
+    }
+
+    @Override
+    public Project archiveProject(int id, ProjectEditVerificationRequest body, boolean unarchive) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        String archiveWord = unarchive ? "unarchive" : "archive";
+
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        if (project.isArchived() != unarchive) {
+            throw new IllegalArgumentException("Could not " + archiveWord + " project because it is already " + archiveWord + "d.");
+        }
+
+        project.setArchived(!unarchive);
+        return project;
+    }
+
+    @Override
+    public Project transferOwnership(int id, ProjectTransferRequest body) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        int clientId = body.getClientId();
+        if (project.getClient().getId() == clientId) {
+            throw new IllegalArgumentException("That client is already assigned to this project.");
+        }
+
+        final Client client = validateClient(clientId);
+        project.setClient(client);
+
+        return project;
     }
 
     @Override
@@ -183,7 +219,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public ProjectParticipant addProjectParticipant(int projectId, JsonProjectParticipantAddInfo body) {
+    public ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest body) {
         final Project project = projectRepo.findById(projectId);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
@@ -217,6 +253,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
+        // TODO: Integrate backend authorisation here.
         if (!body.has("userId")) {
             throw new IllegalArgumentException("No user id was provided.");
         }
@@ -312,37 +349,29 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<Integer> userId) {
-        if (searchQuery.orElse("").isBlank() && userId.isEmpty()) {
-            return projectRepo.findAll();
-        } else if (searchQuery.isPresent()) {
-            String search = searchQuery.get().toLowerCase();
-            return projectRepo.findAll().stream()
-                    .filter(project -> project.getTitle().toLowerCase().contains(search) ||
-                            project.getDescription().toLowerCase().contains(search)
-                    ).toList();
-        } else {
-            User user = userRepo.getUserById(userId.get());
-            if (user.getRole() == User.Role.SPECIALIST) {
-                return projectRepo.findAll().stream()
-                        .filter(p -> p.getParticipants().stream().anyMatch(pp -> pp.getSpecialist().getId() == userId.get()))
-                        .toList();
-            }
-            throw new IllegalArgumentException("The given ID is from an admin/client, not a specialist!");
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter) {
+        String projectFilter = filter.orElse("ALL");
+        try {
+            return projectRepo.findAll(ProjectFilter.valueOf(projectFilter), searchQuery.orElse(""));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An invalid filter was entered.");
         }
     }
 
-    private void validateProjectInformation(String title, int clientId, String description) {
+    private void validateProjectInformation(String title, String description) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");
         } else if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
+    }
 
+    private Client validateClient(int clientId) {
         User client = userRepo.getUserById(clientId);
-        if (!(client instanceof Client)) {
+        if (!(client instanceof Client casted)) {
             throw new IllegalArgumentException("There is no user with that ID or the user is not a client.");
         }
+        return casted;
     }
 
 }

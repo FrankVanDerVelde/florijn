@@ -6,6 +6,7 @@
     <div class="flex items-center justify-between mb-[24px]">
       <stats class="!pb-0">
         <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
+        <stat v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</stat>
       </stats>
       <button
           v-if="editButton"
