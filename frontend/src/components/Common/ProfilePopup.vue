@@ -38,13 +38,13 @@ export default {
   methods: {
     displayName(lastName = false) {
       // user is a client
-      // if ('name' in this.user) {
-      //   return this.participant.user.name;
-      // }
+      if ('name' in this.user) {
+        return this.participant.user.name;
+      }
 
       // user is a specialist/admin
-      // let lastNameParts = this.user.lastName.split(" ");
-      // return this.user.firstName + (lastName ? " " + lastNameParts[lastNameParts.length - 1].charAt(0) + "." : "");
+      let lastNameParts = this.user.lastName.split(" ");
+      return this.user.firstName + (lastName ? " " + lastNameParts[lastNameParts.length - 1].charAt(0) + "." : "");
     },
     confirmationLogOut() {
       if (this.user == null) {
