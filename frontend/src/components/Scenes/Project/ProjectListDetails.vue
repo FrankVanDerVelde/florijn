@@ -5,7 +5,7 @@
 
       <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-      <div class="flex flex-col justify-between container ml-4 ">
+      <div class="flex flex-col justify-between container ml-4">
         <div class="flex flex-col mb-3">
           <div class="font-bold">{{ project.title }}</div>
           <div class="font-semibold text-neutral-500">{{ project.description }}</div>
@@ -15,6 +15,7 @@
 
           <div>
             <AvatarStack :participants="this.project.participants" :client="this.project.client"/>
+            <stat v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</stat>
           </div>
           <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
             Project
@@ -29,10 +30,11 @@
 
 <script>
 import Asset from "../../Common/Asset.vue";
+import Stats from "./Stats.vue";
 import AvatarStack from "./AvatarStack.vue";
 
 export default {
-  components: {AvatarStack, Asset},
+  components: {Stats, Asset, AvatarStack},
   name: "ProjectListDetails",
   inject: ["fetchService"],
 

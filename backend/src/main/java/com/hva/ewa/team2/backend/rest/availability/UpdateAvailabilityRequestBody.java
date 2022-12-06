@@ -2,22 +2,26 @@ package com.hva.ewa.team2.backend.rest.availability;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class UpdateAvailabilityRequestBody {
 
     @Getter @Setter
-    private int id;
+    private LocalDate date;
     @Getter @Setter
-    private String date;
+    private LocalTime from;
     @Getter @Setter
-    private String from;
-    @Getter @Setter
-    private String to;
+    private LocalTime to;
 
-    public UpdateAvailabilityRequestBody(int id, String date, String from, String to) {
-        this.id = id;
+    public UpdateAvailabilityRequestBody(LocalDate date, LocalTime from, LocalTime to) {
         this.date = date;
         this.from = from;
         this.to = to;
+    }
+
+    UpdateAvailabilityRequestBody() {
     }
 }

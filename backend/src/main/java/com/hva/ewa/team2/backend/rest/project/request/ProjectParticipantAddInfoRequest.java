@@ -1,4 +1,4 @@
-package com.hva.ewa.team2.backend.rest.project.json;
+package com.hva.ewa.team2.backend.rest.project.request;
 
 import lombok.Getter;
 
@@ -6,7 +6,7 @@ import lombok.Getter;
  * Class with properties required to add a project participant.
  * Used for deserializing JSON.
  */
-public class JsonProjectParticipantAddInfo {
+public class ProjectParticipantAddInfoRequest {
 
     @Getter
     private int userId = -1;
@@ -15,9 +15,9 @@ public class JsonProjectParticipantAddInfo {
     @Getter
     private double hourlyRate = -1;
 
-    public JsonProjectParticipantAddInfo() {}
+    public ProjectParticipantAddInfoRequest() {}
 
-    public JsonProjectParticipantAddInfo(int userId, String role, double hourlyRate) {
+    public ProjectParticipantAddInfoRequest(int userId, String role, double hourlyRate) {
         this.userId = userId;
         this.role = role;
         this.hourlyRate = hourlyRate;

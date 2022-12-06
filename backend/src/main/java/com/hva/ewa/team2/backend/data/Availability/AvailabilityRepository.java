@@ -18,6 +18,6 @@ public interface AvailabilityRepository {
 
     Availability deleteAvailability(int id) throws Exception;
 
-
+    List<Availability> copyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception;
 
 }

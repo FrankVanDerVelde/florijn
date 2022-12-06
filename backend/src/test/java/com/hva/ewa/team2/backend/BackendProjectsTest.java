@@ -3,8 +3,8 @@ package com.hva.ewa.team2.backend;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectInteractor;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectParticipantAddInfoRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -35,18 +35,18 @@ public class BackendProjectsTest {
     @Test
     public void canCreateProject() {
         final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("", "", -1, null)));
+                interactor.createProject(new ProjectInfoRequest("", "", -1, null)));
         assertEquals("The project title cannot be empty.", ex1.getMessage());
 
         final IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("test", "", -1, null)));
+                interactor.createProject(new ProjectInfoRequest("test", "", -1, null)));
         assertEquals("The project client id is invalid.", ex2.getMessage());
 
         final IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.createProject(new JsonProjectInfo("test", "", 1, null)));
+                interactor.createProject(new ProjectInfoRequest("test", "", 1, null)));
         assertEquals("The project description cannot be empty.", ex3.getMessage());
 
-        final Project createdProject = interactor.createProject(new JsonProjectInfo("test", "test2", 1, null));
+        final Project createdProject = interactor.createProject(new ProjectInfoRequest("test", "test2", 1, null));
 
         assertNotNull(createdProject, "The created project should not be null");
         assertEquals(2, createdProject.getId(), "The created project should have an ID of 2");
@@ -79,7 +79,7 @@ public class BackendProjectsTest {
 
     @Test
     public void updateProjectInformation() {
-        JsonProjectInfo info = new JsonProjectInfo("ING Forever", "The future of ING.", 5, null);
+        ProjectInfoRequest info = new ProjectInfoRequest("ING Forever", "The future of ING.", 5, null);
 
         final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> interactor.updateProjectInformation(99, info));
         assertEquals("The project with ID 99 does not exist.", ex1.getMessage());
@@ -108,18 +108,18 @@ public class BackendProjectsTest {
 
 
         final IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.addProjectParticipant(1, new JsonProjectParticipantAddInfo(99, "Tester", 45.00)));
+                interactor.addProjectParticipant(1, new ProjectParticipantAddInfoRequest(99, "Tester", 45.00)));
         assertEquals("The user with ID 99 does not exist or is not a specialist.", ex3.getMessage());
 
         final IllegalArgumentException ex4 = assertThrows(IllegalArgumentException.class, () ->
-                interactor.addProjectParticipant(1, new JsonProjectParticipantAddInfo(1, "Tester", 45.00)));
+                interactor.addProjectParticipant(1, new ProjectParticipantAddInfoRequest(1, "Tester", 45.00)));
         assertEquals("User 1 is already participating this project.", ex4.getMessage());
 
         interactor.removeProjectParticipant(1, 1);
 
         assertEquals(1, interactor.getProjectParticipants(1).size());
 
-        final ProjectParticipant newParticipant = interactor.addProjectParticipant(1, new JsonProjectParticipantAddInfo(1, "Tester", 45.00));
+        final ProjectParticipant newParticipant = interactor.addProjectParticipant(1, new ProjectParticipantAddInfoRequest(1, "Tester", 45.00));
 
         assertEquals(2, interactor.getProjectParticipants(1).size());
         assertEquals(1, newParticipant.getSpecialist().getId());
