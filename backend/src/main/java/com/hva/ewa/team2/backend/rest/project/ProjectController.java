@@ -59,8 +59,7 @@ public class ProjectController {
 
     @PutMapping(path = "/{id}/update")
     @ResponseBody
-    public ResponseEntity<Project> updateProject(@PathVariable int id,
-                                                 @ModelAttribute JsonProjectInfo project) throws IOException {
+    public ResponseEntity<Project> updateProject(@PathVariable int id, @ModelAttribute JsonProjectInfo project) throws IOException {
         return ResponseEntity.ok(projectBusinessLogic.updateProjectInformation(id, project));
     }
 

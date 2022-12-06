@@ -121,7 +121,6 @@ public class SkillInteractor implements SkillBusinessLogic {
     @Override
     public List<UserExpertise> getUserExpertises(int userId) {
         User user = userRepo.getUserById(userId);
-        System.out.println(user);
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
@@ -129,7 +128,7 @@ public class SkillInteractor implements SkillBusinessLogic {
         if (!(user instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
-        System.out.println(specialist.getExpertises());
+//        System.out.println(specialist.getExpertises());
         return specialist.getExpertises();
     }
 

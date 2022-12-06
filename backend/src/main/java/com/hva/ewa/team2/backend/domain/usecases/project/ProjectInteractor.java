@@ -117,7 +117,6 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
 
-        System.out.println(logoUpload);
 
         // creating temp project to update.
         Project project;

@@ -2,15 +2,18 @@ package com.hva.ewa.team2.backend.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
+import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.user.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody JsonNode body) {
+    public ResponseEntity<User> updateUser(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
         return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
     }
 
