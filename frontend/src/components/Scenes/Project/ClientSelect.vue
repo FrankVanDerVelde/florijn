@@ -1,13 +1,13 @@
 <template>
-  <Listbox as="div" v-model="modelValue">
+  <Listbox as="div" @update:modelValue="update($event)" :value="value">
     <div class="relative mt-1">
       <ListboxButton
           class="relative w-full cursor-default rounded-md border border-neutral-200 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
         <span class="flex items-center">
-          <img v-if="modelValue != null"
-               :src="modelValue.avatarUrl"
+          <img v-if="value != null"
+               :src="value.avatarUrl"
                class="h-6 w-6 flex-shrink-0 rounded-full"/>
-          <span class="ml-3 block truncate">{{ modelValue == null ? 'Selecteer een klant' : modelValue.name }}</span>
+          <span class="ml-3 block truncate">{{ value == null ? 'Selecteer een klant' : value.name }}</span>
         </span>
         <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
           <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true"/>
@@ -51,13 +51,14 @@ export default {
 
   data() {
     return {
-      value: {}
+      value: this.modelValue,
     }
   },
 
-  watch: {
-    'modelValue'() {
-      this.$emit('update:modelValue', this.modelValue);
+  methods: {
+    update(value) {
+      this.value = value;
+      this.$emit('update:modelValue', value);
     }
   },
 
