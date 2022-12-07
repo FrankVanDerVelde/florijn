@@ -1,8 +1,10 @@
 <template>
   <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
 
+
   <div class="flex flex-row flex-wrap gap-8">
-    <participant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true" @selectedParticipant="deleteParticipant"/>
+    <participant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true"
+                 @selectedParticipant="item => selectedDeleteSpecialist = item"/>
   </div>
 
   <h2 class=" mb-4 mt-10 header-2" >Deelnemers toevoegen</h2>
@@ -16,8 +18,12 @@
                        :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
     </div>
   </div>
+
+  <!--Modals for adding and deleting specialists-->
   <AddParticipantModal v-if="this.selectedSpecialist != null" :participant="selectedSpecialist" :project="this.project"
                        @accept="addParticipant" @reject="this.selectedSpecialist = null"/>
+  <DeleteParticipantModal v-if="selectedDeleteSpecialist != null" @close="selectedDeleteSpecialist = null"
+                          @delete="deleteParticipant" :participant="selectedDeleteSpecialist"/>
 
 </template>
 
@@ -26,15 +32,17 @@ import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
 import Participant from "../Project/Participant.vue";
 import AddParticipantModal from "./AddParticipantModal.vue";
+import DeleteParticipantModal from "./DeleteParticipantModal.vue";
 
 export default {
   name: "AddParticipants",
-  components: {AddParticipantModal, Participant, ParticipantCard, FilterParticipants},
+  components: {DeleteParticipantModal, AddParticipantModal, Participant, ParticipantCard, FilterParticipants},
   inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
 
   props: {
-    projectId: {
-      type: String,
+    project: {
+      type: Object,
+      required: true
     }
   },
 
@@ -69,21 +77,24 @@ export default {
 
     skillSelect(selectedSkill) {
       if (!selectedSkill.checked) {
-        this.selectedfilters.push(selectedSkill.selectedSkill)
+        this.selectedFilters.push(selectedSkill.selectedSkill)
       } else {
-        this.selectedfilters = this.selectedfilters.filter(selectedfilters => selectedfilters.id !== selectedSkill.selectedSkill.id)
+        this.selectedFilters = this.selectedFilters.filter(selectedfilters => selectedfilters.id !== selectedSkill.selectedSkill.id)
       }
 
       //if selectedFilters array is empty, show all specialists
-      if (this.selectedfilters.length === 0) {
+      if (this.selectedFilters.length === 0) {
         this.filteredParticipantsList = this.specialists;
         return
       }
 
-      this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill => this.selectedfilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
+      this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill =>
+          this.selectedFilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
     },
     deleteParticipant(selectedParticipant) {
-      const participant = selectedParticipant.participant;
+      console.log(selectedParticipant)
+      this.selectedDeleteSpecialist = null;
+      const participant = selectedParticipant.participant.participant;
       this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)
       this.projectFetchService.fetchJsonMethod(`/${this.$route.params.projectId}/participants/${participant.user.id}/delete`, "DELETE")
       this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.user.id))
@@ -115,10 +126,11 @@ export default {
       specialists: {},
       assignedSpecialists: {},
       skillset: {},
-      selectedfilters: [],
+      selectedFilters: [],
       filteredParticipantsList: {},
       validation: false,
       selectedSpecialist : null,
+      selectedDeleteSpecialist: null,
 
       skillGroup: {},
 
