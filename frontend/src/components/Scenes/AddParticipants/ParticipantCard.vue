@@ -1,5 +1,5 @@
 <template >
-  <div class="flex flex-col h-fit mt-4 ml-2 p-3 fa-border rounded-xl ">
+  <div class="flex flex-col mt-4 ml-2 p-3 pr-2 fa-border rounded-xl ">
     <div class="flex">
 
       <div>
@@ -10,29 +10,40 @@
         <div>
           <div class="font-bold">{{ name }}</div>
           <div class="font-medium text-neutral-500">{{ participant.role }}</div>
+          <div v-if="this.skill.length === 0" class="flex flex-row-reverse mt-1">
+            <div class="add-participant hover:border-primary-500 cursor-pointer">
+              <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+            </div>
+            <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1">
+              <font-awesome-icon icon="user"/>
+            </div>
+          </div>
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skill[0].skill.slice(0, 3)" :key="skills.id">{{skills.name }}
+            <li class="accent-neutral-700" v-for="skills in skill.slice(0, 5)" :key="skills.id">{{ skills.name }}
             </li>
           </ul>
         </div>
       </div>
 
       <div class="flex m-0 ml-2 p-0 relative">
-        <div class="add-button hover:border-primary-500 cursor-pointer">
-          <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
-        </div>
-        <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
-          <font-awesome-icon icon="user"/>
+        <div v-if="this.skill.length !== 0">
+          <div class="add-button hover:border-primary-500 cursor-pointer">
+            <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+          </div>
+          <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
+            <font-awesome-icon icon="user"/>
+          </div>
         </div>
         <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
-          <div class="star-color" v-for="skills in skill[0].skill.slice(0,3)" :key="skills">
+          <div class="star-color" v-for="skills in getSkills.slice(0,5)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
         </div>
       </div>
     </div>
+
   </div>
 
 
@@ -50,8 +61,13 @@ export default {
     name() {
       let lastNameParts = this.participant.lastName.split(" ");
       return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
+    },
+    getSkills() {
+      return this.participant.skills.filter(skill => this.skill.some(s => s.id === skill.id));
     }
   },
+  methods: {}
+  ,
 
   props: {
     participant: {
@@ -96,6 +112,22 @@ export default {
   position: absolute;
   top: 0;
   right: 30px;
+  color: var(--neutral-500);
+  border: 1px solid var(--neutral-200);
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.add-participant {
+  color: var(--primary-500);
+  border: 1px solid var(--neutral-200);
+  padding: 2px 6px;
+  font-size: 14px;
+  border-radius: 6px;
+}
+
+.add-project {
   color: var(--neutral-500);
   border: 1px solid var(--neutral-200);
   padding: 2px 6px;

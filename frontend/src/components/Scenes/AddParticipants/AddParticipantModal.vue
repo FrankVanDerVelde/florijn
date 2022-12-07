@@ -85,7 +85,7 @@ export default {
         return;
       }
 
-      this.$emit('accept', {"participant" : this.participant, role: this.hourRateInput, hourlyRate: this.hourRateInput});
+      this.$emit('accept', {"participant" : this.participant, role: this.roleInput, hourlyRate: this.hourRateInput});
     },
   },
 

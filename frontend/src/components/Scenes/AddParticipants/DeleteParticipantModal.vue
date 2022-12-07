@@ -7,7 +7,7 @@
       <DialogPanel class="w-full max-w-sm rounded bg-white p-3">
         <DialogTitle class="text-2xl font-bold text-gray-600 text-center mt-3 mb-2">Verwijder deelnemer</DialogTitle>
         <DialogDescription class="text-center font-medium text-gray-500 mb-4">
-          Weet je zeker dat je sinterklaas wilt verwijderen?
+          Weet je zeker dat je {{fullUserName}} wilt verwijderen?
         </DialogDescription>
 
         <div
@@ -40,6 +40,12 @@ export default {
     }
   },
 
+  computed: {
+    fullUserName() {
+      return this.participant.participant.user.firstName + " " + this.participant.participant.user.lastName;
+    }
+  },
+
   methods: {
     close() {
       this.$emit('close');
@@ -62,10 +68,4 @@ button {
   color: white;
 }
 
-button.accept {
-  background-color: var(--app_green-400);
-}
-
-button.reject {
-}
 </style>

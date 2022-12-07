@@ -14,7 +14,7 @@
     </div>
 
     <div v-else>
-      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skills.slice(0,3)" :key="selectedSkill">
+      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skills.slice(0,4)" :key="selectedSkill">
         <label class="mark">
           <input type="checkbox" id="checkbox" v-model="selectedSkill.checked"
                  @click="$emit('selectedSkill', {'selectedSkill' : selectedSkill, 'checked' : selectedSkill.checked})">
