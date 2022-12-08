@@ -6,16 +6,16 @@ import FetchService from "../../Services/FetchService.js";
  * @author Martijn van der Wal
  */
 export class HourRegistrationRepository {
-    #fetcher;
+    fetcher;
 
     constructor() {
-        this.#fetcher = new FetchService('');
+        this.fetcher = new FetchService('');
     }
 
     /** Methods **/
     async fetchAllFor(specialistId) {
         try {
-            let jsonHrs = await this.#fetcher.fetchUrl(`/users/${specialistId}/hour-registrations/`);
+            let jsonHrs = await this.fetcher.fetchUrl(`/users/${specialistId}/hour-registrations/`);
             return jsonHrs.map(HourRegistration.fromJSON)
         } catch (e) {
             console.error(e);
@@ -25,7 +25,7 @@ export class HourRegistrationRepository {
 
     async deleteHourRegistration(id) {
         try {
-            return await this.#fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}/delete/`);
+            return await this.fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}/delete/`);
         } catch (e) {
             console.error(e);
             return e;
@@ -34,7 +34,7 @@ export class HourRegistrationRepository {
 
     async fetch(hourRegistrationId) {
         try {
-            return this.#fetcher.fetchUrl(`/hour-registrations/${hourRegistrationId}`);
+            return this.fetcher.fetchUrl(`/hour-registrations/${hourRegistrationId}`);
         } catch (e) {
             console.error(e);
         }
@@ -42,7 +42,7 @@ export class HourRegistrationRepository {
 
     async update(hourRegistrationId, projectId, userId, from, to, description) {
         try {
-            return await this.#fetcher.fetchJson(
+            return await this.fetcher.fetchJson(
                 `/hour-registrations/${hourRegistrationId}/update`,
                 {
                     method: 'PUT',
@@ -73,6 +73,6 @@ export class HourRegistrationRepository {
             description: description
         };
 
-        return await this.#fetcher.fetchJsonPost(`/users/${userId}/hour-registrations/`, body);
+        return await this.fetcher.fetchJsonPost(`/users/${userId}/hour-registrations/`, body);
     }
 }

@@ -2,12 +2,14 @@ package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Specialist extends User {
 
@@ -19,7 +21,9 @@ public class Specialist extends User {
     @Setter
     @JsonView(EssentialInfo.class)
     private String lastName;
+
     private final List<UserSkill> skills;
+    private List<UserExpertise> expertises;
 
     @Getter
     @Setter
@@ -27,7 +31,6 @@ public class Specialist extends User {
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this(id, email, password, profilePictureURL, firstName, lastName, new Address());
-        // TODO: implement new skill structure with UserSkill.
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
@@ -35,6 +38,7 @@ public class Specialist extends User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
+        this.expertises = new ArrayList<>();
         this.address = address;
     }
 
@@ -48,6 +52,10 @@ public class Specialist extends User {
 
     public List<UserSkill> getSkills() {
         return skills;
+    }
+
+    public List<UserExpertise> getExpertises() {
+        return expertises;
     }
 
     public UserSkill getUserSkill(Skill skill) {
@@ -68,6 +76,15 @@ public class Specialist extends User {
         UserSkill newSkill = new UserSkill(0, skill, rating);
         skills.add(newSkill);
         return newSkill;
+    }
+
+    public List<UserExpertise> updateUserExpertise(ArrayList<UserExpertise> expertises) {
+//        List<UserExpertise> userExpertises = expertises.stream()
+//                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
+//                .collect(Collectors.toList());
+
+        this.expertises = expertises;
+        return expertises;
     }
 
     @Override

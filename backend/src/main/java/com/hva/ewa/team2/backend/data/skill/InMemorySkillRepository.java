@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.data.skill;
 
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -20,6 +21,8 @@ public class InMemorySkillRepository implements SkillRepository {
     private ArrayList<Skill> skills = new ArrayList<>();
 
     private ArrayList<SkillGroup> skillGroups = new ArrayList<>();
+
+    private ArrayList<Expertise> expertises = new ArrayList<>();
 
     public InMemorySkillRepository() {
         String[] skillNames = new String[]{"MS Office Access",
@@ -120,6 +123,11 @@ public class InMemorySkillRepository implements SkillRepository {
             this.skillGroups.add(tempSkillGroup);
         }
 
+        String[] expertiseNames = new String[]{"Financieel Administratief", "Hypotheken" ,"Facturatie/Offertes","Secutirisaties","Boekhouding","CRM","Rapportage-tools","Conversietools", "Workflow", "Logistieke Processen", "Engineering", "Bouw & Infra", "Marketing", "(semi) Overheidsinstelling", "Web/App Development"};
+
+        for (int i = 0; i < expertiseNames.length; i++) {
+            this.expertises.add(new Expertise(i, expertiseNames[i]));
+        }
     }
 
     @Override
@@ -154,5 +162,16 @@ public class InMemorySkillRepository implements SkillRepository {
         Skill skill = getSkillById(id);
         return skillGroups.stream().filter(group -> group.getSkills().contains(skill)).findFirst().orElse(null);
     }
+
+    @Override
+    public Expertise getExpertiseById(int id) {
+        return expertises.stream().filter(expertise -> expertise.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public ArrayList<Expertise> getAllExpertises() {
+        return this.expertises;
+    }
+
 
 }
