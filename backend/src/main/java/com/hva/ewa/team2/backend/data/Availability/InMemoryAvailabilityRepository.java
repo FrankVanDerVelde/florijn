@@ -34,8 +34,8 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.getUserById(1);
-        User user2 = userRepository.getUserById(2);
+        User user1 = userRepository.getUserById(0);
+        User user2 = userRepository.getUserById(1);
 
         this.availabilities.addAll(List.of(
                 new Availability(
@@ -70,7 +70,6 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
                         dateService.currentDay(22, 0).toLocalTime()
                 )
         ));
-
     }
 
 

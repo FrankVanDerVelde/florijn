@@ -18,13 +18,27 @@ export class DateService {
         return moment().week(weekNumber).isoWeekday(dayIndex);
     }
 
+    dayIndex(date) {
+        return moment(date).day();
+    }
+
     isoWeekDays(weekNumber) {
         return [1, 2, 3, 4, 5, 6, 7].map(isoWeekDay => {
-            return {
-                weekDayIndex: isoWeekDay,
-                date:  moment().week(weekNumber).isoWeekday(isoWeekDay)
-            }
+            return this.#createWeekDayObjectFromIndex(isoWeekDay, weekNumber);
         });
+    }
+
+    isoWorkWeekDays(weekNumber) {
+        return [1, 2, 3, 4, 5].map(isoWeekDay => {
+            return this.#createWeekDayObjectFromIndex(isoWeekDay, weekNumber);
+        });
+    }
+
+    #createWeekDayObjectFromIndex(isoWeekDay, weekNumber) {
+        return {
+            weekDayIndex: isoWeekDay,
+            date: moment().week(weekNumber).isoWeekday(isoWeekDay)
+        }
     }
 
     isSameDay(date1, date2) {

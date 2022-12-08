@@ -1,4 +1,5 @@
 import FetchService from "../../Services/FetchService.js";
+import {Availability} from "../../components/models/Availability.js";
 
 export class AvailabilityRepository {
 
@@ -16,7 +17,8 @@ export class AvailabilityRepository {
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
         try {
-            return await this.fetcher.fetchJson(`/users/${userId}/availability`);
+            let results = await this.fetcher.fetchJson(`/users/${userId}/availability`);
+            return results.map(Availability.fromJSON);
         } catch (e) {
             console.error(e);
             return e;
@@ -33,7 +35,7 @@ export class AvailabilityRepository {
      */
     async createAvailability(userId, date, fromTime, toTime) {
         try {
-            return await this.fetcher.fetchJsonMethod(
+            let result = await this.fetcher.fetchJsonMethod(
                 `/users/${userId}/availability`,
                 HttpMethods.POST,
                 {
@@ -42,6 +44,8 @@ export class AvailabilityRepository {
                     to: toTime
                 }
             );
+
+            return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
             return e;
@@ -58,7 +62,7 @@ export class AvailabilityRepository {
      */
     async updateAvailability(id, date, fromTime, toTime) {
         try {
-            return await this.fetcher.fetchJsonMethod(
+            let result = await this.fetcher.fetchJsonMethod(
                 `/availability/${id}/update`,
                 HttpMethods.PUT,
                 {
@@ -67,6 +71,7 @@ export class AvailabilityRepository {
                     to: toTime
                 }
             );
+            return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
             return e;
@@ -80,7 +85,8 @@ export class AvailabilityRepository {
      */
     async deleteAvailability(id) {
         try {
-            return await this.fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
+            let result = await this.fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
+            return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
             return e;
@@ -94,7 +100,8 @@ export class AvailabilityRepository {
      */
     async getAvailability(id) {
         try {
-            return await this.fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
+            let result = await this.fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
+            return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
             return e;

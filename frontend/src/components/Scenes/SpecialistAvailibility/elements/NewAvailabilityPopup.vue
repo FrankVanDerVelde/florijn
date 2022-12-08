@@ -23,14 +23,19 @@
 </template>
 
 <script>
+import {Availability} from "../../../models/Availability.js";
+import moment from "moment";
+
 export default {
   name: "NewAvailabilityPopup",
   inject: ['projectFetchService', 'hourRegistrationRepository'],
   emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked'],
+  props: {
+    availability: Availability
+  },
   data() {
     return {
       projects: [],
-      selectedProjectId: null,
       from: null,
       to: null,
       description: null
@@ -38,12 +43,9 @@ export default {
   },
   async created() {
     await this.loadProjects();
-    if (this.hourRegistration) {
-      this.selectedProjectId = this.hourRegistration.project.id;
-      this.from = moment(this.hourRegistration.from).format('HH:mm');
-      this.to = moment(this.hourRegistration.to).format('HH:mm');
-      console.log(this.hourRegistration)
-      this.description = this.hourRegistration.description
+    if (this.availability) {
+      this.from = moment(this.availability.from).format('HH:mm');
+      this.to = moment(this.availability.to).format('HH:mm');
     }
   },
 
