@@ -31,7 +31,7 @@ export default {
 
 
   async created() {
-    this.employees = await this.fetchService.fetchJson(`/users/specialist`)
+    this.employees = await this.fetchService.fetchJson(`/users/role/specialist`)
   },
 
   data() {

@@ -31,7 +31,7 @@ export default {
   inject: ['fetchService'],
 
   async created() {
-    this.clients = await this.fetchService.fetchJson(`/users/client`)
+    this.clients = await this.fetchService.fetchJson(`/users/role/client`)
   },
 
   data() {
