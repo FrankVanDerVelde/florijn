@@ -7,10 +7,15 @@ import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+@Entity
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Specialist extends User {
 
     @Getter
@@ -22,12 +27,22 @@ public class Specialist extends User {
     @JsonView(EssentialInfo.class)
     private String lastName;
 
-    private final List<UserSkill> skills;
+    @Getter
+    @Setter
+    private List<UserSkill> skills;
+
+    @Getter
+    @Setter
     private List<UserExpertise> expertises;
 
     @Getter
     @Setter
     private Address address;
+
+    public Specialist() {
+        this.skills = new ArrayList<>();
+        this.expertises = new ArrayList<>();
+    }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this(id, email, password, profilePictureURL, firstName, lastName, new Address());
@@ -40,22 +55,6 @@ public class Specialist extends User {
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
         this.address = address;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public List<UserSkill> getSkills() {
-        return skills;
-    }
-
-    public List<UserExpertise> getExpertises() {
-        return expertises;
     }
 
     public UserSkill getUserSkill(Skill skill) {
