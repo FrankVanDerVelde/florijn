@@ -12,7 +12,7 @@ public class config implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("http://localhost:*", "https://localhost:*", "https://frontend-production-*", "https://frontend-development-*")
+                .allowedOriginPatterns("http://localhost:*", "https://localhost:*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS");
 
     }
