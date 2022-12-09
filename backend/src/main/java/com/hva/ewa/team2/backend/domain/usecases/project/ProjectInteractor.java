@@ -1,24 +1,33 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hva.ewa.team2.backend.common.Services.DateService.DateServiceLogic;
+import com.hva.ewa.team2.backend.common.services.asset.AssetService;
+import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectParticipantAddInfo;
+import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectParticipantAddInfoRequest;
+import com.hva.ewa.team2.backend.rest.project.request.ProjectTransferRequest;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
@@ -27,39 +36,42 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
     private final DateServiceLogic dateService;
+    private final AssetService assetService;
 
     @Autowired
     public ProjectInteractor(ProjectRepository projectRepository,
                              UserRepository userRepo,
                              HourRegistrationRepository hourRegistrationRepo,
-                             DateServiceLogic dateService) {
+                             DateServiceLogic dateService,
+                             AssetService assetService) {
         this.projectRepo = projectRepository;
         this.userRepo = userRepo;
         this.hourRegistrationRepo = hourRegistrationRepo;
         this.dateService = dateService;
+        this.assetService = assetService;
     }
 
     @Override
-    public Project createProject(JsonProjectInfo projectInfo) {
+    public Project createProject(ProjectInfoRequest projectInfo) throws IOException {
         final String title = projectInfo.getTitle();
-        final int clientId = projectInfo.getClient();
+        final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
-        final String logoSrc = projectInfo.getLogoSrc();
+        final MultipartFile logoUpload = projectInfo.getLogoFile();
 
-        validateProjectInformation(title, clientId, description);
+        validateProjectInformation(title, description);
+        final Client client = validateClient(clientId.orElse(-1));
 
         // creating temp project to update.
         Project project;
-        if (logoSrc == null) {
-            project = new Project(
-                    projectRepo.findAll().size() + 1, title, description,
-                    (Client) userRepo.findById(clientId)
-            );
+        final int id = projectRepo.findAll().size() + 1;
+        if (logoUpload == null) {
+            project = new Project(id, title, description, client);
         } else {
-            project = new Project(
-                    projectRepo.findAll().size() + 1, title, description,
-                    (Client) userRepo.findById(clientId), logoSrc
-            );
+            // uploading the logo to the assets.
+            String extension = FilenameUtils.getExtension(logoUpload.getName());
+            final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/" + id + "." + extension);
+
+            project = new Project(id, title, description, client, fileResult.getPath());
         }
 
         return projectRepo.addProject(project);
@@ -85,37 +97,84 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project updateProjectInformation(int pId, JsonProjectInfo body) {
+    public Project updateProjectInformation(int pId, ProjectInfoRequest body) throws IOException {
         final String title = body.getTitle();
-        final int client = body.getClient();
         final String description = body.getDescription();
-        final String logoSrc = body.getLogoSrc();
+        final MultipartFile logoUpload = body.getLogoFile();
 
         validateProjectInformation(
                 title,
-                client,
                 description
         );
 
-        if (projectRepo.findById(pId) == null) {
+        final Project existingProject = projectRepo.findById(pId);
+        if (existingProject == null) {
             throw new IllegalArgumentException("The project with ID " + pId + " does not exist.");
         }
 
         // creating temp project to update.
         Project project;
-        if (logoSrc == null) {
+        if (logoUpload == null) {
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.findById(client)
+                    existingProject.getClient(),
+                    existingProject.getLogoSrc()
             );
         } else {
+            String extension = FilenameUtils.getExtension(logoUpload.getOriginalFilename());
+            final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/logo-" + pId + "." + extension, true);
+
             project = new Project(
                     pId, title, description,
-                    (Client) userRepo.findById(client), logoSrc
+                    existingProject.getClient(),
+                    fileResult.getPath()
             );
         }
 
         return projectRepo.updateProject(project);
+    }
+
+    @Override
+    public Project archiveProject(int id, ProjectEditVerificationRequest body, boolean unarchive) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        String archiveWord = unarchive ? "unarchive" : "archive";
+
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        if (project.isArchived() != unarchive) {
+            throw new IllegalArgumentException("Could not " + archiveWord + " project because it is already " + archiveWord + "d.");
+        }
+
+        project.setArchived(!unarchive);
+        return project;
+    }
+
+    @Override
+    public Project transferOwnership(int id, ProjectTransferRequest body) {
+        final Project project = projectRepo.findById(id);
+        if (project == null) {
+            throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
+        }
+
+        if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
+            throw new IllegalArgumentException("Confirmation title does not match the project title.");
+        }
+
+        int clientId = body.getClientId();
+        if (project.getClient().getId() == clientId) {
+            throw new IllegalArgumentException("That client is already assigned to this project.");
+        }
+
+        final Client client = validateClient(clientId);
+        project.setClient(client);
+
+        return project;
     }
 
     @Override
@@ -160,7 +219,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public ProjectParticipant addProjectParticipant(int projectId, JsonProjectParticipantAddInfo body) {
+    public ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest body) {
         final Project project = projectRepo.findById(projectId);
         if (project == null) {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
@@ -175,7 +234,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         final int userId = body.getUserId();
-        if (!(userRepo.findById(userId) instanceof Specialist specialist)) {
+        if (!(userRepo.getUserById(userId) instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist or is not a specialist.");
         }
         if (project.getParticipantByUserId(userId) != null) {
@@ -194,12 +253,13 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new IllegalArgumentException("The project with ID " + projectId + " does not exist.");
         }
 
+        // TODO: Integrate backend authorisation here.
         if (!body.has("userId")) {
             throw new IllegalArgumentException("No user id was provided.");
         }
 
         final int userId = body.get("userId").asInt(-1);
-        final User user = userRepo.findById(userId);
+        final User user = userRepo.getUserById(userId);
 
         if (user == null) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
@@ -289,21 +349,29 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects() {
-        return projectRepo.findAll();
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter) {
+        String projectFilter = filter.orElse("ALL");
+        try {
+            return projectRepo.findAll(ProjectFilter.valueOf(projectFilter), searchQuery.orElse(""));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("An invalid filter was entered.");
+        }
     }
 
-    private void validateProjectInformation(String title, int clientId, String description) {
+    private void validateProjectInformation(String title, String description) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");
         } else if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("The project description cannot be empty.");
         }
+    }
 
-        User client = userRepo.findById(clientId);
-        if (!(client instanceof Client)) {
+    private Client validateClient(int clientId) {
+        User client = userRepo.getUserById(clientId);
+        if (!(client instanceof Client casted)) {
             throw new IllegalArgumentException("There is no user with that ID or the user is not a client.");
         }
+        return casted;
     }
 
 }

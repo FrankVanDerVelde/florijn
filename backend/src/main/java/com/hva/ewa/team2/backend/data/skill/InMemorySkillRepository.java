@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.data.skill;
 
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -21,10 +22,90 @@ public class InMemorySkillRepository implements SkillRepository {
 
     private ArrayList<SkillGroup> skillGroups = new ArrayList<>();
 
+    private ArrayList<Expertise> expertises = new ArrayList<>();
+
     public InMemorySkillRepository() {
-        String[] skillNames = new String[]{"HTML", "CSS", "Javascript", "PHP", "Node", "Python", "Swift", "C++", "c#", "React", "VueJS", "Angular", "Wordpress", "Lua","Git"};
-        String[] groupNames = new String[]{"Front-End", "Back-End", "Frameworks", "Other"};
-        Integer[] skillPositions = {3, 6, 4, 2};
+        String[] skillNames = new String[]{"MS Office Access",
+                "MS Office Access VBA",
+                "MS Office Excel",
+                "MS Office Excel VBA",
+                "MS Power Query",
+                "MS Powerpivot",
+                "MS Office Word",
+                "MS Office Word VBA",
+                "MS Office Outlook",
+                "MS Office Outlook VBA",
+                "MS Office VBA",
+                "MS SQL-Server",
+                "MS SQL-Server Stored Procedures",
+                "MS SQL-Server Views",
+                "MY SQL",
+                "MY SQL Workbench",
+                "MS Azure",
+                "Oracle",
+                "Microsoft Dynamics AX",
+                "Windows PowerShell (Core)",
+                ".NET Framework",
+                "XML - XAML",
+                "Filemaker",
+                "Filemaker Script",
+                "Filemaker Server",
+                "MS VB.NET",
+                "MS Visual Basic",
+                "Microsoft Dynamics 365",
+                "Microsoft Dynamics 365 for Operations",
+                "Microsoft Dynamics 365 for Business Applications",
+                "Sharepoint",
+                "Javascript",
+                "Java",
+                "PhP",
+                "ASP.NET",
+                "Google Apps ",
+                "Google Apps Script",
+                "Flow",
+                "HTML",
+                "CSS",
+                "C#",
+                "C++/CLI (Managed)",
+                "F#",
+                "Q#",
+                ".NET Core",
+                "Angular/AngularJS",
+                "Bootstrap",
+                "Mendix",
+                "OutSystems",
+                "PowerApps",
+                "Power Automate",
+                "Power Platform",
+                "Tableau",
+                "Qlik",
+                "SAP",
+                "SAS",
+                "Oracle",
+                "Salesforce",
+                "Thoughtspot",
+                "Yellowfin",
+                "Sisense",
+                "Microstrategy",
+                "TIBCO Software",
+                "Looker",
+                "Information Builders",
+                "Overall",
+                "DAX",
+                "M Language",
+                "Grafisch",
+                "Power Query",
+                "Power BI Beheer",
+                "Datamodellering",
+                "Data analyse",
+                "Agile",
+                "Scrum",
+                "Lean",
+                "Kanban",
+                "Extreme Programming (XP)"};
+
+        String[] groupNames = new String[]{"OFFICE FRONT-END", "BACK-END", "DATABASE", "WEB BASED FRONT-END", "Business Intelligence","Power BI", "Werkwijze"};
+        Integer[] skillPositions = {11, 11, 9, 21, 13, 8, 5};
 
         for (int i = 0; i < skillNames.length; i++) {
             this.skills.add(new Skill(i, skillNames[i], "Your ability to use " + skillNames[i]));
@@ -42,6 +123,11 @@ public class InMemorySkillRepository implements SkillRepository {
             this.skillGroups.add(tempSkillGroup);
         }
 
+        String[] expertiseNames = new String[]{"Financieel Administratief", "Hypotheken" ,"Facturatie/Offertes","Secutirisaties","Boekhouding","CRM","Rapportage-tools","Conversietools", "Workflow", "Logistieke Processen", "Engineering", "Bouw & Infra", "Marketing", "(semi) Overheidsinstelling", "Web/App Development"};
+
+        for (int i = 0; i < expertiseNames.length; i++) {
+            this.expertises.add(new Expertise(i, expertiseNames[i]));
+        }
     }
 
     @Override
@@ -76,5 +162,16 @@ public class InMemorySkillRepository implements SkillRepository {
         Skill skill = getSkillById(id);
         return skillGroups.stream().filter(group -> group.getSkills().contains(skill)).findFirst().orElse(null);
     }
+
+    @Override
+    public Expertise getExpertiseById(int id) {
+        return expertises.stream().filter(expertise -> expertise.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public ArrayList<Expertise> getAllExpertises() {
+        return this.expertises;
+    }
+
 
 }

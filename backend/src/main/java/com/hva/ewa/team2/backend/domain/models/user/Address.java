@@ -21,6 +21,7 @@ public class Address {
     @Getter @Setter
     private String postalCode;
 
+
     public Address(String place, String street, int houseNumber, String houseNumberAddition, String postalCode) {
         this.place = place;
         this.street = street;
@@ -31,5 +32,16 @@ public class Address {
 
     public Address() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "place='" + place + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber=" + houseNumber +
+                ", houseNumberAddition='" + houseNumberAddition + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

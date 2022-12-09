@@ -1,9 +1,8 @@
 <template>
     <div class="border-[1px] border-neutral-200 bg-neutral-0 h-[58px] items-center rounded-t-lg">
-        <div class="grid grid-cols-4 gap-2 h-full items-center justify-center col-span-2 text-center">
-            <div class="font-bold capitalize text-[14px] text-left ml-[16px]">{{ group.name }}</div>
-            <div></div>
-            <div></div>
+        <div class="h-full items-center flex justify-between col-span-2 text-center">
+            <div class="font-bold capitalize text-[14px] text-left ml-[16px]  w-full text-neutral-600">{{ group.name }}</div>
+    
             <div class="flex justify-end mr-3">
                 <div class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md h-[32px] w-[96px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center cursor-pointer"
                     @click="handleFormButton">
@@ -44,6 +43,7 @@ export default {
     data() {
         return {
             active: false,
+            user: JSON.parse(localStorage.getItem("user")),
         }
     },
     methods: {
@@ -70,8 +70,7 @@ export default {
         handleFormButton() {
             this.active = !this.active;
             if (!this.active) {
-                console.log(this.group)
-                this.skillFetchService.fetchJsonPut(`/update-user-skill-group/5`, this.group);
+                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/${this.user.id}`, "PUT", this.group);
             }
         },
         handleSkillUpdate(skillId, newValue) {
@@ -81,29 +80,3 @@ export default {
     }
 }
 </script>
-
-<!-- {
-    "id": 0,
-    "name": "Front-End",
-    "description": "This is the group for Front-End",
-    "skills": [
-        {
-            "id": 0,
-            "name": "HTML",
-            "description": "Your ability to use HTML",
-            "rating": 5
-        },
-        {
-            "id": 1,
-            "name": "CSS",
-            "description": "Your ability to use CSS",
-            "rating": 5
-        },
-        {
-            "id": 2,
-            "name": "Javascript",
-            "description": "Your ability to use Javascript",
-            "rating": 5
-        }
-    ]
-} -->

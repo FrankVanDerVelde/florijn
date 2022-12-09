@@ -1,5 +1,3 @@
-
-
 <template>
     <span class="font-bold text-[20px]">Beschikbare uren</span>
     <div v-for="day in days">

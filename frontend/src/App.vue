@@ -10,6 +10,7 @@ import {DateService} from "./Services/DateService.js";
 import FetchService from "./Services/FetchService.js";
 import {UserAdaptor} from "./Services/user-adaptor.js";
 import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegistrationRepository.js";
+import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepository.js";
 
 export default {
   name: "App",
@@ -20,8 +21,10 @@ export default {
       projectFetchService: new FetchService("projects"),
       skillFetchService: new FetchService("skills"),
       specialistFetchService: new FetchService("/specialists"),
+      userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),
-      userService: new UserAdaptor()
+      userService: new UserAdaptor(),
+      availabilityRepository: new AvailabilityRepository()
     }
   },
 }

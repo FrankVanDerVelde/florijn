@@ -1,11 +1,11 @@
 package com.hva.ewa.team2.backend.data.user;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.user.*;
-import com.hva.ewa.team2.backend.rest.user.json.JsonAdminInfo;
-import com.hva.ewa.team2.backend.rest.user.json.JsonClientInfo;
-import com.hva.ewa.team2.backend.rest.user.json.JsonSpecialistInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepository implements UserRepository {
@@ -32,11 +33,13 @@ public class InMemoryUserRepository implements UserRepository {
         this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
         this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
-        Specialist specialist = (new Specialist(5, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen"));
-        Specialist specialist2 = (new Specialist(6, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen"));
+        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
+        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
 
-        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53 ,"E", "1204EX");
-        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12 ,"", "1623AB");
+        Specialist specialist = (new Specialist(5, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
+        Specialist specialist2 = (new Specialist(6, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
+
+        this.users.add(new Client(7, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
 
         setSkills(specialist);
         setSkills(specialist2);
@@ -58,11 +61,26 @@ public class InMemoryUserRepository implements UserRepository {
             specialist.updateUserSkill(allSkills.get(i), randomRating);
         }
 
+        ArrayList<Expertise> allExpertises = skillRepo.getAllExpertises();
+
+        ArrayList<UserExpertise> userExpertises = new ArrayList<>();
+        int specialistId = specialist.getId();
+        for (Expertise expertise: allExpertises) {
+            boolean randomBool = ThreadLocalRandom.current().nextBoolean();
+            if (randomBool == true) {
+                userExpertises.add(new UserExpertise(expertise.getId(), specialistId));
+            }
+        }
+
+        System.out.println(userExpertises);
+
+        specialist.updateUserExpertise(userExpertises);
+
         users.add(specialist);
     }
 
     @Override
-    public User findUserByCredentials(String email, String password) {
+    public User getUserInfoByCredentials(String email, String password) {
         return this.users.stream()
                 .filter(user -> user.getEmail().equals(email))
                 .filter(user -> user.getPassword().equals(password))
@@ -70,7 +88,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public String findRoleByUser(User user) {
+    public String getRoleByUser(User user) {
         String role = null;
         if (user instanceof Admin) {
             role = "admin";
@@ -83,7 +101,7 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User findById(int id) {
+    public User getUserById(int id) {
         return this.users.stream()
                 .filter(user -> user.getId() == id)
                 .findFirst()
@@ -100,7 +118,7 @@ public class InMemoryUserRepository implements UserRepository {
         List<User> userList = new ArrayList<>();
 
         for (User user : this.users) {
-            String tempRole = this.findRoleByUser(user);
+            String tempRole = this.getRoleByUser(user);
 
             if (tempRole.equals(role)) {
                 userList.add(user);
@@ -110,67 +128,22 @@ public class InMemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public User saveAdmin(JsonAdminInfo body) {
-        Admin admin = new Admin(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getFirstName(), body.getLastName());
-        if (admin.getId() <= 0) {
-            admin.setId(this.users.size());
-        }
-
-        try {
-            int index = this.users.indexOf(findById(admin.getId()));
-            this.users.set(index, admin);
-        } catch (Exception e) {
-            this.users.add(admin);
-        }
-        return findById(admin.getId());
-    }
-
-    @Override
-    public User saveSpecialist(JsonSpecialistInfo body) {
-        Specialist specialist = new Specialist(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getFirstName(), body.getLastName());
-
-        if (specialist.getId() <= 0) {
-            specialist.setId(this.users.size());
-        }
-
-        try {
-            int index = this.users.indexOf(findById(specialist.getId()));
-            this.users.set(index, specialist);
-        } catch (Exception e) {
-            this.users.add(specialist);
-        }
-        return specialist;
-    }
-
-    @Override
-    public User saveClient(JsonClientInfo body) {
-        Client client = new Client(body.getId(), body.getEmail(), body.getPassword(), body.getAvatarUrl(),
-                body.getName(), body.getBannerSrc());
-
-        if (client.getId() <= 0) {
-            client.setId(this.users.size());
-        }
-
-        try {
-            int index = this.users.indexOf(findById(client.getId()));
-            this.users.set(index, client);
-        } catch (Exception e) {
-            this.users.add(client);
-        }
-        return client;
-    }
-
-    @Override
-    public User deleteById(int id) {
-        User user = findById(id);
-        this.users.remove(user);
+    public User updateUser(User user) {
+        this.users.replaceAll(u -> u.getId() == user.getId() ? user : u);
         return user;
     }
 
     @Override
-    public List<User> getSpecialists() {
-        return this.users.stream().filter(user -> user instanceof Specialist).toList();
+    public User addUser(String role, User user) {
+        user.setId(users.size());
+        users.add(user);
+        return user;
+    }
+
+    @Override
+    public User deleteUserById(int id) {
+        User user = getUserById(id);
+        this.users.remove(user);
+        return user;
     }
 }

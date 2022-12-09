@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.data.project;
 
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class InMemoryProjectRepository implements ProjectRepository {
@@ -27,23 +29,24 @@ public class InMemoryProjectRepository implements ProjectRepository {
     }
 
     private void setup() {
-        Client ingClient = (Client) userRepo.findById(4);
+        Client ingClient = (Client) userRepo.getUserById(4);
 
         Project ingProject = new Project(1,
                 "ING Banking Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
                 ingClient,
-                "/src/assets/ING-Bankieren-icoon.webp");
+                "projects/logo-1.png",
+                new ArrayList<>(), true);
 
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1), "Designer", 40));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
+        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(1), "Designer", 40));
 
         projectList.add(ingProject);
         Project KPN = new Project(2,
                 "KPN Network Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.", ingClient);
 
-        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(0), "Lead Developer", 60));
+        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.getUserById(0), "Lead Developer", 60));
 
 
         // TODO: Add more projects.
@@ -53,6 +56,27 @@ public class InMemoryProjectRepository implements ProjectRepository {
     @Override
     public List<Project> findAll() {
         return projectList;
+    }
+
+    @Override
+    public List<Project> findAll(ProjectFilter filter) {
+        return findAll(filter, "");
+    }
+
+    @Override
+    public List<Project> findAll(ProjectFilter filter, String query) {
+        if (filter == ProjectFilter.ALL) return projectList;
+
+        Stream<Project> stream = projectList.stream()
+                .filter(p -> (filter == ProjectFilter.ARCHIVED) == p.isArchived());
+        if (query != null && !query.isBlank()) {
+            final String lowercaseQuery = query.toLowerCase();
+            stream = stream.filter(p -> p.getTitle().toLowerCase().contains(lowercaseQuery) ||
+                    p.getDescription().toLowerCase().contains(lowercaseQuery)
+            );
+        }
+
+        return stream.toList();
     }
 
     @Override
@@ -96,8 +120,6 @@ public class InMemoryProjectRepository implements ProjectRepository {
         found.setLogoSrc(project.getLogoSrc());
 
         return found;
-//        // replacing all projects with the given ID with the provided project, otherwise with themselves to change nothing.
-//        this.projectList.replaceAll(p -> p.getId() == project.getId() ? project : p);
     }
 
     @Override
