@@ -1,7 +1,7 @@
 stages:
   - deploy
 
-deploy_fe:
+deploy_fe_production:
   stage: deploy
   image: node:latest
   tags:
@@ -14,11 +14,11 @@ deploy_fe:
   script:
     - apt-get update && apt-get install -y curl
     - curl -fsSL https://railway.app/install.sh | sh
-    - export RAILWAY_TOKEN=${RAILWAY_FE_TOKEN}
+    - export RAILWAY_TOKEN=${RAILWAY_FE_PRODUCTION_TOKEN}
     - cd frontend
     - railway up --service=frontend -d
 
-deploy_be:
+deploy_be_production:
   stage: deploy
   image: node:latest
   tags:
@@ -31,6 +31,43 @@ deploy_be:
   script:
     - apt-get update && apt-get install -y curl
     - curl -fsSL https://railway.app/install.sh | sh
-    - export RAILWAY_TOKEN=${RAILWAY_BE_TOKEN}
+    - export RAILWAY_TOKEN=${RAILWAY_BE_PRODUCTION_TOKEN}
+    - cd backend
+    - railway up --service=backend -d
+
+
+
+
+deploy_fe_development:
+  stage: deploy
+  image: node:latest
+  tags:
+    - hva
+  only:
+    refs:
+      - development
+    changes:
+      - "frontend/**/*"
+  script:
+    - apt-get update && apt-get install -y curl
+    - curl -fsSL https://railway.app/install.sh | sh
+    - export RAILWAY_TOKEN=${RAILWAY_FE_DEVELOPMENT_TOKEN}
+    - cd frontend
+    - railway up --service=frontend -d
+
+deploy_be_development:
+  stage: deploy
+  image: node:latest
+  tags:
+    - hva
+  only:
+    refs:
+      - development
+    changes:
+      - "backend/**/*"
+  script:
+    - apt-get update && apt-get install -y curl
+    - curl -fsSL https://railway.app/install.sh | sh
+    - export RAILWAY_TOKEN=${RAILWAY_BE_DEVELOPMENT_TOKEN}
     - cd backend
     - railway up --service=backend -d
