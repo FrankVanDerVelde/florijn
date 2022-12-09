@@ -49,6 +49,7 @@ export default {
 .side-bar {
   margin-top: 71px;
   margin-right: 80px;
+  width: 200px;
 }
 
 </style>
