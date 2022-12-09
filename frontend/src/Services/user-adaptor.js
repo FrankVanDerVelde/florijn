@@ -2,7 +2,7 @@ export class UserAdaptor {
     #resourcesUrl;
 
     constructor() {
-        this.#resourcesUrl = "http://localhost:8086";
+        this.#resourcesUrl = import.meta.env.VITE_VUE_APP_API_URL;
         console.log("Created UserAdaptor " + this.#resourcesUrl);
     }
 

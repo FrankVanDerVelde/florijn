@@ -3,7 +3,7 @@ export default class FetchService {
     #domain;
     #endpoint;
 
-    constructor(endpoint, domain = 'http://localhost:8086') {
+    constructor(endpoint, domain = import.meta.env.VITE_VUE_APP_API_URL) {
         this.#endpoint = endpoint;
         this.#domain = domain;
     }
