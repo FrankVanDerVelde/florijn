@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px]">
-    <p class="text-xl font-semibold mb-2 px-[16px]">Nieuwe activiteit</p>
+    <p class="text-xl font-semibold mb-2 px-[16px]">Beschikbaarheid</p>
     <hr class="text-neutral-300">
 
     <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
@@ -17,6 +17,7 @@
       <div class="flex gap-2 justify-center">
         <button @click="$emit('activity-cancel-clicked')" class="secondary-button grow">Annuleren</button>
         <button @click="handleSaveTapped" class="primary-button grow">Opslaan</button>
+        <button v-if="availability != null" @click="handleDeleteTapped" class="destructive-button grow">Verwijderen</button>
       </div>
     </form>
   </div>
@@ -28,9 +29,11 @@ import moment from "moment";
 
 export default {
   name: "NewAvailabilityPopup",
-  inject: ['projectFetchService', 'hourRegistrationRepository'],
-  emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked'],
+  inject: ['projectFetchService', 'availabilityRepository', 'dateService'],
+  emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked', 'availability-changed'],
   props: {
+    dayIndex: Number,
+    weekIndex: Number,
     availability: Availability
   },
   data() {
@@ -38,11 +41,11 @@ export default {
       projects: [],
       from: null,
       to: null,
-      description: null
+      description: null,
+      userId: Number(localStorage.getItem('id'))
     }
   },
-  async created() {
-    await this.loadProjects();
+  created() {
     if (this.availability) {
       this.from = moment(this.availability.from).format('HH:mm');
       this.to = moment(this.availability.to).format('HH:mm');
@@ -50,46 +53,45 @@ export default {
   },
 
   methods: {
-    async loadProjects() {
-      this.projects = await this.projectFetchService.fetchJson('/');
-      console.log(this.projects);
-    },
+
     async handleSaveTapped() {
-      if (this.hourRegistration) {
-        await this.updateHourRegistration();
+      if (this.availability != null) {
+        await this.updateAvailability();
       } else {
-        await this.createNewHR()
+        await this.createNewAvailability();
       }
     },
 
-    async createNewHR() {
+    async createNewAvailability() {
       try {
-        await this.hourRegistrationRepository
-            .create(
-                this.selectedProjectId,
-                0,
-                this.convertTimeToDateString(this.from),
-                this.convertTimeToDateString(this.to),
-                this.description
-            );
-        this.$emit('activity-added');
+        const date = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex).format('yyyy-MM-DD');
+        const from = moment(this.from, 'hh:mm').format('HH:mm');
+        const to = moment(this.to, 'hh:mm').format('HH:mm');
+        let result = await this.availabilityRepository.createAvailability(
+            this.userId,
+            date,
+            from,
+            to
+        );
+        console.log(result);
+
+        this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
       }
     },
 
-    async updateHourRegistration() {
+    async updateAvailability() {
+      console.log('updateAvailability');
       try {
-        await this.hourRegistrationRepository
-            .update(
-                this.hourRegistration.id,
-                this.hourRegistration.project.id,
-                0,
-                this.convertTimeToDateString(this.from),
-                this.convertTimeToDateString(this.to),
-                this.description
-            );
-        this.$emit('activity-added');
+        const date = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex)
+        const formattedDate = moment(date).format('yyyy-MM-DD');
+        const from = moment(this.from, 'HH:mm').format('HH:mm');
+        const to = moment(this.to, 'HH:mm').format('HH:mm');
+        console.log([date, from, to]);
+        await this.availabilityRepository.updateAvailability(this.userId, formattedDate, from, to);
+
+        this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
       }
@@ -97,7 +99,20 @@ export default {
 
     convertTimeToDateString(timeStringInHoursMinutes) {
       return moment(timeStringInHoursMinutes, 'hh:mm').format('yyyy-MM-DD HH:mm');
-    }
+    },
+
+    async handleDeleteTapped() {
+      try {
+        await this.availabilityRepository.deleteAvailability(this.availability.id);
+        this.notifyAvailabilityChanged()
+      } catch (e) {
+        console.error(e);
+      }
+    },
+
+    notifyAvailabilityChanged() {
+      this.$emit('availability-changed');
+    },
   }
 }
 </script>

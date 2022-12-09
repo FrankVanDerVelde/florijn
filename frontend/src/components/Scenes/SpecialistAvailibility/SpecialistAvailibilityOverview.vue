@@ -4,7 +4,13 @@
     <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
-        <NewAvailabilityPopup :availability="selectedAvailability" @activity-added="handleActivityAdded" @activity-cancel-clicked="showingModel = false"/>
+        <NewAvailabilityPopup
+            :dayIndex="addingAvailabilityForDayIndex"
+            :week-index="weekNumber"
+            :availability="selectedAvailability"
+            @availability-changed="handleAvailabilityChanged"
+            @activity-cancel-clicked="showingModel = false"
+        />
       </div>
     </div>
 
@@ -13,7 +19,10 @@
       <div class="flex flex-col gap-[11px]">
         <div class="flex justify-between w-full">
           <p class="text-3xl text-neutral-400 font-medium ">{{ year }}</p>
-          <button @click="handleThisWeekClicked" class="primary-button">Deze week</button>
+          <div class="flex gap-3">
+            <button @click="handleCopyToNextWeek" class="primary-button">Kopieer naar volgende week</button>
+            <button @click="handleThisWeekClicked" class="primary-button">Deze week</button>
+          </div>
         </div>
 
         <div class="flex justify-center gap-[11px] pt-2">
@@ -33,7 +42,7 @@
               </div>
               <div class="flex flex-col gap-3 pt-4">
                 <div v-for="availability in this.availability.getAvailabilities(day.weekDayIndex)">
-                  <AvailabilitySlot :availability="availability" @click="handleAvailabilityClicked(availability)"/>
+                  <AvailabilitySlot :availability="availability"  @click="handleAvailabilityClicked(availability)"/>
                 </div>
 
                 <div v-if="this.availability.getAvailabilities(day.weekDayIndex).length === 0">
@@ -41,7 +50,7 @@
                 </div>
 
                 <div
-                    @click="this.showingModel = true"
+                    @click="handleAddAvailabilityClicked(day.weekDayIndex)"
                     class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-center cursor-pointer hover:bg-primary-100"
                 >+ Toevoegen
                 </div>
@@ -78,7 +87,9 @@ export default {
       week: [],
       availability: new WeekAvailability(),
       selectedAvailability: null,
+      addingAvailabilityForDayIndex: null,
       weekNumber: 0,
+      weekDelta: 0,
       year: "",
       showingModel: false,
       userId: Number(localStorage.id)
@@ -106,11 +117,12 @@ export default {
     async loadWeekAvailability() {
       const weekAvailability = await this.fetchWeekAvailability();
       this.sortAvailabilityPerDay(weekAvailability);
+      console.log(this.availability);
     },
 
     async fetchWeekAvailability() {
-      let weekDelta = this.weekNumber - this.dateService.currentWeekOfYear();
-      return await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.userId, weekDelta);
+      console.log(this.weekDelta);
+      return await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.userId, this.weekDelta);
     },
 
     sortAvailabilityPerDay(weekAvailability) {
@@ -127,18 +139,24 @@ export default {
 
     async selectThisWeek() {
       this.weekNumber = this.dateService.currentWeekOfYear();
+      this.weekDelta = 0;
       this.loadWeekBar();
       await this.loadWeekAvailability();
     },
 
-    handleNextWeekClicked() {
-      this.weekNumber += 1;
-      this.loadWeekBar();
+    async handleNextWeekClicked() {
+      await this.loadWeekAvailabilityDelta(+1);
     },
 
-    handlePrevWeekCLicked() {
-      this.weekNumber -= 1;
+    async handlePrevWeekCLicked() {
+      await this.loadWeekAvailabilityDelta(-1);
+    },
+
+    async loadWeekAvailabilityDelta(delta) {
+      this.weekNumber += delta;
+      this.weekDelta += delta;
       this.loadWeekBar();
+      await this.loadWeekAvailability();
     },
 
     handleAddActivityClicked() {
@@ -149,16 +167,31 @@ export default {
       this.showingModel = false
     },
 
-    async handleDeleteHourRegistrationClicked(id) {
-    },
-
-    async handleActivityAdded() {
-      this.showingModel = false;
+    async handleAddAvailabilityClicked(dayIndex) {
+      console.log(`handleAddAvailabilityClicked: ${dayIndex}`);
+      this.addingAvailabilityForDayIndex = dayIndex;
+      this.showingModel = true;
     },
 
     handleAvailabilityClicked(availability) {
       this.selectedAvailability = availability;
       this.showingModel = true;
+    },
+
+    async handleAvailabilityChanged() {
+      await this.loadWeekAvailability();
+      this.showingModel = false;
+    },
+
+    async handleCopyToNextWeek() {
+      try {
+        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, 1)
+        this.weekNumber += 1;
+        this.sortAvailabilityPerDay(weekAvailability);
+        this.loadWeekBar()
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 }

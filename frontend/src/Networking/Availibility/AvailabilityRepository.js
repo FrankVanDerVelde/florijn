@@ -1,5 +1,6 @@
 import FetchService from "../../Services/FetchService.js";
 import {Availability} from "../../components/models/Availability.js";
+import {HttpMethods} from "../HttpMethods.js";
 
 export class AvailabilityRepository {
 
@@ -17,7 +18,7 @@ export class AvailabilityRepository {
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
         try {
-            let results = await this.fetcher.fetchJson(`/users/${userId}/availability`);
+            let results = await this.fetcher.fetchJson(`/users/${userId}/availability?weekNumber=${weekNumber}`);
             return results.map(Availability.fromJSON);
         } catch (e) {
             console.error(e);
@@ -35,20 +36,24 @@ export class AvailabilityRepository {
      */
     async createAvailability(userId, date, fromTime, toTime) {
         try {
+            let body = {
+                date: date,
+                from: fromTime,
+                to: toTime
+            };
+            console.log(body);
             let result = await this.fetcher.fetchJsonMethod(
                 `/users/${userId}/availability`,
                 HttpMethods.POST,
-                {
-                    date: date,
-                    from: fromTime,
-                    to: toTime
-                }
+                body
             );
+
+            console.log(result);
 
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
-            return e;
+            throw e;
         }
     }
 
@@ -62,19 +67,21 @@ export class AvailabilityRepository {
      */
     async updateAvailability(id, date, fromTime, toTime) {
         try {
+            let body = {
+                date: date,
+                from: fromTime,
+                to: toTime
+            };
+            console.log(`updateAvailability body: ${body}`);
             let result = await this.fetcher.fetchJsonMethod(
                 `/availability/${id}/update`,
                 HttpMethods.PUT,
-                {
-                    date: date,
-                    from: fromTime,
-                    to: toTime
-                }
+                body
             );
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
-            return e;
+            throw e;
         }
     }
 
@@ -89,7 +96,7 @@ export class AvailabilityRepository {
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
-            return e;
+            throw e;
         }
     }
 
@@ -104,7 +111,20 @@ export class AvailabilityRepository {
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
-            return e;
+            throw e;
+        }
+    }
+
+    async copyToWeek(userId, weekNumber) {
+        try {
+            let result = await this.fetcher.fetchJsonMethod(
+                `/users/${userId}/availability/weeks/${weekNumber}/set-on-next-week`,
+                HttpMethods.POST
+            );
+            return result.map(Availability.fromJSON);
+        } catch (e) {
+            console.log(e);
+            throw e;
         }
     }
 }

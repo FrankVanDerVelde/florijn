@@ -11,17 +11,17 @@ public class CreateAvailabilityRequestBody {
 
     @Getter
     @Setter
-//    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
 
     @Getter
     @Setter
-//    @JsonFormat(pattern="HH:mm")
+    @JsonFormat(pattern="HH:mm")
     private LocalTime from;
 
     @Getter
     @Setter
-//    @JsonFormat(pattern="HH:mm")
+    @JsonFormat(pattern="HH:mm")
     private LocalTime to;
 
     public CreateAvailabilityRequestBody(LocalDate date, LocalTime from, LocalTime to) {

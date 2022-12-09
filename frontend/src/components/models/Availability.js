@@ -18,6 +18,7 @@ export class Availability {
      * @param item as JSON from the server.
      */
     static fromJSON(item) {
+        console.log(item);
         let year = item.date[0];
         let month = item.date[1] - 1;
         let day = item.date[2];
