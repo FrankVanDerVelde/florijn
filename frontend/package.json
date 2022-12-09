@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "npx http-server -p 8081 ./dist",
+    "start": "npx http-server -p ${PORT} ./dist",
     "dev": "vite",
     "dev-host": "vite --host",
     "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch",
-    "build": "vite build",
+    "build": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css && vite build",
     "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "preview": "vite preview"
   },
