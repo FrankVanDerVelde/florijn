@@ -8,6 +8,7 @@
     "dev-host": "vite --host",
     "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch",
     "build": "vite build",
+    "start": "npx http-server -p 8081 ./dist",
     "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "preview": "vite preview"
   },

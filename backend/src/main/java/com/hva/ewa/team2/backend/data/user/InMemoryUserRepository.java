@@ -1,6 +1,5 @@
 package com.hva.ewa.team2.backend.data.user;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
@@ -13,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
+@Deprecated
 @Repository
-public class InMemoryUserRepository implements UserRepository {
+public class InMemoryUserRepository implements MemoryUserRepository {
 
     private final ArrayList<User> users = new ArrayList<>();
 

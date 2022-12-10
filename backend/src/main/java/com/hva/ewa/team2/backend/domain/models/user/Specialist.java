@@ -7,8 +7,7 @@ import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,14 +28,18 @@ public class Specialist extends User {
 
     @Getter
     @Setter
+    @OneToMany
     private List<UserSkill> skills;
 
     @Getter
     @Setter
+    @OneToMany
     private List<UserExpertise> expertises;
 
     @Getter
     @Setter
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Address address;
 
     public Specialist() {

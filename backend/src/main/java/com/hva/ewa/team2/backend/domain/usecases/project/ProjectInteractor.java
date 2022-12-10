@@ -5,7 +5,7 @@ import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
@@ -32,7 +32,7 @@ import java.util.Optional;
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
 
-    private final UserRepository userRepo;
+    private final MemoryUserRepository userRepo;
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
     private final DateServiceLogic dateService;
@@ -40,7 +40,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
     @Autowired
     public ProjectInteractor(ProjectRepository projectRepository,
-                             UserRepository userRepo,
+                             MemoryUserRepository userRepo,
                              HourRegistrationRepository hourRegistrationRepo,
                              DateServiceLogic dateService,
                              AssetService assetService) {

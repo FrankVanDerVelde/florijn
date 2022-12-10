@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.domain.usecases.auth;
 
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthInteractor implements AuthBusinessLogic {
 
-    private final UserRepository userRepo;
+    private final MemoryUserRepository userRepo;
 
     @Autowired
-    public AuthInteractor(UserRepository userRepo) {
+    public AuthInteractor(MemoryUserRepository userRepo) {
         this.userRepo = userRepo;
     }
 

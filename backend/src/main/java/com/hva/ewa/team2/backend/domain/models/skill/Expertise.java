@@ -3,6 +3,9 @@ package com.hva.ewa.team2.backend.domain.models.skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Expertise {
 
         @Getter
@@ -15,6 +18,7 @@ public class Expertise {
 //        @Getter @Setter
 //        private String description;
 
+    public Expertise() {}
 
     public Expertise(int id, String name) {
         this.id = id;
