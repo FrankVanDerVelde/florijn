@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.*;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -16,12 +16,12 @@ import java.util.List;
 @Component
 public class SkillInteractor implements SkillBusinessLogic {
 
-    private final UserRepository userRepo;
+    private final MemoryUserRepository userRepo;
 
     private final SkillRepository skillRepo;
     
     @Autowired
-    public SkillInteractor(UserRepository userRepo, SkillRepository skillRepo) {
+    public SkillInteractor(MemoryUserRepository userRepo, SkillRepository skillRepo) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
     }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
-import com.hva.ewa.team2.backend.rest.user.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +25,12 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<Iterable<User>> getAllUsers() {
         return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
     }
 
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
+    public ResponseEntity<List<User>> getUsersByRole(@PathVariable User.Role role) {
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
     }
 

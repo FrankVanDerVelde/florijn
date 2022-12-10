@@ -3,10 +3,18 @@ package com.hva.ewa.team2.backend.domain.models.skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class UserExpertise {
 
     @Getter
     @Setter
+    @Id
+    @GeneratedValue
     private int id;
 
     @Getter
