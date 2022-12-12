@@ -1,9 +1,18 @@
 <template>
   <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px]">
-    <p class="text-xl font-semibold mb-2 px-[16px]">Beschikbaarheid</p>
+    <div class="mb-2 px-[16px]">
+      <p class="text-xl font-semibold ">Beschikbaarheid</p>
+      <p class="text-neutral-600 font-medium">{{this.momentDate.format('LL')}}</p>
+    </div>
     <hr class="text-neutral-300">
 
     <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
+
+      <div class="bg-app_indigo-50 p-2 rounded" v-if="holidayName">
+        <p class="font-bold text-app_indigo-700">Vrije dag</p>
+        <p class="text-app_indigo-700">deze dag is het {{this.holidayName}}</p>
+      </div>
+
       <div class="form-row">
         <label class="font-semibold">Van</label>
         <input v-model="from" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
@@ -29,7 +38,7 @@ import moment from "moment";
 
 export default {
   name: "NewAvailabilityPopup",
-  inject: ['projectFetchService', 'availabilityRepository', 'dateService'],
+  inject: ['projectFetchService', 'availabilityRepository', 'dateService', 'holidays'],
   emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked', 'availability-changed'],
   props: {
     dayIndex: Number,
@@ -42,17 +51,26 @@ export default {
       from: null,
       to: null,
       description: null,
+      momentDate: null,
+      holidayName: null,
       userId: Number(localStorage.getItem('id'))
     }
   },
   created() {
+    this.momentDate = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex).startOf('day');
     if (this.availability) {
       this.from = moment(this.availability.from).format('HH:mm');
       this.to = moment(this.availability.to).format('HH:mm');
     }
+    this.loadHolidayEvent();
   },
 
   methods: {
+
+    loadHolidayEvent() {
+      const holidays = this.holidays.isHoliday(this.momentDate.toDate());
+      this.holidayName = holidays[0]?.name;
+    },
 
     async handleSaveTapped() {
       if (this.availability != null) {
@@ -64,17 +82,11 @@ export default {
 
     async createNewAvailability() {
       try {
-        const date = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex).format('yyyy-MM-DD');
+        const date = this.momentDate.format('yyyy-MM-DD')
         const from = moment(this.from, 'hh:mm').format('HH:mm');
         const to = moment(this.to, 'hh:mm').format('HH:mm');
-        let result = await this.availabilityRepository.createAvailability(
-            this.userId,
-            date,
-            from,
-            to
-        );
+        let result = await this.availabilityRepository.createAvailability(this.userId, date, from, to);
         console.log(result);
-
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
