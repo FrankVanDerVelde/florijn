@@ -1,34 +1,37 @@
 <template>
-  <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px]">
+  <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px] w-[320px]">
     <div class="mb-2 px-[16px]">
       <p class="text-xl font-semibold ">Beschikbaarheid</p>
       <p class="text-neutral-600 font-medium">{{this.momentDate.format('LL')}}</p>
     </div>
     <hr class="text-neutral-300">
 
-    <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
+    <div class="pt-4 px-[16px]">
+      <form @submit.stop class="flex flex-col gap-4 ">
 
-      <div class="bg-app_indigo-50 p-2 rounded" v-if="holidayName">
-        <p class="font-bold text-app_indigo-700">Vrije dag</p>
-        <p class="text-app_indigo-700">deze dag is het {{this.holidayName}}</p>
-      </div>
+        <div class="bg-app_indigo-50 p-2 rounded" v-if="holidayName">
+          <p class="font-bold text-app_indigo-700">Vrije dag</p>
+          <p class="text-app_indigo-700">deze dag is het {{this.holidayName}}</p>
+        </div>
 
-      <div class="form-row">
-        <label class="font-semibold">Van</label>
-        <input v-model="from" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
-      </div>
+        <div class="form-row">
+          <label class="font-semibold">Van</label>
+          <input v-model="from" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
+        </div>
 
-      <div class="form-row">
-        <label class="font-semibold">Tot</label>
-        <input v-model="to" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
-      </div>
+        <div class="form-row">
+          <label class="font-semibold">Tot</label>
+          <input v-model="to" type="time" class="border border-neutral-300 p-2 rounded rounded-[4px]">
+        </div>
 
-      <div class="flex gap-2 justify-center">
-        <button @click="$emit('activity-cancel-clicked')" class="secondary-button grow">Annuleren</button>
-        <button @click="handleSaveTapped" class="primary-button grow">Opslaan</button>
-        <button v-if="availability != null" @click="handleDeleteTapped" class="destructive-button grow">Verwijderen</button>
-      </div>
-    </form>
+        <div class="flex gap-2 justify-center">
+          <button @click="$emit('activity-cancel-clicked')" class="secondary-button grow">Annuleren</button>
+          <button @click="handleSaveTapped" class="primary-button grow">Opslaan</button>
+          <button v-if="availability != null" @click="handleDeleteTapped" class="destructive-button grow">Verwijderen</button>
+        </div>
+      </form>
+      <p v-if="didEncounterError" class="text-app_red-500 pt-2">Er is iets mis gegaan bij het opslaan van je verzoek, probeer het opnieuw.</p>
+    </div>
   </div>
 </template>
 
@@ -53,6 +56,7 @@ export default {
       description: null,
       momentDate: null,
       holidayName: null,
+      didEncounterError: false,
       userId: Number(localStorage.getItem('id'))
     }
   },
@@ -73,10 +77,15 @@ export default {
     },
 
     async handleSaveTapped() {
-      if (this.availability != null) {
-        await this.updateAvailability();
-      } else {
-        await this.createNewAvailability();
+      this.didEncounterError = false;
+      try {
+        if (this.availability != null) {
+          await this.updateAvailability();
+        } else {
+          await this.createNewAvailability();
+        }
+      } catch (e) {
+        this.didEncounterError = true;
       }
     },
 
@@ -90,6 +99,7 @@ export default {
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
+        throw e;
       }
     },
 
@@ -105,6 +115,7 @@ export default {
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
+        throw e;
       }
     },
 

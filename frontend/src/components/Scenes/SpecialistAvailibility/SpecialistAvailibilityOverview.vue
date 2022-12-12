@@ -20,7 +20,10 @@
         <div class="flex justify-between w-full">
           <p class="text-3xl text-neutral-400 font-medium ">{{ year }}</p>
           <div class="flex gap-3">
-            <button @click="handleCopyToNextWeek" class="primary-button">Kopieer naar volgende week</button>
+            <button @click="handleCopyToNextWeek" class="secondary-button">
+              <font-awesome-icon icon="fa-solid fa-paste" class="pr-2" />
+              Kopieer naar volgende week
+            </button>
             <button @click="handleThisWeekClicked" class="primary-button">Deze week</button>
           </div>
         </div>
