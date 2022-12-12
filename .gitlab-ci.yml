@@ -53,7 +53,6 @@ deploy_fe_development:
     - curl -fsSL https://railway.app/install.sh | sh
     - export RAILWAY_TOKEN=${RAILWAY_FE_DEVELOPMENT_TOKEN}
     - cd frontend
-    - railway environment development
     - railway up --service=frontend -d
 
 deploy_be_development:
@@ -71,5 +70,4 @@ deploy_be_development:
     - curl -fsSL https://railway.app/install.sh | sh
     - export RAILWAY_TOKEN=${RAILWAY_BE_DEVELOPMENT_TOKEN}
     - cd backend
-    - railway environment Development
     - railway up --service=backend -d
