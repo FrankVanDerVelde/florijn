@@ -63,7 +63,7 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic{
     }
 
     @Override
-    public Availability handleDeleteAvailability(int id) throws Exception {
+    public Optional<Availability> handleDeleteAvailability(int id) throws Exception {
         Optional<Availability> availability = availabilityRepository.fetchAvailabilityById(id);
 
         if (availability.isEmpty()) {
