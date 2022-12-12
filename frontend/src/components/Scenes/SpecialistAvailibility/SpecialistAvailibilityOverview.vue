@@ -1,8 +1,8 @@
 <template>
   <div>
 
-    <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
-      <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
+    <div v-if="this.showingModel" class="top-0 bottom-0 right-0 left-0 absolute">
+      <div @click.="console.log('ckicled')" class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
         <NewAvailabilityPopup
             :day-index="addingAvailabilityForDayIndex"
@@ -99,7 +99,6 @@ export default {
     }
   },
   async created() {
-    console.log(`User id: ${this.userId}`)
     this.weekNumber = this.dateService.currentWeekOfYear();
     this.loadWeekBar();
     await this.loadWeekAvailability();
@@ -120,11 +119,9 @@ export default {
     async loadWeekAvailability() {
       const weekAvailability = await this.fetchWeekAvailability();
       this.sortAvailabilityPerDay(weekAvailability);
-      console.log(this.availability);
     },
 
     async fetchWeekAvailability() {
-      console.log(this.weekDelta);
       return await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.userId, this.weekDelta);
     },
 
@@ -171,8 +168,8 @@ export default {
     },
 
     async handleAddAvailabilityClicked(dayIndex) {
-      console.log(`handleAddAvailabilityClicked: ${dayIndex}`);
       this.addingAvailabilityForDayIndex = dayIndex;
+      this.selectedAvailability = null;
       this.showingModel = true;
     },
 
@@ -189,7 +186,7 @@ export default {
 
     async handleCopyToNextWeek() {
       try {
-        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, 1)
+        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, 1);
         this.weekNumber += 1;
         this.sortAvailabilityPerDay(weekAvailability);
         this.loadWeekBar()
