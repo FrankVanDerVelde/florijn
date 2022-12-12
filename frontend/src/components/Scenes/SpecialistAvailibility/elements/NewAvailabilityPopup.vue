@@ -84,13 +84,12 @@ export default {
     async updateAvailability() {
       console.log('updateAvailability');
       try {
-        const date = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex)
-        const formattedDate = moment(date).format('yyyy-MM-DD');
+        console.log(this.availability);
+        const date = moment(this.availability.date).format('yyyy-MM-DD');
         const from = moment(this.from, 'HH:mm').format('HH:mm');
         const to = moment(this.to, 'HH:mm').format('HH:mm');
         console.log([date, from, to]);
-        await this.availabilityRepository.updateAvailability(this.userId, formattedDate, from, to);
-
+        await this.availabilityRepository.updateAvailability(this.availability.id, date, from, to);
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
