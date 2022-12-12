@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.data.project;
 
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
@@ -18,10 +18,10 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
     private ArrayList<Project> projectList;
 
-    private final UserRepository userRepo;
+    private final MemoryUserRepository userRepo;
 
     @Autowired
-    public InMemoryProjectRepository(UserRepository userRepo) {
+    public InMemoryProjectRepository(MemoryUserRepository userRepo) {
         this.userRepo = userRepo;
         this.projectList = new ArrayList<>();
 

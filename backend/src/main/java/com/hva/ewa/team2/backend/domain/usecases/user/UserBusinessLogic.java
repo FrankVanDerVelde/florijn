@@ -9,9 +9,9 @@ import java.util.List;
 public interface UserBusinessLogic {
     User getUserById(int id);
 
-    List<User> getAllUsers();
+    Iterable<User> getAllUsers();
 
-    List<User> getUsersByRole(String role);
+    List<User> getUsersByRole(User.Role role);
 
     User updateUser(int id, JsonNode body);
 

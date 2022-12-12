@@ -39,7 +39,7 @@ export default {
     displayName(lastName = false) {
       // user is a client
       if ('name' in this.user) {
-        return this.participant.user.name;
+        return this.user.name;
       }
 
       // user is a specialist/admin
