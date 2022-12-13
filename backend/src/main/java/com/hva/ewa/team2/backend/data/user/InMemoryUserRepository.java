@@ -40,7 +40,10 @@ public class InMemoryUserRepository implements MemoryUserRepository {
         this.users.add(new Client(8, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
 
         setSkills(specialist);
+        setSkills(specialist1);
         setSkills(specialist2);
+        setSkills(specialist3);
+        setSkills(specialist4);
     }
 
     public void setSkills(Specialist specialist) {
@@ -48,7 +51,7 @@ public class InMemoryUserRepository implements MemoryUserRepository {
         ArrayList<Skill> allSkills = skillRepo.findAllSkills();
 
         // Shuffle skills
-        Collections.shuffle(allSkills);
+//        Collections.shuffle(allSkills);
 
         // Get the size of half the list
         int halfListSize = (int) Math.ceil((double) allSkills.size() / 2);
