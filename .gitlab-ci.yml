@@ -43,9 +43,9 @@ deploy_fe_development:
   script:
     - npm install --global vercel
     - cd frontend
-    - vercel pull --yes --environment=development --token=bah3DNCH0ZwaH5SvlVV44aX7
-    - vercel build --token=bah3DNCH0ZwaH5SvlVV44aX7
-    - vercel deploy --prebuilt --token=bah3DNCH0ZwaH5SvlVV44aX7
+    - vercel pull --yes --environment=development --token=${VERCEL_TOKEN}
+    - vercel build --token=${VERCEL_TOKEN}
+    - vercel deploy --prebuilt --token=${VERCEL_TOKEN}
 
 deploy_be_development:
   stage: deploy
