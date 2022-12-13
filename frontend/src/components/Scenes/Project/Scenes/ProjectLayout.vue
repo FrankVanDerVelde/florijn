@@ -75,8 +75,6 @@ export default {
       this.project = this.projectInfo ?? {};
     }
 
-    console.log("layout:", this.project)
-
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
       this.$router.redirect({name: 'projects'});

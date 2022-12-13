@@ -28,7 +28,6 @@ export default {
 
 <style scoped>
 a {
-  font-family: 'Roboto', 'Arial', sans-serif;
   color: var(--neutral-900);
   font-weight: 500;
   font-size: 16px;

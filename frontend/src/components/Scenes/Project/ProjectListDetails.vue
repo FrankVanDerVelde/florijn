@@ -1,17 +1,17 @@
 <template>
-  <div class="container main-container rounded-xl">
+  <div class="w-full main-container rounded-xl">
     <router-link :to="{name: 'project-overview', params: {projectId: project.id}}"
                  class="flex mt-4 p-2 w-full justify-center">
 
       <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-      <div class="flex flex-col justify-between container ml-4">
+      <div class="flex flex-col justify-between w-full ml-4">
         <div class="flex flex-col mb-3">
           <div class="font-bold">{{ project.title }}</div>
           <div class="font-semibold text-neutral-500">{{ project.description }}</div>
         </div>
 
-        <div class="container flex justify-between m-1">
+        <div class="w-full flex justify-between m-1">
 
           <div>
             <AvatarStack :participants="this.project.participants" :client="this.project.client"/>
@@ -30,11 +30,10 @@
 
 <script>
 import Asset from "../../Common/Asset.vue";
-import Stats from "./Stats.vue";
 import AvatarStack from "./AvatarStack.vue";
 
 export default {
-  components: {Stats, Asset, AvatarStack},
+  components: {Asset, AvatarStack},
   name: "ProjectListDetails",
   inject: ["fetchService"],
 

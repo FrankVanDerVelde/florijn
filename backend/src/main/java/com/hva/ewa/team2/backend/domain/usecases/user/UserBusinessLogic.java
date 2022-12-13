@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserBusinessLogic {
     User getUserById(int id);
 
-    Iterable<User> getAllUsers();
+    List<User> getAllUsers();
 
     List<User> getUsersByRole(User.Role role);
 

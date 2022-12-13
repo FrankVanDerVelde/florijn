@@ -59,13 +59,11 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic{
             throw new Exception("Date is in the past");
         }
 
-
-
         return availabilityRepository.createAvailability(request);
     }
 
     @Override
-    public Availability handleDeleteAvailability(int id) throws Exception {
+    public Optional<Availability> handleDeleteAvailability(int id) throws Exception {
         Optional<Availability> availability = availabilityRepository.fetchAvailabilityById(id);
 
         if (availability.isEmpty()) {
@@ -79,9 +77,8 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic{
         if (checkIfAvailabilityIsInThePast(availability.get().getDate())) {
             throw new Exception("Date is in the past");
         }
+
         return availabilityRepository.deleteAvailability(id);
-
-
     }
 
     @Override
@@ -135,7 +132,6 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic{
         int week = LocalDate.now().get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
         if (week > 0) {
             week = week + weekNumber;
-            ;
         } else if (week < 0) {
             week = week - weekNumber;
         } else {

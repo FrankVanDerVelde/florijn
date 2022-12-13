@@ -65,8 +65,8 @@ public class AvailabilityController {
 
     @DeleteMapping(path = "availability/{id}/delete")
     public ResponseEntity<Availability> deleteAvailability(@PathVariable int id) throws Exception {
-        Availability availability = interactor.handleDeleteAvailability(id);
-        return availability != null ? ResponseEntity.ok(availability) : ResponseEntity.notFound().build();
+        Optional<Availability> availability = interactor.handleDeleteAvailability(id);
+        return availability.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping(path = "/availability/{id}")
