@@ -7,7 +7,7 @@
 
       <div class="mt-2 sm:mt-4 w-full">
         <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <ProjectHeader :project="project" :edit-button="!preview && userId >= 2"/>
+          <ProjectHeader :project="project" :edit-button="!preview && hasAdminPrivileges"/>
 
           <router-view v-if="!preview && project != null" :project="project"/>
         </div>
@@ -33,8 +33,15 @@ export default {
   },
 
   computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user'));
+    },
     userId() {
-      return Number.parseInt(localStorage.getItem('userId'));
+      return Number.parseInt(this.user.id);
+    },
+    hasAdminPrivileges() {
+      console.log(this.project);
+      return this.project.client?.id === this.user?.id || this.user?.role === "ADMIN";
     }
   },
 
@@ -62,13 +69,13 @@ export default {
   },
 
   async created() {
-    localStorage.setItem('userId', this.$route.query.userId ?? 2);
-
     if (this.projectInfo == null && this.projectId >= 0) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
     } else {
       this.project = this.projectInfo ?? {};
     }
+
+    console.log("layout:", this.project)
 
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {

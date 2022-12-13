@@ -3,14 +3,26 @@ package com.hva.ewa.team2.backend.domain.models.skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+
+@Entity
 public class UserSkill {
 
-    @Getter @Setter
+    @Id
+    @GeneratedValue
+    @Getter
+    @Setter
     private int id;
-    @Getter @Setter
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "skill_id")
     private Skill skill;
-    @Getter @Setter
-    private  int rating;
+
+    @Getter
+    @Setter
+    private int rating;
 
     public UserSkill() {
     }
@@ -20,6 +32,7 @@ public class UserSkill {
         this.skill = skill;
         this.rating = rating;
     }
+
     public void setRating(int rating) {
         this.rating = rating;
     }

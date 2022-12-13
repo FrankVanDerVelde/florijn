@@ -2,7 +2,7 @@ package com.hva.ewa.team2.backend.data.Availability;
 
 
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -22,10 +22,10 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     private List<Availability> availabilities;
     private final DateServiceLogic dateService;
 
-    private final UserRepository userRepository;
+    private final MemoryUserRepository userRepository;
 
     @Autowired
-    InMemoryAvailabilityRepository(DateServiceLogic dateService, UserRepository userRepository) {
+    InMemoryAvailabilityRepository(DateServiceLogic dateService, MemoryUserRepository userRepository) {
         this.dateService = dateService;
         this.userRepository = userRepository;
         this.availabilities = new ArrayList<>();
