@@ -102,6 +102,14 @@
     @apply button bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700;
 }
 
+.primary-button-disabled {
+    @apply button bg-primary-300 text-neutral-50 font-semibold;
+}
+
+.destructive-button {
+    @apply button bg-app_red-500 text-neutral-50 font-semibold hover:bg-app_red-700;
+}
+
 .secondary-button {
     @apply button bg-neutral-100 text-neutral-900 font-semibold hover:bg-neutral-200;
 }

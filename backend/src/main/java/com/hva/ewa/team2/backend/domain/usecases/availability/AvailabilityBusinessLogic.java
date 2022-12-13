@@ -13,7 +13,7 @@ public interface AvailabilityBusinessLogic {
 
     Availability handleCreateAvailability(CreateAvailabilityRequest request) throws Exception;
 
-    Availability handleDeleteAvailability(int id) throws Exception;
+    Optional<Availability> handleDeleteAvailability(int id) throws Exception;
 
     Availability handleUpdateAvailability(int id, UpdateAvailabilityRequest request) throws Exception;
 
