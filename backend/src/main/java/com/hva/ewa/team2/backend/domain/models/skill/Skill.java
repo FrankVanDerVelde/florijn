@@ -31,6 +31,13 @@ public class Skill {
     public Skill() {
     }
 
+    public Skill(Integer id, Integer groupId, String name, String description) {
+        this.id = id;
+        this.groupId = groupId;
+        this.name = name;
+        this.description = description;
+    }
+
     public Skill(int id, String name, String description) {
         this.id = id;
         this.name = name;

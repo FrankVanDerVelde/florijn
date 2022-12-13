@@ -2,9 +2,13 @@ package com.hva.ewa.team2.backend;
 
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
+import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
+import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
@@ -20,11 +24,11 @@ import java.util.ArrayList;
 public class BackendApplication implements CommandLineRunner {
 
     private final UserRepository userRepo;
-    private final MemorySkillRepository skillRepo;
+    private final SkillRepository skillRepo;
     private final ProjectRepository projectRepo;
 
     @Autowired
-    public BackendApplication(UserRepository userRepo, MemorySkillRepository skillRepo, ProjectRepository projectRepo) {
+    public BackendApplication(UserRepository userRepo, SkillRepository skillRepo, ProjectRepository projectRepo) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
         this.projectRepo = projectRepo;
@@ -38,6 +42,7 @@ public class BackendApplication implements CommandLineRunner {
     public void run(String... args) {
         loadUsers();
         loadProjects();
+//        loadSkills();
     }
 
     private void loadUsers() {
@@ -79,6 +84,109 @@ public class BackendApplication implements CommandLineRunner {
         KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
 
         projectRepo.save(KPN);
+    }
+
+    private void loadSkills () {
+        String[] skillNames = new String[]{"MS Office Access",
+                "MS Office Access VBA",
+                "MS Office Excel",
+                "MS Office Excel VBA",
+                "MS Power Query",
+                "MS Powerpivot",
+                "MS Office Word",
+                "MS Office Word VBA",
+                "MS Office Outlook",
+                "MS Office Outlook VBA",
+                "MS Office VBA",
+                "MS SQL-Server",
+                "MS SQL-Server Stored Procedures",
+                "MS SQL-Server Views",
+                "MY SQL",
+                "MY SQL Workbench",
+                "MS Azure",
+                "Oracle",
+                "Microsoft Dynamics AX",
+                "Windows PowerShell (Core)",
+                ".NET Framework",
+                "XML - XAML",
+                "Filemaker",
+                "Filemaker Script",
+                "Filemaker Server",
+                "MS VB.NET",
+                "MS Visual Basic",
+                "Microsoft Dynamics 365",
+                "Microsoft Dynamics 365 for Operations",
+                "Microsoft Dynamics 365 for Business Applications",
+                "Sharepoint",
+                "Javascript",
+                "Java",
+                "PhP",
+                "ASP.NET",
+                "Google Apps ",
+                "Google Apps Script",
+                "Flow",
+                "HTML",
+                "CSS",
+                "C#",
+                "C++/CLI (Managed)",
+                "F#",
+                "Q#",
+                ".NET Core",
+                "Angular/AngularJS",
+                "Bootstrap",
+                "Mendix",
+                "OutSystems",
+                "PowerApps",
+                "Power Automate",
+                "Power Platform",
+                "Tableau",
+                "Qlik",
+                "SAP",
+                "SAS",
+                "Oracle",
+                "Salesforce",
+                "Thoughtspot",
+                "Yellowfin",
+                "Sisense",
+                "Microstrategy",
+                "TIBCO Software",
+                "Looker",
+                "Information Builders",
+                "Overall",
+                "DAX",
+                "M Language",
+                "Grafisch",
+                "Power Query",
+                "Power BI Beheer",
+                "Datamodellering",
+                "Data analyse",
+                "Agile",
+                "Scrum",
+                "Lean",
+                "Kanban",
+                "Extreme Programming (XP)"};
+
+        String[] groupNames = new String[]{"OFFICE FRONT-END", "BACK-END", "DATABASE", "WEB BASED FRONT-END", "Business Intelligence","Power BI", "Werkwijze"};
+        Integer[] skillPositions = {11, 11, 9, 21, 13, 8, 5};
+
+
+        for (int i = 0; i < groupNames.length; i++) {
+            SkillGroup skillGroup = new SkillGroup(i, groupNames[i], "This is the group for " + groupNames[i]);
+            skillRepo.saveSkillGroup(skillGroup);
+        }
+
+        int arrayPosition = 0;
+        int lastPosition = 0;
+        for (int i = skillPositions[arrayPosition]; i < skillNames.length; i++) {
+            skillRepo.save(new Skill(i, arrayPosition, skillNames[i], "Your ability to use " + skillNames[i]));
+            if (lastPosition == skillPositions[arrayPosition]) arrayPosition++;
+        }
+
+        String[] expertiseNames = new String[]{"Financieel Administratief", "Hypotheken" ,"Facturatie/Offertes","Secutirisaties","Boekhouding","CRM","Rapportage-tools","Conversietools", "Workflow", "Logistieke Processen", "Engineering", "Bouw & Infra", "Marketing", "(semi) Overheidsinstelling", "Web/App Development"};
+
+        for (int i = 0; i < expertiseNames.length; i++) {
+            skillRepo.saveExpertise(new Expertise(i, expertiseNames[i]));
+        }
     }
 
     public Specialist setRandomSkills(Specialist specialist) {
