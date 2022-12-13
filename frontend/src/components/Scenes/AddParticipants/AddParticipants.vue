@@ -106,7 +106,7 @@ export default {
 
   async created() {
     this.project = await this.projectFetchService.fetchJson(`/${this.$route.params.projectId}`);
-    this.specialists = await this.fetchService.fetchJson("/users/role/specialist")
+    this.specialists = await this.fetchService.fetchJson("/users/role/SPECIALIST")
     this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
     this.skillGroup = await this.skillFetchService.fetchJson("/groups")
     this.filteredParticipantsList = this.specialists;
