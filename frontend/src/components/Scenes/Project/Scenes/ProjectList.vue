@@ -27,6 +27,9 @@ export default {
   inject: ['projectFetchService'],
 
   created() {
+    if (localStorage.getItem("user") === "null") {
+      this.$router.push({name: "home"});
+    }
     this.fetchProjects();
   },
 

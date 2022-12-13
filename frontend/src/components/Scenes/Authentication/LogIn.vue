@@ -3,7 +3,7 @@
     <div class="flex justify-end col-span-6 row-start-1 h-full form-column">
       <div class="flex w-full justify-center items-center h-full max-width">
         <form @submit.prevent="submitButton()" class="w-140">
-          <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom yoU!</h1>
+          <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom!</h1>
           <div class="inputfield">
             <div class="input-container">
               <label class="mb-[12px]">Emailadres</label>
@@ -50,9 +50,9 @@ export default {
   name: "LogIn.vue",
   inject: ['fetchService'],
   created() {
-    if (localStorage.getItem("id") !== "null") {
-      localStorage.setItem("id", "null");
-      localStorage.setItem("role", "null");
+    if (localStorage.getItem("user") !== "null") {
+      console.log(localStorage.getItem("user"))
+      this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
     }
   },
   methods: {
@@ -76,23 +76,26 @@ export default {
         localStorage.setItem("id", userData.id);
         localStorage.setItem("role", userData.role);
 
-        switch (userData.role) {
-          case "ADMIN": {
-            this.$router.push({name: "admin-home"});
-            break;
-          }
-          case "SPECIALIST": {
-            this.$router.push({name: "specialist-home"});
-            break;
-          }
-          case "CLIENT": {
-            this.$router.push({name: "client-home"});
-            break;
-          }
-        }
+        this.pushHelperMethod(userData.role)
       } else {
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
+      }
+    },
+    pushHelperMethod(role){
+      switch (role) {
+        case "ADMIN": {
+          this.$router.push("/adminpanel/customer-list");
+          break;
+        }
+        case "SPECIALIST": {
+          this.$router.push({name: "projects"});
+          break;
+        }
+        case "CLIENT": {
+          this.$router.push({name: "projects"});
+          break;
+        }
       }
     }
   },

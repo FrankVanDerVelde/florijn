@@ -119,6 +119,9 @@ export default {
   },
 
   async created() {
+      if (localStorage.getItem("user") === "null") {
+        this.$router.push({name: "home"});
+      }
     if (!this.newProject) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 

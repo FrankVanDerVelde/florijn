@@ -91,6 +91,9 @@ export default {
     },
     inject: ['userFetchService'],
     async created() {
+      if (localStorage.getItem("user") === "null") {
+        this.$router.push({name: "home"});
+      }
         const newAddress = await this.userFetchService.fetchJson(`/address/${this.user.id}`);
         this.address = newAddress;
     },

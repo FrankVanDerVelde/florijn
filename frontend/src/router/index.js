@@ -31,20 +31,7 @@ import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue
 
 const routes = [
     {path: '/', redirect: 'login'},
-    {path: '/home', redirect: 'login'},
-    {
-        path: '/admin/home',
-        component: WelcomeAdminView,
-        name: "admin-home"
-    },
-    {
-        path: '/specialist/home', component: WelcomeSpecialistView,
-        name: "specialist-home"
-    },
-    {
-        path: '/client/home', component: WelcomeClientView,
-        name: "client-home"
-    },
+    {path: '/home', redirect: 'login', name: "home"},
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
