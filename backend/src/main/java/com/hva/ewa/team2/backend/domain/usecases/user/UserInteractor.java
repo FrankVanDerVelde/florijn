@@ -25,7 +25,7 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return this.userRepo.findAll();
     }
 

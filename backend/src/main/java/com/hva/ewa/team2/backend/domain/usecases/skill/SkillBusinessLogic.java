@@ -17,6 +17,6 @@ public interface SkillBusinessLogic {
 
     List<Expertise> getAllExpertises();
     Expertise getExpertise(int id);
-    List<UserExpertise> getUserExpertises(int id);
-    ArrayList<UserExpertise> updateUserExpertise(int userId, ArrayList<UserExpertise> userExpertises);
+    List<Expertise> getUserExpertises(int id);
+    ArrayList<Expertise> updateUserExpertise(int userId, ArrayList<Expertise> userExpertises);
 }

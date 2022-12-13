@@ -14,14 +14,11 @@ public class Expertise {
     @GeneratedValue
     @Getter
     @Setter
-    private int id;
+    private Integer id;
 
     @Getter
     @Setter
     private String name;
-
-//        @Getter @Setter
-//        private String description;
 
     public Expertise() {
     }
