@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public interface ProjectRepository extends CrudRepository<Project, Integer> {
 
+    @Query("SELECT p FROM Project p")
+    ArrayList<Project> findAll();
+
     /**
      * Find all {@link Project}s that match the given {@link ProjectFilter}.
      *

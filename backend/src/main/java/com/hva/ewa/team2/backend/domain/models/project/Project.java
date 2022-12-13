@@ -5,17 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Project {
+public class Project implements Serializable {
 
     @Getter
     @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Getter
     @Setter
@@ -40,7 +41,8 @@ public class Project {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "projectId", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id")
     private List<ProjectParticipant> participants;
 
     public Project() {
@@ -64,11 +66,24 @@ public class Project {
         this.archived = archived;
     }
 
-    public ProjectParticipant getParticipantByUserId(int userId) {
+    public ProjectParticipant getParticipantByUserId(Integer userId) {
         return participants.stream()
-                .filter(p -> p.getSpecialist().getId() == userId)
+                .filter(p -> p.getSpecialist().getId().equals(userId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", client=" + client +
+                ", logoSrc='" + logoSrc + '\'' +
+                ", archived=" + archived +
+                ", participants=" + participants +
+                '}';
     }
 
     public void addSpecialist(ProjectParticipant specialist) {

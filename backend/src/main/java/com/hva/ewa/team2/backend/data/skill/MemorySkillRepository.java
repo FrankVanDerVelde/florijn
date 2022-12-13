@@ -6,7 +6,7 @@ import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 
 import java.util.ArrayList;
 
-public interface SkillRepository {
+public interface MemorySkillRepository {
     ArrayList<Skill> findAllSkills();
     Skill findSkillById(int id);
     ArrayList<SkillGroup> findAllSkillGroups();

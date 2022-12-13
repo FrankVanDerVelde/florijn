@@ -2,7 +2,9 @@ package com.hva.ewa.team2.backend.domain.usecases.hourregistration;
 
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.MemoryProjectRepository;
+import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
@@ -21,14 +23,14 @@ import java.util.Optional;
 public class HourRegistrationInteractor implements HourRegistrationBusinessLogic {
 
     private final HourRegistrationRepository hourRegistrationRepository;
-    private final MemoryProjectRepository projectRepository;
-    private final MemoryUserRepository userRepository;
+    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public HourRegistrationInteractor(
             HourRegistrationRepository hourRegistrationRepository,
-            MemoryProjectRepository projectRepository,
-            MemoryUserRepository userRepository
+            ProjectRepository projectRepository,
+            UserRepository userRepository
     ) {
         this.hourRegistrationRepository = hourRegistrationRepository;
         this.projectRepository = projectRepository;
@@ -46,7 +48,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     @Override
     public List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId) {
-        final User user = userRepository.getUserById(userId);
+        final User user = userRepository.findById(userId).orElse(null);
         if (user instanceof Specialist specialist) {
             return hourRegistrationRepository.fetchAllHourRegistrationByProjectUser(projectId, userId);
         }
@@ -73,7 +75,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     @Override
     public HourRegistration handleCreateHourRegistration(CreateHourRegistrationRequest request) throws Exception {
-        Optional<Project> project = Optional.ofNullable(projectRepository.findById(request.getProjectId()));
+        Optional<Project> project = projectRepository.findById(request.getProjectId());
         if (project.isEmpty())
             throw new Exception("Project not found for id: " + request.getProjectId());
         return hourRegistrationRepository.createHourRegistration(request, project.get());

@@ -20,9 +20,6 @@ public class Expertise {
     @Setter
     private String name;
 
-//        @Getter @Setter
-//        private String description;
-
     public Expertise() {
     }
 

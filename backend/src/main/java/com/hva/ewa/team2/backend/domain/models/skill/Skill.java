@@ -16,6 +16,8 @@ public class Skill {
 
     @Getter
     @Setter
+    @ManyToOne(targetEntity = SkillGroup.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Integer groupId;
 
     @Getter

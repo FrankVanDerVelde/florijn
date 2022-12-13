@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.data.user;
 
-import com.hva.ewa.team2.backend.data.skill.SkillRepository;
+import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.user.*;
@@ -18,26 +18,26 @@ public class InMemoryUserRepository implements MemoryUserRepository {
 
     private final ArrayList<User> users = new ArrayList<>();
 
-    private SkillRepository skillRepo;
+    private MemorySkillRepository skillRepo;
 
     @Autowired
-    public InMemoryUserRepository(SkillRepository skillRepo) {
+    public InMemoryUserRepository(MemorySkillRepository skillRepo) {
         this.skillRepo = skillRepo;
 
-        this.users.add(new Specialist(0, "withneyk@florijn.com", "test", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"));
-        this.users.add(new Specialist(1, "jant@florijn.com", "test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans"));
+        this.users.add(new Specialist(1, "withneyk@florijn.com", "test", "/src/assets/avatars/avatar2.avif", "Withney", "Keulen"));
+        this.users.add(new Specialist(2, "jant@florijn.com", "test", "/src/assets/avatars/avatar3.avif", "Jan", "Timmermans"));
 
-        this.users.add(new Admin(2, "admin@test.com", "test", null, "Admin", "Test"));
-        this.users.add(new Specialist(3, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
-        this.users.add(new Client(4, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
+        this.users.add(new Admin(3, "admin@test.com", "test", null, "Admin", "Test"));
+        this.users.add(new Specialist(4, "specialist@test.com", "test", "/src/assets/avatars/avatar3.avif", "Kingsley", "Mckenzie"));
+        this.users.add(new Client(5, "contact@ing.nl", "test", "/src/assets/ING-Bankieren-icoon.webp", "ING", "/src/assets/ing-banner.jpg"));
 
         Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
 
-        Specialist specialist = (new Specialist(5, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
-        Specialist specialist2 = (new Specialist(6, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
+        Specialist specialist = (new Specialist(6, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
+        Specialist specialist2 = (new Specialist(7, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
 
-        this.users.add(new Client(7, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
+        this.users.add(new Client(8, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
 
         setSkills(specialist);
         setSkills(specialist2);

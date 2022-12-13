@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.skill;
 
+import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,12 +10,14 @@ import javax.persistence.*;
 public class UserSkill {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private Integer id;
 
     @Getter @Setter
+    @OneToOne(targetEntity = Specialist.class)
+    @JoinColumn(name = "user_id")
     private Integer userId;
 
     @Getter

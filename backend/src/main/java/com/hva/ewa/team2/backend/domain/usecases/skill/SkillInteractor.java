@@ -1,7 +1,8 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
-import com.hva.ewa.team2.backend.data.skill.SkillRepository;
+import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
 import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
@@ -15,16 +16,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class SkillInteractor implements SkillBusinessLogic {
 
-    private final MemoryUserRepository userRepo;
+    private final UserRepository userRepo;
 
-    private final SkillRepository skillRepo;
+    private final MemorySkillRepository skillRepo;
     
     @Autowired
-    public SkillInteractor(MemoryUserRepository userRepo, SkillRepository skillRepo) {
+    public SkillInteractor(UserRepository userRepo, MemorySkillRepository skillRepo) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
     }
@@ -41,13 +43,13 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public UserSkill updateUserSkill(int userId, JsonUserSkill jsonBody) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
@@ -69,13 +71,13 @@ public class SkillInteractor implements SkillBusinessLogic {
      */
     @Override
     public SkillGroup updateUserSkillGroup(int userId, JsonUserSkillGroup jsonBody) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
@@ -98,13 +100,13 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public List<UserSkill> getUserSkills(int userId) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist)) {
+        if (!(user.get() instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
@@ -123,13 +125,13 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public List<Expertise> getUserExpertises(int userId) {
-        User user = userRepo.getUserById(userId);
-        System.out.println(user);
-        if (user == null) {
+        Optional<User> user = userRepo.findById(userId);
+
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist)) {
+        if (!(user.get() instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
         System.out.println(specialist.getExpertises());
@@ -138,13 +140,13 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public ArrayList<Expertise> updateUserExpertise(int userId, ArrayList<Expertise> userExpertises) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 

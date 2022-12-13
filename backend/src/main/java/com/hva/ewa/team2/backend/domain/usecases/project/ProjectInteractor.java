@@ -313,10 +313,13 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter) {
-        String projectFilter = filter.orElse("ALL");
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter) {
+        if (filter.isEmpty()) {
+            return projectRepo.findAll();
+        }
+
         try {
-            return projectRepo.findAll(ProjectFilter.valueOf(projectFilter), searchQuery.orElse(""));
+            return projectRepo.findAll(filter.get(), searchQuery.orElse(""));
         } catch (Exception e) {
             throw new IllegalArgumentException("An invalid filter was entered.");
         }

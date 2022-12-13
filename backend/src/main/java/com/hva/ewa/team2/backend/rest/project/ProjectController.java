@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.rest.project;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectInteractor;
@@ -36,7 +37,7 @@ public class ProjectController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjects(@RequestParam("query") Optional<String> searchQuery,
-                                                        @RequestParam(name = "filter", defaultValue = "ALL") Optional<String> filter) {
+                                                        @RequestParam(name = "filter") Optional<ProjectFilter> filter) {
         return ResponseEntity.ok(projectInteractor.getAllProjects(searchQuery, filter));
     }
 

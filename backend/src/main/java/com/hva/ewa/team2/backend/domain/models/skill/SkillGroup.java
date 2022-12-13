@@ -23,7 +23,8 @@ public class SkillGroup {
     private String description;
 
     @Getter @Setter
-    @OneToMany(mappedBy = "groupId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "group_id")
     private List<Skill> skills;
 
     public SkillGroup() {}
@@ -32,7 +33,7 @@ public class SkillGroup {
         this(id, name, description, new ArrayList<>());
     }
 
-    public SkillGroup(int id, String name, String description, List<Skill> skills) {
+    public SkillGroup(int id, String name, String description, ArrayList<Skill> skills) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -8,10 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@NamedQueries({
-        @NamedQuery(name = "User.findUsersByRole", query = "select u from User u where u.role = ?1"),
-        @NamedQuery(name = "User.getUserInfoByCredentials", query = "select u from User u where u.email = ?1 and u.password = ?2")
-})
 public abstract class User {
 
     @Getter

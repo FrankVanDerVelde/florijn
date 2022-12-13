@@ -27,12 +27,13 @@ public class Specialist extends User {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<UserSkill> skills;
 
     @Getter
     @Setter
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Expertise> expertises;
 
     @Getter

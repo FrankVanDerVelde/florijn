@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.domain.usecases.project;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
@@ -37,6 +38,6 @@ public interface ProjectBusinessLogic {
 
     List<ProjectReport> getProjectReports(int projectId, JsonNode body);
 
-    List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter);
+    List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter);
 
 }

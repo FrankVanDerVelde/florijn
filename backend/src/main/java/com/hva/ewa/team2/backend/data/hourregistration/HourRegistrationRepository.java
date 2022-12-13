@@ -14,9 +14,9 @@ public interface HourRegistrationRepository {
     List<HourRegistration> fetchAllHourRegistrationsByUser(int userId);
     Optional<HourRegistration> fetchHourRegistrationById(int id);
     List<HourRegistration> fetchAllHourRegistrationByProject(int projectId);
-    List<HourRegistration> fetchAllHourRegistrationByProjectUser(int projectId, int userId);
+    List<HourRegistration> fetchAllHourRegistrationByProjectUser(Integer projectId, Integer userId);
 
-    List<HourRegistration> fetchAllAcceptedHoursForProject(int projectId);
+    List<HourRegistration> fetchAllAcceptedHoursForProject(Integer projectId);
 
     HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) throws Exception;
 

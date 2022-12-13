@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.project;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import lombok.Getter;
@@ -18,13 +19,17 @@ public class ProjectParticipant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
-    private int id;
+    public Integer id;
 
     @Getter
     @Setter
-    private int projectId;
+    @OneToOne(targetEntity = Project.class)
+    @JoinColumn(name = "project_id")
+    @JsonBackReference
+    public Project project;
 
     @Getter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonProperty("user")
@@ -39,10 +44,6 @@ public class ProjectParticipant {
     private double hourlyRate;
 
     public ProjectParticipant() {
-    }
-
-    public void setSpecialist(Specialist specialist) {
-        this.specialist = specialist;
     }
 
     public ProjectParticipant(Specialist specialist, String role, double hourlyRate) {
