@@ -69,7 +69,6 @@ public class AssetService implements AssetServiceLogic {
                     Path.of(fileName)
             ).normalize().toAbsolutePath();
 
-            System.out.println(destination);
 
             // checking if they didn't somehow try to escape the root location.
             final Path absoluteRoot = this.rootLocation.toAbsolutePath();
@@ -107,7 +106,7 @@ public class AssetService implements AssetServiceLogic {
     private boolean isSameName(Path path, String fileName) {
         final String s = FilenameUtils.removeExtension(path.getFileName().toString());
 
-        System.out.println("Comparing " + s + " to " + fileName);
+//        System.out.println("Comparing " + s + " to " + fileName);
 
         return s
                 .equals(fileName);

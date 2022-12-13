@@ -70,7 +70,6 @@ public class InMemoryUserRepository implements MemoryUserRepository {
             }
         }
 
-        System.out.println(userExpertises);
 
         specialist.updateUserExpertise(userExpertises);
 
