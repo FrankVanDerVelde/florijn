@@ -2,7 +2,7 @@ package com.hva.ewa.team2.backend.domain.usecases.hourregistration;
 
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
@@ -22,13 +22,13 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
 
     private final HourRegistrationRepository hourRegistrationRepository;
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final MemoryUserRepository userRepository;
 
     @Autowired
     public HourRegistrationInteractor(
             HourRegistrationRepository hourRegistrationRepository,
             ProjectRepository projectRepository,
-            UserRepository userRepository
+            MemoryUserRepository userRepository
     ) {
         this.hourRegistrationRepository = hourRegistrationRepository;
         this.projectRepository = projectRepository;
