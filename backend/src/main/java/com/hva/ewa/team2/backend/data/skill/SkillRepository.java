@@ -8,8 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 
-@Deprecated
-public interface MemoryRepository extends CrudRepository<Skill, Integer> {
+public interface SkillRepository extends CrudRepository<Skill, Integer> {
 
     @Query(value = "SELECT g FROM SkillGroup g")
     ArrayList<SkillGroup> findAllSkillGroups();

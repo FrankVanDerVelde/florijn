@@ -5,7 +5,7 @@ import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 
 import java.util.ArrayList;
-
+@Deprecated
 public interface MemorySkillRepository {
     ArrayList<Skill> findAllSkills();
     Skill findSkillById(int id);
