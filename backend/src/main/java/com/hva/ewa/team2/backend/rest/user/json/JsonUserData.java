@@ -26,17 +26,16 @@ public class JsonUserData {
 
     @Getter
     @Setter
-
-    private Optional<MultipartFile> avatarFile;
+    private MultipartFile avatarFile;
 
     @Getter
     @Setter
-    private Optional<MultipartFile> bannerFile;
+    private MultipartFile bannerFile;
 
     public JsonUserData() {
     }
 
-    public JsonUserData(int id, String user, String address, Optional<MultipartFile> avatarFile, Optional<MultipartFile> bannerFile) {
+    public JsonUserData(int id, String user, String address, MultipartFile avatarFile, MultipartFile bannerFile) {
         this.id = id;
         this.user = user;
         this.address = address;

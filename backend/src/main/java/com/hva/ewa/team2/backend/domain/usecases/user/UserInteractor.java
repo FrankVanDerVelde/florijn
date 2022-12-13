@@ -44,82 +44,74 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User updateUser(int id, JsonNode body) {
-        System.out.println(body);
-        Optional<User> found = this.userRepo.findById(id);
     public User updateUser(int id, JsonUserData body) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        User user = this.userRepo.getUserById(id);
+        Optional<User> found = this.userRepo.findById(id);
+
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
+
+        User user = found.get();
 
         if (user instanceof Admin admin) {
+            Admin newAdminData = mapper.readValue(body.getUser(), Admin.class);
 
+            admin.setEmail(newAdminData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                admin.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            admin.setFirstName(newAdminData.getFirstName());
+            admin.setLastName(newAdminData.getLastName());
         } else if (user instanceof Specialist specialist) {
-//            Specialist newSpecialistData = mapper.readValue(body.getUser(), Specialist.class);
-            System.out.println(body);
+            Specialist newSpecialistData = mapper.readValue(body.getUser(), Specialist.class);
+
+            specialist.setEmail(newSpecialistData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                System.out.println("users/avatars/" + user.getId() + "." + extension);
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                specialist.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            specialist.setFirstName(newSpecialistData.getFirstName());
+            specialist.setLastName(newSpecialistData.getLastName());
+
+            Address newAddress = mapper.readValue(body.getAddress(), Address.class);
+
+            specialist.setAddress(newAddress);
         } else if (user instanceof Client client) {
+            Client newClientData = mapper.readValue(body.getUser(), Client.class);
+
+            client.setEmail(newClientData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                client.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            if (body.getBannerFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getBannerFile().getOriginalFilename());
+                assetService.uploadAsset(body.getBannerFile(), "projects/" + user.getId() + "." + extension, true);
+
+                client.setBannerSrc("projects/" + user.getId() + "." + extension);
+            }
+
+            client.setName(newClientData.getName());
 
         }
 
         System.out.println(user.getRole());
 
-//        Address newAddress;
-//        newAddress = mapper.readValue(body.getAddress(), Address.class);
-//
-
-//        User userData;
-//        userData = mapper.readValue(body.getUser(), User.class);
-
-
-
-//        if(body.getAvatarFile().isPresent()) {
-//            String extension = FilenameUtils.getExtension(body.getAvatarFile().get().getOriginalFilename());
-//            System.out.println(body.getAvatarFile().get().getOriginalFilename());
-//            assetService.uploadAsset(body.getAvatarFile().get(),"users/avatars/" + userData.getId() + "." + extension, true);
-//        }
-//
-//
-//
-//        if (user == null) throw new IllegalStateException("There is no user found with that id!");
-
-
-        return null;
-
-
-//        user.setEmail(userData.getEmail());
-//        user.setAvatarUrl(userData.getAvatarUrl());
-//        user.setPassword(body.get("password").asText());
-
-
-
-//        if (user instanceof Admin admin) {
-//            if (body.get("firstName") == null || body.get("lastName") == null)
-//                throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-//            admin.setFirstName(body.get("firstName").asText());
-//            admin.setLastName(body.get("lastName").asText());
-//        } else if (user instanceof Specialist specialist) {
-//            if (body.get("firstName") == null || body.get("lastName") == null)
-//                throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-//            specialist.setFirstName(body.get("firstName").asText());
-//            specialist.setLastName(body.get("lastName").asText());
-//            JsonNode newAddress = body.get("address");
-//            Address address = new Address(
-//                    newAddress.get("place").asText(),
-//                    newAddress.get("street").asText(),
-//                    newAddress.get("houseNumber").asInt(),
-//                    newAddress.get("houseNumberAddition").asText(),
-//                    newAddress.get("postalCode").asText()
-//            );
-//
-//            specialist.setAddress(address);
-//        } else if (user instanceof Client client) {
-//            if (body.get("name") == null || body.get("bannerSrc") == null)
-//                throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-//            client.setName(body.get("name").asText());
-//            client.setBannerSrc(body.get("bannerSrc").asText());
-//        }
-
-//        return this.userRepo.updateUser(user);
+        return this.userRepo.save(user);
     }
 
     @Override
