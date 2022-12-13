@@ -45,27 +45,48 @@ public class UserInteractor implements UserBusinessLogic {
     public User updateUser(int id, JsonUserData body) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
-        Address address;
-        address = mapper.readValue(body.getAddress(), Address.class);
+        User user = this.userRepo.getUserById(id);
 
-        User userData;
-        userData = mapper.readValue(body.getUser(), User.class);
+        if (user instanceof Admin admin) {
 
-        if(body.getAvatarFile().isPresent()) {
-            String extension = FilenameUtils.getExtension(body.getAvatarFile().get().getOriginalFilename());
-            System.out.println(body.getAvatarFile().get().getOriginalFilename());
-            assetService.uploadAsset(body.getAvatarFile().get(),"users/avatars/" + userData.getId() + "." + extension, true);
+        } else if (user instanceof Specialist specialist) {
+//            Specialist newSpecialistData = mapper.readValue(body.getUser(), Specialist.class);
+            System.out.println(body);
+        } else if (user instanceof Client client) {
+
         }
 
-        User user = this.userRepo.getUserById(userData.getId());
+        System.out.println(user.getRole());
 
-        if (user == null)
-            throw new IllegalStateException("There is no user found with that id!");
-
-//        user.setEmail(body.get("email").asText());
-////        user.setPassword(body.get("password").asText());
-//        user.setAvatarUrl(body.get("avatarUrl").asText());
+//        Address newAddress;
+//        newAddress = mapper.readValue(body.getAddress(), Address.class);
 //
+
+//        User userData;
+//        userData = mapper.readValue(body.getUser(), User.class);
+
+
+
+//        if(body.getAvatarFile().isPresent()) {
+//            String extension = FilenameUtils.getExtension(body.getAvatarFile().get().getOriginalFilename());
+//            System.out.println(body.getAvatarFile().get().getOriginalFilename());
+//            assetService.uploadAsset(body.getAvatarFile().get(),"users/avatars/" + userData.getId() + "." + extension, true);
+//        }
+//
+//
+//
+//        if (user == null) throw new IllegalStateException("There is no user found with that id!");
+
+
+        return null;
+
+
+//        user.setEmail(userData.getEmail());
+//        user.setAvatarUrl(userData.getAvatarUrl());
+//        user.setPassword(body.get("password").asText());
+
+
+
 //        if (user instanceof Admin admin) {
 //            if (body.get("firstName") == null || body.get("lastName") == null)
 //                throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
@@ -92,7 +113,8 @@ public class UserInteractor implements UserBusinessLogic {
 //            client.setName(body.get("name").asText());
 //            client.setBannerSrc(body.get("bannerSrc").asText());
 //        }
-        return this.userRepo.updateUser(user);
+
+//        return this.userRepo.updateUser(user);
     }
 
     @Override
