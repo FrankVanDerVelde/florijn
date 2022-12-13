@@ -34,8 +34,8 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.getUserById(0);
-        User user2 = userRepository.getUserById(1);
+        User user1 = userRepository.getUserById(2);
+        User user2 = userRepository.getUserById(3);
 
         this.availabilities.addAll(List.of(
                 new Availability(
