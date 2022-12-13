@@ -186,8 +186,11 @@ export default {
 
     async handleCopyToNextWeek() {
       try {
-        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, 1);
+        console.log('handleCopyToNextWeek');
+        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, this.weekDelta);
+        console.log(weekAvailability)
         this.weekNumber += 1;
+        this.weekDelta += 1;
         this.sortAvailabilityPerDay(weekAvailability);
         this.loadWeekBar()
       } catch (e) {

@@ -18,7 +18,9 @@ export class AvailabilityRepository {
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
         try {
-            let results = await this.fetcher.fetchJson(`/users/${userId}/availability?weekNumber=${weekNumber}`);
+            const path = `/users/${userId}/availability?weekNumber=${weekNumber}`;
+            console.log(`fetchAvailabilityForUserInWeek - GET ${path}`);
+            let results = await this.fetcher.fetchJson(path);
             return results.map(Availability.fromJSON);
         } catch (e) {
             console.error(e);
@@ -36,20 +38,18 @@ export class AvailabilityRepository {
      */
     async createAvailability(userId, date, fromTime, toTime) {
         try {
-            let body = {
+            const path = `/users/${userId}/availability`;
+            const body = {
                 date: date,
                 from: fromTime,
                 to: toTime
             };
+
+            console.log(`createAvailability - POST ${path} with body:`);
             console.log(body);
-            let result = await this.fetcher.fetchJsonMethod(
-                `/users/${userId}/availability`,
-                HttpMethods.POST,
-                body
-            );
 
+            let result = await this.fetcher.fetchJsonMethod(path, HttpMethods.POST, body);
             console.log(result);
-
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
@@ -67,17 +67,17 @@ export class AvailabilityRepository {
      */
     async updateAvailability(id, date, fromTime, toTime) {
         try {
+            const path = `/availability/${id}/update`;
             let body = {
                 date: date,
                 from: fromTime,
                 to: toTime
             };
-            console.log(`updateAvailability body: ${body}`);
-            let result = await this.fetcher.fetchJsonMethod(
-                `/availability/${id}/update`,
-                HttpMethods.PUT,
-                body
-            );
+
+            console.log(`updateAvailability - PUT ${path} with body:`);
+            console.log(body);
+
+            let result = await this.fetcher.fetchJsonMethod(path, HttpMethods.PUT, body);
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
@@ -92,7 +92,9 @@ export class AvailabilityRepository {
      */
     async deleteAvailability(id) {
         try {
-            let result = await this.fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
+            const path = `/availability/${id}/delete`;
+            console.log(`deleteAvailability - DELETE ${path}`);
+            let result = await this.fetcher.fetchJsonMethod(path, HttpMethods.DELETE);
             return Availability.fromJSON(result);
         } catch (e) {
             console.error(e);
@@ -107,6 +109,8 @@ export class AvailabilityRepository {
      */
     async getAvailability(id) {
         try {
+            const path = `/availability/${id}`;
+            console.log(`getAvailability - GET ${path}`);
             let result = await this.fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
             return Availability.fromJSON(result);
         } catch (e) {
@@ -117,10 +121,8 @@ export class AvailabilityRepository {
 
     async copyToWeek(userId, weekNumber) {
         try {
-            let result = await this.fetcher.fetchJsonMethod(
-                `/users/${userId}/availability/weeks/${weekNumber}/set-on-next-week`,
-                HttpMethods.POST
-            );
+            const path = `/users/${userId}/availability/weeks/${weekNumber}/set-on-next-week`;
+            let result = await this.fetcher.fetchJsonMethod(path, HttpMethods.POST);
             return result.map(Availability.fromJSON);
         } catch (e) {
             console.log(e);
