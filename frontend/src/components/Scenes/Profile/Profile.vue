@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="page-main-mw p-4 md:pt-[5em] flex">
         <div class="profile-container flex self-center w-full flex-col md:flex-row">
@@ -27,12 +25,12 @@
 
 <script>
 export default {
-    name: "Profile",
-    components: {
-        SideBarNav
-    },
+  name: "Profile",
+  components: {
+    SideBarNav
+  },
   created() {
-    if (this.id === "null") {
+    if (this.id === "null" || localStorage.getItem("role") === "ADMIN" || localStorage.getItem("role") === "CLIENT") {
       this.$router.push("/home");
     }
   },

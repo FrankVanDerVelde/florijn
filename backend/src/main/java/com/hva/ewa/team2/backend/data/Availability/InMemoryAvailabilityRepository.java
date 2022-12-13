@@ -34,8 +34,8 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.getUserById(1);
-        User user2 = userRepository.getUserById(2);
+        User user1 = userRepository.getUserById(2);
+        User user2 = userRepository.getUserById(3);
 
         this.availabilities.addAll(List.of(
                 new Availability(
@@ -70,7 +70,6 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
                         dateService.currentDay(22, 0).toLocalTime()
                 )
         ));
-
     }
 
 
@@ -109,10 +108,15 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     }
 
     @Override
-    public Availability deleteAvailability(int id) throws Exception {
-        Availability availability = availabilities.get(id);
-        availabilities.remove(availability);
-        return availability;
+    public Optional<Availability> deleteAvailability(int id) throws Exception {
+        Optional<Availability> availability = fetchAvailabilityById(id);
+
+        if (availability.isPresent()) {
+            availabilities.removeIf(h -> h.getId() == id);
+            return availability;
+        }
+
+        return Optional.empty();
     }
 
     @Override

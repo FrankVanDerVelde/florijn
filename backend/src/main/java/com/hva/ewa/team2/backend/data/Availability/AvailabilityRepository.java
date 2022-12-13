@@ -16,7 +16,7 @@ public interface AvailabilityRepository {
 
     Availability updateAvailability(int id, Availability availabilityRegistration) throws Exception;
 
-    Availability deleteAvailability(int id) throws Exception;
+    Optional<Availability> deleteAvailability(int id) throws Exception;
 
     List<Availability> copyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception;
 
