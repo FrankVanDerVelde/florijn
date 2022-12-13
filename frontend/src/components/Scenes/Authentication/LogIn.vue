@@ -48,7 +48,13 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['userService'],
+  inject: ['fetchService'],
+  created() {
+    if (localStorage.getItem("id") !== "null") {
+      localStorage.setItem("id", "null");
+      localStorage.setItem("role", "null");
+    }
+  },
   methods: {
     forgotPassword() {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword");
@@ -56,10 +62,9 @@ export default {
     async submitButton() {
       let userData;
 
-
       try {
-        userData = await this.userService.asyncFindByCredentials(this.email.trim(), this.password);
-
+        userData = await this.fetchService.fetchJsonPost("/auth/login",
+            ({email: this.email.trim(), password: this.password}));
       } catch (e) {
         console.error(e)
         userData = null;
@@ -68,7 +73,6 @@ export default {
       if (userData !== null) {
 
         localStorage.setItem("user", JSON.stringify(userData));
-
         localStorage.setItem("id", userData.id);
         localStorage.setItem("role", userData.role);
 

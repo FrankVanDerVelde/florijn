@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -19,6 +19,7 @@ import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvail
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
+import PublicProfile from "../components/Scenes/Profile/PublicProfile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
 import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
@@ -29,9 +30,8 @@ import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue
 
 
 const routes = [
-    // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
-    {path: '/', redirect: 'home'},
-    {path: '/home', component: WelcomeView},
+    {path: '/', redirect: 'login'},
+    {path: '/home', redirect: 'login'},
     {
         path: '/admin/home',
         component: WelcomeAdminView,
@@ -79,6 +79,10 @@ const routes = [
                 component: Resume,
             },
         ]
+    },
+    {
+        path: '/profile/public/:Id',
+        component: PublicProfile,
     }, {
         path: '/adminpanel',
         name: "adminpanel",
@@ -135,7 +139,8 @@ const routes = [
             newProject: false,
             projectId: route.params.projectId,
         }),
-    }
+    },
+    { path: '/:pathMatch(.*)*', redirect: '/login'},
 ];
 
 export const router = createRouter({
