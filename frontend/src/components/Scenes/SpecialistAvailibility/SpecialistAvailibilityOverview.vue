@@ -5,7 +5,7 @@
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
         <NewAvailabilityPopup
-            :dayIndex="addingAvailabilityForDayIndex"
+            :day-index="addingAvailabilityForDayIndex"
             :week-index="weekNumber"
             :availability="selectedAvailability"
             @availability-changed="handleAvailabilityChanged"
@@ -45,7 +45,7 @@
               </div>
               <div class="flex flex-col gap-3 pt-4">
                 <div v-for="availability in this.availability.getAvailabilities(day.weekDayIndex)">
-                  <AvailabilitySlot :availability="availability"  @click="handleAvailabilityClicked(availability)"/>
+                  <AvailabilitySlot :availability="availability"  @click="handleAvailabilityClicked(availability, day.weekDayIndex)"/>
                 </div>
 
                 <div v-if="this.availability.getAvailabilities(day.weekDayIndex).length === 0">
@@ -176,8 +176,9 @@ export default {
       this.showingModel = true;
     },
 
-    handleAvailabilityClicked(availability) {
+    handleAvailabilityClicked(availability, dayIndex) {
       this.selectedAvailability = availability;
+      this.addingAvailabilityForDayIndex = dayIndex;
       this.showingModel = true;
     },
 

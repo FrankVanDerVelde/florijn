@@ -1,9 +1,19 @@
 <template>
   <div class="flex flex-col z-90 bg-neutral-0 py-[16px] rounded-[10px] w-[320px]">
-    <div class="mb-2 px-[16px]">
-      <p class="text-xl font-semibold ">Beschikbaarheid</p>
-      <p class="text-neutral-600 font-medium">{{this.momentDate.format('LL')}}</p>
+    <div class="flex justify-between mb-2 px-[16px]">
+      <div class="flex flex-col">
+        <p class="text-xl font-semibold ">Beschikbaarheid</p>
+        <p class="text-neutral-600 font-medium">{{this.momentDate.format('LL')}}</p>
+      </div>
+      <font-awesome-icon
+          v-if="availability != null"
+          @click="handleDeleteTapped"
+          class="text-app_red-500 text-xl cursor-pointer hover:text-app_red-600"
+          icon="fa-solid fa-trash-can"
+      />
+
     </div>
+
     <hr class="text-neutral-300">
 
     <div class="pt-4 px-[16px]">
@@ -25,9 +35,17 @@
         </div>
 
         <div class="flex gap-2 justify-center">
-          <button @click="$emit('activity-cancel-clicked')" class="secondary-button grow">Annuleren</button>
-          <button @click="handleSaveTapped" class="primary-button grow">Opslaan</button>
-          <button v-if="availability != null" @click="handleDeleteTapped" class="destructive-button grow">Verwijderen</button>
+          <button
+              @click="$emit('activity-cancel-clicked')"
+              class="secondary-button grow"
+          >Annuleren</button>
+
+          <button
+              :disabled="from === null || to === null"
+              @click="handleSaveTapped"
+              :class="isSaveButtonEnabled() ? 'primary-button' : 'primary-button-disabled'"
+              class="grow"
+          >Opslaan</button>
         </div>
       </form>
       <p v-if="didEncounterError" class="text-app_red-500 pt-2">Er is iets mis gegaan bij het opslaan van je verzoek, probeer het opnieuw.</p>
@@ -61,6 +79,8 @@ export default {
     }
   },
   created() {
+    console.log(this.weekIndex)
+    console.log(this.dayIndex)
     this.momentDate = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex).startOf('day');
     if (this.availability) {
       this.from = moment(this.availability.from).format('HH:mm');
@@ -135,6 +155,10 @@ export default {
     notifyAvailabilityChanged() {
       this.$emit('availability-changed');
     },
+
+    isSaveButtonEnabled() {
+      return this.from !== null && this.to !== null;
+    }
   }
 }
 </script>
