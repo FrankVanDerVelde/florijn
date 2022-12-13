@@ -20,7 +20,9 @@ export default class FetchService {
     }
 
     async fetchJson(path, options = null) {
-        let response = await fetch(this.getPath(path), {
+        let path1 = this.getPath(path);
+        console.log("Fetching:", path1);
+        let response = await fetch(path1, {
             headers: {
                 'Accept': 'application/json',
             },

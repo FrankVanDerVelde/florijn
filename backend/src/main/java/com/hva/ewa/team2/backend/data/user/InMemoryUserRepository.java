@@ -40,10 +40,7 @@ public class InMemoryUserRepository implements MemoryUserRepository {
         this.users.add(new Client(8, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
 
         setSkills(specialist);
-        setSkills(specialist1);
         setSkills(specialist2);
-        setSkills(specialist3);
-        setSkills(specialist4);
     }
 
     public void setSkills(Specialist specialist) {
