@@ -18,19 +18,23 @@ public abstract class User {
     @Setter
     @JsonView(EssentialInfo.class)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    protected Integer id;
+
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
     protected String email;
+
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
     protected String avatarUrl;
+
     @Getter
     @Setter
     protected String password;
+
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)

@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.data.hourregistration;
 
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
-import com.hva.ewa.team2.backend.data.project.ProjectRepository;
+import com.hva.ewa.team2.backend.data.project.MemoryProjectRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
@@ -22,12 +22,12 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     private ArrayList<HourRegistration> hourRegistrations;
 
     private final DateServiceLogic dateService;
-    private final ProjectRepository projectRepository;
+    private final MemoryProjectRepository projectRepository;
 
     private Project testProject;
 
     @Autowired
-    public InMemoryHourRegistrationRepository(DateServiceLogic dateService, ProjectRepository projectRepository) {
+    public InMemoryHourRegistrationRepository(DateServiceLogic dateService, MemoryProjectRepository projectRepository) {
         this.dateService = dateService;
         this.projectRepository = projectRepository;
         this.hourRegistrations = new ArrayList<>();

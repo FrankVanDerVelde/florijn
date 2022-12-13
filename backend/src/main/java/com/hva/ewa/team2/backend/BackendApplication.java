@@ -46,7 +46,7 @@ public class BackendApplication implements CommandLineRunner {
     }
 
 
-    public void setRandomSkills(Specialist specialist) {
+    public Specialist setRandomSkills(Specialist specialist) {
         // Give specialist a random set of dummy skills
 //        ArrayList<Skill> allSkills = skillRepo.findAllSkills();
 //
@@ -77,7 +77,7 @@ public class BackendApplication implements CommandLineRunner {
 //
 //        specialist.updateUserExpertise(userExpertises);
 
-        userRepo.save(specialist);
+        return userRepo.save(specialist);
     }
 
 }

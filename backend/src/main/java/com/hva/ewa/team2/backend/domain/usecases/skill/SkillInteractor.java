@@ -2,7 +2,10 @@ package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
-import com.hva.ewa.team2.backend.domain.models.skill.*;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
+import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
+import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
@@ -119,7 +122,7 @@ public class SkillInteractor implements SkillBusinessLogic {
     }
 
     @Override
-    public List<UserExpertise> getUserExpertises(int userId) {
+    public List<Expertise> getUserExpertises(int userId) {
         User user = userRepo.getUserById(userId);
         System.out.println(user);
         if (user == null) {
@@ -134,7 +137,7 @@ public class SkillInteractor implements SkillBusinessLogic {
     }
 
     @Override
-    public ArrayList<UserExpertise> updateUserExpertise(int userId, ArrayList<UserExpertise> userExpertises) {
+    public ArrayList<Expertise> updateUserExpertise(int userId, ArrayList<Expertise> userExpertises) {
         User user = userRepo.getUserById(userId);
 
         if (user == null) {

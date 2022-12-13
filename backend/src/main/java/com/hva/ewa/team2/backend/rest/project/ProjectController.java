@@ -25,7 +25,6 @@ import java.util.Optional;
 @RequestMapping("/projects")
 public class ProjectController {
 
-
     private final ProjectInteractor projectInteractor;
 
     @Autowired

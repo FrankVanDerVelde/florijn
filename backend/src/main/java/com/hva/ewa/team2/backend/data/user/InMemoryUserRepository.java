@@ -3,7 +3,6 @@ package com.hva.ewa.team2.backend.data.user;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.user.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -62,12 +61,12 @@ public class InMemoryUserRepository implements MemoryUserRepository {
 
         ArrayList<Expertise> allExpertises = skillRepo.getAllExpertises();
 
-        ArrayList<UserExpertise> userExpertises = new ArrayList<>();
+        ArrayList<Expertise> userExpertises = new ArrayList<>();
         int specialistId = specialist.getId();
         for (Expertise expertise: allExpertises) {
             boolean randomBool = ThreadLocalRandom.current().nextBoolean();
-            if (randomBool == true) {
-                userExpertises.add(new UserExpertise(expertise.getId(), specialistId));
+            if (randomBool) {
+                userExpertises.add(expertise);
             }
         }
 

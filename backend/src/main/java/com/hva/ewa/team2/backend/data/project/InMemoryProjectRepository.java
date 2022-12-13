@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
-public class InMemoryProjectRepository implements ProjectRepository {
+@Deprecated
+public class InMemoryProjectRepository implements MemoryProjectRepository {
 
     private ArrayList<Project> projectList;
 
@@ -65,8 +66,6 @@ public class InMemoryProjectRepository implements ProjectRepository {
 
     @Override
     public List<Project> findAll(ProjectFilter filter, String query) {
-        if (filter == ProjectFilter.ALL) return projectList;
-
         Stream<Project> stream = projectList.stream()
                 .filter(p -> (filter == ProjectFilter.ARCHIVED) == p.isArchived());
         if (query != null && !query.isBlank()) {

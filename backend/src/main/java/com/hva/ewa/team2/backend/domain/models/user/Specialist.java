@@ -1,8 +1,8 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Entity
@@ -28,18 +27,18 @@ public class Specialist extends User {
 
     @Getter
     @Setter
-    @OneToMany
+    @OneToMany(mappedBy = "userId")
     private List<UserSkill> skills;
 
     @Getter
     @Setter
     @OneToMany
-    private List<UserExpertise> expertises;
+    private List<Expertise> expertises;
 
     @Getter
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
     public Specialist() {
@@ -48,7 +47,7 @@ public class Specialist extends User {
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
-        this(id, email, password, profilePictureURL, firstName, lastName, new Address());
+        this(id, email, password, profilePictureURL, firstName, lastName, null);
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
@@ -80,7 +79,7 @@ public class Specialist extends User {
         return newSkill;
     }
 
-    public List<UserExpertise> updateUserExpertise(ArrayList<UserExpertise> expertises) {
+    public List<Expertise> updateUserExpertise(ArrayList<Expertise> expertises) {
 //        List<UserExpertise> userExpertises = expertises.stream()
 //                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
 //                .collect(Collectors.toList());
