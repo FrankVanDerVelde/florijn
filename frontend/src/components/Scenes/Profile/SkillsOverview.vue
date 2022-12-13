@@ -19,12 +19,6 @@
             Financieel Administratief</div> -->
     </div>
 </template>
-  
-<style scoped>
-* {
-    font-family: 'Roboto';
-}
-</style>
 
 <script>
 import Expertise from "./Expertise.vue";

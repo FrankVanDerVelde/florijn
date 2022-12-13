@@ -100,7 +100,6 @@ export default {
 }
 
 .input-container label {
-  font-family: 'Roboto', sans-serif;
   font-weight: 600;
   color: var(--neutral-400);
   font-size: 14px
@@ -111,7 +110,6 @@ export default {
   color: black;
   border: 1px solid var(--neutral-200);
   border-radius: 6px;
-  font-family: 'Roboto', sans-serif;
   height: 40px;
   font-size: 16px;
 }
