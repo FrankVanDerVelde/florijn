@@ -134,7 +134,7 @@ public class SkillInteractor implements SkillBusinessLogic {
         if (!(user.get() instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
-        System.out.println(specialist.getExpertises());
+//        System.out.println(specialist.getExpertises());
         return specialist.getExpertises();
     }
 

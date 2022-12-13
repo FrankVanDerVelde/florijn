@@ -141,7 +141,7 @@ public class HourRegistrationRepositoryTests {
             try {
                 hourRegistrationRepository.deleteHourRegistration(id);
             } catch (Exception e) {
-                System.out.println(e);
+//                System.out.println(e);
                 throw new RuntimeException(e);
             }
         }

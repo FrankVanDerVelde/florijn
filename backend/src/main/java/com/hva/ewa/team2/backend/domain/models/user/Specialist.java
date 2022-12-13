@@ -47,6 +47,10 @@ public class Specialist extends User {
         this.expertises = new ArrayList<>();
     }
 
+    public Specialist(int id, String email, String profilePictureURL, String firstName, String lastName) {
+        this(id, email, null, profilePictureURL, firstName, lastName);
+    }
+
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
         this(id, email, password, profilePictureURL, firstName, lastName, null);
     }

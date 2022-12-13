@@ -25,6 +25,7 @@ public abstract class User {
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
+//    @Column(columnDefinition = ("varchar(255) default 'defaults/default-avatar.png'"))
     protected String avatarUrl;
 
     @Getter
@@ -38,9 +39,14 @@ public abstract class User {
 
     public User() {}
 
+
+
     public User(int id, String email, String password, String profilePictureURL, Role role) {
         this.id = id;
         this.email = email;
+        if (profilePictureURL == null) {
+            profilePictureURL = "defaults/default-avatar.png";
+        }
         this.avatarUrl = profilePictureURL;
         this.password = password;
         this.role = role;

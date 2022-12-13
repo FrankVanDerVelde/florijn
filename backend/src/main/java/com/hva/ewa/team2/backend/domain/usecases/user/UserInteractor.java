@@ -1,11 +1,17 @@
 package com.hva.ewa.team2.backend.domain.usecases.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,9 +20,12 @@ public class UserInteractor implements UserBusinessLogic {
 
     private final UserRepository userRepo;
 
+    private final AssetService assetService;
+
     @Autowired
-    public UserInteractor(UserRepository userRepo) {
+    public UserInteractor(UserRepository userRepo, AssetService assetService) {
         this.userRepo = userRepo;
+        this.assetService = assetService;
     }
 
     @Override
@@ -35,45 +44,73 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User updateUser(int id, JsonNode body) {
-        System.out.println(body);
+    public User updateUser(int id, JsonUserData body) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
         Optional<User> found = this.userRepo.findById(id);
 
-        if (found.isEmpty())
-            throw new IllegalStateException("There is no user found with that id!");
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
 
         User user = found.get();
 
-        user.setEmail(body.get("email").asText());
-//        user.setPassword(body.get("password").asText());
-        user.setAvatarUrl(body.get("avatarUrl").asText());
-
         if (user instanceof Admin admin) {
-            if (body.get("firstName") == null || body.get("lastName") == null)
-                throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-            admin.setFirstName(body.get("firstName").asText());
-            admin.setLastName(body.get("lastName").asText());
-        } else if (user instanceof Specialist specialist) {
-            if (body.get("firstName") == null || body.get("lastName") == null)
-                throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-            specialist.setFirstName(body.get("firstName").asText());
-            specialist.setLastName(body.get("lastName").asText());
-            JsonNode newAddress = body.get("address");
-            Address address = new Address(
-                    newAddress.get("place").asText(),
-                    newAddress.get("street").asText(),
-                    newAddress.get("houseNumber").asInt(),
-                    newAddress.get("houseNumberAddition").asText(),
-                    newAddress.get("postalCode").asText()
-            );
+            Admin newAdminData = mapper.readValue(body.getUser(), Admin.class);
 
-            specialist.setAddress(address);
+            admin.setEmail(newAdminData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                admin.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            admin.setFirstName(newAdminData.getFirstName());
+            admin.setLastName(newAdminData.getLastName());
+        } else if (user instanceof Specialist specialist) {
+            Specialist newSpecialistData = mapper.readValue(body.getUser(), Specialist.class);
+
+            specialist.setEmail(newSpecialistData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                System.out.println("users/avatars/" + user.getId() + "." + extension);
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                specialist.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            specialist.setFirstName(newSpecialistData.getFirstName());
+            specialist.setLastName(newSpecialistData.getLastName());
+
+            Address newAddress = mapper.readValue(body.getAddress(), Address.class);
+
+            specialist.setAddress(newAddress);
         } else if (user instanceof Client client) {
-            if (body.get("name") == null || body.get("bannerSrc") == null)
-                throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-            client.setName(body.get("name").asText());
-            client.setBannerSrc(body.get("bannerSrc").asText());
+            Client newClientData = mapper.readValue(body.getUser(), Client.class);
+
+            client.setEmail(newClientData.getEmail());
+
+            if (body.getAvatarFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getAvatarFile().getOriginalFilename());
+                assetService.uploadAsset(body.getAvatarFile(), "users/avatars/" + user.getId() + "." + extension, true);
+
+                client.setAvatarUrl("users/avatars/" + user.getId() + "." + extension);
+            }
+
+            if (body.getBannerFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getBannerFile().getOriginalFilename());
+                assetService.uploadAsset(body.getBannerFile(), "projects/" + user.getId() + "." + extension, true);
+
+                client.setBannerSrc("projects/" + user.getId() + "." + extension);
+            }
+
+            client.setName(newClientData.getName());
+
         }
+
+        System.out.println(user.getRole());
+
         return this.userRepo.save(user);
     }
 
