@@ -42,11 +42,6 @@ deploy_fe_development:
   image: node:latest
   tags:
     - hva
-  only:
-    refs:
-      - development
-    changes:
-      - "frontend/**/*"
   script:
     - npm install --global vercel
     - vercel pull --yes --environment=production --token=bah3DNCH0ZwaH5SvlVV44aX7
