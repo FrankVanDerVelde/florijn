@@ -34,9 +34,6 @@ deploy_be_production:
     - cd backend
     - railway up --service=backend -d
 
-
-
-
 deploy_fe_development:
   stage: deploy
   image: node:latest
@@ -44,9 +41,9 @@ deploy_fe_development:
     - hva
   script:
     - npm install --global vercel
-    - vercel pull --yes --environment=production --token=bah3DNCH0ZwaH5SvlVV44aX7
-    - vercel build --prod --token=bah3DNCH0ZwaH5SvlVV44aX7
-    - vercel deploy --prebuilt --prod --token=bah3DNCH0ZwaH5SvlVV44aX7
+    - cd frontend && vercel pull --yes --environment=production --token=bah3DNCH0ZwaH5SvlVV44aX7
+    - cd frontend && vercel build --prod --token=bah3DNCH0ZwaH5SvlVV44aX7
+    - cd frontend && vercel deploy --prebuilt --prod --token=bah3DNCH0ZwaH5SvlVV44aX7
 
 deploy_be_development:
   stage: deploy
