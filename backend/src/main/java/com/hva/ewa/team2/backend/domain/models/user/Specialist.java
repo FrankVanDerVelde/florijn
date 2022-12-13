@@ -1,16 +1,19 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+
+@Entity
+@PrimaryKeyJoinColumn(name = "user_id")
 public class Specialist extends User {
 
     @Getter
@@ -22,15 +25,30 @@ public class Specialist extends User {
     @JsonView(EssentialInfo.class)
     private String lastName;
 
-    private final List<UserSkill> skills;
-    private List<UserExpertise> expertises;
+    @Getter
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<UserSkill> skills;
 
     @Getter
     @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Expertise> expertises;
+
+    @Getter
+    @Setter
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    public Specialist() {
+        this.skills = new ArrayList<>();
+        this.expertises = new ArrayList<>();
+    }
+
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
-        this(id, email, password, profilePictureURL, firstName, lastName, new Address());
+        this(id, email, password, profilePictureURL, firstName, lastName, null);
     }
 
     public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
@@ -40,22 +58,6 @@ public class Specialist extends User {
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
         this.address = address;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public List<UserSkill> getSkills() {
-        return skills;
-    }
-
-    public List<UserExpertise> getExpertises() {
-        return expertises;
     }
 
     public UserSkill getUserSkill(Skill skill) {
@@ -78,7 +80,7 @@ public class Specialist extends User {
         return newSkill;
     }
 
-    public List<UserExpertise> updateUserExpertise(ArrayList<UserExpertise> expertises) {
+    public List<Expertise> updateUserExpertise(ArrayList<Expertise> expertises) {
 //        List<UserExpertise> userExpertises = expertises.stream()
 //                .map(expertise -> (new UserExpertise(expertise.getId(), this.getId())))
 //                .collect(Collectors.toList());

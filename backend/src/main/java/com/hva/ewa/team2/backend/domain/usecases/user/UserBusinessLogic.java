@@ -13,7 +13,7 @@ public interface UserBusinessLogic {
 
     List<User> getAllUsers();
 
-    List<User> getUsersByRole(String role);
+    List<User> getUsersByRole(User.Role role);
 
     User updateUser(int id, JsonUserData body) throws IOException;
 

@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserInteractor implements UserBusinessLogic {
+
     private final UserRepository userRepo;
 
     private final AssetService assetService;
@@ -28,20 +30,23 @@ public class UserInteractor implements UserBusinessLogic {
 
     @Override
     public User getUserById(int id) {
-        return this.userRepo.getUserById(id);
+        return this.userRepo.findById(id).orElse(null);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return this.userRepo.getAllUsers();
+        return this.userRepo.findAll();
     }
 
     @Override
-    public List<User> getUsersByRole(String role) {
-        return this.userRepo.getUsersByRole(role);
+    public List<User> getUsersByRole(User.Role role) {
+        return this.userRepo.findUsersByRole(role);
     }
 
     @Override
+    public User updateUser(int id, JsonNode body) {
+        System.out.println(body);
+        Optional<User> found = this.userRepo.findById(id);
     public User updateUser(int id, JsonUserData body) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -125,39 +130,43 @@ public class UserInteractor implements UserBusinessLogic {
         String email = body.get("email").asText();
         String password = body.get("password").asText();
         String avatarUrl = body.get("avatarUrl").asText();
-        User user = null;
 
-        switch (role) {
+        User user = switch (role) {
             case "admin" -> {
                 if (body.get("firstName") == null || body.get("lastName") == null)
                     throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                user = new Admin(-1, email, password, avatarUrl,
+                yield new Admin(-1, email, password, avatarUrl,
                         body.get("firstName").asText(), body.get("lastName").asText());
-            }
-            case "specialist" -> {
-                if (body.get("firstName") == null || body.get("lastName") == null)
-                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                user = new Specialist(-1, email, password, avatarUrl, body.get("firstName").asText(),
-                        body.get("lastName").asText());
             }
             case "client" -> {
                 if (body.get("name") == null || body.get("bannerSrc") == null)
                     throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-                user = new Client(-1, email, password, avatarUrl, body.get("name").asText(),
+                yield new Client(-1, email, password, avatarUrl, body.get("name").asText(),
                         body.get("bannerSrc").asText());
             }
-        }
-        return this.userRepo.addUser(role, user);
+            default -> {
+                if (body.get("firstName") == null || body.get("lastName") == null)
+                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
+                yield new Specialist(-1, email, password, avatarUrl, body.get("firstName").asText(),
+                        body.get("lastName").asText());
+            }
+        };
+        return this.userRepo.save(user);
     }
 
     @Override
     public User deleteUserById(int id) {
-        return this.userRepo.deleteUserById(id);
+        final Optional<User> found = this.userRepo.findById(id);
+
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
+
+        this.userRepo.deleteById(id);
+        return found.get();
     }
 
     @Override
     public Address getUsersAddressById(int id) {
-        User user = this.userRepo.getUserById(id);
+        User user = this.userRepo.findById(id).orElse(null);
         if (!(user instanceof Specialist specialist)) return null;
 
         return specialist.getAddress();

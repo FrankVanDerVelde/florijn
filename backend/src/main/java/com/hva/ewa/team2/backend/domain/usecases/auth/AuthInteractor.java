@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.usecases.auth;
 
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import org.springframework.beans.factory.annotation.Autowired;

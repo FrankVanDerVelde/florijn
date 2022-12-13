@@ -59,7 +59,7 @@ export default {
 
   computed: {
     userId() {
-      return Number.parseInt(localStorage.getItem('userId'));
+      return Number.parseInt(JSON.parse(localStorage.getItem('user')).id);
     }
   },
 

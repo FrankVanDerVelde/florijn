@@ -4,46 +4,86 @@ import com.hva.ewa.team2.backend.domain.models.user.Client;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Project {
+@Entity
+public class Project implements Serializable {
 
-    @Getter @Setter
-    private int id;
-    @Getter @Setter
+    @Getter
+    @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Getter
+    @Setter
     private String title;
-    @Getter @Setter
+
+    @Getter
+    @Setter
     private String description;
-    @Getter @Setter
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "client_id")
     private Client client;
-    @Getter @Setter
+
+    @Getter
+    @Setter
     private String logoSrc;
-    @Getter @Setter
+    @Getter
+    @Setter
+    private boolean archived;
+
+    @Getter
+    @Setter
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_id")
     private List<ProjectParticipant> participants;
 
+    public Project() {
+    }
+
     public Project(int id, String title, String description, Client client) {
-        this(id, title, description, client, "projects/sample-logo.png", new ArrayList<>());
+        this(id, title, description, client, "projects/sample-logo.png", new ArrayList<>(), false);
     }
 
     public Project(int id, String title, String description, Client client, String logoSrc) {
-        this(id, title, description, client, logoSrc, new ArrayList<>());
+        this(id, title, description, client, logoSrc, new ArrayList<>(), false);
     }
 
-    public Project(int id, String title, String description, Client client, String logoSrc, List<ProjectParticipant> specialists) {
+    public Project(int id, String title, String description, Client client, String logoSrc, List<ProjectParticipant> specialists, boolean archived) {
         this.id = id;
         this.title = title;
         this.client = client;
         this.description = description;
         this.logoSrc = logoSrc;
         this.participants = specialists;
+        this.archived = archived;
     }
 
-    public ProjectParticipant getParticipantByUserId(int userId) {
+    public ProjectParticipant getParticipantByUserId(Integer userId) {
         return participants.stream()
-                .filter(p -> p.getSpecialist().getId() == userId)
+                .filter(p -> p.getSpecialist().getId().equals(userId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", client=" + client +
+                ", logoSrc='" + logoSrc + '\'' +
+                ", archived=" + archived +
+                ", participants=" + participants +
+                '}';
     }
 
     public void addSpecialist(ProjectParticipant specialist) {

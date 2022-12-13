@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @ResponseBody
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
 
-    private AuthBusinessLogic authBusinessLogic;
+    private final AuthBusinessLogic authBusinessLogic;
 
     @Autowired
     public AuthController(AuthBusinessLogic authBusinessLogic) {

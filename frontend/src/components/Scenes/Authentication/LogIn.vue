@@ -3,7 +3,7 @@
     <div class="flex justify-end col-span-6 row-start-1 h-full form-column">
       <div class="flex w-full justify-center items-center h-full max-width">
         <form @submit.prevent="submitButton()" class="w-140">
-          <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom!</h1>
+          <h1 class="w-3 font-bold text-[20px] mb-[24px]">Welkom yoU!</h1>
           <div class="inputfield">
             <div class="input-container">
               <label class="mb-[12px]">Emailadres</label>

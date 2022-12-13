@@ -3,24 +3,38 @@ package com.hva.ewa.team2.backend.domain.models.user;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+
+@Entity
 public class Address {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter @Setter
+    private int id;
 
     @Getter
     @Setter
     private String place;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String street;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private int houseNumber;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String houseNumberAddition;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String postalCode;
 
+    public Address() {
+    }
 
     public Address(String place, String street, int houseNumber, String houseNumberAddition, String postalCode) {
         this.place = place;
@@ -28,10 +42,6 @@ public class Address {
         this.houseNumber = houseNumber;
         this.houseNumberAddition = houseNumberAddition;
         this.postalCode = postalCode;
-    }
-
-    public Address() {
-
     }
 
     @Override

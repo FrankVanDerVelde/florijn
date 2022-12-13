@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -8,14 +8,14 @@ import WelcomeClientView from "../components/Scenes/Welcome/WelcomeClientView.vu
 import ProjectLayout from "../components/Scenes/Project/Scenes/ProjectLayout.vue";
 import LogIn from "../components/Scenes/Authentication/LogIn.vue";
 import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.vue";
-import ProjectList from "../components/Scenes/Project/ProjectList.vue";
+import ProjectList from "../components/Scenes/Project/Scenes/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
 import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
 import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
 import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
-import SpecialistHourRegistrationOverview
-    from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
+import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
+import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvailibility/SpecialistAvailibilityOverview.vue";
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
@@ -63,7 +63,7 @@ const routes = [
             },
             {
                 path: 'available-hours',
-                component: AvailableHours,
+                component: SpecialistAvailibilityOverview,
             },
             {
                 path: "hour-registration",

@@ -1,13 +1,9 @@
 package com.hva.ewa.team2.backend.rest.skill;
 
-import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
-import com.hva.ewa.team2.backend.domain.models.skill.UserExpertise;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
-import com.hva.ewa.team2.backend.domain.usecases.project.ProjectBusinessLogic;
 import com.hva.ewa.team2.backend.domain.usecases.skill.SkillBusinessLogic;
-import com.hva.ewa.team2.backend.rest.project.json.JsonProjectInfo;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,12 +37,12 @@ public class SkillController {
     }
 
     @PutMapping(path = "/update-user-skill/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserSkill> updateUserSkill(@PathVariable int userId,  @RequestBody JsonUserSkill body) {
+    public ResponseEntity<UserSkill> updateUserSkill(@PathVariable int userId, @RequestBody JsonUserSkill body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkill(userId, body));
     }
 
     @PutMapping(path = "/update-user-skill-group/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId,  @RequestBody JsonUserSkillGroup body) {
+    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId, @RequestBody JsonUserSkillGroup body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
     }
 
@@ -61,12 +57,12 @@ public class SkillController {
     }
 
     @GetMapping(path = "/user-expertises/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserExpertise>> getUserExpertises(@PathVariable int userId) {
+    public ResponseEntity<List<Expertise>> getUserExpertises(@PathVariable int userId) {
         return ResponseEntity.ok(skillBusinessLogic.getUserExpertises(userId));
     }
 
     @PutMapping(path = "/update-user-expertise/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ArrayList<UserExpertise>> updateUserExpertise(@PathVariable int userId, @RequestBody ArrayList<UserExpertise> body) {
+    public ResponseEntity<ArrayList<Expertise>> updateUserExpertise(@PathVariable int userId, @RequestBody ArrayList<Expertise> body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserExpertise(userId, body));
     }
 }
