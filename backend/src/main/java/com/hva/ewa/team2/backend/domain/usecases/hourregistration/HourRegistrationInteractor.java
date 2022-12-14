@@ -77,6 +77,7 @@ public class HourRegistrationInteractor implements HourRegistrationBusinessLogic
         if (project.isEmpty())
             throw new Exception("Project not found for id: " + request.getProjectId());
 
+        System.out.println("saving....");
         HourRegistration newHours = new HourRegistration(0,
                 project.get(),
                 project.get().getParticipantByUserId(request.getUserId()),
