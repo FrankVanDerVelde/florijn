@@ -1,7 +1,7 @@
 <template>
   <div v-if="user != null" class="account-link relative cursor-pointer select-none">
     <div class="flex flex-row gap-2 items-center">
-      <img :src="user.avatarUrl" class="h-[25px] w-[25px] rounded-full">
+      <Asset :src="user.avatarUrl" class="h-[25px] w-[25px] rounded-full"/>
       <div class="account-item">{{ displayName(true) }}</div>
     </div>
     <div class="account-popup-container pt-1">
@@ -25,8 +25,11 @@
 </template>
 
 <script>
+import Asset from "./Asset.vue";
+
 export default {
   name: "ProfilePopup",
+  components: {Asset},
 
   computed: {
     user() {

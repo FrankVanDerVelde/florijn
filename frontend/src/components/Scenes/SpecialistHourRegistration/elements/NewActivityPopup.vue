@@ -3,12 +3,12 @@
     <p class="text-xl font-semibold mb-2 px-[16px]">Nieuwe activiteit</p>
     <hr class="text-neutral-300">
 
-    <form @submit.stop class="flex flex-col gap-4 pt-4 px-[16px]">
+    <form @submit.prevent class="flex flex-col gap-4 pt-4 px-[16px]">
       <div class="form-row">
         <label id="project" class="font-semibold">Project</label>
         <select v-model="selectedProjectId" class="border border-neutral-300 p-2 rounded rounded-[4px]" @change="onChanged($event.target.value)">
           <option disabled :selected="selectedProjectId === null" :value="null">Kies een project</option>
-          <option :selected="project.id === selectedProjectId" v-for="project in projects" :key="project.id" :value="project.id">{{project.title}}</option>
+          <option :selected="project.id === selectedProjectId" v-for="project in projects" :key="project.id" :value="project.id">{{ project.title }}</option>
         </select>
       </div>
 
@@ -55,6 +55,12 @@ export default {
       description: null
     }
   },
+  computed: {
+    userId() {
+      return JSON.parse(localStorage.getItem('user')).id;
+    }
+  },
+
   async created() {
     await this.loadProjects();
     if (this.hourRegistration) {
@@ -84,7 +90,7 @@ export default {
         await this.hourRegistrationRepository
             .create(
                 this.selectedProjectId,
-                0,
+                this.userId,
                 this.convertTimeToDateString(this.from),
                 this.convertTimeToDateString(this.to),
                 this.description
@@ -96,20 +102,20 @@ export default {
     },
 
     async updateHourRegistration() {
-        try {
-          await this.hourRegistrationRepository
-              .update(
-                  this.hourRegistration.id,
-                  this.hourRegistration.project.id,
-                  0,
-                  this.convertTimeToDateString(this.from),
-                  this.convertTimeToDateString(this.to),
-                  this.description
-              );
-          this.$emit('activity-added');
-        } catch (e) {
-          console.error(e);
-        }
+      try {
+        await this.hourRegistrationRepository
+            .update(
+                this.hourRegistration.id,
+                this.hourRegistration.project.id,
+                this.userId,
+                this.convertTimeToDateString(this.from),
+                this.convertTimeToDateString(this.to),
+                this.description
+            );
+        this.$emit('activity-added');
+      } catch (e) {
+        console.error(e);
+      }
     },
 
     convertTimeToDateString(timeStringInHoursMinutes) {

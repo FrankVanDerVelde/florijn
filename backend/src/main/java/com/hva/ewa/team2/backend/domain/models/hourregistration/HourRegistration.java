@@ -9,33 +9,40 @@ import com.hva.ewa.team2.backend.rest.hourregistration.HourRegistrationViews;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 
+@Entity
 public class HourRegistration {
 
     @Getter
     @Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Getter
     @Setter
     @JsonProperty("participant")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private ProjectParticipant projectParticipant;
 
     @Getter
     @JsonView(HourRegistrationViews.HourRegistrationProject.class)
+    @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
 
     @Getter
     @Setter
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime from;
 
     @Getter
     @Setter
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime to;
 
     @Getter
@@ -43,7 +50,9 @@ public class HourRegistration {
     private String description;
 
     @Getter
-    private Optional<Status> status;
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     public HourRegistration(int id, Project project, ProjectParticipant participant, LocalDateTime from, LocalDateTime to, String description) {
         this(id, project, participant, from, to, description, null);
@@ -56,28 +65,19 @@ public class HourRegistration {
         this.from = from;
         this.to = to;
         this.description = description;
-        this.status = Optional.ofNullable(status);
+        this.status = status;
     }
 
     public HourRegistration() {
-        this.status = Optional.empty();
     }
 
     public enum Status {
         ACCEPTED,
-        REJECTED
-    }
-
-    public void setStatus(Status status) {
-        this.status = Optional.ofNullable(status);
+        REJECTED,
     }
 
     public boolean isAccepted() {
-        if (status.isPresent()) {
-            return this.status.get() == Status.ACCEPTED;
-        } else {
-            return false;
-        }
+        return this.status == Status.ACCEPTED;
     }
 
     public double getHoursSpent() {

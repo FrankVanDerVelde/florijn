@@ -17,7 +17,8 @@ import java.util.Optional;
 
 @Component
 @Primary
-public class InMemoryHourRegistrationRepository implements HourRegistrationRepository {
+@Deprecated
+public class InMemoryHourRegistrationRepository implements MemoryHourRegistrationRepository {
 
     private ArrayList<HourRegistration> hourRegistrations;
 
