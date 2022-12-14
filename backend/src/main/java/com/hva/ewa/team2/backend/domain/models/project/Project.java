@@ -41,7 +41,7 @@ public class Project implements Serializable {
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private List<ProjectParticipant> participants;
 

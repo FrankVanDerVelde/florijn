@@ -1,25 +1,39 @@
 package com.hva.ewa.team2.backend.data.hourregistration;
 
-import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
-import com.hva.ewa.team2.backend.domain.models.project.Project;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-public interface HourRegistrationRepository {
+public interface HourRegistrationRepository extends CrudRepository<HourRegistration, Integer> {
 
-    List<HourRegistration> fetchAllHourRegistrations();
+    @Query(value = "SELECT * FROM hour_registration h WHERE h.project_id = :projectId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    List<HourRegistration> findAllByProject(int projectId);
 
-    List<HourRegistration> fetchAllHourRegistrationsByUser(int userId);
-    Optional<HourRegistration> fetchHourRegistrationById(int id);
-    List<HourRegistration> fetchAllHourRegistrationByProject(int projectId);
-    List<HourRegistration> fetchAllHourRegistrationByProjectUser(Integer projectId, Integer userId);
+    @Query(value = "SELECT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    List<HourRegistration> findAllByUser(int userId);
 
-    List<HourRegistration> fetchAllAcceptedHoursForProject(Integer projectId);
+    @Query(value = "SELECT DISTINCT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.project_id = :projectId AND h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    List<HourRegistration> findAllByProjectParticipant(int projectId, int userId);
 
-    HourRegistration createHourRegistration(CreateHourRegistrationRequest request, Project project) throws Exception;
+    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED'")
+    Double getTotalHoursForProject(int projectId);
 
-    HourRegistration updateHourRegistration(int id, HourRegistration hourRegistration) throws Exception;
-    Optional<HourRegistration> deleteHourRegistration(int id) throws Exception;
+    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED'")
+    Double getTotalHoursForProject(int projectId, int userId);
+
+    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED' AND h.from >= :from AND h.from <= :to")
+    Double getTotalHoursForProjectBetween(int projectId, LocalDateTime from, LocalDateTime to);
+
+    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED' AND h.from >= :from AND h.from <= :to")
+    Double getTotalHoursForProjectBetween(int projectId, int userId, LocalDateTime from, LocalDateTime to);
+
+    @Query(value = "SELECT sum(((h.to - h.from) / 10000) * h.projectParticipant.hourlyRate) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED'")
+    Double getTotalCostsForProject(int projectId);
+
+    @Query(value = "SELECT sum(((h.to - h.from) / 10000) * h.projectParticipant.hourlyRate) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED'")
+    Double getTotalRevenueForProject(int projectId, int userId);
+
 }
