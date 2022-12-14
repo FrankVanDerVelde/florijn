@@ -1,13 +1,12 @@
 <template>
   <div>
-
-
-    <div class="font-semibold my-2">{{ skillset.name }}</div>
+    <div class="font-semibold mb-2 mt-4">{{ skillset.name }}</div>
 
     <div v-if="expand">
-      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skill" :key="selectedSkill">
+      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skills" :key="selectedSkill">
         <label class="mark">
-          <input type="checkbox" :name="`${selectedSkill}`">
+          <input type="checkbox" id="checkbox" v-model="selectedSkill.checked"
+                 @click="$emit('selectedSkill', {'selectedSkill' : selectedSkill, 'checked' : selectedSkill.checked})">
           <span class="checkmark"></span>
         </label>
         <div class="pl-7">{{ selectedSkill.name }}</div>
@@ -15,15 +14,19 @@
     </div>
 
     <div v-else>
-      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skill.slice(0,3)" :key="selectedSkill">
+      <div class="text-neutral-400 ml-4 mb-1" v-for="selectedSkill in skillset.skills.slice(0,4)" :key="selectedSkill">
         <label class="mark">
-          <input type="checkbox" :name="`${selectedSkill}`" :id="`${skill}`">
+          <input type="checkbox" id="checkbox" v-model="selectedSkill.checked"
+                 @click="$emit('selectedSkill', {'selectedSkill' : selectedSkill, 'checked' : selectedSkill.checked})">
           <span class="checkmark"></span>
         </label>
         <div class="pl-7">{{ selectedSkill.name }}</div>
       </div>
     </div>
-    <div class="text-primary-500 font-bold pl-10" @click="expand = !expand">Uitbreiden</div>
+    <div class="text-primary-500 font-bold pl-10 cursor-pointer" @click="expand = !expand">
+      <div v-if="!expand">Uitbreiden</div>
+      <div v-else>Inklappen</div>
+    </div>
 
   </div>
 </template>
@@ -33,22 +36,25 @@
 
 export default {
   name: "FilterParticipants",
+  emits: ['selectedSkill'],
 
   components: {},
   props: {
     skillset: {
-      type: [Array, Object]
+      type: [Array, Object],
+      required: true,
     }
   },
+
   data() {
     return {
       expand: false,
 
     }
   }
-
-
 }
+
+
 </script>
 
 <style scoped>

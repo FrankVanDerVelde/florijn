@@ -131,7 +131,7 @@ export default {
       this.project = this.getSampleProject();
     }
 
-    this.clients = await this.fetchService.fetchJson(`/users/role/client`);
+    this.clients = await this.fetchService.fetchJson(`/users/role/CLIENT`);
     if (!this.newProject) this.injectProjectInfo();
 
     // when a non-existing project is requested, redirect to the /projects page.

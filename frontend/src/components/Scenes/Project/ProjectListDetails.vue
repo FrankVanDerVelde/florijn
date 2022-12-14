@@ -1,28 +1,26 @@
 <template>
-  <div class="container main-container rounded-xl">
+  <div class="w-full main-container rounded-xl">
     <router-link :to="{name: 'project-overview', params: {projectId: project.id}}"
-                 class="flex mt-4 p-2 w-full justify-center">
+                 class="flex px-3 py-4 w-full justify-center">
 
       <Asset :src="logoSrc" alt="project logo" class="icon-container"/>
 
-      <div class="flex flex-col justify-between container ml-4">
+      <div class="flex flex-col justify-between w-full ml-4">
         <div class="flex flex-col mb-3">
           <div class="font-bold">{{ project.title }}</div>
-          <div class="font-semibold text-neutral-500">{{ project.description }}</div>
+          <div class="font-normal text-neutral-500">{{ project.description }}</div>
         </div>
 
-        <div class="container flex justify-between m-1">
-
-          <div class="flex flex-row">
-            <stat :dot="false" icon="users" class="bottom-0">{{ project.participants.length }}</stat>
-            <stat v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</stat>
+        <div class="w-full flex items-end justify-between my-1 gap-2 flex-wrap">
+          <div>
+            <AvatarStack :participants="this.project.participants" :client="this.project.client"/>
+            <stat v-if="project.archived" :dot="false" class="mt-2" icon="box-archive">Gearchiveerd</stat>
           </div>
-
           <button class="bg-primary-400 rounded-md bold p-2 mr-2 h-[32px] flex items-center text-neutral-0">Bekijk
             Project
           </button>
         </div>
-      </div>
+        </div>
 
     </router-link>
   </div>
@@ -30,12 +28,12 @@
 </template>
 
 <script>
-import Stat from "./Stat.vue";
 import Asset from "../../Common/Asset.vue";
-import Stats from "./Stats.vue";
+import AvatarStack from "./AvatarStack.vue";
+import Stat from "./Stat.vue";
 
 export default {
-  components: {Stats, Asset, Stat},
+  components: {Stat, Asset, AvatarStack},
   name: "ProjectListDetails",
   inject: ["fetchService"],
 

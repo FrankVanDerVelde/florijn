@@ -12,6 +12,8 @@
 
 <script setup>
 
+localStorage.setItem("id", "null")
+localStorage.setItem("role", "null")
 
 </script>
 
