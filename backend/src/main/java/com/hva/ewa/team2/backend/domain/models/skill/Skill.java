@@ -1,9 +1,11 @@
 package com.hva.ewa.team2.backend.domain.models.skill;
 
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Skill {
@@ -16,9 +18,8 @@ public class Skill {
 
     @Getter
     @Setter
-    @ManyToOne(targetEntity = SkillGroup.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private Integer groupId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private SkillGroup skillGroup;
 
     @Getter
     @Setter
@@ -31,9 +32,9 @@ public class Skill {
     public Skill() {
     }
 
-    public Skill(Integer id, Integer groupId, String name, String description) {
+    public Skill(Integer id, SkillGroup skillGroup, String name, String description) {
         this.id = id;
-        this.groupId = groupId;
+        this.skillGroup = skillGroup;
         this.name = name;
         this.description = description;
     }

@@ -1,7 +1,8 @@
 package com.hva.ewa.team2.backend;
 
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
-import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
+import com.hva.ewa.team2.backend.data.skill.ExpertiseRepository;
+import com.hva.ewa.team2.backend.data.skill.SkillGroupRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
@@ -25,12 +26,19 @@ public class BackendApplication implements CommandLineRunner {
 
     private final UserRepository userRepo;
     private final SkillRepository skillRepo;
+
+    private final SkillGroupRepository skillGroupRepository;
+
+    private final ExpertiseRepository expertiseRepository;
+
     private final ProjectRepository projectRepo;
 
     @Autowired
-    public BackendApplication(UserRepository userRepo, SkillRepository skillRepo, ProjectRepository projectRepo) {
+    public BackendApplication(UserRepository userRepo, SkillRepository skillRepo, SkillGroupRepository skillGroupRepository, ExpertiseRepository expertiseRepository, ProjectRepository projectRepo) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
+        this.skillGroupRepository = skillGroupRepository;
+        this.expertiseRepository = expertiseRepository;
         this.projectRepo = projectRepo;
     }
 
@@ -42,7 +50,7 @@ public class BackendApplication implements CommandLineRunner {
     public void run(String... args) {
         loadUsers();
         loadProjects();
-//        loadSkills();
+        loadSkills();
     }
 
     private void loadUsers() {
@@ -169,23 +177,26 @@ public class BackendApplication implements CommandLineRunner {
         String[] groupNames = new String[]{"OFFICE FRONT-END", "BACK-END", "DATABASE", "WEB BASED FRONT-END", "Business Intelligence","Power BI", "Werkwijze"};
         Integer[] skillPositions = {11, 11, 9, 21, 13, 8, 5};
 
-
+        ArrayList<SkillGroup> skillGroups = new ArrayList<>();
         for (int i = 0; i < groupNames.length; i++) {
             SkillGroup skillGroup = new SkillGroup(i, groupNames[i], "This is the group for " + groupNames[i]);
-            skillRepo.saveSkillGroup(skillGroup);
+            skillGroups.add(skillGroup);
+            skillGroupRepository.save(skillGroup);
         }
 
-        int arrayPosition = 0;
-        int lastPosition = 0;
-        for (int i = skillPositions[arrayPosition]; i < skillNames.length; i++) {
-            skillRepo.save(new Skill(i, arrayPosition, skillNames[i], "Your ability to use " + skillNames[i]));
-            if (lastPosition == skillPositions[arrayPosition]) arrayPosition++;
+        int index = 0;
+        for (int i = 0; i < skillPositions.length; i++) {
+            for (int j = 0; j < skillPositions[i]; j++) {
+                Skill newSkill = new Skill(index, skillGroups.get(i), skillNames[i], "Your ability to use " + skillNames[i]);
+                skillRepo.save(newSkill);
+                index++;
+            }
         }
 
         String[] expertiseNames = new String[]{"Financieel Administratief", "Hypotheken" ,"Facturatie/Offertes","Secutirisaties","Boekhouding","CRM","Rapportage-tools","Conversietools", "Workflow", "Logistieke Processen", "Engineering", "Bouw & Infra", "Marketing", "(semi) Overheidsinstelling", "Web/App Development"};
 
         for (int i = 0; i < expertiseNames.length; i++) {
-            skillRepo.saveExpertise(new Expertise(i, expertiseNames[i]));
+            expertiseRepository.save(new Expertise(i, expertiseNames[i]));
         }
     }
 

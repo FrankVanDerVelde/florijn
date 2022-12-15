@@ -23,8 +23,7 @@ public class SkillGroup {
     private String description;
 
     @Getter @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "skillGroup", cascade = CascadeType.ALL)
     private List<Skill> skills;
 
     public SkillGroup() {}
