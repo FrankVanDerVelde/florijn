@@ -30,7 +30,7 @@ export default {
     SideBarNav
   },
   created() {
-    if (localStorage.getItem("user") === "null") {
+    if (localStorage.getItem("user") == null) {
       this.$router.push({name: "home"});
     }
   },

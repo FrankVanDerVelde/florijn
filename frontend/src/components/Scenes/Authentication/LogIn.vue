@@ -50,8 +50,7 @@ export default {
   name: "LogIn.vue",
   inject: ['fetchService'],
   created() {
-    if (localStorage.getItem("user") !== "null") {
-      console.log(localStorage.getItem("user"))
+    if (localStorage.getItem("user") !== null) {
       this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
     }
   },
@@ -71,10 +70,7 @@ export default {
       }
 
       if (userData !== null) {
-
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("role", userData.role);
 
         this.pushHelperMethod(userData.role)
       } else {
