@@ -1,10 +1,12 @@
 package com.hva.ewa.team2.backend;
 
 import com.hva.ewa.team2.backend.common.services.date.DateService;
+import com.hva.ewa.team2.backend.data.Availability.AvailabilityRepository;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
@@ -17,6 +19,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 @SpringBootApplication
@@ -27,18 +31,21 @@ public class BackendApplication implements CommandLineRunner {
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
     private final DateService dateService;
+    private final AvailabilityRepository availability;
 
     @Autowired
     public BackendApplication(UserRepository userRepo,
                               MemorySkillRepository skillRepo,
                               ProjectRepository projectRepo,
                               HourRegistrationRepository hourRegistrationRepo,
-                              DateService dateService) {
+                              DateService dateService,
+                              AvailabilityRepository availability) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
         this.projectRepo = projectRepo;
         this.hourRegistrationRepo = hourRegistrationRepo;
         this.dateService = dateService;
+        this.availability = availability;
     }
 
     public static void main(String[] args) {
@@ -50,6 +57,7 @@ public class BackendApplication implements CommandLineRunner {
         loadUsers();
         loadProjects();
         loadHourRegistrations();
+        loadAvailabilities();
     }
 
     private void loadUsers() {
@@ -142,6 +150,39 @@ public class BackendApplication implements CommandLineRunner {
                 dateService.currentDay(13, 0),
                 dateService.currentDay(17, 30),
                 "Gewerkt aan het project"
+        ));
+    }
+
+    public void loadAvailabilities() {
+        availability.save(new Availability(
+                userRepo.findById(1).orElse(null),
+                LocalDate.now(),
+                LocalTime.of(8, 0),
+                LocalTime.of(12, 0)
+        ));
+        availability.save(new Availability(
+                userRepo.findById(1).orElse(null),
+                LocalDate.now(),
+                LocalTime.of(13, 0),
+                LocalTime.of(17, 0)
+        ));
+        availability.save(new Availability(
+                userRepo.findById(1).orElse(null),
+                LocalDate.now().plusDays(7),
+                LocalTime.of(8, 0),
+                LocalTime.of(12, 0)
+        ));
+        availability.save(new Availability(
+                userRepo.findById(1).orElse(null),
+                LocalDate.now().minusDays(7),
+                LocalTime.of(8, 0),
+                LocalTime.of(12, 0)
+        ));
+        availability.save(new Availability(
+                userRepo.findById(1).orElse(null),
+                LocalDate.now().minusDays(7).minusYears(1),
+                LocalTime.of(8, 0),
+                LocalTime.of(12, 0)
         ));
     }
 
