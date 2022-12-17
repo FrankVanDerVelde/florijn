@@ -82,7 +82,7 @@ import moment from "moment";
 
 export default {
   name: "NewAvailabilityPopup",
-  inject: ['projectFetchService', 'availabilityRepository', 'dateService', 'holidays'],
+  inject: ['projectFetchService', 'memoryAvailabilityRepository', 'dateService', 'holidays'],
   emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked', 'availability-changed'],
   props: {
     dayIndex: Number,
@@ -140,7 +140,7 @@ export default {
         const date = this.momentDate.format('yyyy-MM-DD')
         const from = moment(this.from, 'hh:mm').format('HH:mm');
         const to = moment(this.to, 'hh:mm').format('HH:mm');
-        let result = await this.availabilityRepository.createAvailability(this.userId, date, from, to);
+        let result = await this.memoryAvailabilityRepository.createAvailability(this.userId, date, from, to);
         console.log(result);
         this.notifyAvailabilityChanged();
       } catch (e) {
@@ -157,7 +157,7 @@ export default {
         const from = moment(this.from, 'HH:mm').format('HH:mm');
         const to = moment(this.to, 'HH:mm').format('HH:mm');
         console.log([date, from, to]);
-        await this.availabilityRepository.updateAvailability(this.availability.id, date, from, to);
+        await this.memoryAvailabilityRepository.updateAvailability(this.availability.id, date, from, to);
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
@@ -171,7 +171,7 @@ export default {
 
     async handleDeleteTapped() {
       try {
-        await this.availabilityRepository.deleteAvailability(this.availability.id);
+        await this.memoryAvailabilityRepository.deleteAvailability(this.availability.id);
         this.notifyAvailabilityChanged()
       } catch (e) {
         console.error(e);

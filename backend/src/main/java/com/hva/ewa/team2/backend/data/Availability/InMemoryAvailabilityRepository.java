@@ -17,7 +17,8 @@ import java.util.Optional;
 
 @Component
 @Primary
-public class InMemoryAvailabilityRepository implements AvailabilityRepository {
+@Deprecated
+public class InMemoryAvailabilityRepository implements MemoryAvailabilityRepository {
 
     private List<Availability> availabilities;
     private final DateServiceLogic dateService;

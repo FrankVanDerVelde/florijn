@@ -25,8 +25,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -231,81 +238,57 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
         List<ProjectReport> reports = new ArrayList<>();
 
-        if (user.get() instanceof Specialist specialist) {
-            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProjectUser(projectId, userId);
+        final TemporalField weekField = WeekFields.of(Locale.GERMANY).weekOfWeekBasedYear();
 
+        LocalDateTime startMonth = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime endMonth = LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth());
+        LocalDateTime startWeek = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDateTime endWeek = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        if (user.get() instanceof Specialist specialist) {
             reports.add(new ProjectReport(
                     "Totaal gemaakte uren",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId, userId))
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze maand",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent)
-                            .sum()
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startMonth, endMonth)
                     )
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze week",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent)
-                            .sum()
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startWeek, endWeek)
                     )
             ));
 
             reports.add(new ProjectReport(
                     "Verdiensten",
-                    String.format("€%,.2f", projectRegistrations.stream()
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
-                            .sum()
+                    String.format("€%,.2f", hourRegistrationRepo.getTotalRevenueForProject(projectId, userId)
                     ).replace(".", ",")
             ));
         } else {
-            List<HourRegistration> projectRegistrations = hourRegistrationRepo.fetchAllHourRegistrationByProject(projectId);
-
             reports.add(new ProjectReport(
                     "Totaal gemaakte uren",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent).sum())
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId))
+
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze maand",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> dateService.isThisMonth(reg.getFrom()))
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent)
-                            .sum()
-                    )
-            ));
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startMonth, endMonth)
+            )));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze week",
-                    String.format("%.2f", projectRegistrations.stream()
-                            .filter(reg -> dateService.isThisWeek(reg.getFrom()))
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(HourRegistration::getHoursSpent)
-                            .sum()
-                    )
-            ));
+                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startWeek, endWeek)
+            )));
 
             reports.add(new ProjectReport(
                     "Ontwikkelkosten",
-                    String.format("€%,.2f", projectRegistrations.stream()
-                            .filter(reg -> reg.getStatus().isEmpty() || reg.getStatus().get() == HourRegistration.Status.ACCEPTED)
-                            .mapToDouble(reg -> reg.getHoursSpent() * reg.getProjectParticipant().getHourlyRate())
-                            .sum()
-                    ).replace(".", ",")
+                    String.format("%.2f", hourRegistrationRepo.getTotalCostsForProject(projectId))
+                            .replace(".", ",")
             ));
         }
 

@@ -1,12 +1,15 @@
 <template>
   <div class="banner-container grid">
-    <img :src="project.client?.bannerSrc ?? '/src/assets/banner-default.webp'" :class="{'max-h-[200px]': preview}" alt="banner">
+    <Asset :src="project.client?.bannerSrc ?? 'defaults/default-banner.webp'" :class="{'max-h-[200px]': preview}" alt="banner"/>
   </div>
 </template>
 
 <script>
+import Asset from "../../Common/Asset.vue";
+
 export default {
   name: "ProjectBanner",
+  components: {Asset},
 
   props: {
     project: {

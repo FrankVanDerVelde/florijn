@@ -84,7 +84,7 @@ import NotAvailableRow from "./elements/NotAvailableRow.vue";
 export default {
   name: "SpecialistAvailibilityOverview",
   components: {PrimaryButton, CalendarDayOption, AvailabilitySlot, NewAvailabilityPopup, NotAvailableRow},
-  inject: ['dateService', 'availabilityRepository'],
+  inject: ['dateService', 'memoryAvailabilityRepository'],
   data() {
     return {
       week: [],
@@ -122,7 +122,7 @@ export default {
     },
 
     async fetchWeekAvailability() {
-      return await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.userId, this.weekDelta);
+      return await this.memoryAvailabilityRepository.fetchAvailabilityForUserInWeek(this.userId, this.weekDelta);
     },
 
     sortAvailabilityPerDay(weekAvailability) {
@@ -187,7 +187,7 @@ export default {
     async handleCopyToNextWeek() {
       try {
         console.log('handleCopyToNextWeek');
-        let weekAvailability = await this.availabilityRepository.copyToWeek(this.userId, this.weekDelta);
+        let weekAvailability = await this.memoryAvailabilityRepository.copyToWeek(this.userId, this.weekDelta);
         console.log(weekAvailability)
         this.weekNumber += 1;
         this.weekDelta += 1;
