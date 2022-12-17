@@ -25,7 +25,7 @@ export default {
       userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),
       userService: new UserAdaptor(),
-      availabilityRepository: new AvailabilityRepository(),
+      memoryAvailabilityRepository: new AvailabilityRepository(),
       holidays: new Holidays('NL')
     }
   },

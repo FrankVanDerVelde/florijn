@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface AvailabilityBusinessLogic {
 
-    List<Availability> handleFetchAvailabilityByUser(int userId, Optional<Integer> weekNumber);
+    List<Availability> handleFetchAvailabilityByUser(int userId, Optional<Integer> weekNumber, Optional<Integer> year);
 
     Availability handleCreateAvailability(CreateAvailabilityRequest request) throws Exception;
 
@@ -17,10 +17,8 @@ public interface AvailabilityBusinessLogic {
 
     Availability handleUpdateAvailability(int id, UpdateAvailabilityRequest request) throws Exception;
 
-    void handleDuplicateToNextWeek(int userId, int weekNumber) throws Exception;
+Optional<Availability> handleGetAvailabilityById(int id) throws Exception;
 
-    Availability handleGetAvailabilityById(int id) throws Exception;
-
-    List<Availability> handleCopyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception;
+    List<Availability> handleCopyAvailabilityToNextWeek(int userId, Optional<Integer> week, Optional<Integer> year) throws Exception;
 
 }
