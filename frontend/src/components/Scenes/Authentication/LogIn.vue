@@ -48,7 +48,7 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['fetchService'],
+  inject: ['authenticationRepository', 'storedTokenRepository'],
   created() {
     if (localStorage.getItem("user") !== null) {
       this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
@@ -62,21 +62,23 @@ export default {
       let userData;
 
       try {
-        userData = await this.fetchService.fetchJsonPost("/auth/login",
-            ({email: this.email.trim(), password: this.password}));
+        userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
       } catch (e) {
         console.error(e)
         userData = null;
       }
 
-      if (userData !== null) {
-        localStorage.setItem("user", JSON.stringify(userData));
+      console.log(this.storedTokenRepository.getToken())
+      console.log(this.storedTokenRepository.getUser())
 
-        this.pushHelperMethod(userData.role)
-      } else {
-        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
-        this.password = '';
-      }
+      // if (userData !== null) {
+      //   localStorage.setItem("user", JSON.stringify(userData));
+      //
+      //   this.pushHelperMethod(userData.role)
+      // } else {
+      //   this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
+      //   this.password = '';
+      // }
     },
     pushHelperMethod(role){
       switch (role) {
