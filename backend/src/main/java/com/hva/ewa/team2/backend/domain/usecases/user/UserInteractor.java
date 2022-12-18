@@ -39,8 +39,8 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public List<User> getUsersByRole(User.Role role) {
-        return this.userRepo.findUsersByRole(role);
+    public <U extends User> List<U> getUsersByRole(User.Role role, Class<U> clazz) {
+        return this.userRepo.findUsersByRole(role, clazz);
     }
 
     @Override

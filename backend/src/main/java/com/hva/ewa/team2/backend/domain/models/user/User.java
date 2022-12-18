@@ -36,10 +36,7 @@ public abstract class User {
     @Setter
     @JsonView(EssentialInfo.class)
     protected Role role;
-
     public User() {}
-
-
 
     public User(int id, String email, String password, String profilePictureURL, Role role) {
         this.id = id;
@@ -53,9 +50,19 @@ public abstract class User {
     }
 
     public enum Role {
-        ADMIN,
-        SPECIALIST,
-        CLIENT
+        ADMIN(Admin.class),
+        SPECIALIST(Specialist.class),
+        CLIENT(Client.class);
+
+        private final Class<? extends User> userClass;
+
+        Role(Class<? extends User> userClass) {
+            this.userClass = userClass;
+        }
+
+        public Class<? extends User> getUserClass() {
+            return userClass;
+        }
     }
 
     public class EssentialInfo {

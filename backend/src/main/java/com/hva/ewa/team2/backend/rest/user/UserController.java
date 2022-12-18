@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable User.Role role) {
-        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
+    public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role, role.getUserClass()));
     }
 
     @JsonView(User.EssentialInfo.class)
