@@ -1,5 +1,5 @@
 <template>
-  <ProjectParticipantList :edit-button="userId >= 2" :participants="project.participants" :client="project.client"/>
+  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants" :client="project.client"/>
 
   <section class="pt-[48px]">
     <h2 class="header-2">Uren</h2>
@@ -58,8 +58,11 @@ export default {
   },
 
   computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user'));
+    },
     userId() {
-      return Number.parseInt(JSON.parse(localStorage.getItem('user')).id);
+      return Number.parseInt(this.user.id);
     }
   },
 
@@ -73,7 +76,7 @@ export default {
 
   methods: {
     async fetchReports() {
-      this.reports = await this.fetchService.fetchJsonPost(`/projects/${this.project.id}/reports`, {userId: this.userId});
+      this.reports = await this.fetchService.fetchJson(`/projects/${this.project.id}/reports?userId=${this.userId}`);
     },
     async fetchHourRegistry() {
       this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);

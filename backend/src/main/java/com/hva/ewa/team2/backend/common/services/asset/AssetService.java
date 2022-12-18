@@ -33,7 +33,7 @@ public class AssetService implements AssetServiceLogic {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read file: " + assetName);
+                throw new RuntimeException("Could not read file: " + assetName + " (exists=" + resource.exists() + ", readable=" + resource.isReadable() + ")");
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not read file: " + assetName, e);

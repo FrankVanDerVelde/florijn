@@ -13,7 +13,7 @@ public class SkillGroup {
     @Getter
     @Setter
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Getter @Setter
@@ -28,11 +28,11 @@ public class SkillGroup {
 
     public SkillGroup() {}
 
-    public SkillGroup(int id, String name, String description) {
+    public SkillGroup(Integer id, String name, String description) {
         this(id, name, description, new ArrayList<>());
     }
 
-    public SkillGroup(int id, String name, String description, ArrayList<Skill> skills) {
+    public SkillGroup(Integer id, String name, String description, ArrayList<Skill> skills) {
         this.id = id;
         this.name = name;
         this.description = description;

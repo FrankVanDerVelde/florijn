@@ -108,9 +108,9 @@ public class ProjectController {
 
     // Reports (summaries)
 
-    @PostMapping(path = "/{id}/reports")
-    public ResponseEntity<List<ProjectReport>> getReports(@PathVariable int id, @RequestBody JsonNode body) {
-        return ResponseEntity.ok(projectInteractor.getProjectReports(id, body));
+    @GetMapping(path = "/{id}/reports")
+    public ResponseEntity<List<ProjectReport>> getReports(@PathVariable int id, @RequestParam("userId") int userId) {
+        return ResponseEntity.ok(projectInteractor.getProjectReports(id, userId));
     }
 
 }
