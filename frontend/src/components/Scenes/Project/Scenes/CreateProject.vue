@@ -62,7 +62,10 @@
 
             <div class="mt-2 border border-app_red-200 rounded-md">
               <ul>
-                <DangerZoneRow @click="$refs.ownershipModal.open = true" title="Eigendom overdragen" button="Overdragen"
+                <DangerZoneRow v-if="user.role === 'ADMIN'"
+                               @click="$refs.ownershipModal.open = true"
+                               title="Eigendom overdragen"
+                               button="Overdragen"
                                description="Draag het eigendom van dit project over aan een andere klant."/>
 
                 <DangerZoneRow v-if="!project.archived" @click="$refs.archiveModal.open = true" title="Archiveer dit project" button="Archiveer"
