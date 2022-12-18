@@ -63,7 +63,7 @@ public class BackendApplication implements CommandLineRunner {
         loadSkills();
         loadUsers();
         loadProjects();
-//        loadHourRegistrations();
+        loadHourRegistrations();
         loadAvailabilities();
         setRandomSkillList();
     }
@@ -194,8 +194,8 @@ public class BackendApplication implements CommandLineRunner {
         String[] groupNames = new String[]{"OFFICE FRONT-END", "BACK-END", "DATABASE", "WEB BASED FRONT-END", "Business Intelligence","Power BI", "Werkwijze"};
         Integer[] skillPositions = {11, 11, 9, 21, 13, 8, 5};
 
-        for (int i = 0; i < groupNames.length; i++) {
-            SkillGroup skillGroup = new SkillGroup(0, groupNames[i], "This is the group for " + groupNames[i]);
+        for (String groupName : groupNames) {
+            SkillGroup skillGroup = new SkillGroup(0, groupName, "This is the group for " + groupName);
             skillGroupRepository.save(skillGroup);
         }
 
@@ -210,8 +210,8 @@ public class BackendApplication implements CommandLineRunner {
 
         String[] expertiseNames = new String[]{"Financieel Administratief", "Hypotheken" ,"Facturatie/Offertes","Secutirisaties","Boekhouding","CRM","Rapportage-tools","Conversietools", "Workflow", "Logistieke Processen", "Engineering", "Bouw & Infra", "Marketing", "(semi) Overheidsinstelling", "Web/App Development"};
 
-        for (int i = 0; i < expertiseNames.length; i++) {
-            expertiseRepository.save(new Expertise(0, expertiseNames[i]));
+        for (String expertiseName : expertiseNames) {
+            expertiseRepository.save(new Expertise(0, expertiseName));
         }
     }
 
@@ -316,7 +316,7 @@ public class BackendApplication implements CommandLineRunner {
             for (int i = 0; i < halfListSize; i++) {
                 int randomRating = ThreadLocalRandom.current().nextInt(1, 5 + 1);
                 // Add a skill to the specialist with a random rating
-                userSkills.add(new UserSkill(0, skills.get(i), randomRating));
+                userSkills.add(new UserSkill(0, specialist, skills.get(i), randomRating));
 
             }
             specialist.setSkills(userSkills);

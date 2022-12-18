@@ -1,12 +1,10 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
@@ -26,15 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
@@ -221,15 +215,10 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<ProjectReport> getProjectReports(int projectId, JsonNode body) {
+    public List<ProjectReport> getProjectReports(int projectId, int userId) {
         final Project project = getProjectOrThrowError(projectId);
 
         // TODO: Integrate backend authorisation here.
-        if (!body.has("userId")) {
-            throw new IllegalArgumentException("No user id was provided.");
-        }
-
-        final int userId = body.get("userId").asInt(-1);
         final Optional<User> user = userRepo.findById(userId);
 
         if (user.isEmpty()) {
@@ -248,19 +237,17 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         if (user.get() instanceof Specialist specialist) {
             reports.add(new ProjectReport(
                     "Totaal gemaakte uren",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId, userId))
+                    hourRegistrationRepo.getTotalHoursForProject(projectId, userId) + ""
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze maand",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startMonth, endMonth)
-                    )
+                    hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startMonth, endMonth) + ""
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze week",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startWeek, endWeek)
-                    )
+                    hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startWeek, endWeek) + ""
             ));
 
             reports.add(new ProjectReport(
@@ -269,25 +256,26 @@ public class ProjectInteractor implements ProjectBusinessLogic {
                     ).replace(".", ",")
             ));
         } else {
+            final Object totalHoursForProject = hourRegistrationRepo.getTotalHoursForProject(projectId);
+            System.out.println(totalHoursForProject);
             reports.add(new ProjectReport(
                     "Totaal gemaakte uren",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId))
-
+                    totalHoursForProject + ""
             ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze maand",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startMonth, endMonth)
-            )));
+                    hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startMonth, endMonth) + ""
+            ));
 
             reports.add(new ProjectReport(
                     "Gemaakte uren deze week",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startWeek, endWeek)
-            )));
+                    hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startWeek, endWeek) + ""
+            ));
 
             reports.add(new ProjectReport(
                     "Ontwikkelkosten",
-                    String.format("%.2f", hourRegistrationRepo.getTotalCostsForProject(projectId))
+                    String.format("€%.2f", hourRegistrationRepo.getTotalCostsForProject(projectId))
                             .replace(".", ",")
             ));
         }

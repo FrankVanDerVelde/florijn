@@ -14,29 +14,31 @@ public abstract class User {
     @Setter
     @JsonView(EssentialInfo.class)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
-    protected String email;
+    public String email;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
 //    @Column(columnDefinition = ("varchar(255) default 'defaults/default-avatar.png'"))
-    protected String avatarUrl;
+    public String avatarUrl;
 
     @Getter
     @Setter
-    protected String password;
+    public String password;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
-    protected Role role;
-    public User() {}
+    public Role role;
+
+    public User() {
+    }
 
     public User(int id, String email, String password, String profilePictureURL, Role role) {
         this.id = id;

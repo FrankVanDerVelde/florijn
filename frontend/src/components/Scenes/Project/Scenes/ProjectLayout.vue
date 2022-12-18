@@ -26,12 +26,6 @@ export default {
   components: {ProjectLogo, ProjectBanner, ProjectHeader},
   inject: ['projectFetchService'],
 
-  watch: {
-    '$route.query.userId': async function () {
-      localStorage.setItem('userId', this.$route.query.userId);
-    }
-  },
-
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user'));
@@ -40,8 +34,7 @@ export default {
       return Number.parseInt(this.user.id);
     },
     hasAdminPrivileges() {
-      console.log(this.project);
-      return this.project.client?.id === this.user?.id || this.user?.role === "ADMIN";
+      return this.project.client?.id === this.userId || this.user?.role === "ADMIN";
     }
   },
 
