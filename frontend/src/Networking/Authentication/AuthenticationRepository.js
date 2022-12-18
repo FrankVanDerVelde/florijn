@@ -1,16 +1,14 @@
 import {NetworkClient} from "../NetworkClient";
 import {HttpMethod} from "../HttpMethod";
-import {StoredTokenRepository} from "./StoredTokenRepository";
-import CONFIG from '/config.js'
 
 export class AuthenticationRepository {
 
     #networkClient;
     #storedTokenRepository;
 
-    constructor() {
+    constructor(storedTokenRepository) {
         this.#networkClient = new NetworkClient();
-        this.#storedTokenRepository = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
+        this.#storedTokenRepository = storedTokenRepository;
     }
 
     /**
@@ -23,26 +21,15 @@ export class AuthenticationRepository {
         const path = `/auth/login`;
         const body = {"email": email, "password": password};
 
-        const response = await this.#networkClient.executeRequest(
-            path,
-            HttpMethod.POST,
-            body,
-            this.#networkClient.getDefaultHeader(),
-            {
-                credentials: "include"
-            }
-        );
-        console.log("response= "+ response)
+        const user = await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
 
-        if (response.ok) {
-            let user = await response.json();
-            this.#storedTokenRepository.saveToken(
-                response.headers.get('Authorization'),
-                user);
+        if (user != null) {
+            const token = user.token;
+            delete user.token;
+            this.#storedTokenRepository.saveToken(token, user);
+
             return user;
-        } else {
-            console.log(response)
-            return null;
         }
+        return null;
     }
 }

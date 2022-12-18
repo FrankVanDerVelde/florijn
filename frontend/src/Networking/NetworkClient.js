@@ -34,6 +34,10 @@ export class NetworkClient {
             if (response.ok) {
                 const data = await response.json();
                 this.#logNetworkResponse(response, data);
+
+                if (response.headers.has("Authorization"))
+                    data.token = response.headers.get("Authorization");
+
                 return data;
             } else {
                 throw {

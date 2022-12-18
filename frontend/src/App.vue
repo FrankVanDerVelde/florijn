@@ -18,6 +18,7 @@ import CONFIG from '/config.js'
 export default {
   name: "App",
   provide() {
+    const storedTokenRepository = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
     return {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),
@@ -27,8 +28,8 @@ export default {
       userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),
       memoryAvailabilityRepository: new AvailabilityRepository(),
-      storedTokenRepository: new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM),
-      authenticationRepository: new AuthenticationRepository(),
+      storedTokenRepository: storedTokenRepository,
+      authenticationRepository: new AuthenticationRepository(storedTokenRepository),
       holidays: new Holidays('NL')
     }
   },

@@ -15,11 +15,10 @@ export class StoredTokenRepository {
 
         if (token == null) {
             this.#user = null;
-            window.sessionStorage.removeItem(this.BROWSER_STORAGE_ITEM_NAME);
+            window.sessionStorage.removeItem(this.#BROWSER_STORAGE_ITEM_NAME);
         } else {
-            console.log("New token for " + user.name + ": " + token);
-            window.sessionStorage.setItem(this.BROWSER_STORAGE_ITEM_NAME, token);
-            window.localStorage.setItem("user", user);
+            console.log("New token for " + user.firstName + ": " + token);
+            window.sessionStorage.setItem(this.#BROWSER_STORAGE_ITEM_NAME, token);
         }
     }
 
