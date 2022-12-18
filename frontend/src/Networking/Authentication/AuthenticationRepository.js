@@ -23,7 +23,15 @@ export class AuthenticationRepository {
         const path = `/auth/login`;
         const body = {"email": email, "password": password};
 
-        const response = await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
+        const response = await this.#networkClient.executeRequest(
+            path,
+            HttpMethod.POST,
+            body,
+            this.#networkClient.getDefaultHeader(),
+            {
+                credentials: "include"
+            }
+        );
         console.log("response= "+ response)
 
         if (response.ok) {
