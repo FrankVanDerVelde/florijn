@@ -37,7 +37,6 @@ export default {
       return JSON.parse(item);
     },
   },
-
   methods: {
     displayName(lastName = false) {
       // user is a client
@@ -53,9 +52,7 @@ export default {
       if (this.user == null) {
         return;
       }
-      localStorage.setItem("user", null);
-      localStorage.setItem("id", null);
-      localStorage.setItem("role", null);
+      localStorage.removeItem("user")
       location.reload();
     }
   }

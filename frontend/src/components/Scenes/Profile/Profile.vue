@@ -30,8 +30,8 @@ export default {
     SideBarNav
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "ADMIN" || localStorage.getItem("role") === "CLIENT") {
-      this.$router.push("/home");
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
     }
   },
     data() {

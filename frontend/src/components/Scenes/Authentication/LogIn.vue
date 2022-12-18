@@ -50,9 +50,8 @@ export default {
   name: "LogIn.vue",
   inject: ['fetchService'],
   created() {
-    if (localStorage.getItem("id") !== "null") {
-      localStorage.setItem("id", "null");
-      localStorage.setItem("role", "null");
+    if (localStorage.getItem("user") !== null) {
+      this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
     }
   },
   methods: {
@@ -71,28 +70,28 @@ export default {
       }
 
       if (userData !== null) {
-
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("role", userData.role);
 
-        switch (userData.role) {
-          case "ADMIN": {
-            this.$router.push({name: "admin-home"});
-            break;
-          }
-          case "SPECIALIST": {
-            this.$router.push({name: "specialist-home"});
-            break;
-          }
-          case "CLIENT": {
-            this.$router.push({name: "client-home"});
-            break;
-          }
-        }
+        this.pushHelperMethod(userData.role)
       } else {
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
+      }
+    },
+    pushHelperMethod(role){
+      switch (role) {
+        case "ADMIN": {
+          this.$router.push("/adminpanel/customer-list");
+          break;
+        }
+        case "SPECIALIST": {
+          this.$router.push({name: "projects"});
+          break;
+        }
+        case "CLIENT": {
+          this.$router.push({name: "projects"});
+          break;
+        }
       }
     }
   },
