@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public interface SkillRepository extends CrudRepository<Skill, Integer> {
 
     @Query(value = "SELECT s FROM Skill s WHERE s.id = :id")
-    Expertise getSkillById(int id);
+    Skill getSkillById(int id);
 
     @Query(value = "SELECT s FROM Skill s")
     ArrayList<Skill> getAllSkills();
