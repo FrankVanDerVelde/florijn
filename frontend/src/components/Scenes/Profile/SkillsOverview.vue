@@ -30,7 +30,8 @@ export default {
     inject: ['skillFetchService'],
     methods: {
         updateUserExpertises(expertiseId) {
-            const userExpertiseIds = this.userExpertises.map((expertise) => expertiseId);
+            console.log('update triggered')
+            const userExpertiseIds = this.userExpertises.map(expertise => expertise.id);
             if (!userExpertiseIds.includes(expertiseId)) {
                 this.userExpertises.push({id: expertiseId, userId: this.user.id});     
             } else {

@@ -69,8 +69,15 @@ export default {
         },
         handleFormButton() {
             this.active = !this.active;
+            
+            const response = this.group.skills.map(skill => {
+                return {id: skill.id, rating: skill.rating}
+            })
+
+            console.log(response)
+
             if (!this.active) {
-                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/${this.user.id}`, "PUT", this.group);
+                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/${this.user.id}`, "PUT", response);
             }
         },
         handleSkillUpdate(skillId, newValue) {
