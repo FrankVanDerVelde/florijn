@@ -50,7 +50,6 @@ export default {
   name: "LogIn.vue",
   inject: ['authenticationRepository', 'storedTokenRepository', 'fetchService'],
   created() {
-    localStorage.removeItem("user")
     if (localStorage.getItem("user") !== null) {
       this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
     }
