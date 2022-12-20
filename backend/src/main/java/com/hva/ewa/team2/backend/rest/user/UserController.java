@@ -48,6 +48,11 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
     }
 
+    @PutMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateResume(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.updateResume(id, body));
+    }
+
     @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
         return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));

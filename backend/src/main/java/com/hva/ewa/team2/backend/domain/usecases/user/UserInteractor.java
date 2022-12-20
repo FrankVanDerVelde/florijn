@@ -164,4 +164,24 @@ public class UserInteractor implements UserBusinessLogic {
         return specialist.getAddress();
     }
 
+    @Override
+    public User updateResume(int id, JsonUserData body) throws IOException {
+        Optional<User> found = this.userRepo.findById(id);
+
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
+
+        User user = found.get();
+
+        if (user instanceof Specialist specialist) {
+            if (body.getResumeFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getResumeFile().getOriginalFilename());
+                assetService.uploadAsset(body.getResumeFile(), "users/resumes/" + user.getId() + "." + extension, true);
+
+                specialist.setResumeURL("users/resumes/" + user.getId() + "." + extension);
+            }
+        }
+
+        return this.userRepo.save(user);
+    }
+
 }

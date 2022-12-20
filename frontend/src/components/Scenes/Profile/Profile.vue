@@ -43,6 +43,11 @@ export default {
                 href: '/profile/personal-info',
             },
             {
+                icon: 'fa-solid fa-file',
+                name: 'resume',
+                href: '/profile/resume',
+            },
+            {
                 icon: 'fa-solid fa-lightbulb',
                 name: 'skills',
                 href: '/profile/skills',
