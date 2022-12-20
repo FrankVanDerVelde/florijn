@@ -8,14 +8,17 @@
 <script>
 import {DateService} from "./Services/DateService.js";
 import FetchService from "./Services/FetchService.js";
-import {UserAdaptor} from "./Services/user-adaptor.js";
+import {StoredTokenRepository} from "./Networking/Authentication/StoredTokenRepository.js";
+import {AuthenticationRepository} from "./Networking/Authentication/AuthenticationRepository.js";
 import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegistrationRepository.js";
 import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepository.js";
 import Holidays from "date-holidays";
+import CONFIG from '/config.js'
 
 export default {
   name: "App",
   provide() {
+    const storedTokenRepository = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
     return {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),
@@ -24,8 +27,9 @@ export default {
       specialistFetchService: new FetchService("/specialists"),
       userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),
-      userService: new UserAdaptor(),
       memoryAvailabilityRepository: new AvailabilityRepository(),
+      storedTokenRepository: storedTokenRepository,
+      authenticationRepository: new AuthenticationRepository(storedTokenRepository),
       holidays: new Holidays('NL')
     }
   },
