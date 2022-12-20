@@ -1,4 +1,3 @@
-import FetchService from "../../Services/FetchService.js";
 import {Availability} from "../../components/models/Availability.js";
 import {HttpMethod} from "../HttpMethod.js";
 import {NetworkClient} from "../NetworkClient.js";
@@ -13,9 +12,9 @@ export class AvailabilityRepository {
 
     /**
      * Fetches a list of Availability for the specified week
-     * @param userId
-     * @param weekNumber
-     * @return {Promise<[Availability]>}
+     * @param {Number} userId user's id
+     * @param {Number} weekNumber week number
+     * @return {Promise<[Availability]>} list of availabilities on the specified week.
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
         const path = `/users/${userId}/availability?weekNumber=${weekNumber}`;
@@ -25,10 +24,10 @@ export class AvailabilityRepository {
 
     /**
      * create a new availability
-     * @param userId
-     * @param date
-     * @param fromTime
-     * @param toTime
+     * @param {Number} userId
+     * @param {String} date Formatted date using YYYY-MM-dd format (like: 2022-03-24 for 2022 March the 24th.)
+     * @param {String} fromTime Formatted time using HH:mm format (like: 12:30)
+     * @param {String} toTime Formatted time using HH:mm format (like: 12:30)
      * @return {Promise<Availability|null>}
      */
     async createAvailability(userId, date, fromTime, toTime) {
@@ -44,11 +43,11 @@ export class AvailabilityRepository {
 
     /**
      * Updates an availability
-     * @param id
-     * @param date
-     * @param fromTime
-     * @param toTime
-     * @return {Promise<*|null>}
+     * @param {Number} id user's id
+     * @param {String} date Formatted date using YYYY-MM-dd format/ (like: 2022-03-24 for 2022 March the 24th.)
+     * @param {String} fromTime Formatted time using HH:mm format.
+     * @param {String} toTime  Formatted time using HH:mm format.
+     * @return {Promise<Availability|null>} updated Availability.
      */
     async updateAvailability(id, date, fromTime, toTime) {
         const path = `/availability/${id}/update`;
@@ -63,8 +62,8 @@ export class AvailabilityRepository {
 
     /**
      * Deletes an availability
-     * @param id
-     * @return {Promise<Availability>}
+     * @param {Number} id id of the Availability.
+     * @return {Promise<Availability>} deleted Availability.
      */
     async deleteAvailability(id) {
         const path = `/availability/${id}/delete`;
@@ -74,8 +73,8 @@ export class AvailabilityRepository {
 
     /**
      * Gets the availability
-     * @param id
-     * @return {Promise<Availability|null>}
+     * @param {Number} id id of the Availability.
+     * @return {Promise<Availability|null>} Availability.
      */
     async getAvailability(id) {
         const path = `/availability/${id}`;
@@ -83,8 +82,20 @@ export class AvailabilityRepository {
         return Availability.fromJSON(result);
     }
 
-    async copyToWeek(userId, weekNumber) {
-        const path = `/users/${userId}/availability/weeks/${weekNumber}/set-on-next-week`;
+    /**
+     * Copies the specified week number to the next week.
+     * @param {Number} userId The user's id.
+     * @param {Number} weekNumber week number of the year that you want to copy from. (1...51)
+     * @param {Number} year year number you want to copy from.
+     * @return {Promise<[Availability]>} List of availabilities for next week.
+     */
+    async copyToWeek(userId, weekNumber, year) {
+        let queryOptions = {
+            weekNumber: weekNumber,
+            year: year
+        }
+        const queryOptionString = new URLSearchParams(queryOptions).toString();
+        const path = `/users/${userId}/availability/set-on-next-week?${queryOptionString}`;
         let result = await this.#networkClient.executeRequest(path, HttpMethod.POST);
         return result.map(Availability.fromJSON);
     }
