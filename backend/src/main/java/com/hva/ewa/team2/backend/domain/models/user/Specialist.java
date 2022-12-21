@@ -47,6 +47,10 @@ public class Specialist extends User {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    @Getter
+    @Setter
+    String resumeURL;
+
     public Specialist() {
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
@@ -57,16 +61,17 @@ public class Specialist extends User {
     }
 
     public Specialist(Integer id, String email, String password, String profilePictureURL, String firstName, String lastName) {
-        this(id, email, password, profilePictureURL, firstName, lastName, null);
+        this(id, email, password, profilePictureURL, firstName, lastName, null, null);
     }
 
-    public Specialist(Integer id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
+    public Specialist(Integer id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address, String resumeURL) {
         super(id, email, password, profilePictureURL, Role.SPECIALIST);
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
         this.address = address;
+        this.resumeURL = resumeURL;
     }
 
     public UserSkill getUserSkill(Skill skill) {

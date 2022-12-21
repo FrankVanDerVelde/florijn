@@ -62,8 +62,8 @@ public class AssetService implements AssetServiceLogic {
             fileName = fileName.substring(1);
         }
 
+        if (file.isEmpty()) throw new IllegalArgumentException("Failed to store empty file.");
         try {
-            if (file.isEmpty()) throw new IllegalArgumentException("Failed to store empty file.");
 
             Path destination = this.rootLocation.resolve(
                     Path.of(fileName)

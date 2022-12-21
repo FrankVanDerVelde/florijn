@@ -22,4 +22,6 @@ public interface UserBusinessLogic {
     User deleteUserById(int id);
 
     Address getUsersAddressById(int id);
+
+    User updateResume(int id, JsonUserData body) throws IOException;
 }

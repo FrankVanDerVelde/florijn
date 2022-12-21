@@ -30,6 +30,7 @@ import Asset from "./Asset.vue";
 export default {
   name: "ProfilePopup",
   components: {Asset},
+  inject: ['storedTokenRepository'],
 
   computed: {
     user() {
@@ -53,6 +54,7 @@ export default {
         return;
       }
       localStorage.removeItem("user")
+      this.storedTokenRepository.signOut();
       location.reload();
     }
   }

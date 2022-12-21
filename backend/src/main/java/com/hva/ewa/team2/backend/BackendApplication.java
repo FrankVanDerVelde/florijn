@@ -73,11 +73,11 @@ public class BackendApplication implements CommandLineRunner {
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
         Address dummyAddress3 = new Address("Diemen", "Gert Jan Straat", 14, "A", "1133XJ");
 
-        userRepo.save(new Specialist(1, "withneyk@florijn.com", "test", "users/avatars/1.avif", "Withney", "Keulen", dummyAddress1));
-        userRepo.save(new Specialist(2, "jant@florijn.com", "test", "users/avatars/2.avif", "Jan", "Timmermans", dummyAddress2));
+        userRepo.save(new Specialist(1, "withneyk@florijn.com", "test", "users/avatars/1.avif", "Withney", "Keulen", dummyAddress1, null));
+        userRepo.save(new Specialist(2, "jant@florijn.com", "test", "users/avatars/2.avif", "Jan", "Timmermans", dummyAddress2, null));
 
         userRepo.save(new Admin(3, "admin@test.com", "test", null, "Admin", "Test"));
-        userRepo.save(new Specialist(4, "specialist@test.com", "test", "users/avatars/3.avif", "Kingsley", "Mckenzie", dummyAddress3));
+        userRepo.save(new Specialist(4, "specialist@test.com", "test", "users/avatars/3.avif", "Kingsley", "Mckenzie", dummyAddress3, null));
         userRepo.save(new Client(5, "contact@ing.nl", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
 
 //        setRandomSkills(new Specialist(6, "specialist2@test.com", "test", "users/avatars/6.png", "Sam", "Janssen", dummyAddress1));

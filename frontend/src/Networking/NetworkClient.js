@@ -15,7 +15,7 @@ export class NetworkClient {
      * @param {HttpMethod} method Specify the HttpMethod to use. Defaults to HttpMethod.GET.
      * @param {Object} body Body to use with the request, null by default.
      * @param {Object} headers Specify header fields you want to include.
-     * @param {Object} options Native JavaScript fetch options. Do not specify the `header` field in the options, use the `headers` parameter from this.
+     * @param {RequestInit} options Native JavaScript fetch options. Do not specify the `header` field in the options, use the `headers` parameter from this.
      * @return {Promise<[Object]|Object|String>} return value.
      */
     async executeRequest(
@@ -34,6 +34,10 @@ export class NetworkClient {
             if (response.ok) {
                 const data = await response.json();
                 this.#logNetworkResponse(response, data);
+
+                if (response.headers.has("Authorization"))
+                    data.token = response.headers.get("Authorization");
+
                 return data;
             } else {
                 throw {
@@ -48,10 +52,18 @@ export class NetworkClient {
         }
     }
 
+    /**
+     * Merges options and returns the final `RequestInit` object.
+     * @param {HttpMethod} method method to use for the request.
+     * @param {Object|null} body Object body, will be turned into a String.
+     * @param {Object|null} headers headers to include, giving a value will override the default headers.
+     * @param {RequestInit} options additional options to provide that will be used in the return value.
+     * @return {RequestInit} merged request options.
+     */
     #getRequestOptionsForMethod(method, body, headers, options) {
         const defaultOptions = {
             method: method,
-            header: this.#signHeaderWithToken(headers ?? this.#getDefaultHeader()),
+            headers: this.#signHeaderWithToken(headers ?? this.getDefaultHeader()),
             ...options
         }
         if (this.#supportsBodyForHttpMethod(method) && body) {
@@ -92,7 +104,7 @@ export class NetworkClient {
         return `${this.#baseURL}${correctedPath}`;
     }
 
-    #getDefaultHeader() {
+    getDefaultHeader() {
         return this.#signHeaderWithToken({
             'Content-Type': 'application/json',
             'Accept': 'application/json',

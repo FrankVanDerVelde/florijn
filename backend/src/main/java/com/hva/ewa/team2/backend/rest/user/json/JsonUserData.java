@@ -32,15 +32,20 @@ public class JsonUserData {
     @Setter
     private MultipartFile bannerFile;
 
+    @Getter
+    @Setter
+    private MultipartFile resumeFile;
+
     public JsonUserData() {
     }
 
-    public JsonUserData(int id, String user, String address, MultipartFile avatarFile, MultipartFile bannerFile) {
+    public JsonUserData(int id, String user, String address, MultipartFile avatarFile, MultipartFile bannerFile, MultipartFile resumeFile) {
         this.id = id;
         this.user = user;
         this.address = address;
         this.avatarFile = avatarFile;
         this.bannerFile = bannerFile;
+        this.resumeFile = resumeFile;
     }
 
     @Override
