@@ -14,10 +14,16 @@ export class AvailabilityRepository {
      * Fetches a list of Availability for the specified week
      * @param {Number} userId user's id
      * @param {Number} weekNumber week number
+     * @param {Number} year year
      * @return {Promise<[Availability]>} list of availabilities on the specified week.
      */
-    async fetchAvailabilityForUserInWeek(userId, weekNumber) {
-        const path = `/users/${userId}/availability?weekNumber=${weekNumber}`;
+    async fetchAvailabilityForUserInWeek(userId, weekNumber, year) {
+        let queryOptions = {
+            weekNumber: weekNumber,
+            year: year
+        }
+        const queryOptionString = new URLSearchParams(queryOptions).toString();
+        const path = `/users/${userId}/availability?${queryOptionString}`;
         let results = await this.#networkClient.executeRequest(path, HttpMethod.GET);
         return results.map(Availability.fromJSON);
     }

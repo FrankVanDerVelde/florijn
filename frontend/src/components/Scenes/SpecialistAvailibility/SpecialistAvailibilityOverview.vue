@@ -5,8 +5,8 @@
       <div @click.="console.log('ckicled')" class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
         <NewAvailabilityPopup
-            :day-index="addingAvailabilityForDayIndex"
-            :week-index="weekNumber"
+            :year="selected.year"
+            :day-of-year="addingAvailabilityForDayOfYear"
             :availability="selectedAvailability"
             @availability-changed="handleAvailabilityChanged"
             @activity-cancel-clicked="showingModel = false"
@@ -18,7 +18,7 @@
     <div class="flex">
       <div class="flex flex-col gap-[11px]">
         <div class="flex justify-between w-full">
-          <p class="text-3xl text-neutral-400 font-medium ">{{ year }}</p>
+          <p class="text-3xl text-neutral-400 font-medium ">{{ selected.year }}</p>
           <div class="flex gap-3">
             <button @click="handleCopyToNextWeek" class="secondary-button">
               <font-awesome-icon icon="fa-solid fa-paste" class="pr-2" />
@@ -80,32 +80,42 @@ import AvailabilitySlot from "./elements/AvailabilitySlot.vue";
 import NewAvailabilityPopup from "./elements/NewAvailabilityPopup.vue";
 import {WeekAvailability} from "../../models/WeekAvailability.js";
 import NotAvailableRow from "./elements/NotAvailableRow.vue";
+import moment from "moment";
 
 export default {
   name: "SpecialistAvailibilityOverview",
   components: {PrimaryButton, CalendarDayOption, AvailabilitySlot, NewAvailabilityPopup, NotAvailableRow},
-  inject: ['dateService', 'memoryAvailabilityRepository'],
+  inject: ['dateService', 'availabilityRepository'],
   data() {
     return {
       week: [],
       availability: new WeekAvailability(),
       selectedAvailability: null,
-      addingAvailabilityForDayIndex: null,
-      weekNumber: 0,
-      weekDelta: 0,
-      year: "",
+      addingAvailabilityForDayOfYear: null,
+      selected: {
+        year: 0,
+        week: 0,
+        dayOfYear: 0,
+      },
       showingModel: false,
       userId: Number(localStorage.id)
     }
   },
   async created() {
-    this.weekNumber = this.dateService.currentWeekOfYear();
-    this.loadWeekBar();
+    this.selectThisWeek();
     await this.loadWeekAvailability();
   },
   methods: {
+
+    selectThisWeek() {
+      this.selected.week = this.dateService.currentWeekOfYear();
+      this.selected.year = this.dateService.currentYear();
+      this.selected.dayOfYear = this.dateService.currentDayOfYear();
+      this.loadWeekBar();
+    },
+
     loadWeekBar() {
-      this.week = this.dateService.isoWorkWeekDays(this.weekNumber)
+      this.week = this.dateService.isoWorkWeekDays(this.selected.week)
           .map(day => {
             return {
               day: day.date.format("dddd"),
@@ -113,7 +123,6 @@ export default {
               weekDayIndex: day.weekDayIndex,
             }
           });
-      this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
 
     async loadWeekAvailability() {
@@ -122,7 +131,11 @@ export default {
     },
 
     async fetchWeekAvailability() {
-      return await this.memoryAvailabilityRepository.fetchAvailabilityForUserInWeek(this.userId, this.weekDelta);
+      return await this.availabilityRepository.fetchAvailabilityForUserInWeek(
+          this.userId,
+          this.selected.week,
+          this.selected.year
+      );
     },
 
     sortAvailabilityPerDay(weekAvailability) {
@@ -133,14 +146,8 @@ export default {
       });
     },
 
-    handleThisWeekClicked() {
+    async handleThisWeekClicked() {
       this.selectThisWeek();
-    },
-
-    async selectThisWeek() {
-      this.weekNumber = this.dateService.currentWeekOfYear();
-      this.weekDelta = 0;
-      this.loadWeekBar();
       await this.loadWeekAvailability();
     },
 
@@ -153,10 +160,24 @@ export default {
     },
 
     async loadWeekAvailabilityDelta(delta) {
-      this.weekNumber += delta;
-      this.weekDelta += delta;
+      this.adjustSelectedWeekByDelta(delta);
       this.loadWeekBar();
       await this.loadWeekAvailability();
+    },
+
+    adjustSelectedWeekByDelta(delta) {
+      let newSelectedMomentDate = moment()
+          .year(this.selected.year)
+          .dayOfYear(this.selected.dayOfYear)
+
+      // Adding -1 will result in a subtraction
+      newSelectedMomentDate = delta > 0
+          ? newSelectedMomentDate.add(delta, 'week')
+          : newSelectedMomentDate.subtract(Math.abs(delta), 'week');
+
+      this.selected.week = newSelectedMomentDate.isoWeek();
+      this.selected.year = newSelectedMomentDate.year();
+      this.selected.dayOfYear = newSelectedMomentDate.dayOfYear();
     },
 
     handleAddActivityClicked() {
@@ -168,14 +189,17 @@ export default {
     },
 
     async handleAddAvailabilityClicked(dayIndex) {
-      this.addingAvailabilityForDayIndex = dayIndex;
+      this.addingAvailabilityForDayOfYear = moment()
+          .year(this.selected.year)
+          .isoWeek(this.selected.week)
+          .isoWeekday(dayIndex)
+          .dayOfYear();
       this.selectedAvailability = null;
       this.showingModel = true;
     },
 
     handleAvailabilityClicked(availability, dayIndex) {
       this.selectedAvailability = availability;
-      this.addingAvailabilityForDayIndex = dayIndex;
       this.showingModel = true;
     },
 
@@ -186,11 +210,13 @@ export default {
 
     async handleCopyToNextWeek() {
       try {
-        console.log('handleCopyToNextWeek');
-        let weekAvailability = await this.memoryAvailabilityRepository.copyToWeek(this.userId, this.weekDelta);
-        console.log(weekAvailability)
-        this.weekNumber += 1;
-        this.weekDelta += 1;
+        const weekAvailability = await this.availabilityRepository.copyToWeek(
+            this.userId,
+            this.selected.week,
+            this.selected.year
+        );
+
+        this.adjustSelectedWeekByDelta(+1);
         this.sortAvailabilityPerDay(weekAvailability);
         this.loadWeekBar()
       } catch (e) {
