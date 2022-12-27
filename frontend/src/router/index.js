@@ -44,6 +44,7 @@ const routes = [
             },
             {
                 path: 'available-hours',
+                name: 'availability',
                 component: SpecialistAvailibilityOverview,
             },
             {
@@ -53,6 +54,7 @@ const routes = [
             },
             {
                 path: "skills",
+                name: "profile-skills",
                 component: SkillsOverview,
             },
             {

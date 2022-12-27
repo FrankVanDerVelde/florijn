@@ -1,6 +1,7 @@
 package com.hva.ewa.team2.backend.domain.usecases.user;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
@@ -24,4 +25,7 @@ public interface UserBusinessLogic {
     Address getUsersAddressById(int id);
 
     User updateResume(int id, JsonUserData body) throws IOException;
+
+    List<UserRepository.UserCount> getUserCounts();
+
 }

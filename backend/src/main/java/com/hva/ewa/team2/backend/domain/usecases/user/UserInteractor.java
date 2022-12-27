@@ -184,4 +184,8 @@ public class UserInteractor implements UserBusinessLogic {
         return this.userRepo.save(user);
     }
 
+    @Override
+    public List<UserRepository.UserCount> getUserCounts() {
+        return this.userRepo.getUserCounts();
+    }
 }

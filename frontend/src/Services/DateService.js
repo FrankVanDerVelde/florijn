@@ -81,6 +81,13 @@ export class DateService {
         return `${timeSpent[0]}h ${timeSpent[1]}m`;
     }
 
+    // from a decimal hour value, return the time in hours and minutes (e.g. 5.75 => 5h 45m)
+    formatTimeSpentDecimal(decimalHours) {
+        let hours = Math.floor(decimalHours);
+        let minutes = Math.round((decimalHours - hours) * 60);
+
+        return `${hours}h ${minutes}m`;
+    }
 
 
 }

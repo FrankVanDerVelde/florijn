@@ -64,4 +64,20 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
             nativeQuery = true)
     Double getTotalRevenueForProject(int projectId, int userId);
 
+    @Query(value = """
+            SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)
+                FROM hour_registration h
+                INNER JOIN project_participant pp
+                    ON (pp.project_id = h.project_id
+                    AND pp.user_id = h.user_id)
+                WHERE pp.user_id = :userId
+                    AND h.status <> 'REJECTED'""",
+            nativeQuery = true)
+    Double getTotalRevenueForUser(Integer userId);
+
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+            "FROM hour_registration h " +
+            "WHERE h.user_id = :userId AND h.status <> 'REJECTED'",
+            nativeQuery = true)
+    Double getTotalHoursForUser(Integer userId);
 }

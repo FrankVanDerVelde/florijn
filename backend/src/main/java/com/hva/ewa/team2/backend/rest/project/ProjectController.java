@@ -1,8 +1,6 @@
 package com.hva.ewa.team2.backend.rest.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
-import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectInteractor;
@@ -37,10 +35,9 @@ public class ProjectController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Project>> getAllProjects(@RequestParam(name = "query", required = false) Optional<String> searchQuery,
-                                                        @RequestParam(name = "filter", required = false) Optional<String> filter) {
-        System.out.println("filter: " + filter.orElse(null));
-        System.out.println("query: " + searchQuery.orElse(null));
-        return ResponseEntity.ok(projectInteractor.getAllProjects(searchQuery, filter));
+                                                        @RequestParam(name = "filter", required = false) Optional<String> filter,
+                                                        @RequestParam(name = "userId", required = false) Optional<Integer> userId) {
+        return ResponseEntity.ok(projectInteractor.getAllProjects(searchQuery, filter, userId));
     }
 
     // Project CRUD
@@ -113,6 +110,21 @@ public class ProjectController {
     @GetMapping(path = "/{id}/reports")
     public ResponseEntity<List<ProjectReport>> getReports(@PathVariable int id, @RequestParam("userId") int userId) {
         return ResponseEntity.ok(projectInteractor.getProjectReports(id, userId));
+    }
+
+    @GetMapping(path = "/total")
+    public ResponseEntity<Integer> getTotalProjects(@RequestParam("userId") Optional<Integer> userId) {
+        return ResponseEntity.ok(projectInteractor.getProjectCount(userId));
+    }
+
+    @GetMapping(path = "/earnings")
+    public ResponseEntity<Double> getEarnings(@RequestParam("userId") Integer userId) {
+        return ResponseEntity.ok(projectInteractor.getEarnings(userId));
+    }
+
+    @GetMapping(path = "/hours")
+    public ResponseEntity<Double> getHours(@RequestParam("userId") Integer userId) {
+        return ResponseEntity.ok(projectInteractor.getHours(userId));
     }
 
 }
