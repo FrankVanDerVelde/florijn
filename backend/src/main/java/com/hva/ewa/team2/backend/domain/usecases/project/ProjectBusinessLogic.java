@@ -38,6 +38,6 @@ public interface ProjectBusinessLogic {
 
     List<ProjectReport> getProjectReports(int projectId, int userId);
 
-    List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter);
+    List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter);
 
 }

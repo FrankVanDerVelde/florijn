@@ -110,9 +110,9 @@ export default {
     }
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
-      this.$router.push("/home");
-    }
+    // if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
+    //   this.$router.push("/home");
+    // }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();
     this.fetchProjects();

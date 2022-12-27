@@ -284,13 +284,13 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter) {
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter) {
         if (searchQuery.isPresent() && filter.isPresent()) {
-            return projectRepo.findAll(filter.get(), searchQuery.get());
+            return projectRepo.findAll(ProjectFilter.valueOf(filter.get()), searchQuery.get());
         } else if (searchQuery.isPresent()) {
             return projectRepo.findAll(searchQuery.get());
         } else if (filter.isPresent()) {
-            return projectRepo.findAll(filter.get());
+            return projectRepo.findAll(ProjectFilter.valueOf(filter.get()));
         } else {
             return projectRepo.findAll();
         }

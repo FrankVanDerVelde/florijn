@@ -1,9 +1,4 @@
-import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
-
-import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
-import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
-import WelcomeSpecialistView from "../components/Scenes/Welcome/WelcomeSpecialistView.vue";
-import WelcomeClientView from "../components/Scenes/Welcome/WelcomeClientView.vue";
+import {createRouter, createWebHashHistory} from "vue-router";
 
 import ProjectLayout from "../components/Scenes/Project/Scenes/ProjectLayout.vue";
 import LogIn from "../components/Scenes/Authentication/LogIn.vue";
@@ -21,18 +16,17 @@ import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvail
 import Profile from "../components/Scenes/Profile/Profile.vue";
 import PublicProfile from "../components/Scenes/Profile/PublicProfile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
-import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
 import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue";
+import BaseHome from "../components/Scenes/Home/BaseHome.vue";
 
 
 const routes = [
-    {path: '/', redirect: 'login'},
-    {path: '/home', redirect: 'login', name: "home"},
-    {path: '/login', component: LogIn},
+    {path: '/', component: BaseHome, name: 'home'},
+    {path: '/login', component: LogIn, name: "login"},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
     {

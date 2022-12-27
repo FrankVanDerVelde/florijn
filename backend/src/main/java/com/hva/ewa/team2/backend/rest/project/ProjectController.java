@@ -36,8 +36,10 @@ public class ProjectController {
     // General
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Project>> getAllProjects(@RequestParam("query") Optional<String> searchQuery,
-                                                        @RequestParam(name = "filter") Optional<ProjectFilter> filter) {
+    public ResponseEntity<List<Project>> getAllProjects(@RequestParam(name = "query", required = false) Optional<String> searchQuery,
+                                                        @RequestParam(name = "filter", required = false) Optional<String> filter) {
+        System.out.println("filter: " + filter.orElse(null));
+        System.out.println("query: " + searchQuery.orElse(null));
         return ResponseEntity.ok(projectInteractor.getAllProjects(searchQuery, filter));
     }
 
