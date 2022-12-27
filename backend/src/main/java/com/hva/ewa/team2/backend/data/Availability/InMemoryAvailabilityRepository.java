@@ -2,7 +2,7 @@ package com.hva.ewa.team2.backend.data.Availability;
 
 
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
-import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.data.user.MemoryUserRepository;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -17,15 +17,16 @@ import java.util.Optional;
 
 @Component
 @Primary
-public class InMemoryAvailabilityRepository implements AvailabilityRepository {
+@Deprecated
+public class InMemoryAvailabilityRepository implements MemoryAvailabilityRepository {
 
     private List<Availability> availabilities;
     private final DateServiceLogic dateService;
 
-    private final UserRepository userRepository;
+    private final MemoryUserRepository userRepository;
 
     @Autowired
-    InMemoryAvailabilityRepository(DateServiceLogic dateService, UserRepository userRepository) {
+    InMemoryAvailabilityRepository(DateServiceLogic dateService, MemoryUserRepository userRepository) {
         this.dateService = dateService;
         this.userRepository = userRepository;
         this.availabilities = new ArrayList<>();
@@ -34,8 +35,8 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
 
     private void setUp() {
 
-        User user1 = userRepository.getUserById(1);
-        User user2 = userRepository.getUserById(2);
+        User user1 = userRepository.getUserById(2);
+        User user2 = userRepository.getUserById(3);
 
         this.availabilities.addAll(List.of(
                 new Availability(
@@ -70,7 +71,6 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
                         dateService.currentDay(22, 0).toLocalTime()
                 )
         ));
-
     }
 
 
@@ -109,10 +109,15 @@ public class InMemoryAvailabilityRepository implements AvailabilityRepository {
     }
 
     @Override
-    public Availability deleteAvailability(int id) throws Exception {
-        Availability availability = availabilities.get(id);
-        availabilities.remove(availability);
-        return availability;
+    public Optional<Availability> deleteAvailability(int id) throws Exception {
+        Optional<Availability> availability = fetchAvailabilityById(id);
+
+        if (availability.isPresent()) {
+            availabilities.removeIf(h -> h.getId() == id);
+            return availability;
+        }
+
+        return Optional.empty();
     }
 
     @Override

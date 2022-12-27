@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.data.hourregistration;
 
 import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
-import com.hva.ewa.team2.backend.data.project.ProjectRepository;
+import com.hva.ewa.team2.backend.data.project.MemoryProjectRepository;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
@@ -17,17 +17,18 @@ import java.util.Optional;
 
 @Component
 @Primary
-public class InMemoryHourRegistrationRepository implements HourRegistrationRepository {
+@Deprecated
+public class InMemoryHourRegistrationRepository implements MemoryHourRegistrationRepository {
 
     private ArrayList<HourRegistration> hourRegistrations;
 
     private final DateServiceLogic dateService;
-    private final ProjectRepository projectRepository;
+    private final MemoryProjectRepository projectRepository;
 
     private Project testProject;
 
     @Autowired
-    public InMemoryHourRegistrationRepository(DateServiceLogic dateService, ProjectRepository projectRepository) {
+    public InMemoryHourRegistrationRepository(DateServiceLogic dateService, MemoryProjectRepository projectRepository) {
         this.dateService = dateService;
         this.projectRepository = projectRepository;
         this.hourRegistrations = new ArrayList<>();
@@ -44,8 +45,8 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     private void setupHourRegistrations() {
-        final ProjectParticipant developer = testProject.getParticipantByUserId(0);
-        final ProjectParticipant designer = testProject.getParticipantByUserId(1);
+        final ProjectParticipant developer = testProject.getParticipantByUserId(1);
+        final ProjectParticipant designer = testProject.getParticipantByUserId(2);
 
         hourRegistrations = new ArrayList<>();
         hourRegistrations.addAll(List.of(
@@ -125,19 +126,17 @@ public class InMemoryHourRegistrationRepository implements HourRegistrationRepos
     }
 
     @Override
-    public List<HourRegistration> fetchAllAcceptedHoursForProject(int projectId) {
+    public List<HourRegistration> fetchAllAcceptedHoursForProject(Integer projectId) {
         return hourRegistrations.stream()
-                .filter(h -> h.getProject().getId() == projectId)
-                .filter(HourRegistration::isAccepted)
+                .filter(h -> h.getProject().getId().equals(projectId))
                 .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }
 
     @Override
-    public List<HourRegistration> fetchAllHourRegistrationByProjectUser(int projectId, int userId) {
+    public List<HourRegistration> fetchAllHourRegistrationByProjectUser(Integer projectId, Integer userId) {
         return hourRegistrations.stream()
-                .filter(h -> h.getProject().getId() == projectId && h.getProjectParticipant().getSpecialist().getId() == userId)
-                .filter(HourRegistration::isAccepted)
+                .filter(h -> h.getProject().getId().equals(projectId) && h.getProjectParticipant().getSpecialist().getId().equals(userId))
                 .sorted(Comparator.comparing(HourRegistration::getTo).reversed())
                 .toList();
     }

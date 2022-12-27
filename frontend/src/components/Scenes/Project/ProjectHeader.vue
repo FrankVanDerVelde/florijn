@@ -4,10 +4,10 @@
     <p class="description">{{ project.description }}</p>
 
     <div class="flex items-center justify-between mb-[24px]">
-      <stats class="!pb-0">
-        <stat :dot="false" icon="users">{{ participantCount }} Deelnemers</stat>
+      <Stats class="!pb-0">
+        <Stat :dot="false" icon="users">{{ participantCount }} Deelnemers</Stat>
         <stat v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</stat>
-      </stats>
+      </Stats>
       <button
           v-if="editButton"
           @click="$router.push({name: 'edit-project', params: {projectId: project.id}})"
@@ -19,6 +19,7 @@
 <script>
 import Stats from "./Stats.vue";
 import Stat from "./Stat.vue";
+
 export default {
   name: "ProjectHeader",
   components: {Stat, Stats},

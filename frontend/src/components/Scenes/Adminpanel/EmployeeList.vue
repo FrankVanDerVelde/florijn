@@ -8,7 +8,7 @@
           </router-link>
         </div>
         <div class="container grow">
-          <employee-list-details v-for="employee in employees" :key="employee.id"
+          <employee-list-details v-for="employee in employees" :key="employee.id" @click="currentSpecialist(employee)"
                                  :employee="employee"></employee-list-details>
         </div>
       </div>
@@ -48,8 +48,12 @@ export default {
           href: 'employee-list',
         }],
     }
+  },
+  methods: {
+    currentSpecialist(employee){
+      this.$router.push("/profile/public/" + employee.id);
+    }
   }
-
 }
 </script>
 

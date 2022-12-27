@@ -19,14 +19,14 @@ import java.util.Optional;
 @SpringBootTest
 public class HourRegistrationRepositoryTests {
 
-    private final HourRegistrationRepository hourRegistrationRepository;
+    private final MemoryHourRegistrationRepository hourRegistrationRepository;
     private final DateServiceLogic dateService;
 
     private Project testProject;
 
     @Autowired
     public HourRegistrationRepositoryTests(
-            HourRegistrationRepository hourRegistrationRepository,
+            MemoryHourRegistrationRepository hourRegistrationRepository,
             DateServiceLogic dateService) {
         this.hourRegistrationRepository = hourRegistrationRepository;
         this.dateService = dateService;
@@ -141,7 +141,7 @@ public class HourRegistrationRepositoryTests {
             try {
                 hourRegistrationRepository.deleteHourRegistration(id);
             } catch (Exception e) {
-                System.out.println(e);
+//                System.out.println(e);
                 throw new RuntimeException(e);
             }
         }

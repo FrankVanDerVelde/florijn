@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
 import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
@@ -19,6 +19,7 @@ import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvail
 
 // Profile components
 import Profile from "../components/Scenes/Profile/Profile.vue";
+import PublicProfile from "../components/Scenes/Profile/PublicProfile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
 import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
@@ -30,22 +31,8 @@ import AddSpecialist from "../components/Scenes/Adminpanel/AddSpecialist.vue";
 
 
 const routes = [
-    // { path: '/:pathMatch(.*)*', name: 'NotFound', component: UnknownRoute },
-    {path: '/', redirect: 'home'},
-    {path: '/home', component: WelcomeView},
-    {
-        path: '/admin/home',
-        component: WelcomeAdminView,
-        name: "admin-home"
-    },
-    {
-        path: '/specialist/home', component: WelcomeSpecialistView,
-        name: "specialist-home"
-    },
-    {
-        path: '/client/home', component: WelcomeClientView,
-        name: "client-home"
-    },
+    {path: '/', redirect: 'login'},
+    {path: '/home', redirect: 'login', name: "home"},
     {path: '/login', component: LogIn},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
@@ -80,6 +67,10 @@ const routes = [
                 component: Resume,
             },
         ]
+    },
+    {
+        path: '/profile/public/:Id',
+        component: PublicProfile,
     }, {
         path: '/adminpanel',
         name: "adminpanel",
@@ -141,10 +132,11 @@ const routes = [
             newProject: false,
             projectId: route.params.projectId,
         }),
-    }
+    },
+    { path: '/:pathMatch(.*)*', redirect: '/login'},
 ];
 
 export const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes
 });

@@ -62,7 +62,10 @@
 
             <div class="mt-2 border border-app_red-200 rounded-md">
               <ul>
-                <DangerZoneRow @click="$refs.ownershipModal.open = true" title="Eigendom overdragen" button="Overdragen"
+                <DangerZoneRow v-if="user.role === 'ADMIN'"
+                               @click="$refs.ownershipModal.open = true"
+                               title="Eigendom overdragen"
+                               button="Overdragen"
                                description="Draag het eigendom van dit project over aan een andere klant."/>
 
                 <DangerZoneRow v-if="!project.archived" @click="$refs.archiveModal.open = true" title="Archiveer dit project" button="Archiveer"
@@ -119,6 +122,11 @@ export default {
   },
 
   async created() {
+      if (localStorage.getItem("user") == null) {
+        this.$router.push({name: "home"});
+        return;
+      }
+
     if (!this.newProject) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
@@ -131,7 +139,7 @@ export default {
       this.project = this.getSampleProject();
     }
 
-    this.clients = await this.fetchService.fetchJson(`/users/role/client`);
+    this.clients = await this.fetchService.fetchJson(`/users/role/CLIENT`);
     if (!this.newProject) this.injectProjectInfo();
 
     // when a non-existing project is requested, redirect to the /projects page.

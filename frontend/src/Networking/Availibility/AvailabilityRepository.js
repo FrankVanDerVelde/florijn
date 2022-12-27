@@ -1,11 +1,14 @@
 import FetchService from "../../Services/FetchService.js";
+import {Availability} from "../../components/models/Availability.js";
+import {HttpMethod} from "../HttpMethod.js";
+import {NetworkClient} from "../NetworkClient.js";
 
 export class AvailabilityRepository {
 
-    fetcher;
+    #networkClient;
 
     constructor() {
-        this.fetcher = new FetchService('');
+        this.#networkClient = new NetworkClient();
     }
 
     /**
@@ -15,12 +18,9 @@ export class AvailabilityRepository {
      * @return {Promise<[Availability]>}
      */
     async fetchAvailabilityForUserInWeek(userId, weekNumber) {
-        try {
-            return await this.fetcher.fetchJson(`/users/${userId}/availability`);
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
+        const path = `/users/${userId}/availability?weekNumber=${weekNumber}`;
+        let results = await this.#networkClient.executeRequest(path, HttpMethod.GET);
+        return results.map(Availability.fromJSON);
     }
 
     /**
@@ -29,23 +29,17 @@ export class AvailabilityRepository {
      * @param date
      * @param fromTime
      * @param toTime
-     * @return {Promise<*|null>}
+     * @return {Promise<Availability|null>}
      */
     async createAvailability(userId, date, fromTime, toTime) {
-        try {
-            return await this.fetcher.fetchJsonMethod(
-                `/users/${userId}/availability`,
-                HttpMethods.POST,
-                {
-                    date: date,
-                    from: fromTime,
-                    to: toTime
-                }
-            );
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
+        const path = `/users/${userId}/availability`;
+        const body = {
+            date: date,
+            from: fromTime,
+            to: toTime
+        };
+        let result = await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
+        return Availability.fromJSON(result);
     }
 
     /**
@@ -57,20 +51,14 @@ export class AvailabilityRepository {
      * @return {Promise<*|null>}
      */
     async updateAvailability(id, date, fromTime, toTime) {
-        try {
-            return await this.fetcher.fetchJsonMethod(
-                `/availability/${id}/update`,
-                HttpMethods.PUT,
-                {
-                    date: date,
-                    from: fromTime,
-                    to: toTime
-                }
-            );
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
+        const path = `/availability/${id}/update`;
+        let body = {
+            date: date,
+            from: fromTime,
+            to: toTime
+        };
+        let result = await this.#networkClient.executeRequest(path, HttpMethod.PUT, body);
+        return Availability.fromJSON(result);
     }
 
     /**
@@ -79,25 +67,25 @@ export class AvailabilityRepository {
      * @return {Promise<Availability>}
      */
     async deleteAvailability(id) {
-        try {
-            return await this.fetcher.fetchJsonMethod(`/availability/${id}/delete`, HttpMethods.DELETE);
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
+        const path = `/availability/${id}/delete`;
+        let result = await this.#networkClient.executeRequest(path, HttpMethod.DELETE);
+        return Availability.fromJSON(result);
     }
 
     /**
      * Gets the availability
      * @param id
-     * @return {Promise<*|null>}
+     * @return {Promise<Availability|null>}
      */
     async getAvailability(id) {
-        try {
-            return await this.fetcher.fetchJsonMethod(`/availability/${id}`, HttpMethods.GET);
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
+        const path = `/availability/${id}`;
+        let result = await this.#networkClient.executeRequest(path);
+        return Availability.fromJSON(result);
+    }
+
+    async copyToWeek(userId, weekNumber) {
+        const path = `/users/${userId}/availability/weeks/${weekNumber}/set-on-next-week`;
+        let result = await this.#networkClient.executeRequest(path, HttpMethod.POST);
+        return result.map(Availability.fromJSON);
     }
 }

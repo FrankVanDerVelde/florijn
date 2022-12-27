@@ -2,18 +2,16 @@ package com.hva.ewa.team2.backend.data.skill;
 
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
-import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.ArrayList;
 
-public interface SkillRepository {
-    ArrayList<Skill> findAllSkills();
-    Skill findSkillById(int id);
-    ArrayList<SkillGroup> findAllSkillGroups();
-    SkillGroup findGroupById(int id);
-    Skill getSkillById(int id);
-    SkillGroup getGroupBySkillId(int id);
-    Expertise getExpertiseById(int id);
-    ArrayList<Expertise> getAllExpertises();
+public interface SkillRepository extends CrudRepository<Skill, Integer> {
 
+    @Query(value = "SELECT s FROM Skill s WHERE s.id = :id")
+    Skill getSkillById(int id);
+
+    @Query(value = "SELECT s FROM Skill s")
+    ArrayList<Skill> getAllSkills();
 }

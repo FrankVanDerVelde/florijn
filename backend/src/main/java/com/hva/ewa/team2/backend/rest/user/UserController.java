@@ -2,6 +2,7 @@ package com.hva.ewa.team2.backend.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -26,13 +28,13 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<Iterable<User>> getAllUsers() {
         return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
     }
 
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable String role) {
-        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
+    public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role, role.getUserClass()));
     }
 
     @JsonView(User.EssentialInfo.class)
@@ -42,8 +44,13 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody JsonNode body) {
+    public ResponseEntity<User> updateUser(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
         return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
+    }
+
+    @PutMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateResume(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.updateResume(id, body));
     }
 
     @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)

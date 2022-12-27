@@ -48,47 +48,42 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['userService'],
+  inject: ['authenticationRepository', 'storedTokenRepository', 'fetchService'],
+  created() {
+    if (localStorage.getItem("user") !== null) {
+      this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
+    }
+  },
   methods: {
     forgotPassword() {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword");
     },
     async submitButton() {
-      let userData;
-
-
       try {
-        userData = await this.userService.asyncFindByCredentials(this.email.trim(), this.password);
+        const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
 
+        localStorage.setItem("user", JSON.stringify(this.storedTokenRepository.getUser()))
+        this.pushHelperMethod(userData.role)
       } catch (e) {
         console.error(e)
-        userData = null;
-      }
-
-      if (userData !== null) {
-
-        localStorage.setItem("user", JSON.stringify(userData));
-
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("role", userData.role);
-
-        switch (userData.role) {
-          case "ADMIN": {
-            this.$router.push({name: "admin-home"});
-            break;
-          }
-          case "SPECIALIST": {
-            this.$router.push({name: "specialist-home"});
-            break;
-          }
-          case "CLIENT": {
-            this.$router.push({name: "client-home"});
-            break;
-          }
-        }
-      } else {
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
+      }
+    },
+    pushHelperMethod(role){
+      switch (role) {
+        case "ADMIN": {
+          this.$router.push("/adminpanel/customer-list");
+          break;
+        }
+        case "SPECIALIST": {
+          this.$router.push({name: "projects"});
+          break;
+        }
+        case "CLIENT": {
+          this.$router.push({name: "projects"});
+          break;
+        }
       }
     }
   },
@@ -150,7 +145,6 @@ export default {
 }
 
 .input-container label {
-  font-family: 'Roboto', sans-serif;
   font-weight: 600;
   color: var(--neutral-300);
   font-size: 14px
@@ -160,7 +154,6 @@ export default {
   color: black;
   border: 1px solid var(--neutral-300);
   border-radius: 6px;
-  font-family: 'Roboto', sans-serif;
   height: 40px;
   font-size: 16px;
 }

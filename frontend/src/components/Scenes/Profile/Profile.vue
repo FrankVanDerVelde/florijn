@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="page-main-mw p-4 md:pt-[5em] flex">
         <div class="profile-container flex self-center w-full flex-col md:flex-row">
@@ -27,13 +25,13 @@
 
 <script>
 export default {
-    name: "Profile",
-    components: {
-        SideBarNav
-    },
+  name: "Profile",
+  components: {
+    SideBarNav
+  },
   created() {
-    if (this.id === "null") {
-      this.$router.push("/home");
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
     }
   },
     data() {
@@ -43,6 +41,11 @@ export default {
                 icon: 'fa-solid fa-user',
                 name: 'profiel',
                 href: '/profile/personal-info',
+            },
+            {
+                icon: 'fa-solid fa-file',
+                name: 'resume',
+                href: '/profile/resume',
             },
             {
                 icon: 'fa-solid fa-lightbulb',

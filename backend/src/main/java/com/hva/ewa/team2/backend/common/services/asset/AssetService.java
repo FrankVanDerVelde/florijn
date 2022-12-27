@@ -33,7 +33,7 @@ public class AssetService implements AssetServiceLogic {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read file: " + assetName);
+                throw new RuntimeException("Could not read file: " + assetName + " (exists=" + resource.exists() + ", readable=" + resource.isReadable() + ")");
             }
         } catch (Exception e) {
             throw new RuntimeException("Could not read file: " + assetName, e);
@@ -62,14 +62,13 @@ public class AssetService implements AssetServiceLogic {
             fileName = fileName.substring(1);
         }
 
+        if (file.isEmpty()) throw new IllegalArgumentException("Failed to store empty file.");
         try {
-            if (file.isEmpty()) throw new IllegalArgumentException("Failed to store empty file.");
 
             Path destination = this.rootLocation.resolve(
                     Path.of(fileName)
             ).normalize().toAbsolutePath();
 
-            System.out.println(destination);
 
             // checking if they didn't somehow try to escape the root location.
             final Path absoluteRoot = this.rootLocation.toAbsolutePath();
@@ -107,7 +106,7 @@ public class AssetService implements AssetServiceLogic {
     private boolean isSameName(Path path, String fileName) {
         final String s = FilenameUtils.removeExtension(path.getFileName().toString());
 
-        System.out.println("Comparing " + s + " to " + fileName);
+//        System.out.println("Comparing " + s + " to " + fileName);
 
         return s
                 .equals(fileName);

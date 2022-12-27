@@ -3,14 +3,18 @@ package com.hva.ewa.team2.backend.domain.models.skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class SkillGroup {
 
     @Getter
     @Setter
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Getter @Setter
     private String name;
@@ -19,21 +23,20 @@ public class SkillGroup {
     private String description;
 
     @Getter @Setter
-    private final List<Skill> skills;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "skillGroup", cascade = CascadeType.ALL)
+    private List<Skill> skills;
 
-    public SkillGroup(int id, String name, String description) {
+    public SkillGroup() {}
+
+    public SkillGroup(Integer id, String name, String description) {
         this(id, name, description, new ArrayList<>());
     }
 
-    public SkillGroup(int id, String name, String description, List<Skill> skills) {
+    public SkillGroup(Integer id, String name, String description, ArrayList<Skill> skills) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.skills = skills;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void add(Skill skill) {

@@ -1,21 +1,44 @@
 package com.hva.ewa.team2.backend.domain.models.skill;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
 public class Skill {
 
-    @Getter @Setter
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
+    private Integer id;
 
-    @Getter @Setter
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private SkillGroup skillGroup;
+
+    @Getter
+    @Setter
     private String name;
 
-    @Getter @Setter
+    @Getter
+    @Setter
     private String description;
 
-    public int getId() {
-        return id;
+    public Skill() {
+    }
+
+    public Skill(Integer id, SkillGroup skillGroup, String name, String description) {
+        this.id = id;
+        this.skillGroup = skillGroup;
+        this.name = name;
+        this.description = description;
     }
 
     public Skill(int id, String name, String description) {

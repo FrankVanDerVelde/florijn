@@ -81,7 +81,8 @@ export default {
       weekNumber: 0,
       selectedDayIndex: null,
       year: "",
-      showingModel: false
+      showingModel: false,
+      userId: JSON.parse(localStorage.getItem("user"))?.id
     }
   },
   async created() {
@@ -102,7 +103,7 @@ export default {
     },
 
     async loadHourRegistrationsList() {
-      this.hourRegistrations = await this.hourRegistrationRepository.fetchAllFor(0);
+      this.hourRegistrations = await this.hourRegistrationRepository.fetchAllFor(this.userId);
     },
 
     handleTodayClicked() {

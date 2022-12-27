@@ -90,7 +90,7 @@ export default {
             })
         },
         handleFormButton() {
-            console.log(this.active)
+            console.log(this.userExpertises)
                 this.skillFetchService.fetchJsonMethod(`/update-user-expertise/${this.user.id}`, "PUT", this.userExpertises);
                 this.active = !this.active;
         }

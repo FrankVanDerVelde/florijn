@@ -4,11 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html {
+        font-family: Roboto, sans-serif;
+    }
+}
+
 /* Project Styles */
 :root {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    font-weight: 400;
-
     margin: 0 auto;
 
     font-synthesis: none;
@@ -97,6 +100,14 @@
 
 .primary-button {
     @apply button bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700;
+}
+
+.primary-button-disabled {
+    @apply button bg-primary-300 text-neutral-50 font-semibold;
+}
+
+.destructive-button {
+    @apply button bg-app_red-500 text-neutral-50 font-semibold hover:bg-app_red-700;
 }
 
 .secondary-button {

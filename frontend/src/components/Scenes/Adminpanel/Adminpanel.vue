@@ -21,8 +21,8 @@ export default {
     SideBarNav
   },
   created() {
-    if (this.id === "null") {
-      this.$router.push("/home");
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
     }
   },
   data() {

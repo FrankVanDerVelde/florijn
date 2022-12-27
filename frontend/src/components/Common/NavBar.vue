@@ -74,10 +74,6 @@ export default {
     },
     isLoggedIn() {
       if (this.user == null) {
-        this.links = [{
-          name: 'Home',
-          link: '/home'
-        }]
         this.staticLink = {
           name: 'Log in',
           link: '/login'
@@ -87,13 +83,13 @@ export default {
           case "ADMIN":
             this.links = [
               {
-                name: 'Home',
-                link: '/admin/home'
-              },
-              {
                 name: 'Admin',
                 link: '/adminpanel'
-              }, {
+              },
+              {
+                name: 'Projecten',
+                link: '/projects'
+              },{
                 name: 'Nieuw project',
                 link: '/projects/new'
               }
@@ -101,27 +97,18 @@ export default {
             break;
           case "SPECIALIST":
             this.links = [{
-              name: 'Home',
-              link: '/specialist/home'
+              name: 'Projecten',
+              link: '/projects'
             }, {
               name: 'Profiel',
               link: '/profile'
-            }, {
-              name: 'Projecten',
-              link: '/projects'
             }]
             break;
           case "CLIENT":
-            this.links = [{
-              name: 'Home',
-              link: '/client/home'
-            }, {
-              name: 'Project Overzicht',
-              link: '/projects/1'
-            }, {
+            this.links = [ {
               name: 'Projecten',
               link: '/projects'
-            },]
+            }]
             break;
         }
         this.staticLink = {

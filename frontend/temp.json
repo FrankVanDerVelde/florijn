@@ -1,0 +1,18 @@
+{
+    "adjustedUser": {
+        "id": 6,
+        "email": "specialist2@test.com",
+        "avatarUrl": "/src/assets/avatars/avatar3.avif",
+        "firstName": "Sam",
+        "lastName": "Janssen"
+    }
+}
+', address = ' {
+    "id": 1,
+    "place": "Amsterdam",
+    "street": "Jan van Galenstraat",
+    "houseNumber": 53,
+    "houseNumberAddition": "E",
+    "postalCode": "1204EX"
+}
+', avatarFile = null, bannerFile = null

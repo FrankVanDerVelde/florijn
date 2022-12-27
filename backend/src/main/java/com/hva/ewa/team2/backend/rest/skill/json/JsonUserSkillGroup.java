@@ -1,7 +1,7 @@
 package com.hva.ewa.team2.backend.rest.skill.json;
 
-import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
@@ -11,13 +11,14 @@ public class JsonUserSkillGroup {
     private int id;
 
     @Getter
-    private ArrayList<UserSkill> skills = new ArrayList<>();
+    private ArrayList<JsonUserSkill> skills = new ArrayList<>();
 
     public JsonUserSkillGroup() {
     }
 
-    public JsonUserSkillGroup(int skillGroupId, ArrayList<UserSkill> userSkillsArrayList) {
+    public JsonUserSkillGroup(int skillGroupId, ArrayList<JsonUserSkill> userSkillsArrayList) {
         this.id = skillGroupId;
         this.skills = userSkillsArrayList;
     }
+
 }

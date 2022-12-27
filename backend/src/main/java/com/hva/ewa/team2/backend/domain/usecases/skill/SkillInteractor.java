@@ -1,8 +1,14 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
+import com.hva.ewa.team2.backend.data.skill.ExpertiseRepository;
+import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
+import com.hva.ewa.team2.backend.data.skill.SkillGroupRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.skill.*;
+import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
+import com.hva.ewa.team2.backend.domain.models.skill.Skill;
+import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
+import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
@@ -12,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class SkillInteractor implements SkillBusinessLogic {
@@ -19,36 +27,42 @@ public class SkillInteractor implements SkillBusinessLogic {
     private final UserRepository userRepo;
 
     private final SkillRepository skillRepo;
-    
+
+    private final ExpertiseRepository expertiseRepo;
+
+    private final SkillGroupRepository skillGroupRepo;
+
     @Autowired
-    public SkillInteractor(UserRepository userRepo, SkillRepository skillRepo) {
+    public SkillInteractor(UserRepository userRepo, SkillRepository skillRepo, ExpertiseRepository expertiseRepo, SkillGroupRepository skillGroupRepo) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
+        this.expertiseRepo = expertiseRepo;
+        this.skillGroupRepo = skillGroupRepo;
     }
 
     @Override
     public List<Skill> getAllSkills() {
-        return skillRepo.findAllSkills();
+        return skillRepo.getAllSkills();
     }
 
     @Override
     public ArrayList<SkillGroup> getAllSkillGroups() {
-       return skillRepo.findAllSkillGroups();
+        return skillGroupRepo.findAllSkillGroups();
     }
 
     @Override
     public UserSkill updateUserSkill(int userId, JsonUserSkill jsonBody) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
-        Skill skill = skillRepo.findSkillById(jsonBody.getId());
+        Skill skill = skillRepo.getSkillById(jsonBody.getId());
 
         if (skill == null) {
             throw new IllegalArgumentException("The skill with ID " + jsonBody.getId() + " does not exist.");
@@ -58,50 +72,51 @@ public class SkillInteractor implements SkillBusinessLogic {
             throw new IllegalArgumentException("The skill value of " + jsonBody.getRating() + " is out of bounds.");
         }
 
-        return specialist.updateUserSkill(skill, jsonBody.getRating());
+        UserSkill updatedSkill = specialist.updateUserSkill(skill, jsonBody.getRating());
+
+        userRepo.save(specialist);
+
+        return updatedSkill;
     }
 
     /*
     Edit rest to send group id along with data, and edit this function to use the group id
      */
     @Override
-    public SkillGroup updateUserSkillGroup(int userId, JsonUserSkillGroup jsonBody) {
-        User user = userRepo.getUserById(userId);
+    public SkillGroup updateUserSkillGroup(int userId, List<JsonUserSkill> jsonBody) {
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
-        Skill skill = skillRepo.findSkillById(jsonBody.getId());
+        List<UserSkill> skills = new ArrayList<>();
+        for (JsonUserSkill jsu : jsonBody) {
+            Skill skill = skillRepo.getSkillById(jsu.getId());
+            if (skill == null || jsu.getRating() < 0 || jsu.getRating() > 5) continue;
 
-        if (skill == null) {
-            throw new IllegalArgumentException("The skill with ID " + jsonBody.getId() + " does not exist.");
+            skills.add(new UserSkill(0, specialist, skill, jsu.getRating()));
         }
 
-        for (UserSkill updateTarget : jsonBody.getSkills()) {
-            if (updateTarget.getRating() < 0 || updateTarget.getRating() > 5) {
-                throw new IllegalArgumentException("The skill value of " + updateTarget.getRating() + " is out of bounds.");
-            }
+        specialist.setSkills(skills);
+        userRepo.save(specialist);
 
-            specialist.updateUserSkill(skillRepo.getSkillById(updateTarget.getId()), updateTarget.getRating());
-        }
-
-        return skillRepo.getGroupBySkillId(jsonBody.getSkills().get(0).getId());
+        return skills.get(0).getSkill().getSkillGroup();
     }
 
     @Override
     public List<UserSkill> getUserSkills(int userId) {
-        User user = userRepo.getUserById(userId);
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist)) {
+        if (!(user.get() instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
@@ -110,7 +125,7 @@ public class SkillInteractor implements SkillBusinessLogic {
 
     @Override
     public List<Expertise> getAllExpertises() {
-        return skillRepo.getAllExpertises();
+        return expertiseRepo.findAllExpertises();
     }
 
     @Override
@@ -119,33 +134,36 @@ public class SkillInteractor implements SkillBusinessLogic {
     }
 
     @Override
-    public List<UserExpertise> getUserExpertises(int userId) {
-        User user = userRepo.getUserById(userId);
-        System.out.println(user);
-        if (user == null) {
+    public List<Expertise> getUserExpertises(int userId) {
+        Optional<User> user = userRepo.findById(userId);
+
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist)) {
+        if (!(user.get() instanceof Specialist specialist)) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
-        System.out.println(specialist.getExpertises());
+//        System.out.println(specialist.getExpertises());
         return specialist.getExpertises();
     }
 
     @Override
-    public ArrayList<UserExpertise> updateUserExpertise(int userId, ArrayList<UserExpertise> userExpertises) {
-        User user = userRepo.getUserById(userId);
+    public ArrayList<Expertise> updateUserExpertise(int userId, ArrayList<Expertise> userExpertises) {
+        Optional<User> user = userRepo.findById(userId);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
         }
 
-        if (!(user instanceof Specialist specialist) ) {
+        if (!(user.get() instanceof Specialist specialist) ) {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
-        specialist.updateUserExpertise(userExpertises);
+        System.out.println(userExpertises);
+        specialist.setExpertises(userExpertises);
+
+        userRepo.save(specialist);
 
         return userExpertises;
     }
