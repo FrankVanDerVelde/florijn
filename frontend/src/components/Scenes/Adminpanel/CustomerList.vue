@@ -8,61 +8,54 @@
           </router-link>
         </div>
         <div class="container grow">
-          <customer-list-details v-for="client in clients" :key="client.id"
-                                 :client="client"></customer-list-details>
+          <customer-list-details v-for="client in clients" :key="client.id" :client="client"></customer-list-details>
         </div>
       </div>
-
     </div>
   </div>
-
-
 </template>
 
 <script>
-
 import CustomerListDetails from "./CustomerListDetails.vue";
+import {UserRole} from "../../models/UserRole.js";
 
 export default {
   name: "CustomerList",
   components: {
     CustomerListDetails
   },
-  inject: ['fetchService'],
-
-  async created() {
-    this.clients = await this.fetchService.fetchJson(`/users/role/client`)
-  },
-
+  inject: ['userRepository'],
   data() {
     return {
-      clients: {},
-      sideBarLinks: [{
-        icon: 'fa-solid fa-share-nodes',
-        name: 'Klanten',
-        href: 'customer-list',
-      },
+      clients: [],
+      sideBarLinks: [
+        {
+          icon: 'fa-solid fa-share-nodes',
+          name: 'Klanten',
+          href: 'customer-list',
+        },
         {
           icon: 'fa-solid fa-user',
           name: 'Specialisten',
           href: 'employee-list',
-        }],
+        }
+      ],
     }
+  },
+  async created() {
+    await this.loadClients();
+  },
+  methods: {
+   async loadClients() {
+     this.clients = await this.userRepository.fetchUsers(UserRole.client);
+   }
   }
-
 }
 </script>
 
 <style scoped>
-
-
-
 .buttoncontainer{
   display: flex;
   justify-content: flex-end;
 }
-
-
-
-
 </style>

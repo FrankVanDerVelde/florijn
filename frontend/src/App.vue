@@ -14,6 +14,7 @@ import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegi
 import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepository.js";
 import Holidays from "date-holidays";
 import CONFIG from '/config.js'
+import {UserRepository} from "./Networking/UserRepository.js";
 
 export default {
   name: "App",
@@ -30,7 +31,8 @@ export default {
       memoryAvailabilityRepository: new AvailabilityRepository(),
       storedTokenRepository: storedTokenRepository,
       authenticationRepository: new AuthenticationRepository(storedTokenRepository),
-      holidays: new Holidays('NL')
+      holidays: new Holidays('NL'),
+      userRepository: new UserRepository()
     }
   },
 }

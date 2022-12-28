@@ -51,12 +51,6 @@
 export default {
   name: "AddClient",
   inject: ['fetchService'],
-  props: {
-    userId: {
-      type: String,
-      default: "-1"
-    }
-  },
 
   data(){
     return {
@@ -82,7 +76,7 @@ export default {
         bannerSrc: null
       };
 
-      await this.fetchService.fetchJsonMethod(`/users/add/client`, "POST", body)
+      await this.fetchService.fetchJsonMethod(`/users/add/client`, "POST", body);
     }
   }
 }

@@ -29,4 +29,14 @@ export class UserRepository {
         };
         return await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
     }
+
+    /**
+     * Fetches users, optionally filtered with a specified role.
+     * @param {UserRole|null} role Fetches all users with a specified role, defaults to null.
+     * @return {Promise<[User|Object]>} Fetched users
+     */
+    async fetchUsers(role= null) {
+        const path = role ? `/users/role/${role}` : `/users/`;
+        return await this.#networkClient.executeRequest(path);
+    }
 }
