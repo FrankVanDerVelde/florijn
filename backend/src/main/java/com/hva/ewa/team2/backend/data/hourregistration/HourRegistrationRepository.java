@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface HourRegistrationRepository extends CrudRepository<HourRegistration, Integer> {
 
-    @Query(value = "SELECT * FROM hour_registration h WHERE h.project_id = :projectId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * FROM hour_registration h WHERE h.project_id = :projectId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
     List<HourRegistration> findAllByProject(int projectId);
 
-    @Query(value = "SELECT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
     List<HourRegistration> findAllByUser(int userId);
 
     @Query(value = "SELECT DISTINCT h.* FROM hour_registration h " +

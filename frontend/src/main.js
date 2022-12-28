@@ -14,7 +14,9 @@ import './PrototypeExtensions/Array+random.js';
 import {
     faArrowDown,
     faBars,
+    faBarsProgress,
     faBoxArchive,
+    faBuilding,
     faCalendarDays,
     faCalendarWeek,
     faCheck,
@@ -23,6 +25,7 @@ import {
     faCircleXmark,
     faClock,
     faEnvelope,
+    faFaceGrinSquint,
     faFile,
     faFileImage,
     faLightbulb,
@@ -36,18 +39,16 @@ import {
     faStar,
     faTrashCan,
     faUser,
+    faUserPlus,
     faUsers,
     faWindowMinimize,
-    faXmark,
-    faUserPlus,
-    faBuilding,
-    faBarsProgress
+    faXmark
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
     faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
     faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan,
-    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress
+    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint
 );
 
 // `Chainable` list of global components.

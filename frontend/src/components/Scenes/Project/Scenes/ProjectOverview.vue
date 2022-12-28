@@ -8,10 +8,6 @@
     </div>
 
     <div class="overflow-x-auto mb-6">
-      <HoursInfoPopup v-if="selectedHourRegistry != null"
-                      :registry="selectedHourRegistry"
-                      @close="selectedHourRegistry = null"
-                      @changeStatus="updateRegistryStatus"/>
       <table class="w-full mt-4">
         <thead>
         <tr class="text-left">
@@ -26,7 +22,7 @@
         <HoursRow v-for="registry in hourRegistry"
                   :key="registry.id"
                   :registry="registry"
-                  @select="reg => selectedHourRegistry = reg"/>
+                  @updateStatus="fetchReports"/>
         </tbody>
       </table>
     </div>
@@ -37,11 +33,10 @@
 import SummaryBlock from "../SummaryBlock.vue";
 import ProjectParticipantList from "../ProjectParticipantList.vue";
 import HoursRow from "../HoursRow.vue";
-import HoursInfoPopup from "../HoursInfoPopup.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {HoursInfoPopup, HoursRow, ProjectParticipantList, SummaryBlock},
+  components: {HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
 
   props: {
@@ -70,7 +65,6 @@ export default {
     return {
       hourRegistry: [],
       reports: [],
-      selectedHourRegistry: null
     }
   },
 
@@ -81,15 +75,6 @@ export default {
     async fetchHourRegistry() {
       this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);
     },
-    async updateRegistryStatus(accepted) {
-      const endpoint = accepted ? 'accept' : 'reject';
-
-      const response = await this.fetchService.fetchUrl(`/hour-registrations/${this.selectedHourRegistry.id}/${endpoint}`, 'POST');
-      this.selectedHourRegistry.status = response.status;
-
-      this.selectedHourRegistry = null;
-      await this.fetchReports();
-    }
   }
 }
 </script>

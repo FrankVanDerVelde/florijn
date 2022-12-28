@@ -23,6 +23,16 @@ export class HourRegistrationRepository {
         }
     }
 
+    async fetchAllForProject(projectId) {
+        try {
+            let jsonHrs = await this.fetcher.fetchUrl(`/projects/${projectId}/hour-registrations/`);
+            return jsonHrs.map(HourRegistration.fromJSON)
+        } catch (e) {
+            console.error(e);
+            return e;
+        }
+    }
+
     async deleteHourRegistration(id) {
         try {
             return await this.fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}/delete/`);

@@ -5,19 +5,47 @@
     <SummaryBox title="Verdiensten" :value="formatMoney(earnings)"/>
   </div>
 
-  <div class="flex flex-col gap-2">
-    <HomeBox>
-      <h2 class="text-xl font-semibold mb-2">Jouw projecten</h2>
+  <HomeBox>
+    <h2 class="text-xl font-semibold mb-2">Jouw projecten</h2>
 
-      <router-link v-for="project in projects" :to="{name: 'project', params: {projectId: project.id}}" class="project flex items-center gap-2"
-                   :key="project.id">
-        <Asset :src="project.logoSrc" class="rounded-md h-8 w-8 object-contain"/>
-        <div class="flex flex-col ml-2">
-          <h3 class="text-lg font-medium">{{ project.title }}</h3>
-        </div>
-      </router-link>
-    </HomeBox>
-  </div>
+    <div v-if="projectCount === 0" class="flex gap-2 items-center text-app_red-500">
+      <font-awesome-icon icon="fa-face-grin-squint" size="xl"></font-awesome-icon>
+      <p>Je hebt nog geen actieve projecten.</p>
+    </div>
+    <router-link v-for="project in projects" :to="{name: 'project', params: {projectId: project.id}}" class="project flex items-center gap-2"
+                 :key="project.id">
+      <Asset :src="project.logoSrc" class="rounded-md h-8 w-8 object-contain"/>
+      <div class="flex flex-col ml-2">
+        <h3 class="text-lg font-medium">{{ project.title }}</h3>
+      </div>
+    </router-link>
+  </HomeBox>
+  <HomeBox>
+    <h2 class="text-xl font-semibold mb-2">Geregistreerde uren</h2>
+
+    <div v-if="hourRegistrations.length === 0" class="flex gap-2 items-center text-app_red-500">
+      <font-awesome-icon icon="fa-face-grin-squint" size="xl"></font-awesome-icon>
+      <p>Je hebt nog geen uren geregistreerd.</p>
+    </div>
+    <table v-else class="w-full mt-4">
+      <thead>
+      <tr class="text-left">
+        <th>Rol</th>
+        <th>Aantal uren</th>
+        <th>Kosten</th>
+        <th>Datum</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <HoursRow v-for="registry in hourRegistrations"
+                :show-project="true"
+                :key="registry.id"
+                :registry="registry"/>
+      </tbody>
+    </table>
+  </HomeBox>
+
 
   <HomeBox class="w-full md:w-fit">
     <h2 class="text-xl font-semibold mb-2">Snelle acties</h2>
@@ -34,16 +62,18 @@ import SummaryBox from "../SummaryBox.vue";
 import HomeBox from "../HomeBox.vue";
 import QuickAction from "../QuickAction.vue";
 import Asset from "../../../Common/Asset.vue";
+import HoursRow from "../../Project/HoursRow.vue";
 
 export default {
   name: "SpecialistHomeLayout",
-  components: {Asset, QuickAction, HomeBox, SummaryBox},
-  inject: ['projectRepository', 'userFetchService', 'dateService'],
+  components: {HoursRow, Asset, QuickAction, HomeBox, SummaryBox},
+  inject: ['projectRepository', 'userFetchService', 'dateService', 'hourRegistrationRepository'],
 
   async created() {
     Promise.all([
       this.loadProjects(),
-      this.loadUserTotals()
+      this.loadUserTotals(),
+      this.loadHourRegistrations()
     ])
   },
 
@@ -53,6 +83,7 @@ export default {
       workedHours: 0,
       earnings: 0,
       projectCount: 0,
+      hourRegistrations: [],
     }
   },
 
@@ -75,9 +106,13 @@ export default {
       this.workedHours = hours;
       this.earnings = totalEarnings;
     },
+    async loadHourRegistrations() {
+      this.hourRegistrations = await this.hourRegistrationRepository.fetchAllFor(this.user.id);
+      console.log(this.hourRegistrations)
+    },
     formatMoney(string) {
-      return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(string);
-    }
+      return new Intl.NumberFormat('nl-NL', {style: 'currency', currency: 'EUR'}).format(string);
+    },
   },
 
   props: {
