@@ -3,6 +3,7 @@ package com.hva.ewa.team2.backend.domain.usecases.user;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSkills;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 
 import java.io.IOException;
@@ -24,4 +25,6 @@ public interface UserBusinessLogic {
     Address getUsersAddressById(int id);
 
     User updateResume(int id, JsonUserData body) throws IOException;
+
+    List<User> getSpecialistsBySkills(List<Integer> skills);
 }

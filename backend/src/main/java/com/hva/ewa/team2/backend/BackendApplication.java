@@ -84,6 +84,13 @@ public class BackendApplication implements CommandLineRunner {
 //        setRandomSkills(new Specialist(7, "specialist3@test.com", "test", "users/avatars/3.avif", "Jop", "Christensen", dummyAddress2));
 
         userRepo.save(new Client(8, "contact@microsoft.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
+        userRepo.save(new Specialist(9, "jant@florijn.com", "test", "users/avatars/2.avif", "Carl", "Rosario", null, null));
+        userRepo.save(new Specialist(10, "jant@florijn.com", "test", "users/avatars/2.avif", "Liana", "Wilkerson", null, null));
+        userRepo.save(new Specialist(11, "jant@florijn.com", "test", "users/avatars/2.avif", "Christian", "Decker", null, null));
+        userRepo.save(new Specialist(12, "jant@florijn.com", "test", "users/avatars/2.avif", "Gordon", "Hawkins", null, null));
+
+
+
     }
 
     private void loadProjects() {

@@ -1,9 +1,8 @@
 <template >
   <div class="flex flex-col mt-4 ml-2 p-3 pr-2 fa-border rounded-xl ">
     <div class="flex">
-
       <div>
-        <img :src="participant.avatarUrl" alt="participant avatar" class="icon-container">
+        <Asset :src="participant.avatarUrl" alt="Avatar" class="icon-container"/>
       </div>
 
       <div class="ml-3">
@@ -51,10 +50,11 @@
 
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "ParticipantCard",
-  components: {FontAwesomeIcon},
+  components: {Asset, FontAwesomeIcon},
   emits: ['addParticipant'],
 
   computed: {

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSkills;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,11 @@ public class UserInteractor implements UserBusinessLogic {
         }
 
         return this.userRepo.save(user);
+    }
+
+    @Override
+    public List<User> getSpecialistsBySkills(List<Integer> skills) {
+        return this.userRepo.findSpecialistsBySkills(skills);
     }
 
 }

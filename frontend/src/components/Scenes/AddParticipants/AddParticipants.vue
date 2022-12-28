@@ -37,7 +37,7 @@ import DeleteParticipantModal from "./DeleteParticipantModal.vue";
 export default {
   name: "AddParticipants",
   components: {DeleteParticipantModal, AddParticipantModal, Participant, ParticipantCard, FilterParticipants},
-  inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
+  inject: ['projectFetchService', 'fetchService', 'skillFetchService', 'userFetchService'],
 
   props: {
     project: {
@@ -74,30 +74,31 @@ export default {
 
     },
 
-    skillSelect(selectedSkill) {
-      console.log(selectedSkill)
+    async skillSelect(selectedSkill) {
       if (!selectedSkill.checked) {
-        this.selectedFilters.push(selectedSkill.selectedSkill)
+        this.selectedFilters.push(selectedSkill.selectedSkill.id)
       } else {
-        this.selectedFilters = this.selectedFilters.filter(selectedfilters => selectedfilters.id !== selectedSkill.selectedSkill.id)
+        this.selectedFilters = this.selectedFilters.filter(skill => skill !== selectedSkill.selectedSkill.id)
       }
 
-      //if selectedFilters array is empty, show all specialists
+      this.filteredParticipantsList = null;
+
+      // if selectedFilters array is empty, show all specialists
       if (this.selectedFilters.length === 0) {
         this.filteredParticipantsList = this.specialists;
         return
       }
 
-      this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill =>
-          this.selectedFilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
+      this.filteredParticipantsList = await this.userFetchService.fetchJsonPost("/specialists/skills", this.selectedFilters)
     },
+
     deleteParticipant(selectedParticipant) {
       console.log(selectedParticipant)
       this.selectedDeleteSpecialist = null;
       const participant = selectedParticipant.participant.participant;
       this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)
       this.projectFetchService.fetchJsonMethod(`/${this.$route.params.projectId}/participants/${participant.user.id}/delete`, "DELETE")
-      this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.user.id))
+      this.skillSelect()
     }
 
 
@@ -128,8 +129,9 @@ export default {
       skillset: {},
       selectedFilters: [],
       filteredParticipantsList: {},
+      selectedIds: {},
       validation: false,
-      selectedSpecialist : null,
+      selectedSpecialist: null,
       selectedDeleteSpecialist: null,
 
       skillGroup: {},
