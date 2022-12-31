@@ -18,7 +18,7 @@ export class UserRepository {
      * @param {String|null} bannerSrc Default banner to use.
      * @return {Promise<Client|Object|null>} Added Client.
      */
-    async addClient(name, email, password, avatarUrl, bannerSrc) {
+    async addClient(name, email, password, avatarUrl = null, bannerSrc= null) {
         const path = `/users/add/client`;
         const body = {
             name: name,

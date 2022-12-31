@@ -82,10 +82,12 @@ const routes = [
             },
             {
                 path: "customer-list",
+                name: 'admin-customer-list',
                 component: CustomerList,
             },
             {
                 path: "employee-list",
+                name: 'admin-employee-list',
                 component: EmployeeList,
             },
         ]
