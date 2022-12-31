@@ -25,12 +25,12 @@ export default {
   name: "ProjectList",
   components: {Searchbar, ProjectListDetails},
   inject: ['projectFetchService'],
-
-  created() {
+  async beforeCreate(){
     if (localStorage.getItem("user") == null) {
       this.$router.push({name: "home"});
-      return;
     }
+  },
+  created() {
     this.fetchProjects();
   },
 

@@ -26,6 +26,12 @@ export default {
   components: {ProjectLogo, ProjectBanner, ProjectHeader},
   inject: ['projectFetchService'],
 
+  async beforeCreate() {
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
+    }
+  },
+
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user'));
@@ -37,7 +43,6 @@ export default {
       return this.project.client?.id === this.userId || this.user?.role === "ADMIN";
     }
   },
-
   data() {
     return {
       project: {}
@@ -69,7 +74,7 @@ export default {
     }
 
     // when a non-existing project is requested, redirect to the /projects page.
-    if (this.project == null) {
+    if (this.user != null && this.project == null) {
       this.$router.redirect({name: 'projects'});
     }
   },

@@ -1,5 +1,6 @@
 <template>
-  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants" :client="project.client"/>
+  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants"
+                          :client="project.client"/>
 
   <section class="pt-[48px]">
     <h2 class="header-2">Uren</h2>
@@ -43,11 +44,15 @@ export default {
   name: "ProjectOverview",
   components: {HoursInfoPopup, HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
-
   props: {
     project: {
       type: Object,
       required: true
+    }
+  },
+  async beforeCreate(){
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
     }
   },
 

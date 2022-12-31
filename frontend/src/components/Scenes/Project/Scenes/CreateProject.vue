@@ -121,12 +121,13 @@ export default {
     }
   },
 
-  async created() {
-      if (localStorage.getItem("user") == null) {
-        this.$router.push({name: "home"});
-        return;
-      }
+  async beforeCreate(){
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
+    }
+  },
 
+  async created() {
     if (!this.newProject) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
 
@@ -145,7 +146,6 @@ export default {
     // when a non-existing project is requested, redirect to the /projects page.
     if (this.project == null) {
       this.$router.push({name: 'projects'});
-      return;
     }
   },
 
