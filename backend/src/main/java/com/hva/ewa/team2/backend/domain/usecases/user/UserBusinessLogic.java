@@ -13,7 +13,7 @@ public interface UserBusinessLogic {
 
     List<User> getAllUsers();
 
-    List<User> getUsersByRole(User.Role role);
+    <U extends User> List<U> getUsersByRole(User.Role role, Class<U> clazz);
 
     User updateUser(int id, JsonUserData body) throws IOException;
 
@@ -22,4 +22,6 @@ public interface UserBusinessLogic {
     User deleteUserById(int id);
 
     Address getUsersAddressById(int id);
+
+    User updateResume(int id, JsonUserData body) throws IOException;
 }

@@ -13,7 +13,6 @@
         </Expertise>
     </div>
 
-
     <div>
         <!-- <div class="text-primary-500 bg-primary-100 rounded-full px-[11px] py-[4px] font-bold inline-block mt-2">
             Financieel Administratief</div> -->
@@ -30,7 +29,7 @@ export default {
     inject: ['skillFetchService'],
     methods: {
         updateUserExpertises(expertiseId) {
-            const userExpertiseIds = this.userExpertises.map((expertise) => expertiseId);
+            const userExpertiseIds = this.userExpertises.map(expertise => expertise.id);
             if (!userExpertiseIds.includes(expertiseId)) {
                 this.userExpertises.push({id: expertiseId, userId: this.user.id});     
             } else {
@@ -70,6 +69,7 @@ export default {
         this.userExpertises = await this.skillFetchService.fetchJson(`/user-expertises/${this.user.id}`);
     },
     data() {
+        console.log(JSON.parse(localStorage.getItem("user")))
         return {
             skillGroups: [],
             user: JSON.parse(localStorage.getItem("user")),

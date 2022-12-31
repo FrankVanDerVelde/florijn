@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.skill;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,10 @@ public class UserSkill {
     private Integer id;
 
     @Getter @Setter
-    @OneToOne(targetEntity = Specialist.class)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private Integer userId;
+    @JsonBackReference
+    private Specialist specialist;
 
     @Getter
     @Setter
@@ -33,8 +35,9 @@ public class UserSkill {
     public UserSkill() {
     }
 
-    public UserSkill(int id, Skill skill, int rating) {
+    public UserSkill(Integer id, Specialist specialist, Skill skill, int rating) {
         this.id = id;
+        this.specialist = specialist;
         this.skill = skill;
         this.rating = rating;
     }

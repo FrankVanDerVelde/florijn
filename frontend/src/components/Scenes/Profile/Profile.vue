@@ -30,7 +30,7 @@ export default {
     SideBarNav
   },
   created() {
-    if (localStorage.getItem("user") === "null") {
+    if (localStorage.getItem("user") == null) {
       this.$router.push({name: "home"});
     }
   },
@@ -41,6 +41,11 @@ export default {
                 icon: 'fa-solid fa-user',
                 name: 'profiel',
                 href: '/profile/personal-info',
+            },
+            {
+                icon: 'fa-solid fa-file',
+                name: 'resume',
+                href: '/profile/resume',
             },
             {
                 icon: 'fa-solid fa-lightbulb',

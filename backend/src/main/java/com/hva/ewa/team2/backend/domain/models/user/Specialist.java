@@ -6,6 +6,8 @@ import com.hva.ewa.team2.backend.domain.models.skill.Skill;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class Specialist extends User {
     @Setter
     @JsonView(EssentialInfo.class)
     private String firstName;
+
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
@@ -27,13 +30,15 @@ public class Specialist extends User {
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<UserSkill> skills;
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Expertise> expertises;
 
     @Getter
@@ -42,26 +47,31 @@ public class Specialist extends User {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    @Getter
+    @Setter
+    String resumeURL;
+
     public Specialist() {
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
     }
 
-    public Specialist(int id, String email, String profilePictureURL, String firstName, String lastName) {
+    public Specialist(Integer id, String email, String profilePictureURL, String firstName, String lastName) {
         this(id, email, null, profilePictureURL, firstName, lastName);
     }
 
-    public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName) {
-        this(id, email, password, profilePictureURL, firstName, lastName, null);
+    public Specialist(Integer id, String email, String password, String profilePictureURL, String firstName, String lastName) {
+        this(id, email, password, profilePictureURL, firstName, lastName, null, null);
     }
 
-    public Specialist(int id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address) {
+    public Specialist(Integer id, String email, String password, String profilePictureURL, String firstName, String lastName, Address address, String resumeURL) {
         super(id, email, password, profilePictureURL, Role.SPECIALIST);
         this.firstName = firstName;
         this.lastName = lastName;
         this.skills = new ArrayList<>();
         this.expertises = new ArrayList<>();
         this.address = address;
+        this.resumeURL = resumeURL;
     }
 
     public UserSkill getUserSkill(Skill skill) {
@@ -79,7 +89,7 @@ public class Specialist extends User {
             return userSkill;
         }
         // Add new user skill
-        UserSkill newSkill = new UserSkill(skills.size(), skill, rating);
+        UserSkill newSkill = new UserSkill(skills.size(), this, skill, rating);
         skills.add(newSkill);
         return newSkill;
     }

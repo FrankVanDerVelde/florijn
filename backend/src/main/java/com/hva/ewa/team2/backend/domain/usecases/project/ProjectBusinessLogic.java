@@ -36,7 +36,7 @@ public interface ProjectBusinessLogic {
 
     ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest jsonBody);
 
-    List<ProjectReport> getProjectReports(int projectId, JsonNode body);
+    List<ProjectReport> getProjectReports(int projectId, int userId);
 
     List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter);
 

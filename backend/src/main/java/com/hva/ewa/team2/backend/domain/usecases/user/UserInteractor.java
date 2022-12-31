@@ -39,8 +39,8 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public List<User> getUsersByRole(User.Role role) {
-        return this.userRepo.findUsersByRole(role);
+    public <U extends User> List<U> getUsersByRole(User.Role role, Class<U> clazz) {
+        return this.userRepo.findUsersByRole(role, clazz);
     }
 
     @Override
@@ -162,6 +162,26 @@ public class UserInteractor implements UserBusinessLogic {
         if (!(user instanceof Specialist specialist)) return null;
 
         return specialist.getAddress();
+    }
+
+    @Override
+    public User updateResume(int id, JsonUserData body) throws IOException {
+        Optional<User> found = this.userRepo.findById(id);
+
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
+
+        User user = found.get();
+
+        if (user instanceof Specialist specialist) {
+            if (body.getResumeFile() != null) {
+                String extension = FilenameUtils.getExtension(body.getResumeFile().getOriginalFilename());
+                assetService.uploadAsset(body.getResumeFile(), "users/resumes/" + user.getId() + "." + extension, true);
+
+                specialist.setResumeURL("users/resumes/" + user.getId() + "." + extension);
+            }
+        }
+
+        return this.userRepo.save(user);
     }
 
 }

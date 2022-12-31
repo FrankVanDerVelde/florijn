@@ -48,10 +48,9 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['fetchService'],
+  inject: ['authenticationRepository', 'storedTokenRepository', 'fetchService'],
   created() {
-    if (localStorage.getItem("user") !== "null") {
-      console.log(localStorage.getItem("user"))
+    if (localStorage.getItem("user") !== null) {
       this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
     }
   },
@@ -60,24 +59,13 @@ export default {
       this.$router.push(this.$route.matched[0].path + "/forgotpassword");
     },
     async submitButton() {
-      let userData;
-
       try {
-        userData = await this.fetchService.fetchJsonPost("/auth/login",
-            ({email: this.email.trim(), password: this.password}));
+        const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
+
+        localStorage.setItem("user", JSON.stringify(this.storedTokenRepository.getUser()))
+        this.pushHelperMethod(userData.role)
       } catch (e) {
         console.error(e)
-        userData = null;
-      }
-
-      if (userData !== null) {
-
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("role", userData.role);
-
-        this.pushHelperMethod(userData.role)
-      } else {
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
       }

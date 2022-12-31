@@ -101,7 +101,7 @@ export default {
     },
     inject: ['fetchService', 'userFetchService'],
     async created() {
-        if (this.user.role == "SPECIALIST") {
+        if (this.user.role === "SPECIALIST") {
             const newAddress = await this.userFetchService.fetchJson(`/address/${this.user.id}`);
             this.address = newAddress;
         }

@@ -15,25 +15,53 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     @Query(value = "SELECT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
     List<HourRegistration> findAllByUser(int userId);
 
-    @Query(value = "SELECT DISTINCT h.* FROM hour_registration h INNER JOIN project_participant p ON (h.user_id=p.user_id) WHERE h.project_id = :projectId AND h.user_id = :userId ORDER BY `status` IS NULL DESC, `from` DESC", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT h.* FROM hour_registration h " +
+            "INNER JOIN project_participant p ON (h.user_id=p.user_id) " +
+            "WHERE h.project_id = :projectId AND h.user_id = :userId " +
+            "ORDER BY `status` IS NULL DESC, `from` DESC",
+            nativeQuery = true)
     List<HourRegistration> findAllByProjectParticipant(int projectId, int userId);
 
-    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED'")
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+            "FROM hour_registration h " +
+            "WHERE h.project_id = :projectId AND h.status <> 'REJECTED'",
+            nativeQuery = true)
     Double getTotalHoursForProject(int projectId);
 
-    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED'")
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+            "FROM hour_registration h " +
+            "WHERE h.project_id = :projectId AND h.user_id = :userId AND h.status <> 'REJECTED'",
+            nativeQuery = true)
     Double getTotalHoursForProject(int projectId, int userId);
 
-    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED' AND h.from >= :from AND h.from <= :to")
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+            "FROM hour_registration h " +
+            "WHERE h.project_id = :projectId AND h.status <> 'REJECTED' " +
+            "AND h.`from` BETWEEN :from AND :to",
+            nativeQuery = true)
     Double getTotalHoursForProjectBetween(int projectId, LocalDateTime from, LocalDateTime to);
 
-    @Query(value = "SELECT sum((h.to - h.from) / 10000) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED' AND h.from >= :from AND h.from <= :to")
+
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+            "FROM hour_registration h " +
+            "WHERE h.project_id = :projectId AND h.user_id = :userId AND h.status <> 'REJECTED' " +
+            "AND h.`from` BETWEEN :from AND :to",
+            nativeQuery = true)
     Double getTotalHoursForProjectBetween(int projectId, int userId, LocalDateTime from, LocalDateTime to);
 
-    @Query(value = "SELECT sum(((h.to - h.from) / 10000) * h.projectParticipant.hourlyRate) FROM HourRegistration h WHERE h.project.id = :projectId AND h.status <> 'REJECTED'")
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)" +
+            "FROM hour_registration h " +
+            "INNER JOIN project_participant pp ON (pp.project_id = h.project_id AND pp.user_id = h.user_id) " +
+            "WHERE h.project_id = :projectId AND h.status <> 'REJECTED'",
+            nativeQuery = true)
     Double getTotalCostsForProject(int projectId);
 
-    @Query(value = "SELECT sum(((h.to - h.from) / 10000) * h.projectParticipant.hourlyRate) FROM HourRegistration h WHERE h.project.id = :projectId AND h.projectParticipant.specialist.id = :userId AND h.status <> 'REJECTED'")
+
+    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)" +
+            "FROM hour_registration h " +
+            "INNER JOIN project_participant pp ON (pp.project_id = h.project_id AND pp.user_id = h.user_id) " +
+            "WHERE h.project_id = :projectId AND pp.user_id = :userId AND h.status <> 'REJECTED'",
+            nativeQuery = true)
     Double getTotalRevenueForProject(int projectId, int userId);
 
 }

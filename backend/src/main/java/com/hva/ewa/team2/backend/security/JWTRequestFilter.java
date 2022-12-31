@@ -15,9 +15,12 @@ import java.io.IOException;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
+    private Config apiConfig;
 
     @Autowired
-    private Config apiConfig;
+    public JWTRequestFilter(Config apiConfig) {
+        this.apiConfig = apiConfig;
+    }
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,

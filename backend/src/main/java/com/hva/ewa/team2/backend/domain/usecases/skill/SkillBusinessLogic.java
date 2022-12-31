@@ -13,7 +13,7 @@ public interface SkillBusinessLogic {
     ArrayList<SkillGroup> getAllSkillGroups();
     UserSkill updateUserSkill(int userId, JsonUserSkill jsonBody);
     List<UserSkill> getUserSkills(int id);
-    SkillGroup updateUserSkillGroup(int userId, JsonUserSkillGroup jsonBody);
+    SkillGroup updateUserSkillGroup(int userId, List<JsonUserSkill> jsonBody);
 
     List<Expertise> getAllExpertises();
     Expertise getExpertise(int id);

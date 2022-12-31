@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsersByRole(@PathVariable User.Role role) {
-        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role));
+    public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
+        return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role, role.getUserClass()));
     }
 
     @JsonView(User.EssentialInfo.class)
@@ -46,6 +46,11 @@ public class UserController {
     @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
         return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
+    }
+
+    @PutMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> updateResume(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.updateResume(id, body));
     }
 
     @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)

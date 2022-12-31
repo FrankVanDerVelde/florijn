@@ -42,7 +42,7 @@ public class SkillController {
     }
 
     @PutMapping(path = "/update-user-skill-group/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId, @RequestBody JsonUserSkillGroup body) {
+    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId, @RequestBody List<JsonUserSkill> body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
     }
 
