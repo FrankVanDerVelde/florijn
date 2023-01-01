@@ -5,7 +5,7 @@
                   @changeStatus="updateRegistryStatus"/>
   <tr @click="showPopup = true">
     <td>
-      <small-table-card v-if="showProject" :title="registry.project.title" :subtitle="registry.project.client.name" :src="registry.project.logoSrc" :round-image="false"/>
+      <small-table-card v-if="showProject" :title="registry.project.title" :subtitle="registry.participant.role" :src="registry.project.logoSrc" :round-image="false"/>
       <participant v-else :participant="registry.participant" small/>
     </td>
     <td>
@@ -35,6 +35,10 @@ export default {
   inject: ['fetchService', 'dateService'],
   emits: ['updateStatus'],
 
+  created() {
+    console.log(this.registry)
+  },
+
   data() {
     return {
       showPopup: false,
@@ -48,7 +52,7 @@ export default {
     },
     showProject: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
 

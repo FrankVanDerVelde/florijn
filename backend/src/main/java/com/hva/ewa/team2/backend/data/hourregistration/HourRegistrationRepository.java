@@ -28,13 +28,13 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
             nativeQuery = true)
     Double getTotalHoursForProject(int projectId);
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0) " +
             "FROM hour_registration h " +
             "WHERE h.project_id = :projectId AND h.user_id = :userId AND h.status <> 'REJECTED'",
             nativeQuery = true)
     Double getTotalHoursForProject(int projectId, int userId);
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600), 0) " +
             "FROM hour_registration h " +
             "WHERE h.project_id = :projectId AND h.status <> 'REJECTED' " +
             "AND h.`from` BETWEEN :from AND :to",
@@ -42,14 +42,14 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     Double getTotalHoursForProjectBetween(int projectId, LocalDateTime from, LocalDateTime to);
 
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0) " +
             "FROM hour_registration h " +
             "WHERE h.project_id = :projectId AND h.user_id = :userId AND h.status <> 'REJECTED' " +
             "AND h.`from` BETWEEN :from AND :to",
             nativeQuery = true)
     Double getTotalHoursForProjectBetween(int projectId, int userId, LocalDateTime from, LocalDateTime to);
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)" +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate), 0)" +
             "FROM hour_registration h " +
             "INNER JOIN project_participant pp ON (pp.project_id = h.project_id AND pp.user_id = h.user_id) " +
             "WHERE h.project_id = :projectId AND h.status <> 'REJECTED'",
@@ -57,7 +57,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     Double getTotalCostsForProject(int projectId);
 
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)" +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate), 0)" +
             "FROM hour_registration h " +
             "INNER JOIN project_participant pp ON (pp.project_id = h.project_id AND pp.user_id = h.user_id) " +
             "WHERE h.project_id = :projectId AND pp.user_id = :userId AND h.status <> 'REJECTED'",
@@ -65,7 +65,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     Double getTotalRevenueForProject(int projectId, int userId);
 
     @Query(value = """
-            SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate)
+            SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate), 0)
                 FROM hour_registration h
                 INNER JOIN project_participant pp
                     ON (pp.project_id = h.project_id
@@ -75,7 +75,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
             nativeQuery = true)
     Double getTotalRevenueForUser(Integer userId);
 
-    @Query(value = "SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600) " +
+    @Query(value = "SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0) " +
             "FROM hour_registration h " +
             "WHERE h.user_id = :userId AND h.status <> 'REJECTED'",
             nativeQuery = true)

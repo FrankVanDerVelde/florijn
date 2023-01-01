@@ -2,7 +2,9 @@
   <div class="sticky top-0 z-50 h-[60px] bg-neutral-0 border-b border-b-neutral-200 shadow shadow">
     <div class="page-main-mw h-full hidden md:flex flex-row items-center justify-between">
       <div class="flex items-center h-full">
-        <img class="h-full p-4 mr-6 object-contain h-full" :src="logo" alt="Business Logo">
+        <router-link :to="{ name: 'home' }" class="h-full">
+          <img class="h-full p-4 mr-6 object-contain h-full" :src="logo" alt="Business Logo">
+        </router-link>
 
         <div class="flex gap-7 h-full w-fit flex items-center">
           <nav-item v-for="item in links" :key="item.name" :data="item"/>
@@ -79,36 +81,32 @@ export default {
           link: '/login'
         }
       } else {
+        this.links = [
+          {
+            name: 'Projecten',
+            link: '/projects'
+          },
+        ];
+
         switch (this.user.role) {
           case "ADMIN":
-            this.links = [
+            this.links.push([
               {
                 name: 'Admin',
                 link: '/adminpanel'
-              },
-              {
-                name: 'Projecten',
-                link: '/projects'
               },{
                 name: 'Nieuw project',
                 link: '/projects/new'
               }
-            ]
+            ]);
             break;
           case "SPECIALIST":
-            this.links = [{
-              name: 'Projecten',
-              link: '/projects'
-            }, {
+            this.links.push([{
               name: 'Profiel',
               link: '/profile'
-            }]
+            }]);
             break;
           case "CLIENT":
-            this.links = [ {
-              name: 'Projecten',
-              link: '/projects'
-            }]
             break;
         }
         this.staticLink = {

@@ -4,7 +4,7 @@
               :project-count="projectCount"
               :quick-actions="quickActions"
               :hour-registrations="hourRegistrations"
-              hour-registrations-cost-label="Verdiensten"
+              hour-registrations-box-error-message="Er zijn nog geen uren geregistreerd voor jouw projecten."
   />
 </template>
 
@@ -12,7 +12,7 @@
 import HomeLayout from "./HomeLayout.vue";
 
 export default {
-  name: "SpecialistHomeLayout",
+  name: "ClientHomeLayout",
   components: {HomeLayout},
   inject: ['projectRepository', 'userFetchService', 'dateService', 'hourRegistrationRepository'],
 
@@ -43,7 +43,7 @@ export default {
         title: 'Gewerkte uren',
         value: this.dateService.formatTimeSpentDecimal(this.workedHours)
       }, {
-        title: 'Verdiensten',
+        title: 'Kosten',
         value: this.formatMoney(this.earnings)
       }];
     },
@@ -65,6 +65,7 @@ export default {
   },
 
   methods: {
+    // TODO: Retrieve registered hours, total hours, and spendings from the backend for clients.
     async loadProjects() {
       const [count, fetchedProjects] = await Promise.all([
         this.projectRepository.fetchTotalProjects(this.user.id),

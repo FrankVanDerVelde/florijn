@@ -10,6 +10,7 @@
 
     <AdminHomeLayout v-if="user.role === 'ADMIN'"/>
     <SpecialistHomeLayout v-else-if="user.role === 'SPECIALIST'" :user="user"/>
+    <ClientHomeLayout v-else-if="user.role === 'CLIENT'" :user="user"/>
   </div>
 </template>
 
@@ -17,10 +18,11 @@
 import Asset from "../../Common/Asset.vue";
 import AdminHomeLayout from "./layouts/AdminHomeLayout.vue";
 import SpecialistHomeLayout from "./layouts/SpecialistHomeLayout.vue";
+import ClientHomeLayout from "./layouts/ClientHomeLayout.vue";
 
 export default {
   name: "BaseHome",
-  components: {SpecialistHomeLayout, AdminHomeLayout, Asset},
+  components: {ClientHomeLayout, SpecialistHomeLayout, AdminHomeLayout, Asset},
   inject: ['storedTokenRepository', 'projectRepository'],
 
   created() {

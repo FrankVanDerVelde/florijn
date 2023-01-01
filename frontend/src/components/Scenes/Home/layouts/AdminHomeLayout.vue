@@ -1,47 +1,22 @@
 <template>
-  <div class="flex flex-row gap-4">
-    <SummaryBox title="Aantal klanten" :value="clientCount"/>
-    <SummaryBox title="Aantal leden" :value="memberCount"/>
-    <SummaryBox title="Aantal projecten" :value="projectCount"/>
-  </div>
-
-  <div class="flex flex-col gap-2">
-    <HomeBox>
-      <h2 class="text-xl font-semibold mb-2">Jouw projecten</h2>
-
-      <router-link v-for="project in projects" :to="{name: 'project', params: {projectId: project.id}}" class="project flex items-center gap-2"
-                   :key="project.id">
-        <Asset :src="project.logoSrc" class="rounded-md h-8 w-8 object-contain"/>
-        <div class="flex flex-col ml-2">
-          <h3 class="text-lg font-medium">{{ project.title }}</h3>
-        </div>
-      </router-link>
-    </HomeBox>
-  </div>
-
-  <HomeBox class="w-full md:w-fit">
-    <h2 class="text-xl font-semibold mb-2">Snelle acties</h2>
-    <div class="flex flex-col md:flex-row gap-1 md:gap-5">
-      <QuickAction title="Klant toevoegen" link="" icon="fa-building"/>
-      <QuickAction title="Specialist toevoegen" link="" icon="fa-user-plus"/>
-      <QuickAction title="Project aanmaken" :link="{name: 'new-project'}" icon="fa-bars-progress"/>
-    </div>
-  </HomeBox>
+  <HomeLayout :quick-actions="quickActions"
+              :project-count="projectCount"
+              :projects="projects"
+              :summaries="summaries"
+              projects-box-error-message="Er zijn nog geen projecten."
+  />
 </template>
 
 <script>
-import SummaryBox from "../SummaryBox.vue";
-import HomeBox from "../HomeBox.vue";
-import QuickAction from "../QuickAction.vue";
-import Asset from "../../../Common/Asset.vue";
+import HomeLayout from "./HomeLayout.vue";
 
 export default {
   name: "AdminHomeLayout",
-  components: {Asset, QuickAction, HomeBox, SummaryBox},
+  components: {HomeLayout},
   inject: ['projectRepository', 'userFetchService'],
 
   async created() {
-    Promise.all([
+    await Promise.all([
       this.loadProjects(),
       this.loadUserTotals()
     ])
@@ -53,6 +28,36 @@ export default {
       memberCount: 0,
       clientCount: 0,
       projectCount: 0,
+    }
+  },
+
+  computed: {
+    summaries() {
+      return [{
+        title: 'Aantal klanten',
+        value: this.clientCount
+      }, {
+        title: 'Aantal leden',
+        value: this.memberCount
+      }, {
+        title: 'Aantal projecten',
+        value: this.projectCount
+      }];
+    },
+    quickActions() {
+      return [{ // TODO: Add links for adding clients and specialists.
+        title: 'Klant toevoegen',
+        link: '',
+        icon: 'fa-building'
+      }, {
+        title: 'Specialist toevoegen',
+        link: '',
+        icon: 'fa-user-plus'
+      }, {
+        title: 'Project aanmaken',
+        link: {name: 'new-project'},
+        icon: 'fa-bars-progress'
+      }]
     }
   },
 
@@ -79,20 +84,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-h2 {
-  font-family: 'Poppins', sans-serif;
-}
-
-.project:not(:last-child) {
-  border-bottom: 1px solid var(--gray-100);
-  padding-bottom: 8px;
-}
-
-.project:not(:first-child) {
-  padding-top: 8px;
-}
-
-</style>
