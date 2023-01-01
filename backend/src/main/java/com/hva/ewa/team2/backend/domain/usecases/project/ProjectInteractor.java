@@ -9,6 +9,7 @@ import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
+import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -285,9 +286,16 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
     @Override
     public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Optional<Integer> userId) {
-        final boolean queryPresent = searchQuery.isPresent();
-        final boolean filterPresent = filter.isPresent();
-        final boolean userIdPresent = userId.isPresent();
+        boolean queryPresent = searchQuery.isPresent();
+        boolean filterPresent = filter.isPresent();
+        boolean userIdPresent = userId.isPresent();
+
+        // setting the userId option to null if it is an admin that makes the request.
+        // otherwise this method will check if the user is part of the project.
+        if (userIdPresent && userRepo.findById(userId.get()).orElse(null) instanceof Admin) {
+            userId = Optional.empty();
+            userIdPresent = false;
+        }
 
         if (queryPresent && filterPresent) {
             if (userIdPresent) return projectRepo.findAllByQuery(ProjectFilter.valueOf(filter.get()), searchQuery.get(), userId.get());
@@ -335,7 +343,9 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
     @Override
     public Double getEarnings(Integer userId) {
-        return hourRegistrationRepo.getTotalRevenueForUser(userId);
+        final Double totalRevenueForUser = hourRegistrationRepo.getTotalRevenueForUser(userId);
+        System.out.println("getEarnings: " + totalRevenueForUser);
+        return totalRevenueForUser;
     }
 
     @Override

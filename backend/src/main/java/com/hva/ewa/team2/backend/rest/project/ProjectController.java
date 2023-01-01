@@ -114,12 +114,15 @@ public class ProjectController {
 
     @GetMapping(path = "/total")
     public ResponseEntity<Integer> getTotalProjects(@RequestParam("userId") Optional<Integer> userId) {
+        System.out.println("getTotalProjects: " + userId.orElse(null));
         return ResponseEntity.ok(projectInteractor.getProjectCount(userId));
     }
 
     @GetMapping(path = "/earnings")
     public ResponseEntity<Double> getEarnings(@RequestParam("userId") Integer userId) {
-        return ResponseEntity.ok(projectInteractor.getEarnings(userId));
+        final Double earnings = projectInteractor.getEarnings(userId);
+        System.out.println("response get earnings: " + earnings);
+        return ResponseEntity.ok(earnings);
     }
 
     @GetMapping(path = "/hours")
