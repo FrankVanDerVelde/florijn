@@ -37,6 +37,10 @@ export default {
       return JSON.parse(localStorage.getItem('user'));
     },
     userId() {
+      if (this.user == null){
+        this.$router.push({name: "home"});
+        location.reload();
+      }
       return Number.parseInt(this.user.id);
     },
     hasAdminPrivileges() {
@@ -67,6 +71,9 @@ export default {
   },
 
   async created() {
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
+    }
     if (this.projectInfo == null && this.projectId >= 0) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
     } else {

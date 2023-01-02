@@ -55,7 +55,11 @@ export default {
       this.$router.push({name: "home"});
     }
   },
-
+created(){
+  if (localStorage.getItem("user") == null) {
+    this.$router.push({name: "home"});
+  }
+},
   watch: {
     'project': async function () {
       await Promise.all([this.fetchReports(), this.fetchHourRegistry()])
