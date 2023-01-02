@@ -50,13 +50,8 @@ export default {
       required: true
     }
   },
-  async beforeCreate(){
-    if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
-    }
-  },
 created(){
-  if (localStorage.getItem("user") == null) {
+  if (this.user == null) {
     this.$router.push({name: "home"});
   }
 },
@@ -71,6 +66,10 @@ created(){
       return JSON.parse(localStorage.getItem('user'));
     },
     userId() {
+      if (this.userId == null)
+        if (this.user == null) {
+          this.$router.push({name: "home"});
+        }
       return Number.parseInt(this.user.id);
     }
   },

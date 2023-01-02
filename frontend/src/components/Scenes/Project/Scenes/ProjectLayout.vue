@@ -25,13 +25,6 @@ export default {
   name: "ProjectLayout",
   components: {ProjectLogo, ProjectBanner, ProjectHeader},
   inject: ['projectFetchService'],
-
-  async beforeCreate() {
-    if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
-    }
-  },
-
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user'));
@@ -71,7 +64,7 @@ export default {
   },
 
   async created() {
-    if (localStorage.getItem("user") == null) {
+    if (this.user == null) {
       this.$router.push({name: "home"});
     }
     if (this.projectInfo == null && this.projectId >= 0) {

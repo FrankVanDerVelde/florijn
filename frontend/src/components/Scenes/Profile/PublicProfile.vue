@@ -17,7 +17,7 @@
                     <div class="flex mt-2">{{ userData.email }}</div>
                   </div>
                   <div>
-                    <button class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
+                    <button v-if="this.user.role === 'ADMIN'" class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
                     mr-2 text-neutral-0">Op project zetten
                     </button>
                     <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
@@ -92,6 +92,11 @@ export default {
   name: "PublicProfile",
   inject: ['fetchService'],
   components: {ProjectListDetailsSummary, SkillListSummary},
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user'));
+    }
+  },
   data() {
     return {
       specialistId: '',
@@ -110,8 +115,9 @@ export default {
     }
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
-      this.$router.push("/home");
+    if (this.user === null){
+      this.$router.replace({ path: '/login' })
+      this.user = {};
     }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();

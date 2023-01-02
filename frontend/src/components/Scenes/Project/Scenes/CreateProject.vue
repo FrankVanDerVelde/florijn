@@ -120,13 +120,6 @@ export default {
       return JSON.parse(localStorage.getItem('user'));
     }
   },
-
-  async beforeCreate(){
-    if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
-    }
-  },
-
   async created() {
     if (!this.newProject) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
