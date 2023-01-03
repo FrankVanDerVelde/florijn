@@ -15,8 +15,7 @@
 import SideBarNav from "../../Common/SideBarNav.vue";
 
 export default {
-  name: "Adminpanel",
-
+  name: "AdminPanel",
   components: {
     SideBarNav
   },
@@ -28,16 +27,18 @@ export default {
   data() {
     return {
       id: localStorage.getItem("id"),
-      sideBarLinks: [{
-        icon: 'fa-solid fa-share-nodes',
-        name: 'Klanten',
-        href: '/adminpanel/customer-list',
-      },
+      sideBarLinks: [
+        {
+          icon: 'fa-solid fa-share-nodes',
+          name: 'Klanten',
+          href: '/adminpanel/customer-list',
+        },
         {
           icon: 'fa-solid fa-user',
           name: 'Specialisten',
           href: '/adminpanel/employee-list',
-        }],
+        }
+      ],
     }
   }
 }

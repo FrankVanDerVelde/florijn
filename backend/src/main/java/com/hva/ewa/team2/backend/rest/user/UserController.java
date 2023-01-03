@@ -52,10 +52,15 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.updateResume(id, body));
     }
 
-    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
-        return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));
+    @PostMapping(path = "/add/client")
+    public ResponseEntity<User> addUser(@ModelAttribute AddClientRequestBody body) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.addClient(body));
     }
+
+//    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
+//        return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));
+//    }
 
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> deleteUserById(@PathVariable int id) {

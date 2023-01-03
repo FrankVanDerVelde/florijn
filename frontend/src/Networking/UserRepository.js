@@ -25,9 +25,19 @@ export class UserRepository {
             email: email,
             password: password,
             avatarUrl: avatarUrl,
-            bannerSrc: bannerSrc
+            // bannerSrc: bannerSrc
         };
-        return await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
+
+        let formData = new FormData();
+        for (const [key, value] of Object.entries(body)) {
+            formData.append(key, value);
+        }
+
+        for (const [key, value] of formData.entries()) {
+            console.log(`key:${key}, value: ${value}`);
+        }
+
+        return await this.#networkClient.executeRequestWithFormData(path, HttpMethod.POST, formData);
     }
 
     /**

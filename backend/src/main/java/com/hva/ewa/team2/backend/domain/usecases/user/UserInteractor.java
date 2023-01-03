@@ -6,14 +6,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
+import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class UserInteractor implements UserBusinessLogic {
@@ -143,6 +147,29 @@ public class UserInteractor implements UserBusinessLogic {
                         body.get("lastName").asText());
             }
         };
+        return this.userRepo.save(user);
+    }
+
+    @Override
+    public User addClient(AddClientRequestBody body) throws IOException {
+        User user = new Client(
+                -1,
+                body.getEmail(),
+                body.getPassword(),
+                body.getAvatarUrl().getOriginalFilename(),
+                body.getName(),
+                "");
+
+        final MultipartFile avatar = body.getAvatarUrl();
+        if (avatar != null) {
+            // uploading the logo to the assets.
+            String extension = FilenameUtils.getExtension(avatar.getOriginalFilename());
+            String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
+            final FileResult fileResult = assetService.uploadAsset(avatar, fileName);
+
+            user.setAvatarUrl(fileName);
+            // returning the updated project with the generated logo upload src.
+        }
         return this.userRepo.save(user);
     }
 

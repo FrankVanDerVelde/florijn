@@ -1,7 +1,7 @@
 <template>
-  <div class="container main-container rounded-xl">
+  <div class="container bg-neutral-50  rounded-xl">
     <div class="flex mt-4 p-2 w-full justify-center">
-      <img v-bind:src="client.profilePictureURL" alt="project logo" class="icon-container fa-border m-auto">
+      <Asset :src="client.avatarUrl" alt="project logo" class="image-container icon-container"/>
       <div class="flex flex-col justify-between container ml-2">
         <div class="flex flex-col mb-3">
           <div class="container flex justify-between m-1">
@@ -23,32 +23,30 @@
 
 <script>
 
+import Asset from "../../Common/Asset.vue";
+
 export default {
-
-
-  name: "CustomerListDetails",
-
+  name: "ClientRow",
+  components: {Asset},
   props: {
     client: {
       type: Object,
       required: true
     }
+  },
+  created() {
+    console.log(this.client);
   }
 }
 </script>
 
 <style scoped>
-
-.main-container {
-  background-color: #F5F7FA;
-}
-
-.icon-container {
+.image-container {
   margin-left: auto;
   margin-right: auto;
   width: 68px;
   height: 68px;
-  border-radius: 18px;
+  border-radius: 4px;
 }
 
 .icon-container > img {
@@ -63,10 +61,8 @@ export default {
   background-color: #fff;
 }
 
-
 #detailsbutton:hover {
   background-color: #F35627;
   color: white;
 }
-
 </style>

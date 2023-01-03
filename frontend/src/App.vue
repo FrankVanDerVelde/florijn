@@ -15,6 +15,7 @@ import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepo
 import Holidays from "date-holidays";
 import CONFIG from '/config.js'
 import {UserRepository} from "./Networking/UserRepository.js";
+import {AssetsService} from "./Networking/AssetsService.js";
 
 export default {
   name: "App",
@@ -32,7 +33,8 @@ export default {
       storedTokenRepository: storedTokenRepository,
       authenticationRepository: new AuthenticationRepository(storedTokenRepository),
       holidays: new Holidays('NL'),
-      userRepository: new UserRepository()
+      userRepository: new UserRepository(),
+      assetsService: new AssetsService()
     }
   },
 }

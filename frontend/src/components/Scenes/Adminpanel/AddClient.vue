@@ -38,6 +38,7 @@
                       class="w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
                       id="file_input"
                       type="file"
+                      @change="handleAvatarChanged"
                   >
                 </div>
 
@@ -130,6 +131,23 @@ export default {
         this.isFormValid = false;
         this.errors.passwordError = 'Wachtwoord moet minimaal vier karakters hebben';
       }
+    },
+
+    async handleAvatarChanged(event) {
+      if (event.target.files.length === 0) {
+        this.logoFile = null;
+        delete this.project.logoSrc;
+        return;
+      }
+
+      const fileExtension = event.target.files[0].name.split('.').pop();
+      if (!['svg', 'png', 'webp', 'jpg', 'jpeg'].includes(fileExtension)) {
+        this.errors.logo = "Alleen afbeeldingen met de extensies .svg, .png, .webp, .jpg en .jpeg zijn toegestaan.";
+        return;
+      }
+
+      this.form.avatarUrl = event.target.files[0];
+      // this.project.logoSrc = `${await this.getBase64(event.target.files[0])}`;
     },
 
     async addClient() {

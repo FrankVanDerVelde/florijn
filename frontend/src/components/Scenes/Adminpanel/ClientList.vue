@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import CustomerListDetails from "./CustomerListDetails.vue";
+import CustomerListDetails from "./ClientRow.vue";
 import {UserRole} from "../../models/UserRole.js";
 
 export default {
-  name: "CustomerList",
+  name: "ClientList",
   components: {
     CustomerListDetails
   },
