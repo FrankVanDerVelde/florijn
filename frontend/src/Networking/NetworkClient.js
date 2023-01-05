@@ -1,12 +1,13 @@
 import {HttpMethod} from "./HttpMethod.js";
+import {StoredTokenRepository} from "./Authentication/StoredTokenRepository.js";
 export class NetworkClient {
 
     #baseURL;
     #storedTokenRepository;
 
-    constructor(baseURL = import.meta.env.VITE_BACKEND_URL, storedTokenRepository) {
+    constructor(baseURL = import.meta.env.VITE_BACKEND_URL) {
         this.#baseURL = baseURL;
-        this.#storedTokenRepository = storedTokenRepository;
+        this.#storedTokenRepository = StoredTokenRepository.shared;
     }
 
     /**
@@ -159,6 +160,7 @@ export class NetworkClient {
      */
     #signHeaderWithToken(headerFields) {
         const token = this.#storedTokenRepository?.getToken();
+        console.log(`token: ${this.#storedTokenRepository}`);
         if (token) {
             return {
                 'Authorization': `Bearer ${token}`,

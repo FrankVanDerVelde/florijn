@@ -1,13 +1,15 @@
+import CONFIG from "../../../config.js";
+
 export class StoredTokenRepository {
     #BROWSER_STORAGE_ITEM_NAME;
     #token
     #user
 
     constructor(browserStorageItemName) {
-        this.#token = null;
-        this.#user = null;
         this.#BROWSER_STORAGE_ITEM_NAME = browserStorageItemName;
     }
+
+    static shared = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
 
     saveToken(token, user) {
         this.#token = token;

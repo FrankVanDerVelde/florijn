@@ -22,22 +22,52 @@ export class UserRepository {
         const path = `/users/add/client`;
         const body = {
             name: name,
-            email: email,
+            lasstname: email,
             password: password,
             avatarUrl: avatarUrl,
             // bannerSrc: bannerSrc
         };
 
-        let formData = new FormData();
-        for (const [key, value] of Object.entries(body)) {
-            formData.append(key, value);
-        }
+        let formData = this.#createFormDataFromBody(body);
 
         for (const [key, value] of formData.entries()) {
             console.log(`key:${key}, value: ${value}`);
         }
 
         return await this.#networkClient.executeRequestWithFormData(path, HttpMethod.POST, formData);
+    }
+
+    /**
+     * Adds a specialist.
+     * @param {String} firstname Name of the Client.
+     * @param {String} lastname
+     * @param {String} email Chosen email of the Client.
+     * @param {String} password Chosen password of the Client (plain-text)
+     * @param {String|null} avatarUrl URL of the avatar of the Client.
+     * @return {Promise<Client|Object|null>} Added Specialist.
+     */
+    async addSpecialist(firstname, lastname, email, password, avatarUrl = null) {
+        const path = `/users/add/specialist`;
+
+        const body = {
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            password: password,
+            avatarUrl: avatarUrl,
+        };
+
+        let formData = this.#createFormDataFromBody(body);
+
+        return await this.#networkClient.executeRequestWithFormData(path, HttpMethod.POST, formData);
+    }
+
+    #createFormDataFromBody(body) {
+        let formData = new FormData();
+        for (const [key, value] of Object.entries(body)) {
+            formData.append(key, value);
+        }
+        return formData;
     }
 
     /**

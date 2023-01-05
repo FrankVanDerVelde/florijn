@@ -8,6 +8,7 @@ import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
 import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
+import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,29 @@ public class UserInteractor implements UserBusinessLogic {
             user.setAvatarUrl(fileName);
             // returning the updated project with the generated logo upload src.
         }
+        return this.userRepo.save(user);
+    }
+
+    @Override
+    public User addSpecialist(AddSpecialistRequestBody body) throws IOException {
+        User user = new Specialist(
+                -1,
+                body.getEmail(),
+                body.getPassword(),
+                null,
+                body.getFirstname(),
+                body.getLastname());
+
+        if (body.getAvatarUrl() != null) {
+            // uploading the logo to the assets.
+            String extension = FilenameUtils.getExtension(body.getAvatarUrl().getOriginalFilename());
+            String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
+            final FileResult fileResult = assetService.uploadAsset(body.getAvatarUrl(), fileName);
+
+            user.setAvatarUrl(fileName);
+            // returning the updated project with the generated logo upload src.
+        }
+
         return this.userRepo.save(user);
     }
 

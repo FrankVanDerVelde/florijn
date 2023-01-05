@@ -20,7 +20,8 @@ import {AssetsService} from "./Networking/AssetsService.js";
 export default {
   name: "App",
   provide() {
-    const storedTokenRepository = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
+    const storedTokenRepository = StoredTokenRepository.shared
+
     return {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),

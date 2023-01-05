@@ -6,6 +6,7 @@ import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
 import com.hva.ewa.team2.backend.rest.user.json.*;
+import com.hva.ewa.team2.backend.security.JWToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class UserController {
 
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
+//        System.out.println(jwtToken);
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role, role.getUserClass()));
     }
 
@@ -55,6 +57,11 @@ public class UserController {
     @PostMapping(path = "/add/client")
     public ResponseEntity<User> addUser(@ModelAttribute AddClientRequestBody body) throws IOException {
         return ResponseEntity.ok(this.userBusinessLogic.addClient(body));
+    }
+
+    @PostMapping(path = "/add/specialist")
+    public ResponseEntity<User> addUser(@ModelAttribute AddSpecialistRequestBody body) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.addSpecialist(body));
     }
 
 //    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
+import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public interface UserBusinessLogic {
 
     User addUser(String role, JsonNode body);
     User addClient(AddClientRequestBody body) throws IOException;
+    User addSpecialist(AddSpecialistRequestBody body) throws IOException;
 
     User deleteUserById(int id);
 

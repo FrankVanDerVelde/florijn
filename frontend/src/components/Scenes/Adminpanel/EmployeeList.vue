@@ -20,18 +20,19 @@
 
 <script>
 
-import EmployeeListDetails from "./EmployeeListDetails.vue";
+import EmployeeListDetails from "./EmployeeRow.vue";
+import {UserRole} from "../../models/UserRole.js";
 
 export default {
   name: "EmployeeList",
   components: {
     EmployeeListDetails,
   },
-  inject: ['fetchService'],
+  inject: ['userRepository'],
 
 
   async created() {
-    this.employees = await this.fetchService.fetchJson(`/users/role/specialist`)
+    this.employees = await this.userRepository.fetchUsers(UserRole.specialist);
   },
 
   data() {

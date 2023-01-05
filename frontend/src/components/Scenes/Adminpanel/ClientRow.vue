@@ -18,11 +18,9 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-
 import Asset from "../../Common/Asset.vue";
 
 export default {
@@ -46,7 +44,7 @@ export default {
   margin-right: auto;
   width: 68px;
   height: 68px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .icon-container > img {

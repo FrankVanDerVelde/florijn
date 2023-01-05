@@ -1,7 +1,7 @@
 <template>
   <div class="container main-container rounded-xl">
     <div class="flex mt-4 p-2 w-full justify-center">
-      <img v-bind:src="employee.profilePictureURL" alt="project logo" class="icon-container fa-border m-auto">
+      <Asset :src="employee.avatarUrl" alt="project logo" class="image-container icon-container m-auto"></Asset>
       <div class="flex flex-col justify-between container ml-2">
         <div class="flex flex-col mb-3">
           <div class="container flex justify-between m-1">
@@ -9,10 +9,12 @@
               <div class="font-bold">{{ employee.firstName + " " + employee.lastName }}</div>
               <div class="font-semibold text-neutral-500">{{ employee.email }}</div>
             </div>
-            <button id="detailsbutton"
-                    class="bg-neutral-100 border-neutral-200 border-[1px] font-semibold rounded-md bold p-2 mr-2 h-[31px] flex items-center text-neutral-900">
-              Details
-            </button>
+            <div class="flex gap-1">
+              <button id="detailsbutton"
+                      class="bg-neutral-100 border-neutral-200 border-[1px] font-semibold rounded-md bold p-2 mr-2 h-[31px] flex items-center text-neutral-900">
+                Details
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -21,10 +23,10 @@
 </template>
 
 <script>
-
+import Asset from "../../Common/Asset.vue";
 export default {
-  name: "EmployeeListDetails",
-
+  name: "EmployeeRow",
+  components: {Asset},
   props: {
     employee: {
       type: Object,
@@ -35,17 +37,16 @@ export default {
 </script>
 
 <style scoped>
-
 .main-container {
   background-color: #F5F7FA;
 }
 
-.icon-container {
+.image-container {
   margin-left: auto;
   margin-right: auto;
   width: 68px;
   height: 68px;
-  border-radius: 18px;
+  border-radius: 6px;
 }
 
 .icon-container > img {
@@ -60,11 +61,8 @@ export default {
   background-color: #fff;
 }
 
-
 #detailsbutton:hover {
   background-color: #F35627;
   color: white;
 }
-
 </style>
-
