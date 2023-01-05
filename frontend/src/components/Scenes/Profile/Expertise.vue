@@ -19,11 +19,11 @@
                 <div v-for="expertise in expertises" class="min-h-[44px] flex justify-start items-center">
                     <div class="radio-button-container flex column justify-start items-center">
                         
-                        <label class="text-neutral-400 font-semibold text-[12px] w-[25px] h-[25px] mr-[10px] " v-bind:for="`input-${expertise.id}`">
+                        <label class="text-neutral-400 font-semibold text-[12px] w-[25px] h-[25px] mr-[10px]" v-bind:for="`input-${expertise.id}`">
                             <input type="checkbox" v-bind:id="`input-${expertise.id}`" @change="$emit('toggleExpertise', expertise.id)" :checked="(this.userExpertiseIds.includes(expertise.id))">
-                            <span class="checkmark"></span>
+                            <span class="checkmark cursor-pointer"></span>
                         </label>
-                        <div class="text-neutral-900 break-word">{{expertise.name}}</div>
+                        <div class="text-neutral-900 break-word cursor-default">{{expertise.name}}</div>
                     </div>
                 </div>
 
@@ -90,8 +90,9 @@ export default {
             })
         },
         handleFormButton() {
-            console.log(this.userExpertises)
+            if (this.active) {
                 this.skillFetchService.fetchJsonMethod(`/update-user-expertise/${this.user.id}`, "PUT", this.userExpertises);
+            }   
                 this.active = !this.active;
         }
     }

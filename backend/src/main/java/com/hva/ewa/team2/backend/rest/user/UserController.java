@@ -2,7 +2,6 @@ package com.hva.ewa.team2.backend.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
@@ -13,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @ResponseBody
@@ -43,14 +44,23 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.getUserById(id));
     }
 
+    @JsonView(User.EssentialInfo.class)
     @PutMapping(path = "/{id}/edit", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> updateUser(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
         return ResponseEntity.ok(this.userBusinessLogic.updateUser(id, body));
     }
 
+    @GetMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> getResume(@PathVariable int id) throws IOException {
+//        return ResponseEntity.ok(this.userBusinessLogic.getResume(id));
+        return ResponseEntity.ok(Collections.singletonMap("resumeURL", this.userBusinessLogic.getResume(id)));
+    }
+
     @PutMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> updateResume(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
-        return ResponseEntity.ok(this.userBusinessLogic.updateResume(id, body));
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> updateResume(@PathVariable int id, @ModelAttribute JsonUserData body) throws IOException {
+        return ResponseEntity.ok(Collections.singletonMap("resumeURL", this.userBusinessLogic.updateResume(id, body)));
     }
 
     @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
