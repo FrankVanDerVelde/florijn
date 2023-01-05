@@ -5,7 +5,7 @@
       <div class="edit-btn hover:bg-neutral-50 hover:border-app_red-500 transition-all" v-if="edit" @click="$emit('selectedParticipant', {participant})">
         <font-awesome-icon icon="trash-can"/>
       </div>
-      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" :href="'mailto:' + participant.user.email">
+      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" @click.stop="" :href="'mailto:' + participant.user.email">
         <font-awesome-icon icon="envelope"/>
       </a>
       <div class="flex flex-col">

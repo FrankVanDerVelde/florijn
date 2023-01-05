@@ -94,7 +94,7 @@ export default {
   components: {ProjectListDetailsSummary, SkillListSummary},
   computed: {
     user() {
-      return JSON.parse(localStorage.getItem('user'));
+      return JSON.parse(localStorage.getItem('user')) ?? {};
     }
   },
   data() {
@@ -115,9 +115,8 @@ export default {
     }
   },
   created() {
-    if (this.user === null){
+    if (Object.keys(this.user).length === 0){
       this.$router.replace({ path: '/login' })
-      this.user = {};
     }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();
@@ -148,6 +147,7 @@ export default {
     },
     async fetchAvailability() {
       this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
+      console.log(this.availability)
 
       //TODO: when the availibility per week is fixed, replace the api call with the added weeknumber as param
 
