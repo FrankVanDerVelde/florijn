@@ -120,7 +120,7 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User addUser(String role, JsonNode body) {
+    public User addAdmin(JsonNode body) {
         if (body.get("email") == null || body.get("password") == null || body.get("avatarUrl") == null)
             throw new IllegalStateException("The fields email and/or password and/or avatarUrl isn't found!");
 
@@ -128,27 +128,15 @@ public class UserInteractor implements UserBusinessLogic {
         String password = body.get("password").asText();
         String avatarUrl = body.get("avatarUrl").asText();
 
-        User user = switch (role) {
-            case "admin" -> {
-                if (body.get("firstName") == null || body.get("lastName") == null)
-                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                yield new Admin(-1, email, password, avatarUrl,
-                        body.get("firstName").asText(), body.get("lastName").asText());
-            }
-            case "client" -> {
-                if (body.get("name") == null || body.get("bannerSrc") == null)
-                    throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-                yield new Client(-1, email, password, avatarUrl, body.get("name").asText(),
-                        body.get("bannerSrc").asText());
-            }
-            default -> {
-                if (body.get("firstName") == null || body.get("lastName") == null)
-                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                yield new Specialist(-1, email, password, avatarUrl, body.get("firstName").asText(),
-                        body.get("lastName").asText());
-            }
-        };
-        return this.userRepo.save(user);
+        JsonNode firstName = body.get("firstName");
+        JsonNode lastName = body.get("lastName");
+
+        if (firstName == null || lastName == null)
+            throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
+
+        User admin = new Admin(-1, email, password, avatarUrl, firstName.asText(), lastName.asText());
+
+        return this.userRepo.save(admin);
     }
 
     @Override
@@ -159,7 +147,7 @@ public class UserInteractor implements UserBusinessLogic {
                 body.getPassword(),
                 body.getAvatarUrl().getOriginalFilename(),
                 body.getName(),
-                "");
+                null);
 
         final MultipartFile avatar = body.getAvatarUrl();
         if (avatar != null) {

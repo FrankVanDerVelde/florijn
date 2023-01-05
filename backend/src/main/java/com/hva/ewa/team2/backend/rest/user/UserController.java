@@ -64,10 +64,10 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.addSpecialist(body));
     }
 
-//    @PostMapping(path = "/add/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<User> addUser(@PathVariable String role, @RequestBody JsonNode body) {
-//        return ResponseEntity.ok(this.userBusinessLogic.addUser(role, body));
-//    }
+    @PostMapping(path = "/add/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> addUser(@RequestBody JsonNode body) {
+        return ResponseEntity.ok(this.userBusinessLogic.addAdmin(body));
+    }
 
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> deleteUserById(@PathVariable int id) {
