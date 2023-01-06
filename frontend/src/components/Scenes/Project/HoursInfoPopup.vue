@@ -21,13 +21,13 @@
               <div class="col-span-1 flex flex-col">
                 <div class="flex flex-col mb-2">
                   <div class="header">Start tijd</div>
-                  <div>{{ registry.from }}</div>
+                  <div>{{ dateService.formatDate(registry.from) }}</div>
                 </div>
               </div>
               <div class="col-span-1 flex flex-col">
                 <div class="flex flex-col mb-2 ">
                   <div class="header">Eind tijd</div>
-                  <div>{{ registry.to }}</div>
+                  <div>{{ dateService.formatDate(registry.to) }}</div>
                 </div>
               </div>
 
@@ -63,7 +63,7 @@
               <div class="col-span-1 flex flex-col">
                 <div class="flex flex-col mb-2">
                   <div class="header">Start tijd</div>
-                  <div>{{ registry.from }}</div>
+                  <div>{{ dateService.formatDate(registry.from) }}</div>
                 </div>
                 <div class="flex flex-col mb-2">
                   <div class="header">Uurloon</div>
@@ -78,7 +78,7 @@
               <div class="col-span-1 flex flex-col">
                 <div class="flex flex-col mb-2">
                   <div class="header">Eind tijd</div>
-                  <div>{{ registry.to }}</div>
+                  <div>{{ dateService.formatDate(registry.to) }}</div>
                 </div>
                 <div class="flex flex-col mb-2">
                   <div class="header">{{costTitle}}</div>
@@ -113,10 +113,6 @@ export default {
   components: {HourRegistryStatus, Participant},
   inject: ['dateService'],
   emits: ['close', 'changeStatus'],
-
-  created() {
-    console.log(this.registry)
-  },
 
   computed: {
     costTitle() {

@@ -49,17 +49,13 @@ export default {
     },
     quickActions() {
       return [{
-        title: 'Uren registreren',
-        link: {name: 'hour-registration'},
-        icon: 'fa-clock'
+        title: 'Projecten bekijken',
+        link: {name: 'projects'},
+        icon: 'fa-bars-progress'
       }, {
-        title: 'Beschikbaarheid aanpassen',
-        link: {name: 'availability'},
-        icon: 'fa-calendar-days'
-      }, {
-        title: 'Skills wijzigen',
-        link: {name: 'profile-skills'},
-        icon: 'fa-lightbulb'
+        title: 'Profiel aanpassen',
+        link: {name: 'personal-info'},
+        icon: 'fa-user'
       }];
     }
   },

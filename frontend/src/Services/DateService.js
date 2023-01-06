@@ -1,4 +1,5 @@
 import moment from "moment/moment.js";
+import "moment/locale/nl.js";
 
 export class DateService {
 
@@ -62,6 +63,13 @@ export class DateService {
 
             return days[date.getDay()] + ". " + date.getDate() + " " + months[date.getMonth()] + (sameYear ? "" : ", " + date.getFullYear());
         }
+    }
+
+    formatDate(date) {
+        if (typeof date === "string") date = new Date(date);
+
+        const momentDate = moment(date);
+        return momentDate.locale('nl').format('LLL');
     }
 
     calculateTimeSpent(from, to) {
