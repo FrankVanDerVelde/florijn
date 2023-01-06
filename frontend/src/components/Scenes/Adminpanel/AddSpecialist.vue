@@ -1,8 +1,8 @@
 <template>
-  <div class="flex sm:justify-center mt-14">
-    <div>
+  <div class="flex page-main-mw">
+    <div class="mt-14">
       <div class="text-[34px] font-bold">Specialist toevoegen</div>
-      <form class="pt-10 flex flex-col gap-5" @submit.prevent="addSpecialist">
+      <form class="pt-10 flex flex-col gap-5" @submit.prevent="handleSaveTapped">
         <div class="flex flex-col">
           <label for="Persoonsgegevens" class="font-medium text-lg mb-2">Persoonsgegevens</label>
           <div class="flex gap-4 items-start">
@@ -26,20 +26,31 @@
               <input type="text" v-model="lastName" placeholder="Achternaam" id="achternaam" name="lastname">
             </div>
           </div>
+          <p v-if="errors.personalInfo" class="validation-label">{{errors.personalInfo}}</p>
         </div>
 
         <div class="flex flex-col">
           <label for="Persoonsgegevens" class="font-medium text-lg mb-2">Login gegevens</label>
           <div class="flex flex-col gap-2">
-            <input type="text" v-model="email" placeholder="E-mail" name="email">
-            <input type="text" v-model="password" placeholder="Wachtwoord" name="password">
+            <div>
+              <input type="text" v-model="email" placeholder="E-mail" name="email">
+              <p v-if="errors.email" class="validation-label">{{errors.email}}</p>
+            </div>
+
+            <div>
+              <input type="text" v-model="password" placeholder="Wachtwoord" name="password">
+              <p v-if="errors.password" class="validation-label">{{errors.password}}</p>
+            </div>
+
           </div>
         </div>
 
-        <div class="flex gap-2 w-full justify-center">
+        <div class="flex gap-2 w-full">
           <button type="submit" class="primary-button">Bevestigen</button>
           <button @click="handleCancelTapped" class="secondary-button">annuleren</button>
+
         </div>
+        <p v-if="errors.submitError" class="validation-label">{{errors.submitError}}</p>
       </form>
     </div>
   </div>
@@ -66,13 +77,90 @@ export default {
       email: null,
       password: null,
       avatarUrl: null,
-      avatarBase64Encoded: null
+      avatarBase64Encoded: null,
+      errors: {
+        personalInfo: null,
+        email: null,
+        password: null,
+        submitError: null
+      },
+      isFormValid: null
     }
   },
 
   methods: {
     async handleSaveTapped() {
-      await this.addSpecialist();
+      this.clearErrors();
+      this.validateForm();
+      if (this.isFormValid) {
+        await this.addSpecialist();
+      }
+    },
+
+    clearErrors() {
+      Object.keys(this.errors).forEach(key => {
+        this.errors[key] = null;
+      });
+    },
+
+    validateForm() {
+      this.isFormValid = null;
+      this.validateAvatar()
+      this.validateFirstName()
+      this.validateLastName()
+      this.validateEmail()
+      this.validatePassword()
+      if (this.isFormValid === null) {
+        this.isFormValid = true;
+      }
+    },
+
+    validateAvatar() {
+      if (!this.avatarBase64Encoded) {
+        this.isFormValid = false;
+        this.errors.personalInfo = 'Kies een profiel foto.';
+      }
+    },
+
+    validateFirstName() {
+      if (!this.firstName) {
+        this.isFormValid = false;
+        this.errors.personalInfo = 'Vul voornaam in';
+      }
+    },
+
+    validateLastName() {
+      if (!this.lastName) {
+        this.isFormValid = false;
+        this.errors.personalInfo = 'Vul achternaam in';
+      }
+    },
+
+    validateEmail() {
+      if (!this.email) {
+        this.isFormValid = false;
+        this.errors.email = 'Vul email in';
+        return;
+      }
+
+      const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let isEmailValid = re.test(String(this.email).toLowerCase());
+      if (!isEmailValid) {
+        this.isFormValid = false;
+        this.errors.email = 'Email niet geldig';
+      }
+    },
+
+    validatePassword() {
+      if (!this.password) {
+        this.isFormValid = false;
+        this.errors.password = 'Vul wachtwoord in';
+        return;
+      }
+      if (this.password.length < 4) {
+        this.isFormValid = false;
+        this.errors.password = 'Wachtwoord moet minimaal 4 karakters zijn.';
+      }
     },
 
     async addSpecialist() {
@@ -128,5 +216,9 @@ export default {
 <style scoped>
 input {
   @apply border border-neutral-300 p-2 rounded rounded-[4px];
+}
+
+.validation-label {
+  @apply text-app_red-500;
 }
 </style>

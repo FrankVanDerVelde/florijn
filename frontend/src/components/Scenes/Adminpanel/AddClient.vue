@@ -35,7 +35,7 @@
                       data-tooltip-placement="right"
                       :tip="'Deze banner wordt gebruikt voor nieuwe projecten.'">
                     <div class="flex flex-col gap-1 items-start">
-                      <label class="mb-2 text-sm font-medium text-gray-900" for="file_input">Banner</label>
+                      <label class="mb-2 text-sm font-medium text-gray-900" for="file_input">Banner <span class="text-neutral-400">(niet verplicht)</span></label>
                       <div class="flex flex-col gap-2 items-center">
                         <div @click="handlePickBannerClicked"
                              class="w-[300px] h-[90px] rounded rounded-xl bg-primary-100 flex justify-center items-center cursor-pointer">
@@ -146,11 +146,19 @@ export default {
 
     validateForm() {
       this.isFormValid = null;
+      this.validateLogo();
       this.validateCompanyName();
       this.validateEmail();
       this.validatePassword();
       if (this.isFormValid === null) {
         this.isFormValid = true;
+      }
+    },
+
+    validateLogo() {
+      if (!this.logoBase64Encoded) {
+        this.isFormValid = false;
+        this.errors.fileError = 'Logo is verplicht';
       }
     },
 
