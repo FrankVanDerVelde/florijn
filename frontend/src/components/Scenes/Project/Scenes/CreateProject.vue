@@ -189,7 +189,7 @@ export default {
 
       this.project.title = this.title.length > 0 ? this.title : "Nieuw project";
     },
-    updateDescription(event) {
+     updateDescription(event) {
       this.description = event.target.value.trim();
       if (this.description.length > 0) {
         delete this.errors.description;

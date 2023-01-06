@@ -160,7 +160,6 @@ public class SkillInteractor implements SkillBusinessLogic {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
-        System.out.println(userExpertises);
         specialist.setExpertises(userExpertises);
 
         userRepo.save(specialist);

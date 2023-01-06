@@ -15,7 +15,7 @@ import java.io.IOException;
 
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
-    private Config apiConfig;
+    private final Config apiConfig;
 
     @Autowired
     public JWTRequestFilter(Config apiConfig) {
@@ -69,7 +69,6 @@ public class JWTRequestFilter extends OncePerRequestFilter {
 
         // pass-on the token info as an attribute for the request
         request.setAttribute(JWToken.JWT_ATTRIBUTE_NAME, jwToken);
-
         chain.doFilter(request, response);
     }
 }

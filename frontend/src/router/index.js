@@ -5,9 +5,9 @@ import LogIn from "../components/Scenes/Authentication/LogIn.vue";
 import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.vue";
 import ProjectList from "../components/Scenes/Project/Scenes/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
-import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
+import AdminPanel from "../components/Scenes/Adminpanel/AdminPanel.vue";
 import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
-import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
+import CustomerList from "../components/Scenes/Adminpanel/ClientList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvailibility/SpecialistAvailibilityOverview.vue";
@@ -21,6 +21,7 @@ import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
 import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue";
+import AddSpecialist from "../components/Scenes/Adminpanel/AddSpecialist.vue";
 import BaseHome from "../components/Scenes/Home/BaseHome.vue";
 
 
@@ -78,17 +79,24 @@ const routes = [
             },
             {
                 path: "customer-list",
+                name: 'admin-customer-list',
                 component: CustomerList,
             },
             {
                 path: "employee-list",
+                name: 'admin-employee-list',
                 component: EmployeeList,
             },
         ]
     }, {
         path: "/adminpanel/add-client",
         component: AddClient,
-    }, {
+    },
+    {
+        path: "/adminpanel/add-specialist",
+        component: AddSpecialist
+    },
+    {
         path: "/projects",
         name: "projects",
         component: ProjectList

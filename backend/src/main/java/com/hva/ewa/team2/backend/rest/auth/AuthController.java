@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.rest.auth;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.auth.AuthBusinessLogic;
@@ -29,7 +30,9 @@ public class AuthController {
     @Autowired
     private Config apiConfig;
 
+
     @PostMapping(path = "/login")
+    @JsonView(User.EssentialInfo.class)
     public ResponseEntity<User> login(@RequestBody ObjectNode body, HttpServletRequest request) {
 
         String email = body.get("email").asText();

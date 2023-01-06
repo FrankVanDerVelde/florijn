@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
+import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
+import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 
 import java.io.IOException;
@@ -18,7 +20,9 @@ public interface UserBusinessLogic {
 
     User updateUser(int id, JsonUserData body) throws IOException;
 
-    User addUser(String role, JsonNode body);
+    User addAdmin(JsonNode body);
+    User addClient(AddClientRequestBody body) throws IOException;
+    User addSpecialist(AddSpecialistRequestBody body) throws IOException;
 
     User deleteUserById(int id);
 
@@ -28,4 +32,5 @@ public interface UserBusinessLogic {
 
     List<UserRepository.UserCount> getUserCounts();
 
+    String getResume(int id);
 }

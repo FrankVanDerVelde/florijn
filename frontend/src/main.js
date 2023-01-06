@@ -9,6 +9,7 @@ import NavBar from "./components/Common/NavBar.vue";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import './PrototypeExtensions/Array+random.js';
+import 'flowbite';
 
 // temporarily import all because single import won't work
 import {
@@ -42,13 +43,17 @@ import {
     faUserPlus,
     faUsers,
     faWindowMinimize,
-    faXmark
+    faXmark,
+    faImage,
+    faPanorama
 } from '@fortawesome/free-solid-svg-icons'
+import HelpTip from "./components/Common/HelpTip.vue";
 
 library.add(
     faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
     faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan,
-    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint
+    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint,
+    faImage, faPanorama
 );
 
 // `Chainable` list of global components.
@@ -58,5 +63,6 @@ const app = createApp(App).use(router)
     .component('TextField', TextField)
     .component('NavBar', NavBar)
     .component('font-awesome-icon', FontAwesomeIcon)
+    .component('HelpTip', HelpTip)
 
 app.mount('#app');
