@@ -28,7 +28,7 @@ public interface UserBusinessLogic {
 
     Address getUsersAddressById(int id);
 
-    User updateResume(int id, JsonUserData body) throws IOException;
+    String updateResume(int id, JsonUserData body) throws IOException;
 
     List<UserRepository.UserCount> getUserCounts();
 
