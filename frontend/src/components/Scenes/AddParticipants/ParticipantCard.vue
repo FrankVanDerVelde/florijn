@@ -1,5 +1,5 @@
 <template >
-  <div class="flex flex-col mt-4 ml-2 p-3 pr-2 fa-border rounded-xl ">
+  <div class="flex flex-col mt-4 ml-2 p-3 pr-2 w-auto fa-border rounded-xl ">
     <div class="flex">
       <div>
         <Asset :src="participant.avatarUrl" alt="Avatar" class="icon-container"/>
@@ -9,6 +9,7 @@
         <div>
           <div class="font-bold">{{ name }}</div>
           <div class="font-medium text-neutral-500">{{ participant.role }}</div>
+
           <div v-if="this.skill.length === 0" class="flex flex-row-reverse mt-1">
             <div class="add-participant hover:border-primary-500 cursor-pointer">
               <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
@@ -20,14 +21,14 @@
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skill.slice(0, 5)" :key="skills.id">{{ skills.name }}
+            <li class="accent-neutral-700" v-for="skills in skillRating.slice(0, 5)" :key="skills.id">{{ skills.name }}
             </li>
           </ul>
         </div>
       </div>
-
       <div class="flex m-0 ml-2 p-0 relative">
         <div v-if="this.skill.length !== 0">
+
           <div class="add-button hover:border-primary-500 cursor-pointer">
             <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
           </div>
@@ -36,7 +37,7 @@
           </div>
         </div>
         <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
-          <div class="star-color" v-for="skills in getSkills.slice(0,5)" :key="skills">
+          <div class="star-color" v-for="skills in skillRating.slice(0,5)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
         </div>
@@ -56,6 +57,11 @@ export default {
   name: "ParticipantCard",
   components: {Asset, FontAwesomeIcon},
   emits: ['addParticipant'],
+  inject: ['skillFetchService'],
+
+  created() {
+    this.fetchSkills();
+  },
 
   computed: {
     name() {
@@ -63,11 +69,28 @@ export default {
       return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
     },
     getSkills() {
-      return this.participant.skills.filter(skill => this.skill.some(s => s.id === skill.id));
+      // return this.participant.skills.filter(skill => this.skill.some(s => s.id === skill.id));
+      return this.userSkills;
     }
   },
-  methods: {}
-  ,
+  methods: {
+    async fetchSkills() {
+      this.userSkills = await this.skillFetchService.fetchJson("/user-skills/" + this.participant.id)
+
+      for (let i = 0; i < this.userSkills.length; i++) {
+        if (this.skill.includes(this.userSkills[i].skill.id)) {
+          if (this.userSkills[i].rating === 0) {
+            continue;
+          }
+          this.skillRating.push({
+            skillId: this.userSkills[i].skill.id,
+            name: this.userSkills[i].skill.name,
+            rating: this.userSkills[i].rating
+          })
+        }
+      }
+    }
+  },
 
   props: {
     participant: {
@@ -90,6 +113,8 @@ export default {
       hourPlaceholder: "Voeg een hourlyRate toe",
       roleInput: "",
       hourInput: "",
+      userSkills: [],
+      skillRating: []
     }
   }
 }

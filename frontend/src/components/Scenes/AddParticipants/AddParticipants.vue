@@ -13,7 +13,7 @@
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
                           @selectedSkill="skillSelect"/>
     </div>
-    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
+    <div class="ml-10 p-5 m-0 flex flex-row flex-wrap self-start justify-evenly">
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
                        :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
     </div>
@@ -90,6 +90,7 @@ export default {
       }
 
       this.filteredParticipantsList = await this.userFetchService.fetchJsonPost("/specialists/skills", this.selectedFilters)
+
     },
 
     deleteParticipant(selectedParticipant) {
@@ -125,61 +126,13 @@ export default {
     return {
       project: {},
       specialists: {},
-      assignedSpecialists: {},
       skillset: {},
       selectedFilters: [],
       filteredParticipantsList: {},
-      selectedIds: {},
       validation: false,
       selectedSpecialist: null,
       selectedDeleteSpecialist: null,
-
       skillGroup: {},
-
-      skills: [{
-        name: "Microsoft Office Front-end",
-        skill: [{
-          id: 0,
-          name: "Microsoft Access",
-          rating: 3
-        }, {
-          id: 1,
-          name: "Microsoft Access VBA",
-          rating: 2
-        }, {
-          id: 2,
-          name: "Microsoft Excel",
-          rating: 1
-        }, {
-          id: 3,
-          name: "Microsoft Access",
-          rating: 1
-        }, {
-          id: 4,
-          name: "Microsoft Access",
-          rating: 4
-        }
-        ]
-      }, {
-        name: "Back-end",
-        skill: [{
-          id: 0,
-          name: "MS SQL Server",
-          Rating: 3
-        }, {
-          id: 1,
-          name: "MS SQL-Server Stored Procedures",
-          Rating: 2
-        }, {
-          id: 2,
-          name: "MS Office Excel",
-          Rating: 5
-        }, {
-          id: 3,
-          name: "Ms office Eccel pt 2",
-          rating: 3
-        },]
-      }]
     }
   }
 }
@@ -197,9 +150,6 @@ export default {
     width: 100%;
   }
 
-  .participant-container {
-    margin: 0;
-  }
 
 }
 </style>
