@@ -40,7 +40,6 @@ public class JWToken {
                 .compact();
     }
 
-
     private static Key getKey(String passphrase) {
         byte[] hmacKey = passphrase.getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(hmacKey, SignatureAlgorithm.HS512.getJcaName());
