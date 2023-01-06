@@ -6,14 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
+import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
+import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class UserInteractor implements UserBusinessLogic {
@@ -115,7 +120,7 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User addUser(String role, JsonNode body) {
+    public User addAdmin(JsonNode body) {
         if (body.get("email") == null || body.get("password") == null || body.get("avatarUrl") == null)
             throw new IllegalStateException("The fields email and/or password and/or avatarUrl isn't found!");
 
@@ -123,26 +128,60 @@ public class UserInteractor implements UserBusinessLogic {
         String password = body.get("password").asText();
         String avatarUrl = body.get("avatarUrl").asText();
 
-        User user = switch (role) {
-            case "admin" -> {
-                if (body.get("firstName") == null || body.get("lastName") == null)
-                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                yield new Admin(-1, email, password, avatarUrl,
-                        body.get("firstName").asText(), body.get("lastName").asText());
-            }
-            case "client" -> {
-                if (body.get("name") == null || body.get("bannerSrc") == null)
-                    throw new IllegalStateException("The fields name and/or bannerURL isn't found!");
-                yield new Client(-1, email, password, avatarUrl, body.get("name").asText(),
-                        body.get("bannerSrc").asText());
-            }
-            default -> {
-                if (body.get("firstName") == null || body.get("lastName") == null)
-                    throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
-                yield new Specialist(-1, email, password, avatarUrl, body.get("firstName").asText(),
-                        body.get("lastName").asText());
-            }
-        };
+        JsonNode firstName = body.get("firstName");
+        JsonNode lastName = body.get("lastName");
+
+        if (firstName == null || lastName == null)
+            throw new IllegalStateException("The fields firstName and/or lastName isn't found!");
+
+        User admin = new Admin(-1, email, password, avatarUrl, firstName.asText(), lastName.asText());
+
+        return this.userRepo.save(admin);
+    }
+
+    @Override
+    public User addClient(AddClientRequestBody body) throws IOException {
+        User user = new Client(
+                -1,
+                body.getEmail(),
+                body.getPassword(),
+                body.getAvatarUrl().getOriginalFilename(),
+                body.getName(),
+                null);
+
+        final MultipartFile avatar = body.getAvatarUrl();
+        if (avatar != null) {
+            // uploading the logo to the assets.
+            String extension = FilenameUtils.getExtension(avatar.getOriginalFilename());
+            String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
+            final FileResult fileResult = assetService.uploadAsset(avatar, fileName);
+
+            user.setAvatarUrl(fileName);
+            // returning the updated project with the generated logo upload src.
+        }
+        return this.userRepo.save(user);
+    }
+
+    @Override
+    public User addSpecialist(AddSpecialistRequestBody body) throws IOException {
+        User user = new Specialist(
+                -1,
+                body.getEmail(),
+                body.getPassword(),
+                null,
+                body.getFirstname(),
+                body.getLastname());
+
+        if (body.getAvatarUrl() != null) {
+            // uploading the logo to the assets.
+            String extension = FilenameUtils.getExtension(body.getAvatarUrl().getOriginalFilename());
+            String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
+            final FileResult fileResult = assetService.uploadAsset(body.getAvatarUrl(), fileName);
+
+            user.setAvatarUrl(fileName);
+            // returning the updated project with the generated logo upload src.
+        }
+
         return this.userRepo.save(user);
     }
 
@@ -165,23 +204,47 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User updateResume(int id, JsonUserData body) throws IOException {
+    public String getResume(int id) {
         Optional<User> found = this.userRepo.findById(id);
 
         if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
 
         User user = found.get();
 
+        String resumeURL = null;
+
+        if (user instanceof Specialist specialist) {
+            System.out.println("test1");
+            System.out.println(specialist.getResumeURL());
+            resumeURL = specialist.getResumeURL();
+        }
+
+        return resumeURL;
+    }
+
+    @Override
+    public String updateResume(int id, JsonUserData body) throws IOException {
+        Optional<User> found = this.userRepo.findById(id);
+
+        if (found.isEmpty()) throw new IllegalStateException("There is no user found with that id!");
+
+        User user = found.get();
+
+        String resumeURL = null;
         if (user instanceof Specialist specialist) {
             if (body.getResumeFile() != null) {
                 String extension = FilenameUtils.getExtension(body.getResumeFile().getOriginalFilename());
                 assetService.uploadAsset(body.getResumeFile(), "users/resumes/" + user.getId() + "." + extension, true);
 
                 specialist.setResumeURL("users/resumes/" + user.getId() + "." + extension);
+                this.userRepo.save(user);
+
+
+                resumeURL = specialist.getResumeURL();
             }
         }
 
-        return this.userRepo.save(user);
+        return resumeURL;
     }
 
 }
