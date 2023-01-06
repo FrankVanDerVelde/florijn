@@ -29,9 +29,10 @@ export default {
     inject: ['skillFetchService'],
     methods: {
         updateUserExpertises(expertiseId) {
+  
             const userExpertiseIds = this.userExpertises.map(expertise => expertise.id);
             if (!userExpertiseIds.includes(expertiseId)) {
-                this.userExpertises.push({id: expertiseId, userId: this.user.id});     
+                this.userExpertises.push(this.expertises.filter(userExpertise => userExpertise.id === expertiseId)[0]);  
             } else {
                 this.userExpertises = this.userExpertises.filter(userExpertise => userExpertise.id != expertiseId);
             }

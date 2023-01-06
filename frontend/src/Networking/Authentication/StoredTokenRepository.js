@@ -37,6 +37,7 @@ export class StoredTokenRepository {
     }
 
     getUser() {
+        console.log(this.#user);
         return this.#user;
     }
 }
