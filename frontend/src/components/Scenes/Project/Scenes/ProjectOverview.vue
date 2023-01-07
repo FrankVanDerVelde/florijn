@@ -2,7 +2,16 @@
   <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants" :client="project.client"/>
 
   <section class="pt-[48px]">
-    <h2 class="header-2">Uren</h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="header-2 !mb-0">Uren</h2>
+      <router-link
+          v-if="user?.role === 'SPECIALIST'"
+          :to="{name: 'hour-registration'}"
+          class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">
+        Uren registreren
+      </router-link>
+    </div>
+
     <div class="grid grid-cols-12 gap-4">
       <SummaryBlock v-for="report in reports" :label="report.title" :value="report.value" :key="report.title"/>
     </div>
@@ -19,6 +28,10 @@
         </tr>
         </thead>
         <tbody>
+        <tr v-if="hourRegistry.length === 0">
+          <td colspan="5" class="text-red-500">Er zijn nog geen uren geregistreerd.</td>
+        </tr>
+
         <HoursRow v-for="registry in hourRegistry"
                   :key="registry.id"
                   :registry="registry"
@@ -38,6 +51,10 @@ export default {
   name: "ProjectOverview",
   components: {HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
+
+  mounted() {
+    console.log("eyehaw: ", this.project)
+  },
 
   props: {
     project: {

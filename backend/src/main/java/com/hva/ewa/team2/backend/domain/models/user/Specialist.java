@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.Skill;
@@ -33,22 +34,26 @@ public class Specialist extends User {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<UserSkill> skills;
 
     @Getter
     @Setter
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonIgnore
     private List<Expertise> expertises;
 
     @Getter
     @Setter
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @JsonIgnore
     private Address address;
 
     @Getter
     @Setter
+    @JsonIgnore
     String resumeURL;
 
     public Specialist() {

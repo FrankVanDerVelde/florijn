@@ -1,6 +1,8 @@
 package com.hva.ewa.team2.backend.domain.models.project;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +37,7 @@ public class Project implements Serializable {
     @Getter
     @Setter
     private String logoSrc;
+
     @Getter
     @Setter
     private boolean archived;
@@ -92,6 +95,9 @@ public class Project implements Serializable {
 
     public boolean removeSpecialist(ProjectParticipant specialist) {
         return participants.remove(specialist);
+    }
+
+    public static class EssentialInfo extends User.EssentialInfo {
     }
 
 }

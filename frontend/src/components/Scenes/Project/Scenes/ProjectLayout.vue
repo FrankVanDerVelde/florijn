@@ -9,7 +9,7 @@
         <div class="md:pl-[48px] md:pr-[48px] w-full">
           <ProjectHeader :project="project" :edit-button="!preview && hasAdminPrivileges"/>
 
-          <router-view v-if="!preview && project != null" :project="project"/>
+          <router-view v-if="!preview && project" :project="project"/>
         </div>
       </div>
     </div>

@@ -123,15 +123,15 @@ export class NetworkClient {
     }
 
     #logFetchConfiguration(method, url, body, options) {
-        console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+        // console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
     }
 
     #logNetworkResponse(response, data) {
-        console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+        // console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
     }
 
     #logNetworkError(method, url, options, error) {
-        console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+        // console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
     }
 
     /**
@@ -160,7 +160,7 @@ export class NetworkClient {
      */
     #signHeaderWithToken(headerFields) {
         const token = this.#storedTokenRepository?.getToken();
-        console.log(`token: ${this.#storedTokenRepository}`);
+        // console.log(`token: ${this.#storedTokenRepository}`);
         if (token) {
             return {
                 'Authorization': `Bearer ${token}`,
