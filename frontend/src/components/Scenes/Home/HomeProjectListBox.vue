@@ -6,7 +6,7 @@
       <font-awesome-icon icon="fa-face-grin-squint" size="xl"></font-awesome-icon>
       <p>{{ errorMessage}}</p>
     </div>
-    <router-link v-for="project in projects" :to="{name: 'project', params: {projectId: project.id}}"
+    <router-link v-for="project in projects" :to="{name: 'project-overview', params: {projectId: project.id}}"
                  class="project p-2 rounded-md flex items-center gap-2 transition hover:bg-neutral-75"
                  :key="project.id">
       <Asset :src="project.logoSrc" class="rounded-md h-8 w-8 object-contain"/>

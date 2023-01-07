@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
 import ProjectLayout from "../components/Scenes/Project/Scenes/ProjectLayout.vue";
 import LogIn from "../components/Scenes/Authentication/LogIn.vue";
@@ -74,7 +74,7 @@ const routes = [
         component: AdminPanel,
         children: [
             {
-                path: "/adminpanel",
+                path: "",
                 redirect: "/adminpanel/customer-list",
             },
             {
@@ -91,10 +91,12 @@ const routes = [
     }, {
         path: "/adminpanel/add-client",
         component: AddClient,
+        name: 'admin-add-client'
     },
     {
         path: "/adminpanel/add-specialist",
-        component: AddSpecialist
+        component: AddSpecialist,
+        name: 'admin-add-specialist'
     },
     {
         path: "/projects",

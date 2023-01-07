@@ -1,8 +1,10 @@
 package com.hva.ewa.team2.backend.rest.project;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.project.ProjectInteractor;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
@@ -48,7 +50,6 @@ public class ProjectController {
 
         return ResponseEntity.created(uri).body(projectInteractor.createProject(project));
     }
-
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> getProjectInformation(@PathVariable int id) {

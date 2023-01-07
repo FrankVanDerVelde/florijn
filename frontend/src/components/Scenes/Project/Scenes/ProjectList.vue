@@ -6,12 +6,17 @@
                v-model="searchQuery"
                @submit="fetchProjects"/>
 
-    <div v-if="projects.length === 0" class="text-app_red-400">Er konden geen projecten gevonden met de gegeven
+    <div v-if="projects.length === 0 && archivedProjects.length === 0" class="text-app_red-400">Er konden geen projecten gevonden met de gegeven
       zoekopdracht.
     </div>
 
     <div class="flex flex-col gap-3">
+      <h2 v-if="projects.length > 0" class="text-xl">Actieve projecten</h2>
       <project-list-details v-for="project in projects" :key="project.id" :project="project"/>
+
+      <h2 v-if="archivedProjects.length > 0" class="text-xl mt-2">Gearchiveerde projecten</h2>
+      <project-list-details v-for="project in archivedProjects" :key="project.id" :project="project"/>
+
     </div>
   </div>
 </template>
@@ -28,7 +33,7 @@ export default {
 
   created() {
     if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
+      this.$router.push({name: "login"});
       return;
     }
     this.fetchProjects();
@@ -46,7 +51,13 @@ export default {
       if (this.loadingProjects) return;
       this.loadingProjects = true;
 
-      this.projects = await this.projectRepository.fetchProjects(this.user.id, undefined, this.searchQuery);
+      const [active, archived] = await Promise.all([
+        this.projectRepository.fetchProjects(this.user.id, "UNARCHIVED", this.searchQuery),
+        this.projectRepository.fetchProjects(this.user.id, "ARCHIVED", this.searchQuery),
+      ]);
+
+      this.projects = active;
+      this.archivedProjects = archived;
 
       this.loadingProjects = false;
     }
@@ -55,6 +66,7 @@ export default {
   data() {
     return {
       projects: [],
+      archivedProjects: [],
       searchQuery: "",
       loadingProjects: false,
       sideBarLinks: [{

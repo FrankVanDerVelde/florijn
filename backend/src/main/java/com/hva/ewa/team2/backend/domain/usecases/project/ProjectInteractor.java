@@ -137,7 +137,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         project.setArchived(!unarchive);
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override
@@ -156,7 +156,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         final Client client = validateClient(clientId);
         project.setClient(client);
 
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override

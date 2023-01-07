@@ -54,6 +54,7 @@ export default {
     '$route'() {
       this.menuExpanded = false;
       this.user = JSON.parse(localStorage.getItem("user"));
+      console.log(this.user);
       this.isLoggedIn();
     }
   },
@@ -63,7 +64,9 @@ export default {
       links: [],
       staticLink: {
         name: 'Log in',
-        link: '/login'
+        link: {
+          name: 'login'
+        }
       },
       user: JSON.parse(localStorage.getItem("user")),
     }
@@ -78,40 +81,52 @@ export default {
       if (this.user == null) {
         this.staticLink = {
           name: 'Log in',
-          link: '/login'
+          link: {
+            name: 'login'
+          }
         }
       } else {
         this.links = [
           {
             name: 'Projecten',
-            link: '/projects'
+            link: {
+              name: 'projects'
+            }
           },
         ];
 
         switch (this.user.role) {
           case "ADMIN":
-            this.links.push([
-              {
-                name: 'Admin',
-                link: '/adminpanel'
-              },{
-                name: 'Nieuw project',
-                link: '/projects/new'
-              }
-            ]);
+            this.links.push(
+                {
+                  name: 'Admin',
+                  link: {
+                    name: 'admin-customer-list'
+                  }
+                }, {
+                  name: 'Nieuw project',
+                  link: {
+                    name: 'new-project'
+                  }
+                }
+            );
             break;
           case "SPECIALIST":
-            this.links.push([{
+            this.links.push({
               name: 'Profiel',
-              link: '/profile'
-            }]);
+              link: {
+                name: 'profile'
+              }
+            });
             break;
           case "CLIENT":
             break;
         }
         this.staticLink = {
           name: 'Log uit',
-          link: '/home'
+          link: {
+            name: 'home'
+          }
         }
       }
     },

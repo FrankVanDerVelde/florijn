@@ -41,7 +41,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     List<HourRegistration> findAllByProjectParticipant(int projectId, int userId);
 
     @Query(value = """
-            SELECT SUM(time_to_sec(timediff(h.to, h.from)) / 3600)
+            SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600), 0)
                 FROM hour_registration h
                 WHERE h.project_id = :projectId
                     AND h.status <> 'REJECTED'""",

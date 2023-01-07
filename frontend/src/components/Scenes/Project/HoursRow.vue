@@ -35,10 +35,6 @@ export default {
   inject: ['fetchService', 'dateService'],
   emits: ['updateStatus'],
 
-  created() {
-    console.log(this.registry)
-  },
-
   data() {
     return {
       showPopup: false,
