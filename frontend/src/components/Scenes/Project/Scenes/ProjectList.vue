@@ -24,7 +24,7 @@ import Searchbar from "../../../Common/Searchbar.vue";
 export default {
   name: "ProjectList",
   components: {Searchbar, ProjectListDetails},
-  inject: ['projectFetchService'],
+  inject: ['projectRepository'],
 
   created() {
     if (localStorage.getItem("user") == null) {
@@ -34,15 +34,19 @@ export default {
     this.fetchProjects();
   },
 
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem("user"));
+    }
+  },
+
   methods: {
     async fetchProjects() {
       // making sure that they can't send another request before the previous one is finished
       if (this.loadingProjects) return;
-
       this.loadingProjects = true;
 
-      const search = encodeURIComponent(this.searchQuery);
-      this.projects = await this.projectFetchService.fetchJson(`?query=${search}`);
+      this.projects = await this.projectRepository.fetchProjects(this.user.id, undefined, this.searchQuery);
 
       this.loadingProjects = false;
     }

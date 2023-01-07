@@ -3,30 +3,32 @@ import moment from "moment/moment.js";
 export class HourRegistration {
     id
     project
-    specialistId
+    participant
     from
     to
     isApproved
     description
+    status
 
-    constructor(id, project, specialistId, from, to, description) {
+    constructor(id, project, participant, from, to, description, status) {
         this.id = id;
         this.project = project;
-        this.specialistId = specialistId;
+        this.participant = participant;
         this.from = moment(from).toDate();
         this.to = moment(to).toDate();
-        // this.isApproved = isApproved;
         this.description = description;
+        this.status = status;
     }
 
     static fromJSON(object) {
         return new HourRegistration(
             object.id,
             object.project,
-            object.specialistId,
+            object.participant,
             object.from,
             object.to,
-            object.description
+            object.description,
+            object.status
         )
     }
 

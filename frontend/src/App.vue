@@ -14,6 +14,7 @@ import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegi
 import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepository.js";
 import Holidays from "date-holidays";
 import CONFIG from '/config.js'
+import {ProjectRepository} from "./Networking/Project/ProjectRepository.js";
 import {UserRepository} from "./Networking/UserRepository.js";
 import {AssetsService} from "./Networking/AssetsService.js";
 
@@ -34,6 +35,7 @@ export default {
       storedTokenRepository: storedTokenRepository,
       authenticationRepository: new AuthenticationRepository(storedTokenRepository),
       holidays: new Holidays('NL'),
+      projectRepository: new ProjectRepository(),
       userRepository: new UserRepository(),
       assetsService: new AssetsService()
     }

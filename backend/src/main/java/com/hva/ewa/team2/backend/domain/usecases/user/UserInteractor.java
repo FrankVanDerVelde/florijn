@@ -247,4 +247,8 @@ public class UserInteractor implements UserBusinessLogic {
         return resumeURL;
     }
 
+    @Override
+    public List<UserRepository.UserCount> getUserCounts() {
+        return this.userRepo.getUserCounts();
+    }
 }
