@@ -21,6 +21,7 @@
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
     "date-holidays": "3.16.12",
+    "flowbite": "^1.6.0",
     "http-server": "^14.1.1",
     "moment": "^2.29.4",
     "vue": "^3.2.37",

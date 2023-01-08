@@ -9,6 +9,7 @@ import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
+import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
@@ -136,7 +137,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         project.setArchived(!unarchive);
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override
@@ -155,7 +156,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         final Client client = validateClient(clientId);
         project.setClient(client);
 
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override
@@ -284,14 +285,29 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter) {
-        if (searchQuery.isPresent() && filter.isPresent()) {
-            return projectRepo.findAll(filter.get(), searchQuery.get());
-        } else if (searchQuery.isPresent()) {
-            return projectRepo.findAll(searchQuery.get());
-        } else if (filter.isPresent()) {
-            return projectRepo.findAll(filter.get());
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Optional<Integer> userId) {
+        boolean queryPresent = searchQuery.isPresent();
+        boolean filterPresent = filter.isPresent();
+        boolean userIdPresent = userId.isPresent();
+
+        // setting the userId option to null if it is an admin that makes the request.
+        // otherwise this method will check if the user is part of the project.
+        if (userIdPresent && userRepo.findById(userId.get()).orElse(null) instanceof Admin) {
+            userId = Optional.empty();
+            userIdPresent = false;
+        }
+
+        if (queryPresent && filterPresent) {
+            if (userIdPresent) return projectRepo.findAllByQuery(ProjectFilter.valueOf(filter.get()), searchQuery.get(), userId.get());
+            return projectRepo.findAllByQuery(ProjectFilter.valueOf(filter.get()), searchQuery.get());
+        } else if (queryPresent) {
+            if (userIdPresent) return projectRepo.findAllByQuery(searchQuery.get(), userId.get());
+            return projectRepo.findAllByQuery(searchQuery.get());
+        } else if (filterPresent) {
+            if (userIdPresent) return projectRepo.findAll(ProjectFilter.valueOf(filter.get()), userId.get());
+            return projectRepo.findAll(ProjectFilter.valueOf(filter.get()));
         } else {
+            if (userIdPresent) return projectRepo.findAll(userId.get());
             return projectRepo.findAll();
         }
     }
@@ -319,5 +335,21 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
         return project.get();
     }
+    @Override
+    public int getProjectCount(Optional<Integer> userId) {
+        if (userId.isPresent()) return projectRepo.getCount(userId.get());
+        return projectRepo.getCount();
+    }
 
+    @Override
+    public Double getEarnings(Integer userId) {
+        final Double totalRevenueForUser = hourRegistrationRepo.getTotalRevenueForUser(userId);
+        System.out.println("getEarnings: " + totalRevenueForUser);
+        return totalRevenueForUser;
+    }
+
+    @Override
+    public Double getHours(Integer userId) {
+        return hourRegistrationRepo.getTotalHoursForUser(userId);
+    }
 }

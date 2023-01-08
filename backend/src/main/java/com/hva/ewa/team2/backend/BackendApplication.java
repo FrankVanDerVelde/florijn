@@ -21,7 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.EntityManagerHolder;
 
+import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,9 +38,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class BackendApplication implements CommandLineRunner {
 
     private final UserRepository userRepo;
-    private SkillRepository skillRepo;
-    private SkillGroupRepository skillGroupRepository;
-    private ExpertiseRepository expertiseRepository;
+    private final SkillRepository skillRepo;
+    private final SkillGroupRepository skillGroupRepository;
+    private final ExpertiseRepository expertiseRepository;
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
     private final DateService dateService;

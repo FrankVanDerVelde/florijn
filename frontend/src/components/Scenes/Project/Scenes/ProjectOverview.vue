@@ -1,17 +1,23 @@
 <template>
-  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants" :client="project.client"/>
+  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants"
+                          :client="project.client"/>
 
   <section class="pt-[48px]">
-    <h2 class="header-2">Uren</h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="header-2 !mb-0">Uren</h2>
+      <router-link
+          v-if="user?.role === 'SPECIALIST'"
+          :to="{name: 'hour-registration'}"
+          class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">
+        Uren registreren
+      </router-link>
+    </div>
+
     <div class="grid grid-cols-12 gap-4">
       <SummaryBlock v-for="report in reports" :label="report.title" :value="report.value" :key="report.title"/>
     </div>
 
     <div class="overflow-x-auto mb-6">
-      <HoursInfoPopup v-if="selectedHourRegistry != null"
-                      :registry="selectedHourRegistry"
-                      @close="selectedHourRegistry = null"
-                      @changeStatus="updateRegistryStatus"/>
       <table class="w-full mt-4">
         <thead>
         <tr class="text-left">
@@ -23,10 +29,14 @@
         </tr>
         </thead>
         <tbody>
+        <tr v-if="hourRegistry.length === 0">
+          <td colspan="5" class="text-red-500">Er zijn nog geen uren geregistreerd.</td>
+        </tr>
+
         <HoursRow v-for="registry in hourRegistry"
                   :key="registry.id"
                   :registry="registry"
-                  @select="reg => selectedHourRegistry = reg"/>
+                  @updateStatus="fetchReports"/>
         </tbody>
       </table>
     </div>
@@ -37,11 +47,10 @@
 import SummaryBlock from "../SummaryBlock.vue";
 import ProjectParticipantList from "../ProjectParticipantList.vue";
 import HoursRow from "../HoursRow.vue";
-import HoursInfoPopup from "../HoursInfoPopup.vue";
 
 export default {
   name: "ProjectOverview",
-  components: {HoursInfoPopup, HoursRow, ProjectParticipantList, SummaryBlock},
+  components: {HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
 
   props: {
@@ -50,7 +59,11 @@ export default {
       required: true
     }
   },
-
+created(){
+  if (this.user == null) {
+    this.$router.push({name: "login"});
+  }
+},
   watch: {
     'project': async function () {
       await Promise.all([this.fetchReports(), this.fetchHourRegistry()])
@@ -62,7 +75,7 @@ export default {
       return JSON.parse(localStorage.getItem('user'));
     },
     userId() {
-      return Number.parseInt(this.user.id);
+      return Number.parseInt(this.user?.id ?? "-1");
     }
   },
 
@@ -70,7 +83,6 @@ export default {
     return {
       hourRegistry: [],
       reports: [],
-      selectedHourRegistry: null
     }
   },
 
@@ -81,15 +93,6 @@ export default {
     async fetchHourRegistry() {
       this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);
     },
-    async updateRegistryStatus(accepted) {
-      const endpoint = accepted ? 'accept' : 'reject';
-
-      const response = await this.fetchService.fetchUrl(`/hour-registrations/${this.selectedHourRegistry.id}/${endpoint}`, 'POST');
-      this.selectedHourRegistry.status = response.status;
-
-      this.selectedHourRegistry = null;
-      await this.fetchReports();
-    }
   }
 }
 </script>

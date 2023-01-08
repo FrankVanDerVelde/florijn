@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-row mt-4 w-full md:w-auto" v-if="!small">
+  <div class="flex flex-row mt-4 w-full md:w-auto" v-if="!small" @click="getDetails(participant.user)">
     <Asset :src="participant.user.avatarUrl" alt="Avatar" class="w-[82px] h-[82px] rounded-full mr-4"/>
     <div class="flex flex-col justify-between relative pr-[34px] w-full md:w-auto">
       <div class="edit-btn hover:bg-neutral-50 hover:border-app_red-500 transition-all" v-if="edit" @click="$emit('selectedParticipant', {participant})">
         <font-awesome-icon icon="trash-can"/>
       </div>
-      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" :href="'mailto:' + participant.user.email">
+      <a class="email-btn hover:bg-neutral-50 hover:border-neutral-100 transition-all" @click.stop="" :href="'mailto:' + participant.user.email">
         <font-awesome-icon icon="envelope"/>
       </a>
       <div class="flex flex-col">
@@ -17,23 +17,17 @@
       </div>
     </div>
   </div>
-  <div class="flex flex-row items-center w-max" v-else>
-    <Asset :src="participant.user.avatarUrl" alt="Avatar" class="w-[32px] h-[32px] rounded-full mr-2"/>
-    <div class="flex flex-col justify-between">
-      <div class="font-bold text-sm">{{ name }}</div>
-      <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>
-    </div>
-
-  </div>
+  <SmallTableCard v-else :title="name" :subtitle="participant.role" :src="participant.user.avatarUrl"/>
 
 </template>
 
 <script>
 import Asset from "../../Common/Asset.vue";
+import SmallTableCard from "../../Common/SmallTableCard.vue";
 
 export default {
   name: "Participant",
-  components: {Asset},
+  components: {SmallTableCard, Asset},
   emits: ["selectedParticipant"],
 
   created() {
@@ -68,6 +62,13 @@ export default {
     }, edit: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    getDetails(user){
+      if (user.role === "SPECIALIST"){
+        this.$router.push("/profile/public/" + user.id);
+      }
     }
   }
 }

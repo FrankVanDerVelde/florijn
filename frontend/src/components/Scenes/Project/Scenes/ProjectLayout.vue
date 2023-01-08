@@ -9,7 +9,7 @@
         <div class="md:pl-[48px] md:pr-[48px] w-full">
           <ProjectHeader :project="project" :edit-button="!preview && hasAdminPrivileges"/>
 
-          <router-view v-if="!preview && project != null" :project="project"/>
+          <router-view v-if="!preview && project" :project="project"/>
         </div>
       </div>
     </div>
@@ -25,19 +25,21 @@ export default {
   name: "ProjectLayout",
   components: {ProjectLogo, ProjectBanner, ProjectHeader},
   inject: ['projectFetchService'],
-
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user'));
     },
     userId() {
+      if (this.user == null){
+        this.$router.push({name: "home"});
+        location.reload();
+      }
       return Number.parseInt(this.user.id);
     },
     hasAdminPrivileges() {
       return this.project.client?.id === this.userId || this.user?.role === "ADMIN";
     }
   },
-
   data() {
     return {
       project: {}
@@ -62,6 +64,9 @@ export default {
   },
 
   async created() {
+    if (this.user == null) {
+      this.$router.push({name: "home"});
+    }
     if (this.projectInfo == null && this.projectId >= 0) {
       this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
     } else {
@@ -69,7 +74,7 @@ export default {
     }
 
     // when a non-existing project is requested, redirect to the /projects page.
-    if (this.project == null) {
+    if (this.user != null && this.project == null) {
       this.$router.redirect({name: 'projects'});
     }
   },

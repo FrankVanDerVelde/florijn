@@ -7,7 +7,7 @@
       <div class="flex grid grid-cols-16">
         <div class="flex flex-col row-start-1 col-span-7 p-2 w-full">
           <div class="box flex  p-2 justify-center h-[120px]">
-            <img :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4">
+            <Asset :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4"></Asset>
             <div class="flex flex-col justify-between container ml-2">
               <div class="flex flex-col mb-3">
                 <div class="container flex justify-between m-1">
@@ -17,7 +17,7 @@
                     <div class="flex mt-2">{{ userData.email }}</div>
                   </div>
                   <div>
-                    <button class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
+                    <button v-if="this.user.role === 'ADMIN'" class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
                     mr-2 text-neutral-0">Op project zetten
                     </button>
                     <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
@@ -87,11 +87,17 @@
 
 import ProjectListDetailsSummary from "../../Scenes/Project/ProjectsListDetailsSummary.vue";
 import SkillListSummary from "../../Scenes/Project/SkillListSummary.vue";
+import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "PublicProfile",
   inject: ['fetchService'],
-  components: {ProjectListDetailsSummary, SkillListSummary},
+  components: {ProjectListDetailsSummary, SkillListSummary, Asset},
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user')) ?? {};
+    }
+  },
   data() {
     return {
       specialistId: '',
@@ -110,8 +116,8 @@ export default {
     }
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
-      this.$router.push("/home");
+    if (Object.keys(this.user).length === 0) {
+      this.$router.replace({ path: '/login' })
     }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();
@@ -142,6 +148,7 @@ export default {
     },
     async fetchAvailability() {
       this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
+      console.log(this.availability)
 
       //TODO: when the availibility per week is fixed, replace the api call with the added weeknumber as param
 
