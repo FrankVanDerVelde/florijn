@@ -1,7 +1,6 @@
 package com.hva.ewa.team2.backend.domain.usecases.skill;
 
 import com.hva.ewa.team2.backend.data.skill.ExpertiseRepository;
-import com.hva.ewa.team2.backend.data.skill.MemorySkillRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillGroupRepository;
 import com.hva.ewa.team2.backend.data.skill.SkillRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
@@ -12,14 +11,12 @@ import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
-import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class SkillInteractor implements SkillBusinessLogic {
@@ -83,7 +80,7 @@ public class SkillInteractor implements SkillBusinessLogic {
     Edit rest to send group id along with data, and edit this function to use the group id
      */
     @Override
-    public SkillGroup updateUserSkillGroup(int userId, List<JsonUserSkill> jsonBody) {
+    public List<UserSkill> updateUserSkillGroup(int userId, List<JsonUserSkill> jsonBody) {
         Optional<User> user = userRepo.findById(userId);
 
         if (user.isEmpty()) {
@@ -104,8 +101,10 @@ public class SkillInteractor implements SkillBusinessLogic {
 
         specialist.setSkills(skills);
         userRepo.save(specialist);
+        System.out.println(specialist.getSkills());
+        System.out.println(specialist.getSkills().getClass());
 
-        return skills.get(0).getSkill().getSkillGroup();
+        return specialist.getSkills();
     }
 
     @Override
