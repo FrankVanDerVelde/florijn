@@ -51,7 +51,7 @@ import HoursRow from "../HoursRow.vue";
 export default {
   name: "ProjectOverview",
   components: {HoursRow, ProjectParticipantList, SummaryBlock},
-  inject: ['fetchService'],
+  inject: ['projectRepository'],
 
   props: {
     project: {
@@ -88,10 +88,10 @@ created(){
 
   methods: {
     async fetchReports() {
-      this.reports = await this.fetchService.fetchJson(`/projects/${this.project.id}/reports?userId=${this.userId}`);
+      this.reports = await this.projectRepository.fetchProjectReports(this.project.id);
     },
     async fetchHourRegistry() {
-      this.hourRegistry = await this.fetchService.fetchJson(`/projects/${this.project.id}/hour-registrations/users/${this.userId}`);
+      this.hourRegistry = await this.projectRepository.fetchProjectHourRegistrationsForUser(this.project.id);
     },
   }
 }

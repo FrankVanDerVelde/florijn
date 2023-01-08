@@ -67,8 +67,8 @@ export default {
   methods: {
     async loadProjects() {
       const [count, fetchedProjects] = await Promise.all([
-        this.projectRepository.fetchTotalProjects(this.user.id),
-        this.projectRepository.fetchProjects(this.user.id, "UNARCHIVED")
+        this.projectRepository.fetchTotalProjects(),
+        this.projectRepository.fetchProjects("UNARCHIVED")
       ]);
 
       this.projectCount = count;
@@ -76,8 +76,8 @@ export default {
     },
     async loadUserTotals() {
       const [hours, totalEarnings] = await Promise.all([
-        this.projectRepository.fetchTotalWorkedHours(this.user.id),
-        this.projectRepository.fetchEarnings(this.user.id)
+        this.projectRepository.fetchTotalWorkedHours(),
+        this.projectRepository.fetchEarnings()
       ]);
 
       this.workedHours = hours;

@@ -7,6 +7,7 @@ export class StoredTokenRepository {
 
     constructor(browserStorageItemName) {
         this.#BROWSER_STORAGE_ITEM_NAME = browserStorageItemName;
+        this.#token = sessionStorage.getItem(this.#BROWSER_STORAGE_ITEM_NAME);
     }
 
     static shared = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);

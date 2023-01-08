@@ -54,8 +54,8 @@ export default {
       this.loadingProjects = true;
 
       const [active, archived] = await Promise.all([
-        this.projectRepository.fetchProjects(this.user.id, "UNARCHIVED", this.searchQuery),
-        this.projectRepository.fetchProjects(this.user.id, "ARCHIVED", this.searchQuery),
+        this.projectRepository.fetchProjects("UNARCHIVED", this.searchQuery),
+        this.projectRepository.fetchProjects("ARCHIVED", this.searchQuery),
       ]);
 
       this.projects = active;

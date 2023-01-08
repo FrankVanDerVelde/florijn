@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.project;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import lombok.Getter;
@@ -95,6 +95,13 @@ public class Project implements Serializable {
 
     public boolean removeSpecialist(ProjectParticipant specialist) {
         return participants.remove(specialist);
+    }
+
+    public boolean hasAccess(User user, boolean requiresModerationPerm) {
+        return user != null && (user instanceof Admin ||
+                this.client.getId().equals(user.getId()) ||
+                (!requiresModerationPerm && this.participants.stream().anyMatch(p -> p.getSpecialist().getId().equals(user.getId()))
+                ));
     }
 
     public static class EssentialInfo extends User.EssentialInfo {
