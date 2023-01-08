@@ -56,6 +56,7 @@ export default {
       localStorage.removeItem("user")
       this.storedTokenRepository.signOut();
       location.reload();
+      this.$router.push({name: "home"});
     }
   }
 }

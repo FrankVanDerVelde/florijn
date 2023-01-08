@@ -1,5 +1,6 @@
 <template>
-  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants" :client="project.client"/>
+  <ProjectParticipantList :edit-button="this.user.role === 'ADMIN'" :participants="project.participants"
+                          :client="project.client"/>
 
   <section class="pt-[48px]">
     <div class="flex items-center justify-between mb-4">
@@ -52,17 +53,17 @@ export default {
   components: {HoursRow, ProjectParticipantList, SummaryBlock},
   inject: ['fetchService'],
 
-  mounted() {
-    console.log("eyehaw: ", this.project)
-  },
-
   props: {
     project: {
       type: Object,
       required: true
     }
   },
-
+created(){
+  if (this.user == null) {
+    this.$router.push({name: "login"});
+  }
+},
   watch: {
     'project': async function () {
       await Promise.all([this.fetchReports(), this.fetchHourRegistry()])
@@ -74,7 +75,7 @@ export default {
       return JSON.parse(localStorage.getItem('user'));
     },
     userId() {
-      return Number.parseInt(this.user.id);
+      return Number.parseInt(this.user?.id ?? "-1");
     }
   },
 

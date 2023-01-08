@@ -31,6 +31,7 @@ public class UserController {
         this.userBusinessLogic = userBusinessLogic;
     }
 
+    @JsonView(User.EssentialInfo.class)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Iterable<User>> getAllUsers() {
         return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
@@ -41,6 +42,7 @@ public class UserController {
         return ResponseEntity.ok(this.userBusinessLogic.getUserCounts());
     }
 
+    @JsonView(User.EssentialInfo.class)
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
 //        System.out.println(jwtToken);
