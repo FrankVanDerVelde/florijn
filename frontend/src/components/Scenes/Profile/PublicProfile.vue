@@ -7,7 +7,8 @@
       <div class="flex grid grid-cols-16">
         <div class="flex flex-col row-start-1 col-span-7 p-2 w-full">
           <div class="box flex  p-2 justify-center h-[120px]">
-            <Asset :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4"></Asset>
+            <Asset :src="this.userData.avatarUrl??'defaults/default-avatar.png'" alt="profile picture"
+                   class="w-[82px] h-[82px] flex rounded-full mr-4"></Asset>
             <div class="flex flex-col justify-between container ml-2">
               <div class="flex flex-col mb-3">
                 <div class="container flex justify-between m-1">
@@ -91,7 +92,7 @@ import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "PublicProfile",
-  inject: ['fetchService'],
+  inject: ['dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'memoryAvailabilityRepository'],
   components: {ProjectListDetailsSummary, SkillListSummary, Asset},
   computed: {
     user() {
@@ -101,7 +102,7 @@ export default {
   data() {
     return {
       specialistId: '',
-      userData: '',
+      userData: [],
       projects: [],
       skills: [],
       tempSkills: [],
@@ -117,7 +118,7 @@ export default {
   },
   created() {
     if (Object.keys(this.user).length === 0) {
-      this.$router.replace({ path: '/login' })
+      this.$router.replace({path: '/login'})
     }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();
@@ -127,17 +128,17 @@ export default {
   },
   methods: {
     async fetchUserInfo() {
-      this.userData = await this.fetchService.fetchUrl("/users/" + this.specialistId);
+      this.userData = await this.userRepository.getUserById(this.specialistId);
     },
     async fetchProjects() {
-      this.projects = await this.fetchService.fetchJson("/projects?user=" + this.specialistId);
+      this.projects = await this.projectRepository.fetchProjects("UNARCHIVED");
 
       if (this.projects == null) {
         this.projects = [];
       }
     },
     async fetchSkills() {
-      this.skills = await this.fetchService.fetchJson("/skills/user-skills/" + this.specialistId);
+      this.skills = await this.skillsRepository.fetchUserSkills(this.specialistId);
       if (this.skills == null) {
         this.skills = [];
       }
@@ -147,53 +148,38 @@ export default {
       }
     },
     async fetchAvailability() {
-      this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
-      console.log(this.availability)
-
-      //TODO: when the availibility per week is fixed, replace the api call with the added weeknumber as param
+      const weekNumber = this.dateService.currentWeekOfYear();
+      this.availability = await this.memoryAvailabilityRepository.fetchAvailabilityForUserInWeek(this.specialistId, weekNumber)
 
       for (let i = 0; i < this.availability.length; i++) {
-        try {
-          const fromHour = this.availability[i].from[0].toString();
-          let fromMin = this.availability[i].from[1].toString();
-          const toHour = this.availability[i].to[0].toString();
-          let toMin = this.availability[i].to[1].toString();
-
-          if (fromMin.length === 1) {
-            fromMin = "0" + fromMin;
-          }
-
-          if (toMin.length === 1) {
-            toMin = "0" + toMin;
-          }
-
-          const availability = fromHour + ":" + fromMin + "-" + toHour + ":" + toMin;
-          this.availibilityHelper(i, availability)
-        } catch (e) {
-          console.log("Could not convert availability to time" + e)
-          return;
-        }
+        const dayIndex = this.dateService.dayIndex(this.availability[0].date)
+        this.availabilityHelper(dayIndex, this.availability[0])
       }
     },
-    availibilityHelper(index, availability) {
-      switch (index) {
-        case 0:
-          this.monAv = availability;
-          break;
-        case 1:
-          this.tueAv = availability;
-          break;
-        case 2:
-          this.wedAv = availability;
-          break;
-        case 3:
-          this.thuAv = availability;
-          break;
-        case 4:
-          this.friAv = availability;
-          break;
-      }
+    availabilityHelper(index, availability) {
+      const days = ['monAv', 'tueAv', 'wedAv', 'thuAv', 'friAv'];
+      const formattedAvailability = this.availabilityTimeFormatter(availability);
 
+      if (this[days[index - 1]] === '-') {
+        this[days[index - 1]] = formattedAvailability;
+      } else {
+        this[days[index - 1]] += "/" + formattedAvailability;
+      }
+    },
+    availabilityTimeFormatter(availability) {
+      const fromTime = this.getTimeHelper(availability.from)
+      const toTime = this.getTimeHelper(availability.to)
+
+      return (fromTime + "-" + toTime)
+    },
+    getTimeHelper(dateString) {
+      let date = new Date(dateString);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+
+      return hours + ":" + minutes;
     },
     buttonBackPage() {
       this.$router.back();
