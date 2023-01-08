@@ -17,6 +17,7 @@ import CONFIG from '/config.js'
 import {ProjectRepository} from "./Networking/Project/ProjectRepository.js";
 import {UserRepository} from "./Networking/UserRepository.js";
 import {AssetsService} from "./Networking/AssetsService.js";
+import SkillsRepository from "./Networking/User/SkillsRepository.js";
 
 export default {
   name: "App",
@@ -27,7 +28,7 @@ export default {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),
       projectFetchService: new FetchService("projects"),
-      skillFetchService: new FetchService("skills"),
+      skillsRepository: new SkillsRepository(),
       specialistFetchService: new FetchService("/specialists"),
       userFetchService: new FetchService("/users"),
       fetchService: new FetchService(""),

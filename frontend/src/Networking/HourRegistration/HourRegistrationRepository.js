@@ -1,5 +1,6 @@
 import {HourRegistration} from "../../components/models/HourRegistration.js";
-import FetchService from "../../Services/FetchService.js";
+import {NetworkClient} from "../NetworkClient.js";
+import {HttpMethod} from "../HttpMethod.js";
 
 /**
  * Endpoint for retrieving hour registrations for a specialist
@@ -9,23 +10,13 @@ export class HourRegistrationRepository {
     fetcher;
 
     constructor() {
-        this.fetcher = new FetchService('');
+        this.fetcher = new NetworkClient();
     }
 
     /** Methods **/
     async fetchAllFor(specialistId) {
         try {
-            let jsonHrs = await this.fetcher.fetchUrl(`/users/${specialistId}/hour-registrations/`);
-            return jsonHrs.map(HourRegistration.fromJSON)
-        } catch (e) {
-            console.error(e);
-            return e;
-        }
-    }
-
-    async fetchAllForProject(projectId) {
-        try {
-            let jsonHrs = await this.fetcher.fetchUrl(`/projects/${projectId}/hour-registrations/`);
+            let jsonHrs = await this.fetcher.executeRequest(`/users/${specialistId}/hour-registrations/`);
             return jsonHrs.map(HourRegistration.fromJSON)
         } catch (e) {
             console.error(e);
@@ -35,7 +26,7 @@ export class HourRegistrationRepository {
 
     async deleteHourRegistration(id) {
         try {
-            return await this.fetcher.executeDeleteRequestForURL(`/hour-registrations/${id}/delete/`);
+            return await this.fetcher.executeRequest(`/hour-registrations/${id}/delete/`, HttpMethod.DELETE);
         } catch (e) {
             console.error(e);
             return e;
@@ -44,7 +35,7 @@ export class HourRegistrationRepository {
 
     async fetch(hourRegistrationId) {
         try {
-            return this.fetcher.fetchUrl(`/hour-registrations/${hourRegistrationId}`);
+            return this.fetcher.executeRequest(`/hour-registrations/${hourRegistrationId}`);
         } catch (e) {
             console.error(e);
         }
@@ -52,22 +43,19 @@ export class HourRegistrationRepository {
 
     async update(hourRegistrationId, projectId, userId, from, to, description) {
         try {
-            return await this.fetcher.fetchJson(
+            return await this.fetcher.executeRequest(
                 `/hour-registrations/${hourRegistrationId}/update`,
+                HttpMethod.PUT,
                 {
-                    method: 'PUT',
-                    body: JSON.stringify({
-                            project_id: projectId,
-                            user_id: userId,
-                            from: from,
-                            to: to,
-                            description: description
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                }
+                    project_id: projectId,
+                    user_id: userId,
+                    from: from,
+                    to: to,
+                    description: description
+                },
+                {
+                    'Content-Type': 'application/json'
+                },
             );
         } catch (e) {
             console.error(e);
@@ -83,6 +71,15 @@ export class HourRegistrationRepository {
             description: description
         };
 
-        return await this.fetcher.fetchJsonPost(`/users/${userId}/hour-registrations/`, body);
+        return await this.fetcher.executeRequest(`/users/${userId}/hour-registrations/`, HttpMethod.POST, body);
     }
+
+    async acceptHourRegistration(hourRegistrationId) {
+        return await this.fetcher.executeRequest(`/hour-registrations/${hourRegistrationId}/accept`, HttpMethod.POST);
+    }
+
+    async rejectHourRegistration(hourRegistrationId) {
+        return await this.fetcher.executeRequest(`/hour-registrations/${hourRegistrationId}/reject`, HttpMethod.POST);
+    }
+
 }

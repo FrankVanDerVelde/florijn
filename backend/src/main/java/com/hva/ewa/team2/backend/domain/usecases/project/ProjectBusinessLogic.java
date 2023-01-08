@@ -14,31 +14,31 @@ import java.util.Optional;
 
 public interface ProjectBusinessLogic {
 
-    Project createProject(ProjectInfoRequest project) throws IOException;
+    Project createProject(ProjectInfoRequest project, Integer userId) throws IOException;
 
-    Project getProjectInformation(int id);
+    Project getProjectInformation(int id, Integer userId);
 
-    boolean deleteProject(int id);
+    boolean deleteProject(int id, Integer userId);
 
-    Project updateProjectInformation(int pId, ProjectInfoRequest jsonBody) throws IOException;
+    Project updateProjectInformation(int pId, ProjectInfoRequest jsonBody, Integer userId) throws IOException;
 
-    Project archiveProject(int pId, ProjectEditVerificationRequest body, boolean unarchive);
+    Project archiveProject(int pId, ProjectEditVerificationRequest body, boolean unarchive, Integer userId);
 
-    Project transferOwnership(int pId, ProjectTransferRequest body);
+    Project transferOwnership(int pId, ProjectTransferRequest body, Integer userId);
 
-    List<ProjectParticipant> getProjectParticipants(int id);
+    List<ProjectParticipant> getProjectParticipants(int id, Integer userId);
 
-    ProjectParticipant getProjectParticipant(int projectId, int userId);
+    ProjectParticipant getProjectParticipant(int projectId, Integer requesterId, int userId);
 
-    ProjectParticipant removeProjectParticipant(int projectId, int userId);
+    ProjectParticipant removeProjectParticipant(int projectId, Integer requesterId, int userId);
 
-    ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest jsonBody);
+    ProjectParticipant addProjectParticipant(int projectId, Integer userId, ProjectParticipantAddInfoRequest jsonBody);
 
-    List<ProjectReport> getProjectReports(int projectId, int userId);
+    List<ProjectReport> getProjectReports(int projectId, Integer userId);
 
-    List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Optional<Integer> userId);
+    List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Integer userId);
 
-    int getProjectCount(Optional<Integer> userId);
+    int getProjectCount(Integer userId);
 
     Double getEarnings(Integer userId);
 

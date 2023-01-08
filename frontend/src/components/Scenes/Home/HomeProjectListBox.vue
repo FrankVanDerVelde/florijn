@@ -2,7 +2,7 @@
   <HomeBox>
     <h2 class="text-xl font-semibold mb-2">{{label}}</h2>
 
-    <div v-if="projectCount === 0" class="flex gap-2 items-center text-app_red-500">
+    <div v-if="projects?.length === 0" class="flex gap-2 items-center text-app_red-500">
       <font-awesome-icon icon="fa-face-grin-squint" size="xl"></font-awesome-icon>
       <p>{{ errorMessage}}</p>
     </div>
