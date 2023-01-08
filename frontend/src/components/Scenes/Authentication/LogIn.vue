@@ -62,7 +62,6 @@ export default {
       try {
         const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
 
-        localStorage.setItem("user", JSON.stringify(this.storedTokenRepository.getUser()))
         this.pushHelperMethod(userData.role)
       } catch (e) {
         console.error(e)
