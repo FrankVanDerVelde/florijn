@@ -114,7 +114,7 @@ import {UserRole} from "../../../models/UserRole.js";
 export default {
     name: "CreateProject",
     components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
-    inject: ['projectRepository', 'fetchService', 'storedTokenRepository'],
+    inject: ['projectRepository', 'userRepository', 'storedTokenRepository'],
 
     computed: {
         user() {
@@ -143,7 +143,7 @@ export default {
             this.project = this.getSampleProject();
         }
 
-        this.clients = await this.fetchService.fetchJson(`/users/role/CLIENT`);
+        this.clients = await this.userRepository.fetchUsers(UserRole.client);
         if (!this.newProject) this.injectProjectInfo();
 
         // when a non-existing project is requested, redirect to the /projects page.

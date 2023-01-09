@@ -10,6 +10,7 @@ export default {
   computed: {
     logoSrc() {
       if (this.src.startsWith("data:image")) return this.src;
+      if (this.src.startsWith("http")) return this.src;
 
       return this.assetsService.getAsset(this.src);
     }
