@@ -17,6 +17,17 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Query(value = "SELECT u FROM User u WHERE u.email = :email AND u.password = :password")
     User getUserInfoByCredentials(String email, String password);
 
+    @Query(value = "SELECT role, COUNT(*) AS count FROM user GROUP BY role", nativeQuery = true)
+    List<UserCount> getUserCounts();
+
+    interface UserCount {
+
+        String getRole();
+
+        int getCount();
+
+    }
+
     @Query(value = "SELECT DISTINCT u FROM Specialist u INNER JOIN UserSkill us ON u.id = us.specialist.id " +
             "WHERE us.skill.id IN :skills AND us.rating >= 3")
     List<User> findSpecialistsBySkills(List<Integer> skills);

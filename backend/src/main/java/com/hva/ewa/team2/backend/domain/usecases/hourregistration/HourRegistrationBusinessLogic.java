@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface HourRegistrationBusinessLogic {
 
     List<HourRegistration> handleFetchHourRegistrationsByUser(int userId);
-    List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId);
-    List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, int userId);
+    List<HourRegistration> handleFetchHourRegistrationsForProject(int projectId, Integer userId);
+    List<HourRegistration> handleFetchHourRegistrationsForProjectUser(int projectId, Integer userId);
     Optional<HourRegistration> handleFetchHourRegistrationById(int id);
     Optional<HourRegistration> handleDeleteHourRegistrationById(int id);
 

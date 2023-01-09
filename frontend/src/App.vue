@@ -14,23 +14,31 @@ import {HourRegistrationRepository} from "./Networking/HourRegistration/HourRegi
 import {AvailabilityRepository} from "./Networking/Availibility/AvailabilityRepository.js";
 import Holidays from "date-holidays";
 import CONFIG from '/config.js'
+import {ProjectRepository} from "./Networking/Project/ProjectRepository.js";
+import {UserRepository} from "./Networking/UserRepository.js";
+import {AssetsService} from "./Networking/AssetsService.js";
+import SkillsRepository from "./Networking/User/SkillsRepository.js";
 
 export default {
   name: "App",
   provide() {
-    const storedTokenRepository = new StoredTokenRepository(CONFIG.JWT_STORAGE_ITEM);
+    const storedTokenRepository = StoredTokenRepository.shared
+
     return {
       hourRegistrationRepository: new HourRegistrationRepository(),
       dateService: new DateService(),
       projectFetchService: new FetchService("projects"),
-      skillFetchService: new FetchService("skills"),
+      skillsRepository: new SkillsRepository(),
       specialistFetchService: new FetchService("/specialists"),
       userFetchService: new FetchService("users"),
       fetchService: new FetchService(""),
       memoryAvailabilityRepository: new AvailabilityRepository(),
       storedTokenRepository: storedTokenRepository,
       authenticationRepository: new AuthenticationRepository(storedTokenRepository),
-      holidays: new Holidays('NL')
+      holidays: new Holidays('NL'),
+      projectRepository: new ProjectRepository(),
+      userRepository: new UserRepository(),
+      assetsService: new AssetsService()
     }
   },
 }

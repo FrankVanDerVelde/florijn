@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.rest.auth;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.auth.AuthBusinessLogic;
@@ -29,7 +30,9 @@ public class AuthController {
     @Autowired
     private Config apiConfig;
 
+
     @PostMapping(path = "/login")
+    @JsonView(User.EssentialInfo.class)
     public ResponseEntity<User> login(@RequestBody ObjectNode body, HttpServletRequest request) {
 
         String email = body.get("email").asText();
@@ -47,7 +50,7 @@ public class AuthController {
             throw new NotAcceptableStatusException("Cannot authenticate account with email=" + email);
         }
 
-        JWToken jwToken = new JWToken((long) user.getId(), user.getRole(), ipAddress);
+        JWToken jwToken = new JWToken(user.getId(), user.getRole(), ipAddress);
         String tokenString = jwToken.encode(this.apiConfig.getIssuer(),
                 this.apiConfig.getPassphrase(),
                 this.apiConfig.getTokenDurationOfValidity());

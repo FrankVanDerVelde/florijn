@@ -1,18 +1,13 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 
-import WelcomeView from "../components/Scenes/Welcome/WelcomeView.vue";
-import WelcomeAdminView from "../components/Scenes/Welcome/WelcomeAdminView.vue";
-import WelcomeSpecialistView from "../components/Scenes/Welcome/WelcomeSpecialistView.vue";
-import WelcomeClientView from "../components/Scenes/Welcome/WelcomeClientView.vue";
-
 import ProjectLayout from "../components/Scenes/Project/Scenes/ProjectLayout.vue";
 import LogIn from "../components/Scenes/Authentication/LogIn.vue";
 import ForgotPassword from "../components/Scenes/Authentication/ForgotPassword.vue";
 import ProjectList from "../components/Scenes/Project/Scenes/ProjectList.vue";
 import ChangePassword from "../components/Scenes/Authentication/ChangePassword.vue";
-import AdminPanel from "../components/Scenes/Adminpanel/Adminpanel.vue";
+import AdminPanel from "../components/Scenes/Adminpanel/AdminPanel.vue";
 import AddClient from "../components/Scenes/Adminpanel/AddClient.vue";
-import CustomerList from "../components/Scenes/Adminpanel/CustomerList.vue";
+import CustomerList from "../components/Scenes/Adminpanel/ClientList.vue";
 import EmployeeList from "../components/Scenes/Adminpanel/EmployeeList.vue";
 import SpecialistHourRegistrationOverview from "../components/Scenes/SpecialistHourRegistration/SpecialistHourRegistrationOverview.vue";
 import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvailibility/SpecialistAvailibilityOverview.vue";
@@ -21,18 +16,18 @@ import SpecialistAvailibilityOverview from "../components/Scenes/SpecialistAvail
 import Profile from "../components/Scenes/Profile/Profile.vue";
 import PublicProfile from "../components/Scenes/Profile/PublicProfile.vue";
 import PersonalInfo from "../components/Scenes/Profile/PersonalInfo.vue";
-import AvailableHours from "../components/Scenes/Profile/WorkingHours.vue";
 import SkillsOverview from "../components/Scenes/Profile/SkillsOverview.vue";
 import Resume from "../components/Scenes/Profile/Resume.vue";
 import AddParticipants from "../components/Scenes/AddParticipants/AddParticipants.vue";
 import ProjectOverview from "../components/Scenes/Project/Scenes/ProjectOverview.vue";
 import CreateProject from "../components/Scenes/Project/Scenes/CreateProject.vue";
+import AddSpecialist from "../components/Scenes/Adminpanel/AddSpecialist.vue";
+import BaseHome from "../components/Scenes/Home/BaseHome.vue";
 
 
 const routes = [
-    {path: '/', redirect: 'login'},
-    {path: '/home', redirect: 'login', name: "home"},
-    {path: '/login', component: LogIn},
+    {path: '/', component: BaseHome, name: 'home'},
+    {path: '/login', component: LogIn, name: "login"},
     {path: '/login/forgotpassword', component: ForgotPassword},
     {path: '/login/forgotpassword/cp', component: ChangePassword},
     {
@@ -46,10 +41,12 @@ const routes = [
             },
             {
                 path: 'personal-info',
+                name: "personal-info",
                 component: PersonalInfo,
             },
             {
                 path: 'available-hours',
+                name: 'availability',
                 component: SpecialistAvailibilityOverview,
             },
             {
@@ -59,6 +56,7 @@ const routes = [
             },
             {
                 path: "skills",
+                name: "profile-skills",
                 component: SkillsOverview,
             },
             {
@@ -76,22 +74,31 @@ const routes = [
         component: AdminPanel,
         children: [
             {
-                path: "/adminpanel",
+                path: "",
                 redirect: "/adminpanel/customer-list",
             },
             {
                 path: "customer-list",
+                name: 'admin-customer-list',
                 component: CustomerList,
             },
             {
                 path: "employee-list",
+                name: 'admin-employee-list',
                 component: EmployeeList,
             },
         ]
     }, {
         path: "/adminpanel/add-client",
         component: AddClient,
-    }, {
+        name: 'admin-add-client'
+    },
+    {
+        path: "/adminpanel/add-specialist",
+        component: AddSpecialist,
+        name: 'admin-add-specialist'
+    },
+    {
         path: "/projects",
         name: "projects",
         component: ProjectList

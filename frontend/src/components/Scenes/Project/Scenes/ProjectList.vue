@@ -6,12 +6,17 @@
                v-model="searchQuery"
                @submit="fetchProjects"/>
 
-    <div v-if="projects.length === 0" class="text-app_red-400">Er konden geen projecten gevonden met de gegeven
+    <div v-if="projects.length === 0 && archivedProjects.length === 0" class="text-app_red-400">Er konden geen projecten gevonden met de gegeven
       zoekopdracht.
     </div>
 
     <div class="flex flex-col gap-3">
+      <h2 v-if="projects.length > 0" class="text-xl">Actieve projecten</h2>
       <project-list-details v-for="project in projects" :key="project.id" :project="project"/>
+
+      <h2 v-if="archivedProjects.length > 0" class="text-xl mt-2">Gearchiveerde projecten</h2>
+      <project-list-details v-for="project in archivedProjects" :key="project.id" :project="project"/>
+
     </div>
   </div>
 </template>
@@ -24,25 +29,37 @@ import Searchbar from "../../../Common/Searchbar.vue";
 export default {
   name: "ProjectList",
   components: {Searchbar, ProjectListDetails},
-  inject: ['projectFetchService'],
+  inject: ['projectRepository'],
+
+    async beforeCreate(){
+        if (localStorage.getItem("user") == null) {
+            this.$router.push({name: "login"});
+        }
+    },
 
   created() {
-    if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
-      return;
-    }
     this.fetchProjects();
+  },
+
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem("user"));
+    }
   },
 
   methods: {
     async fetchProjects() {
       // making sure that they can't send another request before the previous one is finished
       if (this.loadingProjects) return;
-
       this.loadingProjects = true;
 
-      const search = encodeURIComponent(this.searchQuery);
-      this.projects = await this.projectFetchService.fetchJson(`?query=${search}`);
+      const [active, archived] = await Promise.all([
+        this.projectRepository.fetchProjects("UNARCHIVED", this.searchQuery),
+        this.projectRepository.fetchProjects("ARCHIVED", this.searchQuery),
+      ]);
+
+      this.projects = active;
+      this.archivedProjects = archived;
 
       this.loadingProjects = false;
     }
@@ -51,6 +68,7 @@ export default {
   data() {
     return {
       projects: [],
+      archivedProjects: [],
       searchQuery: "",
       loadingProjects: false,
       sideBarLinks: [{

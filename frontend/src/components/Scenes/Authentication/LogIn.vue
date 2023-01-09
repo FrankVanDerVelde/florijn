@@ -63,28 +63,15 @@ export default {
         const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
 
         localStorage.setItem("user", JSON.stringify(this.storedTokenRepository.getUser()))
-        this.pushHelperMethod(userData.role)
+        this.pushHelperMethod()
       } catch (e) {
         console.error(e)
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
       }
     },
-    pushHelperMethod(role){
-      switch (role) {
-        case "ADMIN": {
-          this.$router.push("/adminpanel/customer-list");
-          break;
-        }
-        case "SPECIALIST": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-        case "CLIENT": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-      }
+    pushHelperMethod(){
+        this.$router.push({name: "home"});
     }
   },
   data() {

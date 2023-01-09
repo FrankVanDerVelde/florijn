@@ -33,7 +33,7 @@ import SkillsForm from "./SkillsForm.vue";
 export default {
     name: "Profile",
     components: { SkillsForm },
-    inject: ['skillFetchService'],
+    inject: ['skillsRepository'],
     props: {
         group: {
             type: Object,
@@ -77,7 +77,7 @@ export default {
             console.log(response)
 
             if (!this.active) {
-                this.skillFetchService.fetchJsonMethod(`/update-user-skill-group/${this.user.id}`, "PUT", response);
+                this.skillsRepository.updateUserSkillGroup(this.user.id, response);
             }
         },
         handleSkillUpdate(skillId, newValue) {
