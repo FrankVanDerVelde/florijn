@@ -113,4 +113,9 @@ export class UserRepository {
     // async updateProject(projectId, formData) {
     //     return await this.#networkClient.executeRequestWithFormData(`/projects/${projectId}/update`, HttpMethod.PUT, formData);
     // }
+
+    async fetchUsersBySkills(body) {
+        const path = `/users/specialists/skills`;
+        return await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
+    }
 }

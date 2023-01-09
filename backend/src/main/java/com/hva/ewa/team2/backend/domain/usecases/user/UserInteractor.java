@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSkills;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
 import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
 import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
@@ -251,4 +252,9 @@ public class UserInteractor implements UserBusinessLogic {
     public List<UserRepository.UserCount> getUserCounts() {
         return this.userRepo.getUserCounts();
     }
+    @Override
+    public List<User> getSpecialistsBySkills(List<Integer> skills) {
+        return this.userRepo.findSpecialistsBySkills(skills);
+    }
+
 }

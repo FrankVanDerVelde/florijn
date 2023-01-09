@@ -30,7 +30,7 @@ export default {
       projectFetchService: new FetchService("projects"),
       skillsRepository: new SkillsRepository(),
       specialistFetchService: new FetchService("/specialists"),
-      userFetchService: new FetchService("/users"),
+      userFetchService: new FetchService("users"),
       fetchService: new FetchService(""),
       memoryAvailabilityRepository: new AvailabilityRepository(),
       storedTokenRepository: storedTokenRepository,
