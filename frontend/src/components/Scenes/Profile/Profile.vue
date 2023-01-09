@@ -28,11 +28,6 @@ export default {
   components: {
     SideBarNav
   },
-  created() {
-    if (localStorage.getItem("user") == null) {
-      this.$router.push({name: "home"});
-    }
-  },
     data() {
         return {
           id: localStorage.getItem("id"),

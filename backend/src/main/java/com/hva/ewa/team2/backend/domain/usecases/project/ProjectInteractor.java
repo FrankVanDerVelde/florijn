@@ -301,6 +301,16 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
     }
 
+    @Override
+    public List<Project> getProjectsByUser(int id, Integer userId) {
+        User user = userRepo.findById(userId).orElse(null);
+
+        if (user instanceof Client || user instanceof Admin){
+            return projectRepo.findAll(ProjectFilter.UNARCHIVED, id);
+        }
+        return null;
+    }
+
     private void validateProjectInformation(String title, String description) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("The project title cannot be empty.");

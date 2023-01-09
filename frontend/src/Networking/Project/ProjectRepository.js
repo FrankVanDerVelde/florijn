@@ -30,6 +30,10 @@ export class ProjectRepository {
         return await this.#networkClient.executeRequest(`/projects/${projectId}`);
     }
 
+    async fetchProjectByUserId(userId) {
+        return await this.#networkClient.executeRequest(`/projects/user/${userId}`);
+    }
+
     async fetchProjectReports(projectId) {
         return await this.#networkClient.executeRequest(`/projects/${projectId}/reports`);
     }

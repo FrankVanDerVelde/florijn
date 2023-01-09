@@ -9,6 +9,38 @@ export class UserRepository {
         this.#networkClient = new NetworkClient();
     }
 
+    async getAllUsers() {
+        return await this.#networkClient.executeRequest(`/users`);
+    }
+
+    async getUserCounts() {
+        return await this.#networkClient.executeRequest(`/users/counts`);
+    }
+
+    async getUserById(userId) {
+        return await this.#networkClient.executeRequest(`/users/${userId}`);
+    }
+
+    async updateUser(userId, body) {
+        return await this.#networkClient.executeRequest(`/users/${userId}/edit`, HttpMethod.PUT, body);
+    }
+
+    async getResumeById(userId) {
+        return await this.#networkClient.executeRequest(`/users/${userId}/resume`);
+    }
+
+    async updateResume(userId, body) {
+        return await this.#networkClient.executeRequest(`/users/${userId}/resume`, HttpMethod.PUT, body);
+    }
+
+    async deleteUserById(userId) {
+        return await this.#networkClient.executeRequest(`/users/${userId}`, HttpMethod.DELETE);
+    }
+
+    async getUsersAdressById(userId) {
+        return await this.#networkClient.executeRequest(`/users/adress/${userId}`);
+    }
+
     /**
      * Adds a client.
      * @param {String} name Name of the Client.
@@ -18,7 +50,7 @@ export class UserRepository {
      * @param {String|null} bannerSrc Default banner to use.
      * @return {Promise<Client|Object|null>} Added Client.
      */
-    async addClient(name, email, password, avatarUrl = null, bannerSrc= null) {
+    async addClient(name, email, password, avatarUrl = null, bannerSrc = null) {
         const path = `/users/add/client`;
         const body = {
             name: name,
