@@ -116,7 +116,7 @@ export default {
     }
   },
   created() {
-    if (Object.keys(this.user).length === 0){
+    if (Object.keys(this.user).length === 0) {
       this.$router.replace({ path: '/login' })
     }
     this.specialistId = this.$route.params.Id;

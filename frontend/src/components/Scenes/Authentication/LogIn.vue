@@ -69,21 +69,8 @@ export default {
         this.password = '';
       }
     },
-    pushHelperMethod(role){
-      switch (role) {
-        case "ADMIN": {
-          this.$router.push("/adminpanel/customer-list");
-          break;
-        }
-        case "SPECIALIST": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-        case "CLIENT": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-      }
+    pushHelperMethod(){
+        this.$router.push({name: "home"});
     }
   },
   data() {

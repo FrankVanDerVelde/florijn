@@ -12,10 +12,49 @@ import './PrototypeExtensions/Array+random.js';
 import 'flowbite';
 
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faCircleXmark, faMagnifyingGlass, faBoxArchive, faShareNodes, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faImage, faPanorama} from '@fortawesome/free-solid-svg-icons'
+import {
+    faArrowDown,
+    faBars,
+    faBarsProgress,
+    faBoxArchive,
+    faBuilding,
+    faCalendarDays,
+    faCalendarWeek,
+    faCheck,
+    faChevronLeft,
+    faChevronRight,
+    faCircleXmark,
+    faClock,
+    faEnvelope,
+    faFaceGrinSquint,
+    faFile,
+    faFileImage,
+    faLightbulb,
+    faMagnifyingGlass,
+    faPaste,
+    faPen,
+    faPenToSquare,
+    faPlus,
+    faRightFromBracket,
+    faShareNodes,
+    faStar,
+    faTrashCan,
+    faUser,
+    faUserPlus,
+    faUsers,
+    faWindowMinimize,
+    faXmark,
+    faImage,
+    faPanorama
+} from '@fortawesome/free-solid-svg-icons'
 import HelpTip from "./components/Common/HelpTip.vue";
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass, faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faImage, faPanorama);
+library.add(
+    faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
+    faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan,
+    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint,
+    faImage, faPanorama
+);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)

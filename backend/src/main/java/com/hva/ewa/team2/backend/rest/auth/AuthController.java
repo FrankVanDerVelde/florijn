@@ -50,7 +50,7 @@ public class AuthController {
             throw new NotAcceptableStatusException("Cannot authenticate account with email=" + email);
         }
 
-        JWToken jwToken = new JWToken((long) user.getId(), user.getRole(), ipAddress);
+        JWToken jwToken = new JWToken(user.getId(), user.getRole(), ipAddress);
         String tokenString = jwToken.encode(this.apiConfig.getIssuer(),
                 this.apiConfig.getPassphrase(),
                 this.apiConfig.getTokenDurationOfValidity());

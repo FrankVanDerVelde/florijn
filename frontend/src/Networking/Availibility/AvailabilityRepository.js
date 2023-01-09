@@ -1,4 +1,3 @@
-import FetchService from "../../Services/FetchService.js";
 import {Availability} from "../../components/models/Availability.js";
 import {HttpMethod} from "../HttpMethod.js";
 import {NetworkClient} from "../NetworkClient.js";

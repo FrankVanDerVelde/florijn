@@ -2,6 +2,8 @@ package com.hva.ewa.team2.backend.rest.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hva.ewa.team2.backend.data.user.UserRepository;
+import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
@@ -22,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserBusinessLogic userBusinessLogic;
+    private final UserBusinessLogic userBusinessLogic;
 
     @Autowired
     public UserController(UserBusinessLogic userBusinessLogic) {
@@ -33,6 +35,11 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Iterable<User>> getAllUsers() {
         return ResponseEntity.ok(this.userBusinessLogic.getAllUsers());
+    }
+
+    @GetMapping("/counts")
+    public ResponseEntity<List<UserRepository.UserCount>> getUserCounts() {
+        return ResponseEntity.ok(this.userBusinessLogic.getUserCounts());
     }
 
     @JsonView(User.EssentialInfo.class)

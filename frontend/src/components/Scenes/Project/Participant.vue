@@ -17,23 +17,17 @@
       </div>
     </div>
   </div>
-  <div class="flex flex-row items-center w-max" v-else>
-    <Asset :src="participant.user.avatarUrl" alt="Avatar" class="w-[32px] h-[32px] rounded-full mr-2"/>
-    <div class="flex flex-col justify-between">
-      <div class="font-bold text-sm">{{ name }}</div>
-      <div class="font-semibold text-neutral-500 text-sm">{{ participant.role }}</div>
-    </div>
-
-  </div>
+  <SmallTableCard v-else :title="name" :subtitle="participant.role" :src="participant.user.avatarUrl"/>
 
 </template>
 
 <script>
 import Asset from "../../Common/Asset.vue";
+import SmallTableCard from "../../Common/SmallTableCard.vue";
 
 export default {
   name: "Participant",
-  components: {Asset},
+  components: {SmallTableCard, Asset},
   emits: ["selectedParticipant"],
 
   created() {
