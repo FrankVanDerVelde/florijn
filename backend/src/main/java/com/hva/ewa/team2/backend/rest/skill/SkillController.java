@@ -3,6 +3,7 @@ package com.hva.ewa.team2.backend.rest.skill;
 import com.hva.ewa.team2.backend.domain.models.skill.Expertise;
 import com.hva.ewa.team2.backend.domain.models.skill.SkillGroup;
 import com.hva.ewa.team2.backend.domain.models.skill.UserSkill;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.skill.SkillBusinessLogic;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkill;
 import com.hva.ewa.team2.backend.rest.skill.json.JsonUserSkillGroup;
@@ -42,7 +43,7 @@ public class SkillController {
     }
 
     @PutMapping(path = "/update-user-skill-group/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SkillGroup> updateUserSkillGroup(@PathVariable int userId, @RequestBody List<JsonUserSkill> body) {
+    public ResponseEntity<List<UserSkill>> updateUserSkillGroup(@PathVariable int userId, @RequestBody List<JsonUserSkill> body) {
         return ResponseEntity.ok(skillBusinessLogic.updateUserSkillGroup(userId, body));
     }
 
