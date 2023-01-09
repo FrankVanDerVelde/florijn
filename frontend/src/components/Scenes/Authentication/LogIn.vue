@@ -62,8 +62,7 @@ export default {
       try {
         const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
 
-        localStorage.setItem("user", JSON.stringify(this.storedTokenRepository.getUser()))
-        this.pushHelperMethod()
+        this.pushHelperMethod(userData.role)
       } catch (e) {
         console.error(e)
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
