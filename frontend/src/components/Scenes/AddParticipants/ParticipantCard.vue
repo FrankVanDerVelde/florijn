@@ -15,7 +15,7 @@
               <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
             </div>
             <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1">
-              <font-awesome-icon icon="user"/>
+              <font-awesome-icon icon="user" @click="viewUserProfile(this.participant)"/>
             </div>
           </div>
         </div>
@@ -26,17 +26,17 @@
           </ul>
         </div>
       </div>
-      <div class="flex m-0 ml-2 p-0 relative">
+      <div class="flex ml-auto p-0 relative">
         <div v-if="this.skill.length !== 0">
 
           <div class="add-button hover:border-primary-500 cursor-pointer">
             <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
           </div>
           <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
-            <font-awesome-icon icon="user"/>
+            <font-awesome-icon icon="user" @click="viewUserProfile(this.participant)"/>
           </div>
         </div>
-        <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
+        <div class="bottom-0 ml-2 self-end m-0 p-0">
           <div class="star-color" v-for="skills in skillRating.slice(0,5)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
@@ -57,7 +57,7 @@ export default {
   name: "ParticipantCard",
   components: {Asset, FontAwesomeIcon},
   emits: ['addParticipant'],
-  inject: ['skillFetchService'],
+  inject: ['skillsRepository'],
 
   created() {
     this.fetchSkills();
@@ -68,14 +68,11 @@ export default {
       let lastNameParts = this.participant.lastName.split(" ");
       return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
     },
-    getSkills() {
-      // return this.participant.skills.filter(skill => this.skill.some(s => s.id === skill.id));
-      return this.userSkills;
-    }
+
   },
   methods: {
     async fetchSkills() {
-      this.userSkills = await this.skillFetchService.fetchJson("/user-skills/" + this.participant.id)
+      this.userSkills = await this.skillsRepository.fetchUserSkills(this.participant.id)
 
       for (let i = 0; i < this.userSkills.length; i++) {
         if (this.skill.includes(this.userSkills[i].skill.id)) {
@@ -88,6 +85,11 @@ export default {
             rating: this.userSkills[i].rating
           })
         }
+      }
+    },
+    viewUserProfile(user) {
+      if (user.role === "SPECIALIST"){
+        this.$router.push("/profile/public/" + user.id);
       }
     }
   },

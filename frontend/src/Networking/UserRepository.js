@@ -79,4 +79,9 @@ export class UserRepository {
         const path = role ? `/users/role/${role}` : `/users/`;
         return await this.#networkClient.executeRequest(path);
     }
+
+    async fetchUsersBySkills(body) {
+        const path = `/users/specialists/skills`;
+        return await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
+    }
 }

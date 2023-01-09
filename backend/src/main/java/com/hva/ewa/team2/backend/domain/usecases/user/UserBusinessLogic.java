@@ -34,7 +34,6 @@ public interface UserBusinessLogic {
     List<UserRepository.UserCount> getUserCounts();
 
     String getResume(int id);
-    User updateResume(int id, JsonUserData body) throws IOException;
 
     List<User> getSpecialistsBySkills(List<Integer> skills);
 }
