@@ -5,33 +5,38 @@
     &#60; Terug naar project overzicht
   </router-link>
 
-
-  <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
+  <h2 class="!mb-0 mt-4 header-2">Huidige deelnemers</h2>
 
   <div class="flex flex-row flex-wrap gap-8">
-    <ProjectParticipant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true"
-                 @selectedParticipant="item => selectedDeleteSpecialist = item"/>
+    <ProjectParticipant v-for="participant in project.participants" :key="participant.id" :participant="participant"
+                        :edit="true"
+                        @selectedParticipant="item => selectedDeleteSpecialist = item"/>
   </div>
 
-  <h2 class=" mb-4 mt-10 header-2" >Deelnemers toevoegen</h2>
+  <h2 class=" mb-4 mt-10 header-2">Deelnemers toevoegen</h2>
+
+  <div class="sb-container">
+    <input type="text" class="sb" v-model="search" placeholder="Zoek deelnemers"/>
+  </div>
+
+
   <div class="flex flex-row participant-container" v-if="specialists.length !== 0">
     <div class=" min-w-1/6  filter-container">
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
                           @selectedSkill="skillSelect"/>
     </div>
 
-<!--    <div v-if="Object.keys(this.filteredParticipantsList).length === 0" class="muted error m-auto">-->
-<!--      Geen deelnemers gevonden met de huidige zoekopdracht-->
-<!--    </div>-->
 
     <div class="ml-10 p-5 m-0 grid grid-cols-3 participant-grid" v-if="selectedFilters.length === 0">
-      <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
-                       :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
+      <ParticipantCard v-for="participants in specialistListSearch" :key=participants.id :skill=selectedFilters
+                       :participant=participants @addParticipant="item => selectedSpecialist = item"
+                       :validation="validation"/>
     </div>
 
     <div class="ml-10 p-5 m-0 grid grid-cols-2 participant-grid" v-else>
-      <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
-                       :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
+      <ParticipantCard v-for="participants in specialistListSearch" :key=participants.id :skill=selectedFilters
+                       :participant=participants @addParticipant="item => selectedSpecialist = item"
+                       :validation="validation"/>
     </div>
   </div>
 
@@ -46,7 +51,6 @@
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
-import Participant from "../Project/Participant.vue";
 import AddParticipantModal from "./AddParticipantModal.vue";
 import DeleteParticipantModal from "./DeleteParticipantModal.vue";
 import ProjectParticipant from "./ProjectParticipant.vue";
@@ -55,13 +59,23 @@ export default {
   name: "AddParticipants",
   components: {
     ProjectParticipant,
-    DeleteParticipantModal, AddParticipantModal, ParticipantCard, FilterParticipants},
+    DeleteParticipantModal, AddParticipantModal, ParticipantCard, FilterParticipants
+  },
   inject: ['skillsRepository', 'projectRepository', 'userRepository'],
 
   props: {
     project: {
       type: Object,
       required: true
+    }
+  },
+
+  computed: {
+    specialistListSearch() {
+      return this.filteredParticipantsList.filter(participant => {
+        return participant.firstName.toLowerCase().includes(this.search.toLowerCase()) ||
+            participant.lastName.toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   },
 
@@ -153,6 +167,7 @@ export default {
       selectedSpecialist: null,
       selectedDeleteSpecialist: null,
       skillGroup: {},
+      search: ""
     }
   }
 }
@@ -184,4 +199,21 @@ export default {
 .participant-grid {
   grid-auto-rows: minmax(min-content, max-content);
 }
+
+.sb-container {
+  margin: 8px 0 20px;
+  height: 50px;
+}
+
+.sb {
+  background-color: #ECECECFF;
+  border-radius: 8px;
+  border: none;
+  outline-color: var(--neutral-200);
+  padding: 13px 15px;
+  font-size: 16px;
+  line-height: 1.5rem;
+}
+
+
 </style>
