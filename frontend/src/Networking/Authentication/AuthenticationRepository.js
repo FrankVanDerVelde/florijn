@@ -12,7 +12,7 @@ export class AuthenticationRepository {
     }
 
     /**
-     * Fetches a list of Availability for the specified week
+     * Retrieves a user for authentication
      * @param email
      * @param password
      * @return {Promise<>}

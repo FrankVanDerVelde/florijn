@@ -17,20 +17,21 @@
                     <div class="flex font-semibold text-neutral-500">Developer</div>
                     <div class="flex mt-2">{{ userData.email }}</div>
                   </div>
-                  <div>
-                    <button v-if="this.user.role === 'ADMIN'" class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
-                    mr-2 text-neutral-0">Op project zetten
+                  <div v-if="this.user.role === 'ADMIN'">
+                    <button @click="viewResume()" class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
+                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV bekijken
                     </button>
-                    <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
-                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV downloaden
-                    </button>
+                    <div v-if="this.showResumeFailText"
+                         class="mt-1 justify-center text-app_red-500 p-2 mr-2 h-[38px] w-[180px] flex ">Geen CV
+                      beschikbaar
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="box flex-col p-2 w-full mt-3">
-            <div>
+            <div class="pb-3">
               <div class="back-text float-right" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
               <div class="font-bold ml-2">Skills</div>
             </div>
@@ -81,6 +82,19 @@
         </div>
       </div>
     </div>
+
+    <div v-if="modalActive" class="bg-white absolute top-0 bottom-0 left-0 right-0 z-10 ">
+
+      <object v-if="pdfSrc" :data="pdfSrc" class="w-full h-full pt-[60px]" type="application/pdf">
+
+      </object>
+
+      <div class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md w-[120px] h-[38px] mb-[10px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center fixed bottom-0 left-1/2 -translate-x-1/2"
+           @click="toggleModal">
+        <div>Close window</div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -97,6 +111,9 @@ export default {
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user')) ?? {};
+    },
+    pdfSrc() {
+      return this.fetchService.getAsset(this.resumeURL);
     }
   },
   data() {
@@ -112,6 +129,9 @@ export default {
       wedAv: '-',
       thuAv: '-',
       friAv: '-',
+      showResumeFailText: false,
+      modalActive: false,
+      resumeURL: null,
       showTempSkills: true,
       showSkillsTitle: 'Meer weergeven',
     }
@@ -147,13 +167,27 @@ export default {
         this.tempSkills = this.skills.slice(0, 8);
       }
     },
+    async toggleModal() {
+      this.modalActive = !this.modalActive;
+    },
+    async viewResume() {
+      this.resumeURL = await this.userRepository.getResumeById(this.specialistId).resumeURL;
+
+      if (this.resumeURL == null) {
+        this.showResumeFailText = true;
+        return false;
+      }
+      await this.toggleModal();
+      this.showResumeFailText = false;
+      return true;
+    },
     async fetchAvailability() {
       const weekNumber = this.dateService.currentWeekOfYear();
       this.availability = await this.memoryAvailabilityRepository.fetchAvailabilityForUserInWeek(this.specialistId, weekNumber)
 
       for (let i = 0; i < this.availability.length; i++) {
-        const dayIndex = this.dateService.dayIndex(this.availability[0].date)
-        this.availabilityHelper(dayIndex, this.availability[0])
+        const dayIndex = this.dateService.dayIndex(this.availability[i].date)
+        this.availabilityHelper(dayIndex, this.availability[i])
       }
     },
     availabilityHelper(index, availability) {
