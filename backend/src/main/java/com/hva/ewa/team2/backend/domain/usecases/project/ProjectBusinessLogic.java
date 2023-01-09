@@ -38,6 +38,8 @@ public interface ProjectBusinessLogic {
 
     List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Integer userId);
 
+    List<Project> getProjectsByUser(int id, Integer userId);
+
     int getProjectCount(Integer userId);
 
     Double getEarnings(Integer userId);

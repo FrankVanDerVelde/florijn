@@ -54,7 +54,6 @@ export default {
     '$route'() {
       this.menuExpanded = false;
       this.user = JSON.parse(localStorage.getItem("user"));
-      console.log(this.user);
       this.isLoggedIn();
     }
   },
@@ -79,6 +78,7 @@ export default {
     },
     isLoggedIn() {
       if (this.user == null) {
+        this.links = [];
         this.staticLink = {
           name: 'Log in',
           link: {
@@ -87,6 +87,12 @@ export default {
         }
       } else {
         this.links = [
+          {
+            name: 'Home',
+            link: {
+              name: 'home'
+            }
+          },
           {
             name: 'Projecten',
             link: {
@@ -125,7 +131,7 @@ export default {
         this.staticLink = {
           name: 'Log uit',
           link: {
-            name: 'home'
+            name: 'login'
           }
         }
       }

@@ -130,6 +130,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectInteractor.getProjectCount(jwtToken.getUserId()));
     }
 
+    @GetMapping(path = "/user/{id}")
+    public ResponseEntity<List<Project>> getProjectsByUser(@PathVariable int id, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) {
+        return ResponseEntity.ok(projectInteractor.getProjectsByUser(id, jwtToken.getUserId()));
+    }
+
     @GetMapping(path = "/earnings")
     public ResponseEntity<Double> getEarnings(@RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) {
         return ResponseEntity.ok(projectInteractor.getEarnings(jwtToken.getUserId()));
