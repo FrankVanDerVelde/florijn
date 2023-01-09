@@ -91,18 +91,25 @@ public class SkillInteractor implements SkillBusinessLogic {
             throw new IllegalArgumentException("The user with ID " + userId + " is not a specialist.");
         }
 
-        List<UserSkill> skills = new ArrayList<>();
+        System.out.println("peppa");
+        System.out.println(specialist.getSkills());
+        System.out.println(jsonBody);
+        List<UserSkill> skills = new ArrayList<>(specialist.getSkills());
         for (JsonUserSkill jsu : jsonBody) {
-            Skill skill = skillRepo.getSkillById(jsu.getId());
-            if (skill == null || jsu.getRating() < 0 || jsu.getRating() > 5) continue;
 
-            skills.add(new UserSkill(0, specialist, skill, jsu.getRating()));
+            Optional<UserSkill> foundUserSkill = skills.stream().filter(existingSkill -> existingSkill.getSkill().getId() == jsu.getId()).findFirst();
+            if (foundUserSkill.isPresent()) {
+                foundUserSkill.get().setRating(jsu.getRating());
+            } else {
+                Skill skill = skillRepo.getSkillById(jsu.getId());
+                if (skill == null || jsu.getRating() < 0 || jsu.getRating() > 5) continue;
+
+                skills.add(new UserSkill(0, specialist, skill, jsu.getRating()));
+            }
         }
 
         specialist.setSkills(skills);
         userRepo.save(specialist);
-        System.out.println(specialist.getSkills());
-        System.out.println(specialist.getSkills().getClass());
 
         return specialist.getSkills();
     }
