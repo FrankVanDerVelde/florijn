@@ -205,6 +205,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         final boolean removed = project.removeSpecialist(participant);
+        projectRepo.save(project);
         return removed ? participant : null;
     }
 
@@ -231,6 +232,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
         final ProjectParticipant created = new ProjectParticipant(specialist, role, hourlyRate);
         project.addSpecialist(created);
+        projectRepo.save(project);
         return created;
     }
 

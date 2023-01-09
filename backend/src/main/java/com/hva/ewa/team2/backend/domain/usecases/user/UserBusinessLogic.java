@@ -6,6 +6,7 @@ import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
 import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
+import com.hva.ewa.team2.backend.rest.user.json.JsonSkills;
 import com.hva.ewa.team2.backend.rest.user.json.JsonUserData;
 
 import java.io.IOException;
@@ -33,4 +34,6 @@ public interface UserBusinessLogic {
     List<UserRepository.UserCount> getUserCounts();
 
     String getResume(int id);
+
+    List<User> getSpecialistsBySkills(List<Integer> skills);
 }
