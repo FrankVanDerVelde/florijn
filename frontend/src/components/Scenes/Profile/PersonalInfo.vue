@@ -3,16 +3,16 @@
     <div class="text-[34px] font-bold mb-[10px]">Profiel</div>
     <div class="name-and-picture-container flex items-center mb-4">
       <div class="relative">
-        <Asset class="rounded-full w-[110px] h-[110px] mr-4" :src="avatar" alt="avatar"/>
+        <Asset class="rounded-full w-[110px] h-[110px] mr-4" :src="avatar" alt="avatar" />
         <div class="profile-picture-container absolute bottom-[-5px] right-[24px]">
           <label for="profile-picture-upload-input" class="cursor-pointer">
             <div class="bg-neutral-0 w-[30px] h-[30px] border-[1px] border-l-neutral-900 rounded-full">
               <font-awesome-icon icon="fa-pen-to-square"
-                                 class="profile-picture-upload-icon absolute left-[5px] top-[4px] text-[20px]"/>
+                class="profile-picture-upload-icon absolute left-[5px] top-[4px] text-[20px]" />
             </div>
           </label>
           <input @change="e => updateAvatar(e)" type="file" name="profile-picture-upload-input" class="hidden"
-                 id="profile-picture-upload-input" accept=".svg,.png,.webp,jpg,.jpeg">
+            id="profile-picture-upload-input" accept=".svg,.png,.webp,jpg,.jpeg">
 
         </div>
       </div>
@@ -50,8 +50,7 @@
       <div class="grid grid-cols-3 gap-4">
         <FormInput name="huisnummer" type="number" v-model="address.houseNumber"></FormInput>
         <FormInput name="toevoeging" v-model="address.houseNumberAddition"></FormInput>
-        <FormInput name="postcode" v-model="address.postalCode"
-                   :validationRules="['required', 'zipcode-dutch']">
+        <FormInput name="postcode" v-model="address.postalCode" :validationRules="['required', 'zipcode-dutch']">
         </FormInput>
       </div>
 
@@ -59,13 +58,13 @@
 
     <div v-if="['CLIENT'].includes(user.role)" class="text-[34px] font-bold mb-[10px]">Banner</div>
     <div v-if="['CLIENT'].includes(user.role)" class="relative">
-      <Asset class="w-full h-[218px] bg-cover rounded-[12px] object-cover" :src="banner" alt="banner"/>
+      <Asset class="w-full h-[218px] bg-cover rounded-[12px] object-cover" :src="banner" alt="banner" />
       <div class="banner-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <label for="banner-upload-input" class="text-[120px] text-neutral-0 opacity-70">
-          <font-awesome-icon icon="fa-pen-to-square" class="banner-upload-icon"/>
+          <font-awesome-icon icon="fa-pen-to-square" class="banner-upload-icon" />
         </label>
         <input @change="e => updateBanner(e)" type="file" name="banner-upload-input" class="hidden"
-               id="banner-upload-input" accept=".svg,.png,.webp,jpg,.jpeg">
+          id="banner-upload-input" accept=".svg,.png,.webp,jpg,.jpeg">
 
       </div>
     </div>
@@ -82,10 +81,9 @@
   margin-bottom: 1em;
 }
 
-.input-container.duo {
-}
+.input-container.duo {}
 
-.input-container.duo > div:first-child {
+.input-container.duo>div:first-child {
   margin-right: 1em;
 }
 </style>
@@ -98,14 +96,16 @@ export default {
     SaveButton,
     Asset
   },
-  inject: ['fetchService', 'userFetchService'],
+  inject: ['userRepository'],
   async created() {
+    console.log(this.user)
     if (this.user === null) {
       this.user = {};
     }
     if (this.user.role === "SPECIALIST") {
-      const newAddress = await this.userFetchService.fetchJson(`/address/${this.user.id}`);
-      this.address = newAddress;
+      this.address = await this.userRepository.getUserAddress(this.user.id)
+      // const newAddress = await this.userFetchService.fetchJson(`/address/${this.user.id}`);
+      // this.address = newAddress;
     }
   },
   data() {
@@ -141,11 +141,11 @@ export default {
       delete adjustedUser.address;
 
       formData.append('user', JSON.stringify(
-          adjustedUser
+        adjustedUser
       ));
 
       formData.append('id',
-          adjustedUser.id
+        adjustedUser.id
       );
 
       // console.log(Object.fromEntries(formData))
@@ -154,9 +154,11 @@ export default {
 
       if (this.bannerFile != null) formData.append('bannerFile', this.bannerFile);
 
-      this.userFetchService.fetchJsonFile(`/${this.user.id}/edit`, "PUT", formData).then((response) => {
-        localStorage.setItem("user", JSON.stringify(response));
-      })
+      localStorage.setItem("user", JSON.stringify(await this.userRepository.updateUser(this.user.id, formData)));
+
+      // this.userFetchService.fetchJsonFile(`/${this.user.id}/edit`, "PUT", formData).then((response) => {
+      //   localStorage.setItem("user", JSON.stringify(response));
+      // })
     },
     async updateAvatar(event) {
       if (event.target.files.length === 0) {
@@ -202,7 +204,7 @@ export default {
   }
 }
 
-import {VueElement} from "vue";
+import { VueElement } from "vue";
 import FormInput from "../../Common/FormInput.vue";
 import SaveButton from "../../Common/SaveButton.vue";
 import Asset from "../../Common/Asset.vue"
