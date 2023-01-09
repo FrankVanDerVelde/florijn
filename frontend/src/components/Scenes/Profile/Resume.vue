@@ -79,11 +79,10 @@ export default {
     },
     computed: {
         pdfSrc() {
-            console.log(this.resumeURL)
             return this.fetchService.getAsset(this.resumeURL);
         },
     },
-    inject: ['fetchService', 'userFetchService'],
+    inject: ['userRepository', 'fetchService', 'userFetchService'],
     data() {
         return {
             user: JSON.parse(localStorage.getItem("user")),
@@ -94,7 +93,8 @@ export default {
     },
     async created() {
         if (this.user) {
-            const response = await this.fetchService.fetchJson(`/users/${this.user.id}/resume`);
+            const response = await this.userRepository.getResume(this.user.id);
+            // const response = await this.fetchService.fetchJson(`/users/${this.user.id}/resume`);
             this.resumeURL = response.resumeURL; 
         }
     },
@@ -108,9 +108,11 @@ export default {
 
             if (this.resumeFile != null) formData.append('resumeFile', this.resumeFile);
 
-            this.userFetchService.fetchJsonFile(`/${this.user.id}/resume`, "PUT", formData).then((response) => {
-                this.resumeURL = response.resumeURL;
-            })
+
+            this.resumeURL = (await this.userRepository.updateResume(this.user.id, formData)).resumeURL;
+            // this.userFetchService.fetchJsonFile(`/${this.user.id}/resume`, "PUT", formData).then((response) => {
+            //     this.resumeURL = response.resumeURL;
+            // })
 
             this.resumeFile = null;
         },
