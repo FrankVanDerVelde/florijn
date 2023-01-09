@@ -48,44 +48,7 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['authenticationRepository', 'storedTokenRepository', 'fetchService'],
-  created() {
-    if (localStorage.getItem("user") !== null) {
-      this.pushHelperMethod(JSON.parse(localStorage.getItem("user"))?.role)
-    }
-  },
-  methods: {
-    forgotPassword() {
-      this.$router.push(this.$route.matched[0].path + "/forgotpassword");
-    },
-    async submitButton() {
-      try {
-        const userData = await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
-
-        this.pushHelperMethod(userData.role)
-      } catch (e) {
-        console.error(e)
-        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
-        this.password = '';
-      }
-    },
-    pushHelperMethod(role){
-      switch (role) {
-        case "ADMIN": {
-          this.$router.push("/adminpanel/customer-list");
-          break;
-        }
-        case "SPECIALIST": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-        case "CLIENT": {
-          this.$router.push({name: "projects"});
-          break;
-        }
-      }
-    }
-  },
+  inject: ['authenticationRepository', 'storedTokenRepository'],
   data() {
     return {
       email: '',
@@ -93,11 +56,28 @@ export default {
       validationText: '',
     };
   },
+  methods: {
+    forgotPassword() {
+      this.$router.push(this.$route.matched[0].path + "/forgotpassword");
+    },
+    async submitButton() {
+      try {
+        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
+        this.pushToHome();
+      } catch (e) {
+        console.error(e)
+        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
+        this.password = '';
+      }
+    },
+    pushToHome() {
+      this.$router.push({name: "home"});
+    }
+  },
 }
 </script>
 
 <style scoped>
-
 
 .max-width {
   max-width: 720px;

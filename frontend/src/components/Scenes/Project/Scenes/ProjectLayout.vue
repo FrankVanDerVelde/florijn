@@ -60,9 +60,6 @@ export default {
     },
 
     async created() {
-        if (this.user == null) {
-            this.$router.push({name: "home"});
-        }
         if (this.projectInfo == null && this.projectId >= 0) {
             try {
                 this.project = await this.projectRepository.fetchProjectById(this.projectId);

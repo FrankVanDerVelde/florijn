@@ -151,7 +151,7 @@ export default {
       this.userData = await this.userRepository.getUserById(this.specialistId);
     },
     async fetchProjects() {
-      this.projects = await this.projectRepository.fetchProjects("UNARCHIVED");
+      this.projects = await this.projectRepository.fetchProjectByUserId(this.specialistId);
 
       if (this.projects == null) {
         this.projects = [];

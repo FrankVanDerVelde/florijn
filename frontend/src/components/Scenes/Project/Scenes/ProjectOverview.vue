@@ -59,11 +59,6 @@ export default {
       required: true
     }
   },
-created(){
-  if (this.user == null) {
-    this.$router.push({name: "login"});
-  }
-},
   watch: {
     'project': async function () {
       await Promise.all([this.fetchReports(), this.fetchHourRegistry()])

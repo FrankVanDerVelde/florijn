@@ -30,13 +30,6 @@ export default {
   name: "ProjectList",
   components: {Searchbar, ProjectListDetails},
   inject: ['projectRepository'],
-
-    async beforeCreate(){
-        if (localStorage.getItem("user") == null) {
-            this.$router.push({name: "login"});
-        }
-    },
-
   created() {
     this.fetchProjects();
   },
