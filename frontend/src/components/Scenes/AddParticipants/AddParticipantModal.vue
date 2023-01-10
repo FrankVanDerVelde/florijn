@@ -16,7 +16,7 @@
             <input v-model="roleInput" type="text" id="roleButton"
                    class="bg-neutral-25 border border-neutral-200 text-neutral-900 text-sm rounded-sm focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
                    :placeholder="rolePlaceHolder" @change="roleValidation = false" required>
-            <div v-if="roleValidation">Voer een rol in</div>
+            <div v-if="roleValidation" class="danger">Voer een rol in</div>
 
           </div>
 
@@ -28,7 +28,7 @@
             <input v-model="hourRateInput" type="number" id="hourRateInput"
                    class="bg-neutral-25 border border-neutral-200 text-neutral-900 text-sm rounded-sm focus:ring-primary-300 focus:border-blue-500 block w-full p-2.5"
                    :placeholder="hourRatePlaceHolder" @change="hourRateValidation = false" required>
-            <div v-if="hourRateValidation">Voer het aantal uur in</div>
+            <div v-if="hourRateValidation" class="danger">Voer het aantal uur in</div>
           </div>
           <div class="flex my-10">
             <button class="reject mx-2" @click="$emit('reject')">Cancel</button>
@@ -158,5 +158,8 @@ button {
   color: white;
 }
 
+.danger {
+  color: var(--app_red-300);
+}
 
 </style>

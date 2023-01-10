@@ -90,4 +90,14 @@ export class HourRegistrationRepository {
         let result = await this.#networkClient.executeRequest(path, HttpMethod.POST, body);
         return HourRegistration.fromJSON(result);
     }
+
+    async acceptHourRegistration(hourRegistrationId) {
+        return await this.#networkClient.executeRequest(`/hour-registrations/${hourRegistrationId}/accept`, HttpMethod.POST);
+    }
+
+    async rejectHourRegistration(hourRegistrationId) {
+        return await this.#networkClient.executeRequest(`/hour-registrations/${hourRegistrationId}/reject`, HttpMethod.POST);
+    }
+
+
 }

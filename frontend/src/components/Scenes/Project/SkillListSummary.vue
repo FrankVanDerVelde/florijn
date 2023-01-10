@@ -46,6 +46,6 @@ export default {
 }
 
 .star-space{
-  width: 140px;
+  width: 110px;
 }
 </style>

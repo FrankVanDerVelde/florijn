@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row gap-4">
+  <div class="flex flex-col md:flex-row gap-4">
     <SummaryBox v-for="summary in summaries" :title="summary.title" :value="summary.value" :key="summary.title"/>
   </div>
 
@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        <HoursRow v-for="registry in hourRegistrations"
+        <HoursRow v-for="registry in hourRegistrations.slice(0, 10)"
                   :show-project="true"
                   :key="registry.id"
                   :registry="registry"/>
