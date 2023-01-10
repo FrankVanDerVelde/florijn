@@ -2,7 +2,7 @@
   <div class="page-main-mw px-20 pt-[4em]">
     <div class="container flex flex-col">
       <div class="py-0.5">
-        <p class="back-text" @click="buttonBackPage()">&lt Terug</p>
+        <p class="back-text cursor-pointer" @click="buttonBackPage()">&lt Terug</p>
       </div>
       <div class="flex grid grid-cols-16">
         <div class="flex flex-col row-start-1 col-span-7 p-2 w-full">
@@ -32,7 +32,7 @@
           </div>
           <div class="box flex-col p-2 w-full mt-3">
             <div class="pb-3">
-              <div class="back-text float-right" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
+              <div v-if="this.skills !== []" class="back-text float-right cursor-pointer" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
               <div class="font-bold ml-2">Skills</div>
             </div>
             <div class="my-2 ml-2">
@@ -106,14 +106,14 @@ import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "PublicProfile",
-  inject: ['dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'memoryAvailabilityRepository'],
+  inject: ['assetsService', 'dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'availabilityRepository'],
   components: {ProjectListDetailsSummary, SkillListSummary, Asset},
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user')) ?? {};
     },
     pdfSrc() {
-      return this.fetchService.getAsset(this.resumeURL);
+      return this.assetsService.getAsset(this.resumeURL);
     }
   },
   data() {
@@ -171,7 +171,8 @@ export default {
       this.modalActive = !this.modalActive;
     },
     async viewResume() {
-      this.resumeURL = await this.userRepository.getResumeById(this.specialistId).resumeURL;
+      const resumeData = await this.userRepository.getResumeById(this.specialistId);
+      this.resumeURL = resumeData.resumeURL
 
       if (this.resumeURL == null) {
         this.showResumeFailText = true;
@@ -183,7 +184,8 @@ export default {
     },
     async fetchAvailability() {
       const weekNumber = this.dateService.currentWeekOfYear();
-      this.availability = await this.memoryAvailabilityRepository.fetchAvailabilityForUserInWeek(this.specialistId, weekNumber)
+      const year = this.dateService.currentYear();
+      this.availability = await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.specialistId, weekNumber, year)
 
       for (let i = 0; i < this.availability.length; i++) {
         const dayIndex = this.dateService.dayIndex(this.availability[i].date)
