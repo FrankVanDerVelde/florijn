@@ -248,8 +248,9 @@ public class BackendApplication implements CommandLineRunner {
                 "projects/logo-1.png",
                 new ArrayList<>(), true);
 
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(2).orElse(null), "Designer", 40));
+        // TODO readd user 1
+//        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
+//        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(2).orElse(null), "Designer", 40));
 
         projectRepo.save(ingProject);
 
@@ -257,7 +258,7 @@ public class BackendApplication implements CommandLineRunner {
                 "KPN Network Web Application",
                 "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.", ingClient);
 
-        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
+//        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
 
         projectRepo.save(KPN);
     }
