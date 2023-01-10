@@ -18,15 +18,13 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     List<HourRegistration> findAllByProject(int projectId);
 
     @Query(value = """
-            SELECT DISTINCT h.*
-                FROM hour_registration h
-                INNER JOIN project_participant pp
-                    ON (h.user_id=pp.user_id)
-                LEFT JOIN project p
-                    ON (h.project_id=p.id)
-                WHERE h.user_id = :userId OR p.client_id = :userId
-                ORDER BY `status` IS NULL DESC, `from` DESC""",
-            nativeQuery = true)
+            SELECT hr FROM HourRegistration hr
+            JOIN hr.projectParticipant pp
+            JOIN pp.specialist s
+            JOIN pp.project p
+            WHERE s.id = :userId OR p.client.id = :userId
+            ORDER BY hr.from DESC
+            """)
     List<HourRegistration> findAllByUser(int userId);
 
     @Query(value = """

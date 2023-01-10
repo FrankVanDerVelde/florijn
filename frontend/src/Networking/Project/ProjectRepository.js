@@ -74,4 +74,17 @@ export class ProjectRepository {
         return await this.#networkClient.executeRequestWithFormData(`/projects/${projectId}/update`, HttpMethod.PUT, formData);
     }
 
+    async addParticipant(projectId, body) {
+        return await this.#networkClient.executeRequest(`/projects/${projectId}/participants/add`, HttpMethod.POST, body);
+    }
+
+    async deleteParticipant(projectId, userId) {
+        try {
+            return await this.#networkClient.executeRequest(`/projects/${projectId}/participants/${userId}/delete`, HttpMethod.DELETE);
+        } catch (e) {
+            console.error(e);
+            return e;
+        }
+    }
+
 }

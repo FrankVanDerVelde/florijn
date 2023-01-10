@@ -98,4 +98,10 @@ public class UserController {
     public ResponseEntity<Address> getUsersAddressById(@PathVariable int id) {
         return ResponseEntity.ok(this.userBusinessLogic.getUsersAddressById(id));
     }
+
+    @PostMapping(path = "/specialists/skills")
+    public ResponseEntity<List<User>> getSpecialistsBySkills(@RequestBody List<Integer> skills) {
+        System.out.println("skills = " + skills.toString());
+        return ResponseEntity.ok(this.userBusinessLogic.getSpecialistsBySkills(skills));
+    }
 }

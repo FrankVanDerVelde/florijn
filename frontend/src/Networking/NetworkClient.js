@@ -4,10 +4,12 @@ export class NetworkClient {
 
     #baseURL;
     #storedTokenRepository;
+    #loggingEnabled
 
     constructor(baseURL = import.meta.env.VITE_BACKEND_URL) {
         this.#baseURL = baseURL;
         this.#storedTokenRepository = StoredTokenRepository.shared;
+        this.#loggingEnabled = true;
     }
 
     /**
@@ -123,15 +125,21 @@ export class NetworkClient {
     }
 
     #logFetchConfiguration(method, url, body, options) {
-        // console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+        if (this.#loggingEnabled) {
+            console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+        }
     }
 
     #logNetworkResponse(response, data) {
-        // console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+        if (this.#loggingEnabled) {
+            console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+        }
     }
 
     #logNetworkError(method, url, options, error) {
-        // console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+        if (this.#loggingEnabled) {
+            console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+        }
     }
 
     /**
@@ -160,13 +168,16 @@ export class NetworkClient {
      */
     #signHeaderWithToken(headerFields) {
         const token = this.#storedTokenRepository?.getToken();
-        // console.log(`token: ${this.#storedTokenRepository}`);
         if (token) {
             return {
                 'Authorization': `Bearer ${token}`,
                 ...headerFields
             }
         } else {
+            if (this.#loggingEnabled) {
+                console.warn("NetworkClient signHeaderWithToken: No JWT Token found.")
+                console.log(this.#storedTokenRepository);
+            }
             return headerFields;
         }
     }
