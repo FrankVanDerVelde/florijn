@@ -70,7 +70,7 @@ export default {
       this.selectedSpecialist = null;
 
       if (specialist.role === "" || specialist.hourlyRate === "") {
-        console.log("role or hourlyRate is null");
+        // console.log("role or hourlyRate is null");
         this.validation = true;
         return;
       }
@@ -114,7 +114,6 @@ export default {
     },
 
     deleteParticipant(selectedParticipant) {
-      console.log(selectedParticipant)
       this.selectedDeleteSpecialist = null;
       const participant = selectedParticipant.participant.participant;
       this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)

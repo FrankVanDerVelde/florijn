@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     handleSkillUpdate(skill, newValue){
-        // console.log(skill, newValue)
             this.$emit("updateSkill", skill.id, newValue)
         }
   }

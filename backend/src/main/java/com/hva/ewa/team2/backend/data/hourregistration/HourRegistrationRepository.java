@@ -31,9 +31,9 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
             SELECT DISTINCT h.*
                 FROM hour_registration h
                 INNER JOIN project_participant p
-                    ON (h.user_id=p.user_id)
+                    ON (h.project_participant_id=p.id)
                 WHERE h.project_id = :projectId
-                    AND h.user_id = :userId
+                    AND p.user_id = :userId
                 ORDER BY `status` IS NULL DESC, `from` DESC""",
             nativeQuery = true)
     List<HourRegistration> findAllByProjectParticipant(int projectId, int userId);
@@ -49,8 +49,11 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     @Query(value = """
             SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0)
                 FROM hour_registration h
+                INNER JOIN project_participant pp
+                    ON (pp.project_id = h.project_id
+                    AND pp.id = h.project_participant_id)
                 WHERE h.project_id = :projectId
-                    AND h.user_id = :userId
+                    AND pp.user_id = :userId
                     AND h.status <> 'REJECTED'""",
             nativeQuery = true)
     Double getTotalHoursForProject(int projectId, int userId);
@@ -68,8 +71,11 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     @Query(value = """
             SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0)
                 FROM hour_registration h
+                INNER JOIN project_participant pp
+                    ON (pp.project_id = h.project_id
+                    AND pp.id = h.project_participant_id)
                 WHERE h.project_id = :projectId
-                    AND h.user_id = :userId
+                    AND pp.user_id = :userId
                     AND h.status <> 'REJECTED'
                     AND h.`from` BETWEEN :from AND :to""",
             nativeQuery = true)
@@ -80,7 +86,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
                 FROM hour_registration h
                 INNER JOIN project_participant pp
                     ON (pp.project_id = h.project_id
-                    AND pp.user_id = h.user_id)
+                    AND pp.id = h.project_participant_id)
                 WHERE h.project_id = :projectId
                     AND h.status <> 'REJECTED'""",
             nativeQuery = true)
@@ -90,9 +96,9 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     @Query(value = """
             SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600 * pp.hourly_rate), 0)
                 FROM hour_registration h
-                INNER JOIN project_participant pp 
-                    ON (pp.project_id = h.project_id 
-                    AND pp.user_id = h.user_id)
+                INNER JOIN project_participant pp
+                    ON (pp.project_id = h.project_id
+                    AND pp.id = h.project_participant_id)
                 WHERE h.project_id = :projectId 
                     AND pp.user_id = :userId 
                     AND h.status <> 'REJECTED'""",
@@ -104,7 +110,7 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
                 FROM hour_registration h
                 INNER JOIN project_participant pp
                     ON (pp.project_id = h.project_id
-                    AND pp.user_id = h.user_id)
+                    AND pp.id = h.project_participant_id)
                 LEFT JOIN project p
                     ON (h.project_id=p.id)
                 WHERE (pp.user_id = :userId OR p.client_id = :userId)
@@ -115,9 +121,12 @@ public interface HourRegistrationRepository extends CrudRepository<HourRegistrat
     @Query(value = """
             SELECT COALESCE(SUM(time_to_sec(timediff(h.to, h.from)) / 3600),0)
                 FROM hour_registration h
+                INNER JOIN project_participant pp
+                    ON (pp.project_id = h.project_id
+                    AND pp.id = h.project_participant_id)
                 LEFT JOIN project p
                     ON (h.project_id=p.id)
-                WHERE (h.user_id = :userId OR p.client_id = :userId)
+                WHERE (pp.user_id = :userId OR p.client_id = :userId)
                     AND h.status <> 'REJECTED'""",
             nativeQuery = true)
     Double getTotalHoursForUser(Integer userId);

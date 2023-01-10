@@ -126,6 +126,7 @@ export default {
         },
         costs() {
             const time = this.dateService.calculateTimeSpent(this.registry.from, this.registry.to)[2];
+            console.log("peppa", time)
             return Math.round(time * this.registry.participant.hourlyRate * 100) / 100;
         },
         relativeDate() {

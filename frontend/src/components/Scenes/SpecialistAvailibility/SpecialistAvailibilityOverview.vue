@@ -142,7 +142,6 @@ export default {
     },
 
     sortAvailabilityPerDay(weekAvailability) {
-      console.log(weekAvailability)
       this.availability.clear();
       weekAvailability.forEach(availability => {
         let dayIndex = this.dateService.dayIndex(availability.date);

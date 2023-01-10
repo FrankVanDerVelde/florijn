@@ -53,7 +53,7 @@ export class HourRegistration {
         const to = new Date(this.to);
 
         let options = { hour: "2-digit", minute: "2-digit" };
-        console.log(typeof from);
+
         const fromFormatted = from.toLocaleTimeString('nl-nl', options);
         const toFormatted = to.toLocaleTimeString('nl-nl', options);
 

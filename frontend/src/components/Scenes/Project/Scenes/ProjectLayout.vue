@@ -72,7 +72,7 @@ export default {
 
         // when a non-existing project is requested, redirect to the /projects page.
         if (this.user != null && this.project == null) {
-            this.$router.redirect({name: 'projects'});
+            this.$router.push({name: 'projects'});
         }
     },
 }

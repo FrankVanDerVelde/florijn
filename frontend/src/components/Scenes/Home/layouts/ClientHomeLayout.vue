@@ -82,7 +82,6 @@ export default {
     },
     async loadHourRegistrations() {
       this.hourRegistrations = await this.hourRegistrationRepository.fetchAllFor(this.user.id);
-      console.log(this.hourRegistrations)
     },
     formatMoney(string) {
       return new Intl.NumberFormat('nl-NL', {style: 'currency', currency: 'EUR'}).format(string);

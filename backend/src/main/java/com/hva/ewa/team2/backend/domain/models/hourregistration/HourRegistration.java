@@ -26,7 +26,7 @@ public class HourRegistration {
     @Setter
     @JsonProperty("participant")
     @ManyToOne
-    @JoinColumn(name = "user_id")
+//    @JoinColumn(name = "user_id")
     private ProjectParticipant projectParticipant;
 
     @Getter

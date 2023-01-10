@@ -24,7 +24,7 @@ export class StoredTokenRepository {
             window.localStorage.removeItem(this.#BROWSER_STORAGE_ITEM_NAME);
             window.localStorage.removeItem("user");
         } else {
-            console.log("New token for " + user.firstName + ": " + token);
+            // console.log("New token for " + user.firstName + ": " + token);
             window.sessionStorage.setItem(this.#BROWSER_STORAGE_ITEM_NAME, token);
             window.localStorage.setItem(this.#BROWSER_STORAGE_ITEM_NAME, token);
             window.localStorage.setItem("user", JSON.stringify(user));

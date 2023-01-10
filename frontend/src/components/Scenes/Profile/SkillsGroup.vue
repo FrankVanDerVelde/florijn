@@ -74,8 +74,6 @@ export default {
                 return {id: skill.id, rating: skill.rating}
             })
 
-            console.log(response)
-
             if (!this.active) {
                 this.skillsRepository.updateUserSkillGroup(this.user.id, response);
             }

@@ -134,10 +134,7 @@ export class InMemoryHourRegistrationRepository {
     }
 
     #removeHourRegistration(id) {
-        console.log('removeHourRegistration');
-        console.log(this.#hourRegistrations);
         this.#hourRegistrations = this.#hourRegistrations.filter(hr => hr.id !== id);
-        console.log(this.#hourRegistrations);
     }
 
     #getRandomProject() {

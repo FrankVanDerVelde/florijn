@@ -30,7 +30,6 @@ export default {
   },
     data() {
         return {
-          id: localStorage.getItem("id"),
             sideBarLinks: [{
                 icon: 'fa-solid fa-user',
                 name: 'profiel',
@@ -62,7 +61,12 @@ export default {
                 roles: ["SPECIALIST"]
             },
         ],
-        userRole: JSON.parse(localStorage.getItem("user")).role
+        userRole: JSON.parse(localStorage.getItem("user"))?.role
+        }
+    },
+    async created() {
+        if (!JSON.parse(localStorage.getItem("user"))) {
+            this.$router.push({name: 'login'});
         }
     }
 }

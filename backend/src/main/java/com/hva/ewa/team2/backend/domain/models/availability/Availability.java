@@ -48,10 +48,18 @@ public class Availability {
         this.from = from;
         this.to = to;
     }
-
-
-
     public Availability() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Availability{" +
+                "id=" + id +
+                ", user=" + user +
+                ", date=" + date +
+                ", from=" + from +
+                ", to=" + to +
+                '}';
     }
 }
