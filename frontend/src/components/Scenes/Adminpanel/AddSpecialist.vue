@@ -1,6 +1,6 @@
 <template>
-  <div class="flex page-main-mw">
-    <div class="mt-14">
+  <div class="page-main-mw flex">
+    <div class="mt-14 ml-14">
       <div class="text-[34px] font-bold">Specialist toevoegen</div>
       <form class="pt-10 flex flex-col gap-5" @submit.prevent="handleSaveTapped">
         <div class="flex flex-col">
@@ -31,14 +31,14 @@
 
         <div class="flex flex-col">
           <label for="Persoonsgegevens" class="font-medium text-lg mb-2">Login gegevens</label>
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2 w-full">
             <div>
-              <input type="text" v-model="email" placeholder="E-mail" name="email">
+              <input class="w-full" type="text" v-model="email" placeholder="E-mail" name="email">
               <p v-if="errors.email" class="validation-label">{{errors.email}}</p>
             </div>
 
             <div>
-              <input type="text" v-model="password" placeholder="Wachtwoord" name="password">
+              <input class="w-full" type="password" v-model="password" placeholder="Wachtwoord" name="password">
               <p v-if="errors.password" class="validation-label">{{errors.password}}</p>
             </div>
 
