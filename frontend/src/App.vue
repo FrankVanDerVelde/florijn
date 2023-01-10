@@ -32,7 +32,7 @@ export default {
       specialistFetchService: new FetchService("/specialists"),
       userFetchService: new FetchService("users"),
       fetchService: new FetchService(""),
-      memoryAvailabilityRepository: new AvailabilityRepository(),
+      availabilityRepository: new AvailabilityRepository(),
       storedTokenRepository: storedTokenRepository,
       authenticationRepository: new AuthenticationRepository(storedTokenRepository),
       holidays: new Holidays('NL'),
