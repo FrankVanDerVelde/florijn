@@ -11,17 +11,17 @@
           <div class="font-medium text-neutral-500">{{ participant.role }}</div>
 
           <div v-if="this.skill.length === 0" class="flex flex-row-reverse mt-1">
-            <div class="add-participant hover:border-primary-500 cursor-pointer">
-              <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+            <div class="add-participant hover:border-primary-500 cursor-pointer" @click="$emit('addParticipant', participant)">
+              <font-awesome-icon icon="plus" />
             </div>
-            <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1">
-              <font-awesome-icon icon="user" @click="viewUserProfile(this.participant)"/>
+            <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1" @click="viewUserProfile(this.participant)">
+              <font-awesome-icon icon="user" />
             </div>
           </div>
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skillRating.slice(0, 5)" :key="skills.id">{{ skills.name }}
+            <li class="accent-neutral-700 text-overflow w-auto" v-for="skills in skillRating.slice(0, 5)" :key="skills.id">{{ skills.name }}
             </li>
           </ul>
         </div>
@@ -29,11 +29,11 @@
       <div class="flex ml-auto p-0 relative">
         <div v-if="this.skill.length !== 0">
 
-          <div class="add-button hover:border-primary-500 cursor-pointer">
-            <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+          <div class="add-button hover:border-primary-500 cursor-pointer" @click="$emit('addParticipant', participant)">
+            <font-awesome-icon icon="plus"/>
           </div>
-          <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
-            <font-awesome-icon icon="user" @click="viewUserProfile(this.participant)"/>
+          <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer" @click="viewUserProfile(this.participant)">
+            <font-awesome-icon icon="user"/>
           </div>
         </div>
         <div class="bottom-0 ml-2 self-end m-0 p-0">
@@ -123,6 +123,13 @@ export default {
 </script>
 
 <style scoped>
+
+.text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+}
 
 .add-button {
   position: absolute;
