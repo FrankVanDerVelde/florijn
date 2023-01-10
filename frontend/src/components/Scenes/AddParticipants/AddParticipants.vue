@@ -20,9 +20,9 @@
                           @selectedSkill="skillSelect"/>
     </div>
 
-<!--    <div v-if="Object.keys(this.filteredParticipantsList).length === 0" class="muted error m-auto">-->
-<!--      Geen deelnemers gevonden met de huidige zoekopdracht-->
-<!--    </div>-->
+    <div v-if="Object.keys(this.filteredParticipantsList).length === 0" class="muted error m-auto">
+      Geen deelnemers gevonden met de huidige zoekopdracht
+    </div>
 
     <div class="ml-10 p-5 m-0 grid grid-cols-3 participant-grid" v-if="selectedFilters.length === 0">
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
@@ -172,8 +172,15 @@ export default {
   .participant-grid {
     grid-template-columns: 1fr;
   }
-
 }
+
+@media screen and (max-width: 1080px) {
+  .participant-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
 
 .muted.error {
   margin-top: 4px;
