@@ -1,43 +1,43 @@
 <template >
-  <div class="flex flex-col mt-4 ml-2 p-3 pr-2 fa-border rounded-xl ">
+  <div class="flex flex-col mt-4 ml-2 p-3 pr-2 w-auto fa-border rounded-xl ">
     <div class="flex">
-
       <div>
-        <img :src="participant.avatarUrl" alt="participant avatar" class="icon-container">
+        <Asset :src="participant.avatarUrl" alt="Avatar" class="icon-container"/>
       </div>
 
       <div class="ml-3">
         <div>
           <div class="font-bold">{{ name }}</div>
           <div class="font-medium text-neutral-500">{{ participant.role }}</div>
+
           <div v-if="this.skill.length === 0" class="flex flex-row-reverse mt-1">
-            <div class="add-participant hover:border-primary-500 cursor-pointer">
-              <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+            <div class="add-participant hover:border-primary-500 cursor-pointer" @click="$emit('addParticipant', participant)">
+              <font-awesome-icon icon="plus" />
             </div>
-            <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1">
-              <font-awesome-icon icon="user"/>
+            <div class="add-project hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer mr-1" @click="viewUserProfile(this.participant)">
+              <font-awesome-icon icon="user" />
             </div>
           </div>
         </div>
         <div>
           <ul>
-            <li class="accent-neutral-700" v-for="skills in skill.slice(0, 5)" :key="skills.id">{{ skills.name }}
+            <li class="accent-neutral-700 text-overflow w-auto" v-for="skills in skillRating.slice(0, 5)" :key="skills.id">{{ skills.name }}
             </li>
           </ul>
         </div>
       </div>
-
-      <div class="flex m-0 ml-2 p-0 relative">
+      <div class="flex ml-auto p-0 relative">
         <div v-if="this.skill.length !== 0">
-          <div class="add-button hover:border-primary-500 cursor-pointer">
-            <font-awesome-icon icon="plus" @click="$emit('addParticipant', participant)"/>
+
+          <div class="add-button hover:border-primary-500 cursor-pointer" @click="$emit('addParticipant', participant)">
+            <font-awesome-icon icon="plus"/>
           </div>
-          <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer">
+          <div class="profile-button hover:border-neutral-100 hover:bg-neutral-50 cursor-pointer" @click="viewUserProfile(this.participant)">
             <font-awesome-icon icon="user"/>
           </div>
         </div>
-        <div class="bottom-0 right-0 ml-3.5 self-end m-0 p-0">
-          <div class="star-color" v-for="skills in getSkills.slice(0,5)" :key="skills">
+        <div class="bottom-0 ml-2 self-end m-0 p-0">
+          <div class="star-color" v-for="skills in skillRating.slice(0,5)" :key="skills">
             <font-awesome-icon v-for="rating in skills.rating" :key="rating" icon="star"/>
           </div>
         </div>
@@ -51,23 +51,48 @@
 
 <script>
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "ParticipantCard",
-  components: {FontAwesomeIcon},
+  components: {Asset, FontAwesomeIcon},
   emits: ['addParticipant'],
+  inject: ['skillsRepository'],
+
+  created() {
+    this.fetchSkills();
+  },
 
   computed: {
     name() {
       let lastNameParts = this.participant.lastName.split(" ");
       return this.participant.firstName + " " + lastNameParts[lastNameParts.length - 1].charAt(0) + ".";
     },
-    getSkills() {
-      return this.participant.skills.filter(skill => this.skill.some(s => s.id === skill.id));
+
+  },
+  methods: {
+    async fetchSkills() {
+      this.userSkills = await this.skillsRepository.fetchUserSkills(this.participant.id)
+
+      for (let i = 0; i < this.userSkills.length; i++) {
+        if (this.skill.includes(this.userSkills[i].skill.id)) {
+          if (this.userSkills[i].rating === 0) {
+            continue;
+          }
+          this.skillRating.push({
+            skillId: this.userSkills[i].skill.id,
+            name: this.userSkills[i].skill.name,
+            rating: this.userSkills[i].rating
+          })
+        }
+      }
+    },
+    viewUserProfile(user) {
+      if (user.role === "SPECIALIST"){
+        this.$router.push("/profile/public/" + user.id);
+      }
     }
   },
-  methods: {}
-  ,
 
   props: {
     participant: {
@@ -90,12 +115,21 @@ export default {
       hourPlaceholder: "Voeg een hourlyRate toe",
       roleInput: "",
       hourInput: "",
+      userSkills: [],
+      skillRating: []
     }
   }
 }
 </script>
 
 <style scoped>
+
+.text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+}
 
 .add-button {
   position: absolute;

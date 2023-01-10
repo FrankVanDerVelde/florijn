@@ -1,4 +1,4 @@
-import {HourRegistration} from "../../components/models/HourRegistration.js";
+import {HourRegistration} from "../../components/models/HourRegistration/HourRegistration.js";
 import {Project} from "../../components/models/Project.js";
 import moment from "moment/moment.js";
 
@@ -134,10 +134,7 @@ export class InMemoryHourRegistrationRepository {
     }
 
     #removeHourRegistration(id) {
-        console.log('removeHourRegistration');
-        console.log(this.#hourRegistrations);
         this.#hourRegistrations = this.#hourRegistrations.filter(hr => hr.id !== id);
-        console.log(this.#hourRegistrations);
     }
 
     #getRandomProject() {

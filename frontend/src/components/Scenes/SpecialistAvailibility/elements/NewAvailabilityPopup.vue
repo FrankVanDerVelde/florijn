@@ -82,11 +82,11 @@ import moment from "moment";
 
 export default {
   name: "NewAvailabilityPopup",
-  inject: ['projectFetchService', 'memoryAvailabilityRepository', 'dateService', 'holidays'],
+  inject: ['projectFetchService', 'availabilityRepository', 'dateService', 'holidays', 'storedTokenRepository'],
   emits: ['dismiss-clicked', 'activity-added', 'activity-cancel-clicked', 'availability-changed'],
   props: {
-    dayIndex: Number,
-    weekIndex: Number,
+    year: Number,
+    dayOfYear: Number,
     availability: Availability
   },
   data() {
@@ -99,11 +99,13 @@ export default {
       holidayName: null,
       didEncounterError: false,
       editingEnabled: true,
-      userId: Number(localStorage.getItem('id'))
+      userId: null,
     }
   },
   created() {
-    this.momentDate = this.dateService.dayOfWeek(this.weekIndex, this.dayIndex).startOf('day');
+    this.userId = this.storedTokenRepository.getUser().id;
+
+    this.momentDate = moment().year(this.year).dayOfYear(this.dayOfYear).startOf('day');
     if (this.availability) {
       this.from = moment(this.availability.from).format('HH:mm');
       this.to = moment(this.availability.to).format('HH:mm');
@@ -112,6 +114,8 @@ export default {
 
     if (this.momentDate.isSameOrBefore(moment())) {
       this.editingEnabled = false;
+    } else {
+      this.editingEnabled = true;
     }
   },
 
@@ -140,8 +144,7 @@ export default {
         const date = this.momentDate.format('yyyy-MM-DD')
         const from = moment(this.from, 'hh:mm').format('HH:mm');
         const to = moment(this.to, 'hh:mm').format('HH:mm');
-        let result = await this.memoryAvailabilityRepository.createAvailability(this.userId, date, from, to);
-        console.log(result);
+        let result = await this.availabilityRepository.createAvailability(this.userId, date, from, to);
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
@@ -150,14 +153,11 @@ export default {
     },
 
     async updateAvailability() {
-      console.log('updateAvailability');
       try {
-        console.log(this.availability);
         const date = moment(this.availability.date).format('yyyy-MM-DD');
         const from = moment(this.from, 'HH:mm').format('HH:mm');
         const to = moment(this.to, 'HH:mm').format('HH:mm');
-        console.log([date, from, to]);
-        await this.memoryAvailabilityRepository.updateAvailability(this.availability.id, date, from, to);
+        await this.availabilityRepository.updateAvailability(this.availability.id, date, from, to);
         this.notifyAvailabilityChanged();
       } catch (e) {
         console.error(e);
@@ -171,7 +171,7 @@ export default {
 
     async handleDeleteTapped() {
       try {
-        await this.memoryAvailabilityRepository.deleteAvailability(this.availability.id);
+        await this.availabilityRepository.deleteAvailability(this.availability.id);
         this.notifyAvailabilityChanged()
       } catch (e) {
         console.error(e);

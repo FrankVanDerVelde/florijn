@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ public abstract class User {
     @JsonView(EssentialInfo.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Integer id;
 
     @Getter
@@ -30,6 +32,7 @@ public abstract class User {
 
     @Getter
     @Setter
+    @JsonIgnore
     public String password;
 
     @Getter
@@ -67,7 +70,7 @@ public abstract class User {
         }
     }
 
-    public class EssentialInfo {
+    public static class EssentialInfo {
 
     }
 

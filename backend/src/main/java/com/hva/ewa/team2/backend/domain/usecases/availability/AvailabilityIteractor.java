@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.WeekFields;
 import java.util.*;
@@ -132,7 +133,6 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic {
     @Override
     public Optional<Availability> handleGetAvailabilityById(int id) throws Exception {
         return availabilityRepository.findById(id);
-
     }
 
     @Override
@@ -172,11 +172,18 @@ public class AvailabilityIteractor implements AvailabilityBusinessLogic {
 
 
     private boolean isOverlapping(Availability availability, DateOverlapRequest request) {
+        if (!isOnSameDay(availability.getDate(), request.getDate()))
+            return false;
+
         return availability.getFrom().isBefore(request.getFrom()) && availability.getTo().isAfter(request.getTo()) ||
                 availability.getFrom().isAfter(request.getFrom()) && availability.getTo().isBefore(request.getTo()) ||
                 availability.getFrom().isBefore(request.getFrom()) && availability.getTo().isAfter(request.getFrom()) ||
                 availability.getFrom().isBefore(request.getTo()) && availability.getTo().isAfter(request.getTo()) ||
                 availability.getFrom().equals(request.getFrom()) && availability.getTo().equals(request.getTo());
+    }
+
+    private boolean isOnSameDay(LocalDate lhs, LocalDate rhs) {
+        return lhs.atStartOfDay().isEqual(rhs.atStartOfDay());
     }
 
     private boolean checkIfAvailabilityIsInThePast(LocalDate date) {

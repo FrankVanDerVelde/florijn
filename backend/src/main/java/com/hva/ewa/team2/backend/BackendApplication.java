@@ -21,22 +21,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.EntityManagerHolder;
 
+import javax.persistence.EntityManagerFactory;
+import javax.print.attribute.standard.Media;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @SpringBootApplication
 public class BackendApplication implements CommandLineRunner {
 
     private final UserRepository userRepo;
-    private SkillRepository skillRepo;
-    private SkillGroupRepository skillGroupRepository;
-    private ExpertiseRepository expertiseRepository;
+    private final SkillRepository skillRepo;
+    private final SkillGroupRepository skillGroupRepository;
+    private final ExpertiseRepository expertiseRepository;
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
     private final DateService dateService;
@@ -69,43 +72,226 @@ public class BackendApplication implements CommandLineRunner {
     }
 
     private void loadUsers() {
-        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
-        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
-        Address dummyAddress3 = new Address("Diemen", "Gert Jan Straat", 14, "A", "1133XJ");
 
-        userRepo.save(new Specialist(1, "withneyk@florijn.com", "test", "users/avatars/1.avif", "Withney", "Keulen", dummyAddress1, null));
-        userRepo.save(new Specialist(2, "jant@florijn.com", "test", "users/avatars/2.avif", "Jan", "Timmermans", dummyAddress2, null));
+        // admins
+        userRepo.save(new Admin(0, "admin1@test.com", "test", "users/avatars/admin1.jpeg", "Maria", "de Jong"));
+        userRepo.save(new Admin(0, "admin2@test.com", "test", "users/avatars/admin2.jpeg", "Hans", "Oudekerk"));
 
-        userRepo.save(new Admin(3, "admin@test.com", "test", null, "Admin", "Test"));
-        userRepo.save(new Specialist(4, "specialist@test.com", "test", "users/avatars/3.avif", "Kingsley", "Mckenzie", dummyAddress3, null));
-        userRepo.save(new Client(5, "contact@ing.nl", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
+        // clients
+        userRepo.save(new Client(0, "client1@test.com", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
+        userRepo.save(new Client(0, "client2@test.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
+        userRepo.save(new Client(0, "client3@test.com", "test", "users/avatars/mediamarktlogo.png", "Media Markt", "users/banners/mediamarktbanner.jpg"));
+        userRepo.save(new Client(0, "client4@test.com", "test", "users/avatars/kpn-logo.png", "KPN", "users/banners/kp-banner.jpeg"));
 
-//        setRandomSkills(new Specialist(6, "specialist2@test.com", "test", "users/avatars/6.png", "Sam", "Janssen", dummyAddress1));
-//        setRandomSkills(new Specialist(7, "specialist3@test.com", "test", "users/avatars/3.avif", "Jop", "Christensen", dummyAddress2));
+        // specialists
+        userRepo.save(
+                new Specialist(0
+                , "specialist1@test.com",
+                        "test",
+                        "users/avatars/1.avif",
+                        "Whitney", "Keulen",
+                        new Address(
+                                "Hoorn",
+                                "Noorder Plantsoen",
+                                12,
+                                "",
+                                "1623AB"),
+                        "users/resumes/sample-resume.pdf"));
 
-        userRepo.save(new Client(8, "contact@microsoft.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
+        userRepo.save(
+                new Specialist(0,
+                "specialist2@test.com",
+                        "test",
+                        "users/avatars/specialist2.jpeg",
+                        "Jan", "Timmermans",
+                        new Address(
+                                "Diemen-Zuid",
+                                "Gert Jan Straat",
+                                14,
+                                "A",
+                                "1133XJ"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(0,
+                "specialist3@test.com",
+                        "test",
+                        "users/avatars/specialist3.jpeg",
+                        "Kingsley", "Mckenzie",
+                        new Address(
+                                "Diemen-Noord",
+                                "Beren straat",
+                                31,
+                                "B",
+                                "1432LM"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist4@test.com",
+                        "test",
+                        "users/avatars/specialist4.jpeg",
+                        "Albert",
+                        "van Hof",
+                        new Address(
+                                "Doordrecht",
+                                "Wester plas",
+                                63,
+                                "",
+                                "1104EX"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist5@test.com",
+                        "test",
+                        "users/avatars/specialist5.jpeg",
+                        "Anna",
+                        "Arends",
+                        new Address(
+                                "Groningen",
+                                "Groniger straat",
+                                13,
+                                "A",
+                                "2504EX"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist6@test.com",
+                        "test",
+                        "users/avatars/specialist6.jpeg",
+                        "Ben",
+                        "de Wilde",
+                        new Address(
+                                "Avenhorn",
+                                "Westerkogge straat",
+                                13,
+                                "",
+                                "5230PL"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist7@test.com",
+                        "test",
+                        "users/avatars/specialist7.jpeg",
+                        "David",
+                        "de Wit",
+                        new Address(
+                                "Maastricht",
+                                "Oesterstraat",
+                                1233,
+                                "",
+                                "1264AX"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        8,
+                        "specialist8@test.com",
+                        "test",
+                        "users/avatars/specialist8.jpeg",
+                        "Gloria",
+                        "Gonzales",
+                        new Address(
+                                "Bergen op Soom",
+                                "Bergenstraat",
+                                123,
+                                "",
+                                "7264AL"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist9@test.com",
+                        "test",
+                        "users/avatars/specialist9.jpeg",
+                        "Jannie",
+                        "Verstegen",
+                        new Address(
+                                "Middenmeer",
+                                "Leegwater straat",
+                                23,
+                                "",
+                                "1264AB"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        0,
+                        "specialist10@test.com",
+                        "test",
+                        "users/avatars/specialist10.jpeg",
+                        "Kim",
+                        "Whitfield",
+                        new Address(
+                                "Arnhem",
+                                "Gelrestraat",
+                                63,
+                                "H",
+                                "2364AB"),
+                        "users/resumes/sample-resume.pdf"));
+
     }
 
     private void loadProjects() {
-        Client ingClient = (Client) userRepo.findById(5).orElse(null);
+        List<Client> allClients = userRepo.findUsersByRole(User.Role.CLIENT, Client.class);
+        List<Specialist> allSpecialist = userRepo.findUsersByRole(User.Role.SPECIALIST, Specialist.class);
 
-        Project ingProject = new Project(0,
-                "ING Banking Web Application",
-                "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.",
+        Client ingClient = allClients.stream().filter(client -> client.getName().equals("ING")).findAny().orElse(null);
+        Client microsoftClient = allClients.stream().filter(client -> client.getName().equals("Microsoft")).findAny().orElse(null);
+        Client mediaMarktClient = allClients.stream().filter(client -> client.getName().equals("Media Markt")).findAny().orElse(null);
+        Client KPNClient = allClients.stream().filter(client -> client.getName().equals("KPN")).findAny().orElse(null);
+
+        // ING
+        Project ingProject = new Project(
+                0,
+                "ING bankier web applicatie",
+                "De nieuwe web applicatie voor internet bankieren bij ING.",
                 ingClient,
                 "projects/logo-1.png",
-                new ArrayList<>(), true);
+                new ArrayList<>(),
+                true);
 
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
-        ingProject.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(2).orElse(null), "Designer", 40));
+        ingProject.addSpecialist(new ProjectParticipant(allSpecialist.get(0), "Lead Developer", 60));
+        ingProject.addSpecialist(new ProjectParticipant(allSpecialist.get(1), "Designer", 40));
 
         projectRepo.save(ingProject);
 
-        Project KPN = new Project(0,
-                "KPN Network Web Application",
-                "Website ontwikkeling voor Florijn. Hier komt een korte beschrijving van het project.", ingClient);
+        // Microsoft
+        Project Microsoft = new Project(0,
+                "Microsoft smart design",
+                "The latest all in one design tool, for any kind of product be it digital or analog.",
+                microsoftClient);
 
-        KPN.addSpecialist(new ProjectParticipant((Specialist) userRepo.findById(1).orElse(null), "Lead Developer", 60));
+        Microsoft.addSpecialist(new ProjectParticipant(allSpecialist.get(2), "Senior developer", 80));
+        Microsoft.addSpecialist(new ProjectParticipant(allSpecialist.get(3), "Senior designer", 80));
+
+        projectRepo.save(Microsoft);
+
+        Project MediaMarkt = new Project(0,
+                "Media markt VR application",
+                "De nieuwe VR applicatie voor een compleet nieuwe moderne winkel ervaring. Met deze applicatie zal het mogenlijk worden om een digitale media markt winkel te bezoeken in VR, producten te bekijken en uit te proberen en ze vervolgens te bestellen.",
+                mediaMarktClient);
+
+        MediaMarkt.addSpecialist(new ProjectParticipant(allSpecialist.get(4), "VR specialist", 120));
+        MediaMarkt.addSpecialist(new ProjectParticipant(allSpecialist.get(5), "3D animator", 100));
+
+        projectRepo.save(MediaMarkt);
+
+        Project KPN = new Project(0,
+                "KPN all in one service manager",
+                "De nieuwe service manager voor KPN telefoneren, internet en tv.",
+                KPNClient);
+
+        KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(6), "Network specialist", 50));
+        KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(7), "Designer", 60));
 
         projectRepo.save(KPN);
     }
@@ -216,88 +402,115 @@ public class BackendApplication implements CommandLineRunner {
     }
 
     public void loadHourRegistrations() {
-        System.out.println("=== IMPORTING HOURS ===");
-        Project testProject = projectRepo.findById(1).orElse(null);
+        List<Project> allProjects = projectRepo.findAll();
 
-        final ProjectParticipant developer = testProject.getParticipantByUserId(1);
-        final ProjectParticipant designer = testProject.getParticipantByUserId(2);
+        for (Project project: allProjects) {
+            List<ProjectParticipant> projectOneMembers = project.getParticipants();
+            System.out.println(project.getParticipants());
+            hourRegistrationRepo.save(new HourRegistration(
+                    0,
+                    project,
+                    projectOneMembers.get(0),
+                    dateService.currentDay(-2, 10, 0),
+                    dateService.currentDay(-2, 12, 0),
+                    "Worked on back-end",
+                    HourRegistration.Status.ACCEPTED
+            ));
+            hourRegistrationRepo.save(new HourRegistration(
+                    0,
+                    project,
+                    projectOneMembers.get(1),
+                    dateService.currentDay(-1, 8, 30),
+                    dateService.currentDay(-1, 12, 0),
+                    "Created a house style and logo",
+                    HourRegistration.Status.REJECTED
+            ));
+            hourRegistrationRepo.save(new HourRegistration(
+                    0,
+                    project,
+                    projectOneMembers.get(0),
+                    dateService.currentDay(12, 15),
+                    dateService.currentDay(16, 0),
+                    "Worked on front-end",
+                    HourRegistration.Status.ACCEPTED
+            ));
+            hourRegistrationRepo.save(new HourRegistration(
+                    0,
+                    project,
+                    projectOneMembers.get(0),
+                    dateService.currentDay(8, 30),
+                    dateService.currentDay(12, 0),
+                    "Created rest api routes"
+            ));
+            hourRegistrationRepo.save(new HourRegistration(
+                    0,
+                    project,
+                    projectOneMembers.get(1),
+                    dateService.currentDay(13, 0),
+                    dateService.currentDay(17, 30),
+                    "Designed landing page"
+            ));
+        }
 
-        hourRegistrationRepo.save(new HourRegistration(
-                0,
-                testProject,
-                developer,
-                dateService.currentDay(-2, 10, 0),
-                dateService.currentDay(-2, 12, 0),
-                "Gewerkt aan het project",
-                HourRegistration.Status.ACCEPTED
-        ));
-        hourRegistrationRepo.save(new HourRegistration(
-                0,
-                testProject,
-                designer,
-                dateService.currentDay(-1, 8, 30),
-                dateService.currentDay(-1, 12, 0),
-                "Gewerkt aan het project",
-                HourRegistration.Status.REJECTED
-        ));
-        hourRegistrationRepo.save(new HourRegistration(
-                0,
-                testProject,
-                developer,
-                dateService.currentDay(12, 15),
-                dateService.currentDay(16, 0),
-                "Gewerkt aan het project",
-                HourRegistration.Status.ACCEPTED
-        ));
-        hourRegistrationRepo.save(new HourRegistration(
-                0,
-                testProject,
-                developer,
-                dateService.currentDay(8, 30),
-                dateService.currentDay(12, 0),
-                "Gewerkt aan het project"
-        ));
-        hourRegistrationRepo.save(new HourRegistration(
-                0,
-                testProject,
-                designer,
-                dateService.currentDay(13, 0),
-                dateService.currentDay(17, 30),
-                "Gewerkt aan het project"
-        ));
     }
 
     public void loadAvailabilities() {
-        availability.save(new Availability(
-                userRepo.findById(1).orElse(null),
-                LocalDate.now(),
-                LocalTime.of(8, 0),
-                LocalTime.of(12, 0)
-        ));
-        availability.save(new Availability(
-                userRepo.findById(1).orElse(null),
-                LocalDate.now(),
-                LocalTime.of(13, 0),
-                LocalTime.of(17, 0)
-        ));
-        availability.save(new Availability(
-                userRepo.findById(1).orElse(null),
-                LocalDate.now().plusDays(7),
-                LocalTime.of(8, 0),
-                LocalTime.of(12, 0)
-        ));
-        availability.save(new Availability(
-                userRepo.findById(1).orElse(null),
-                LocalDate.now().minusDays(7),
-                LocalTime.of(8, 0),
-                LocalTime.of(12, 0)
-        ));
-        availability.save(new Availability(
-                userRepo.findById(1).orElse(null),
-                LocalDate.now().minusDays(7).minusYears(1),
-                LocalTime.of(8, 0),
-                LocalTime.of(12, 0)
-        ));
+        List<Specialist> allSpecialist = userRepo.findUsersByRole(User.Role.SPECIALIST, Specialist.class);
+
+        LocalDate dateTwoWeeksFromAgo = LocalDate.now().minusWeeks(2);
+        LocalDate dateThreeWeeksFromNow = LocalDate.now().plusWeeks(3);
+        Random random = new Random();
+
+        for (Specialist specialist: allSpecialist) {
+            for (LocalDate date = dateTwoWeeksFromAgo; date.isBefore(dateThreeWeeksFromNow); date = date.plusDays(1)) {
+                if (date.getDayOfWeek().getValue() < 6) {
+                    if (random.nextBoolean()) {
+                        int randomMorningHour = (int) ((Math.random() * (12 - 6)) + 6);
+                        int randomAfternoonHour = (int) ((Math.random() * (22 - 15)) + 15);
+                        int randomMinutesOne = (int) ((Math.random() * (4 - 0)) + 0) * 15;
+                        int randomMinutesTwo = (int) ((Math.random() * (4 - 0)) + 0) * 15;
+
+                        availability.save(new Availability(
+                                specialist,
+                                date,
+                                LocalTime.of(randomMorningHour, randomMinutesOne),
+                                LocalTime.of(randomAfternoonHour, randomMinutesTwo)
+                        ));
+                    }
+                }
+            }
+        }
+
+//        availability.save(new Availability(
+//                userRepo.findById(1).orElse(null),
+//                LocalDate.now(),
+//                LocalTime.of(8, 0),
+//                LocalTime.of(12, 0)
+//        ));
+//        availability.save(new Availability(
+//                userRepo.findById(1).orElse(null),
+//                LocalDate.now(),
+//                LocalTime.of(13, 0),
+//                LocalTime.of(17, 0)
+//        ));
+//        availability.save(new Availability(
+//                userRepo.findById(1).orElse(null),
+//                LocalDate.now().plusDays(7),
+//                LocalTime.of(8, 0),
+//                LocalTime.of(12, 0)
+//        ));
+//        availability.save(new Availability(
+//                userRepo.findById(1).orElse(null),
+//                LocalDate.now().minusDays(7),
+//                LocalTime.of(8, 0),
+//                LocalTime.of(12, 0)
+//        ));
+//        availability.save(new Availability(
+//                userRepo.findById(1).orElse(null),
+//                LocalDate.now().minusDays(7).minusYears(1),
+//                LocalTime.of(8, 0),
+//                LocalTime.of(12, 0)
+//        ));
     }
 
     public void setRandomSkillList() {

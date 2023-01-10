@@ -1,19 +1,19 @@
 <template>
-  <div :class="{'page-main-mw': !preview, 'p-4': !preview, 'mt-4': !preview}">
-    <ProjectBanner :project="project" :preview="preview"/>
+    <div :class="{'page-main-mw': !preview, 'p-4': !preview, 'mt-4': !preview}">
+        <ProjectBanner :project="project" :preview="preview"/>
 
-    <div class="flex flex-col items-center">
-      <ProjectLogo :project="project"/>
+        <div class="flex flex-col items-center">
+            <ProjectLogo :project="project"/>
 
-      <div class="mt-2 sm:mt-4 w-full">
-        <div class="md:pl-[48px] md:pr-[48px] w-full">
-          <ProjectHeader :project="project" :edit-button="!preview && hasAdminPrivileges"/>
+            <div class="mt-2 sm:mt-4 w-full">
+                <div class="md:pl-[48px] md:pr-[48px] w-full">
+                    <ProjectHeader :project="project" :edit-button="!preview && hasAdminPrivileges"/>
 
-          <router-view v-if="!preview && project != null" :project="project"/>
+                    <router-view v-if="!preview && project" :project="project"/>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -22,67 +22,69 @@ import ProjectBanner from "../ProjectBanner.vue";
 import ProjectLogo from "../ProjectLogo.vue";
 
 export default {
-  name: "ProjectLayout",
-  components: {ProjectLogo, ProjectBanner, ProjectHeader},
-  inject: ['projectFetchService'],
-
-  computed: {
-    user() {
-      return JSON.parse(localStorage.getItem('user'));
+    name: "ProjectLayout",
+    components: {ProjectLogo, ProjectBanner, ProjectHeader},
+    inject: ['projectRepository'],
+    computed: {
+        user() {
+            return JSON.parse(localStorage.getItem('user'));
+        },
+        userId() {
+            return Number.parseInt(this.user.id);
+        },
+        hasAdminPrivileges() {
+            return this.project.client?.id === this.userId || this.user?.role === "ADMIN";
+        }
     },
-    userId() {
-      return Number.parseInt(this.user.id);
+    data() {
+        return {
+            project: {}
+        }
     },
-    hasAdminPrivileges() {
-      return this.project.client?.id === this.userId || this.user?.role === "ADMIN";
-    }
-  },
 
-  data() {
-    return {
-      project: {}
-    }
-  },
-
-  props: {
-    projectId: {
-      type: String,
-      default: "-1"
+    props: {
+        projectId: {
+            type: String,
+            default: "-1"
+        },
+        projectInfo: {
+            type: Object,
+            default() {
+                return null;
+            }
+        },
+        preview: {
+            type: Boolean,
+            default: false
+        }
     },
-    projectInfo: {
-      type: Object,
-      default() {
-        return null;
-      }
+
+    async created() {
+        if (this.projectInfo == null && this.projectId >= 0) {
+            try {
+                this.project = await this.projectRepository.fetchProjectById(this.projectId);
+            } catch (e) {
+                this.$router.push({name: "projects"});
+            }
+        } else {
+            this.project = this.projectInfo ?? {};
+        }
+
+        // when a non-existing project is requested, redirect to the /projects page.
+        if (this.user != null && this.project == null) {
+            this.$router.push({name: 'projects'});
+        }
     },
-    preview: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  async created() {
-    if (this.projectInfo == null && this.projectId >= 0) {
-      this.project = await this.projectFetchService.fetchJson(`/${this.projectId}`);
-    } else {
-      this.project = this.projectInfo ?? {};
-    }
-
-    // when a non-existing project is requested, redirect to the /projects page.
-    if (this.project == null) {
-      this.$router.redirect({name: 'projects'});
-    }
-  },
 }
 </script>
 
 <style>
 h2, .header-2 {
-  font-weight: 700;
-  font-size: 22px;
-  line-height: 34px;
-  margin-bottom: 16px;
-  color: var(--neutral-700)
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 34px;
+    margin-bottom: 16px;
+    color: var(--neutral-700)
 }
 </style>
 
@@ -90,9 +92,9 @@ h2, .header-2 {
 
 
 th {
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 26px;
-  padding-bottom: 12px;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    padding-bottom: 12px;
 }
 </style>

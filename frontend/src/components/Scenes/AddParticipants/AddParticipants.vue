@@ -1,9 +1,15 @@
 <template>
+
+  <router-link :to="{name: 'project-overview'}"
+               class="muted error mt-15 block mb-2">
+    &#60; Terug naar project overzicht
+  </router-link>
+
+
   <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
 
-
   <div class="flex flex-row flex-wrap gap-8">
-    <participant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true"
+    <ProjectParticipant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true"
                  @selectedParticipant="item => selectedDeleteSpecialist = item"/>
   </div>
 
@@ -13,7 +19,17 @@
       <FilterParticipants v-for="skillset in skillGroup" :key=skillset :skillset=skillset
                           @selectedSkill="skillSelect"/>
     </div>
-    <div class="ml-10 p-5 flex flex-row flex-wrap self-start justify-evenly participant-container">
+
+    <div v-if="Object.keys(this.filteredParticipantsList).length === 0" class="muted error m-auto">
+      Geen deelnemers gevonden met de huidige zoekopdracht
+    </div>
+
+    <div class="ml-10 p-5 m-0 grid grid-cols-3 participant-grid" v-if="selectedFilters.length === 0">
+      <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
+                       :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
+    </div>
+
+    <div class="ml-10 p-5 m-0 grid grid-cols-2 participant-grid" v-else>
       <ParticipantCard v-for="participants in filteredParticipantsList" :key=participants.id :skill=selectedFilters
                        :participant=participants @addParticipant="item => selectedSpecialist = item" :validation="validation"/>
     </div>
@@ -33,11 +49,14 @@ import FilterParticipants from "./FilterParticipants.vue";
 import Participant from "../Project/Participant.vue";
 import AddParticipantModal from "./AddParticipantModal.vue";
 import DeleteParticipantModal from "./DeleteParticipantModal.vue";
+import ProjectParticipant from "./ProjectParticipant.vue";
 
 export default {
   name: "AddParticipants",
-  components: {DeleteParticipantModal, AddParticipantModal, Participant, ParticipantCard, FilterParticipants},
-  inject: ['projectFetchService', 'fetchService', 'skillFetchService'],
+  components: {
+    ProjectParticipant,
+    DeleteParticipantModal, AddParticipantModal, ParticipantCard, FilterParticipants},
+  inject: ['skillsRepository', 'projectRepository', 'userRepository'],
 
   props: {
     project: {
@@ -51,7 +70,7 @@ export default {
       this.selectedSpecialist = null;
 
       if (specialist.role === "" || specialist.hourlyRate === "") {
-        console.log("role or hourlyRate is null");
+        // console.log("role or hourlyRate is null");
         this.validation = true;
         return;
       }
@@ -68,36 +87,38 @@ export default {
               lastName: specialist.participant.lastName
             }
       })
-      this.projectFetchService.fetchJsonPost(`/${this.$route.params.projectId}/participants/add`, specialist)
+      this.projectRepository.addParticipant(`${this.$route.params.projectId}`, specialist)
       this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
       this.validation = false;
 
     },
 
-    skillSelect(selectedSkill) {
-      console.log(selectedSkill)
+    async skillSelect(selectedSkill) {
       if (!selectedSkill.checked) {
-        this.selectedFilters.push(selectedSkill.selectedSkill)
+        this.selectedFilters.push(selectedSkill.selectedSkill.id)
       } else {
-        this.selectedFilters = this.selectedFilters.filter(selectedfilters => selectedfilters.id !== selectedSkill.selectedSkill.id)
+        this.selectedFilters = this.selectedFilters.filter(skill => skill !== selectedSkill.selectedSkill.id)
       }
 
-      //if selectedFilters array is empty, show all specialists
+      this.filteredParticipantsList = null;
+
+      // if selectedFilters array is empty, show all specialists
       if (this.selectedFilters.length === 0) {
         this.filteredParticipantsList = this.specialists;
         return
       }
 
-      this.filteredParticipantsList = this.specialists.filter(specialist => specialist.skills.some(skill =>
-          this.selectedFilters.some(selectedfilter => selectedfilter.id === skill.id && skill.rating > 3)))
+      this.filteredParticipantsList = await this.userRepository.fetchUsersBySkills( this.selectedFilters)
+      this.filteredParticipantsList = this.filteredParticipantsList.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+
     },
+
     deleteParticipant(selectedParticipant) {
-      console.log(selectedParticipant)
       this.selectedDeleteSpecialist = null;
       const participant = selectedParticipant.participant.participant;
       this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)
-      this.projectFetchService.fetchJsonMethod(`/${this.$route.params.projectId}/participants/${participant.user.id}/delete`, "DELETE")
-      this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.user.id))
+      this.projectRepository.deleteParticipant(`${this.$route.params.projectId}`, `${participant.user.id}`)
+      this.skillSelect()
     }
 
 
@@ -105,12 +126,12 @@ export default {
 
 
   async created() {
-    this.project = await this.projectFetchService.fetchJson(`/${this.$route.params.projectId}`);
-    this.specialists = await this.fetchService.fetchJson("/users/role/SPECIALIST")
+    this.project = await this.projectRepository.fetchProjectById(`/${this.$route.params.projectId}`);
+    this.specialists = await this.userRepository.fetchUsers("SPECIALIST")
     this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
-    this.skillGroup = await this.skillFetchService.fetchJson("/groups")
-    this.filteredParticipantsList = this.specialists;
 
+    this.skillGroup = await this.skillsRepository.fetchSkillGroups()
+    this.filteredParticipantsList = this.specialists;
     this.skillGroup.forEach(skill => skill.skills.forEach(skill => skill.checked = false))
 
     // when a non-existing project is requested, redirect to the /projects page.
@@ -124,60 +145,13 @@ export default {
     return {
       project: {},
       specialists: {},
-      assignedSpecialists: {},
       skillset: {},
       selectedFilters: [],
       filteredParticipantsList: {},
       validation: false,
-      selectedSpecialist : null,
+      selectedSpecialist: null,
       selectedDeleteSpecialist: null,
-
       skillGroup: {},
-
-      skills: [{
-        name: "Microsoft Office Front-end",
-        skill: [{
-          id: 0,
-          name: "Microsoft Access",
-          rating: 3
-        }, {
-          id: 1,
-          name: "Microsoft Access VBA",
-          rating: 2
-        }, {
-          id: 2,
-          name: "Microsoft Excel",
-          rating: 1
-        }, {
-          id: 3,
-          name: "Microsoft Access",
-          rating: 1
-        }, {
-          id: 4,
-          name: "Microsoft Access",
-          rating: 4
-        }
-        ]
-      }, {
-        name: "Back-end",
-        skill: [{
-          id: 0,
-          name: "MS SQL Server",
-          Rating: 3
-        }, {
-          id: 1,
-          name: "MS SQL-Server Stored Procedures",
-          Rating: 2
-        }, {
-          id: 2,
-          name: "MS Office Excel",
-          Rating: 5
-        }, {
-          id: 3,
-          name: "Ms office Eccel pt 2",
-          rating: 3
-        },]
-      }]
     }
   }
 }
@@ -195,9 +169,25 @@ export default {
     width: 100%;
   }
 
-  .participant-container {
-    margin: 0;
+  .participant-grid {
+    grid-template-columns: 1fr;
   }
+}
 
+@media screen and (max-width: 1080px) {
+  .participant-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+
+.muted.error {
+  margin-top: 4px;
+  color: var(--app_red-400)
+}
+
+.participant-grid {
+  grid-auto-rows: minmax(min-content, max-content);
 }
 </style>

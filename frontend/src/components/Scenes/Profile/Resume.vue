@@ -34,12 +34,12 @@
                 <div class="flex">
                     <div class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md w-[120px] h-[38px] mb-[10px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center mr-5"
                         @click="handleProfileUpdate">
-                        <div>CV bijwerken</div>
+                        <div class="cursor-pointer">CV bijwerken</div>
                     </div>
 
-                    <div v-if="this.user?.resumeURL" class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md w-[120px] h-[38px] mb-[10px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center"
+                    <div v-if="this.resumeURL" class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md w-[120px] h-[38px] mb-[10px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center"
                         @click="toggleModal">
-                        <div>View resume</div>
+                        <div class="cursor-pointer">View resume</div>
                     </div>
                 </div>
 
@@ -79,15 +79,23 @@ export default {
     },
     computed: {
         pdfSrc() {
-            return this.fetchService.getAsset(this.user.resumeURL);
+            return this.fetchService.getAsset(this.resumeURL);
         },
     },
-    inject: ['fetchService', 'userFetchService'],
+    inject: ['userRepository', 'fetchService', 'userFetchService'],
     data() {
         return {
             user: JSON.parse(localStorage.getItem("user")),
+            resumeURL: null,
             resumeFile: null,
             modalActive: false
+        }
+    },
+    async created() {
+        if (this.user) {
+            const response = await this.userRepository.getResume(this.user.id);
+            // const response = await this.fetchService.fetchJson(`/users/${this.user.id}/resume`);
+            this.resumeURL = response.resumeURL; 
         }
     },
     methods: {
@@ -100,16 +108,16 @@ export default {
 
             if (this.resumeFile != null) formData.append('resumeFile', this.resumeFile);
 
-            this.userFetchService.fetchJsonFile(`/${this.user.id}/resume`, "PUT", formData).then((response) => {
-                localStorage.setItem("user", JSON.stringify(response));
-            })
+
+            this.resumeURL = (await this.userRepository.updateResume(this.user.id, formData)).resumeURL;
+            // this.userFetchService.fetchJsonFile(`/${this.user.id}/resume`, "PUT", formData).then((response) => {
+            //     this.resumeURL = response.resumeURL;
+            // })
 
             this.resumeFile = null;
         },
         async updateResume(event) {
-            console.log(this.user)
             if (event.target.files === 0) {
-                console.log(event.target.files[0].name)
                 return;
             }
 
@@ -119,7 +127,6 @@ export default {
                 return;
             }
 
-            console.log(event.target.files[0])
             this.resumeFile = event.target.files[0];
         },
         async getBase64(file) {

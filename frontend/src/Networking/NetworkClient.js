@@ -1,21 +1,24 @@
 import {HttpMethod} from "./HttpMethod.js";
+import {StoredTokenRepository} from "./Authentication/StoredTokenRepository.js";
 export class NetworkClient {
 
     #baseURL;
     #storedTokenRepository;
+    #loggingEnabled
 
-    constructor(baseURL = import.meta.env.VITE_BACKEND_URL, storedTokenRepository) {
+    constructor(baseURL = import.meta.env.VITE_BACKEND_URL) {
         this.#baseURL = baseURL;
-        this.#storedTokenRepository = storedTokenRepository;
+        this.#storedTokenRepository = StoredTokenRepository.shared;
+        this.#loggingEnabled = true;
     }
 
     /**
-     * Sends a network request to the backen
+     * Sends a network request to the backend.
      * @param {String} path The path to be appended after the base URL.
      * @param {HttpMethod} method Specify the HttpMethod to use. Defaults to HttpMethod.GET.
-     * @param {Object} body Body to use with the request, null by default.
-     * @param {Object} headers Specify header fields you want to include.
-     * @param {RequestInit} options Native JavaScript fetch options. Do not specify the `header` field in the options, use the `headers` parameter from this.
+     * @param {Object|null} body Body to use with the request, null by default.
+     * @param {Object|null} headers Specify header fields you want to include.
+     * @param {RequestInit|null} options Native JavaScript fetch options. Do not specify the `header` field in the options, use the `headers` parameter from this.
      * @return {Promise<[Object]|Object|String>} return value.
      */
     async executeRequest(
@@ -25,11 +28,76 @@ export class NetworkClient {
         headers = null,
         options = null
     ) {
-        let finalOptions = this.#getRequestOptionsForMethod(method, body, headers, options);
+        let finalOptions = this.#getRequestOptionsForMethod(
+            method,
+            body ? JSON.stringify(body) : null,
+            headers ?? this.getDefaultHeader(),
+            options
+        );
+        return await this.#executeNetworkRequestWithOptions(finalOptions, path, method);
+    }
+
+    /**
+     * Sends a network request to the backend using FormData.
+     * @param {String} path The path to be appended after the base URL.
+     * @param {HttpMethod} method Specify the HttpMethod to use. Defaults to HttpMethod.POST.
+     * @param {FormData} body FormData Body to use with the request, will NOT stringify body.
+     * @param {Object|null} headers Specify header fields you want to include.
+     * @param {RequestInit|null} options Native JavaScript fetch options. Do not specify the `header` field in the options, use the `headers` parameter from this.
+     * @return {Promise<[Object]|Object|String>} return value.
+     */
+    async executeRequestWithFormData(
+        path,
+        method = HttpMethod.POST,
+        body = null,
+        headers = null,
+        options = null
+    ) {
+        let finalOptions = this.#getRequestOptionsForMethod(
+            method,
+            body,
+            {},
+            options
+        );
+        return await this.#executeNetworkRequestWithOptions(finalOptions, path, method);
+    }
+
+    /**
+     * Merges options and returns the final `RequestInit` object.
+     * @param {HttpMethod} method method to use for the request.
+     * @param {Object|String|null} body Object body, can be a JSON turned into a String.
+     * @param {Object|null} headers headers to include, giving a value will override the default headers.
+     * @param {RequestInit|null} options additional options to provide that will be used in the return value.
+     * @return {RequestInit} merged request options.
+     */
+    #getRequestOptionsForMethod(method, body, headers, options) {
+        const defaultOptions = {
+            method: method,
+            headers: this.#signHeaderWithToken(headers),
+            ...options
+        }
+        if (this.#supportsBodyForHttpMethod(method) && body) {
+            return {
+                body: body,
+                ...defaultOptions
+            }
+        } else {
+            return defaultOptions;
+        }
+    }
+
+    /**
+     * Executes request with determined options and return value from backend or an error.
+     * @param {RequestInit} options Request options
+     * @param {String} path Path used for the request
+     * @param {HttpMethod} method HTTP Method used
+     * @return {Promise<any>} result type.
+     */
+    async #executeNetworkRequestWithOptions(options, path, method) {
         const url = this.#createURL(path);
-        this.#logFetchConfiguration(method, url, finalOptions.body, finalOptions);
+        this.#logFetchConfiguration(method, url, options.body, options);
         try {
-            let response = await fetch(url, finalOptions);
+            let response = await fetch(url, options);
 
             if (response.ok) {
                 const data = await response.json();
@@ -47,32 +115,8 @@ export class NetworkClient {
                 }
             }
         } catch (error) {
-            this.#logNetworkError(method, path, finalOptions, error);
+            this.#logNetworkError(method, path, options, error);
             throw error;
-        }
-    }
-
-    /**
-     * Merges options and returns the final `RequestInit` object.
-     * @param {HttpMethod} method method to use for the request.
-     * @param {Object|null} body Object body, will be turned into a String.
-     * @param {Object|null} headers headers to include, giving a value will override the default headers.
-     * @param {RequestInit} options additional options to provide that will be used in the return value.
-     * @return {RequestInit} merged request options.
-     */
-    #getRequestOptionsForMethod(method, body, headers, options) {
-        const defaultOptions = {
-            method: method,
-            headers: this.#signHeaderWithToken(headers ?? this.getDefaultHeader()),
-            ...options
-        }
-        if (this.#supportsBodyForHttpMethod(method) && body) {
-            return {
-                body: JSON.stringify(body),
-                ...defaultOptions
-            }
-        } else {
-            return defaultOptions;
         }
     }
 
@@ -81,15 +125,21 @@ export class NetworkClient {
     }
 
     #logFetchConfiguration(method, url, body, options) {
-        console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+        if (this.#loggingEnabled) {
+            // console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+        }
     }
 
     #logNetworkResponse(response, data) {
-        console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+        if (this.#loggingEnabled) {
+            // console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+        }
     }
 
     #logNetworkError(method, url, options, error) {
-        console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+        if (this.#loggingEnabled) {
+            // console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+        }
     }
 
     /**
@@ -113,7 +163,7 @@ export class NetworkClient {
 
     /**
      * Signs the header with a JWT Authorization Token.
-     * @param {Object} headerFields Header fields going in.
+     * @param {Object|null} headerFields Header fields going in.
      * @return {*&{Authorization: string}} Signed header with the ingoing header options and the authorization header if available.
      */
     #signHeaderWithToken(headerFields) {
@@ -124,6 +174,10 @@ export class NetworkClient {
                 ...headerFields
             }
         } else {
+            if (this.#loggingEnabled) {
+                console.warn("NetworkClient signHeaderWithToken: No JWT Token found.")
+                // console.log(this.#storedTokenRepository);
+            }
             return headerFields;
         }
     }

@@ -9,11 +9,54 @@ import NavBar from "./components/Common/NavBar.vue";
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import './PrototypeExtensions/Array+random.js';
+import 'flowbite';
 
 // temporarily import all because single import won't work
-import {faBars, faCheck, faChevronRight, faChevronLeft, faEnvelope, faUsers, faWindowMinimize, faXmark, faCircleXmark, faMagnifyingGlass, faBoxArchive, faShareNodes, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown} from '@fortawesome/free-solid-svg-icons'
+import {
+    faArrowDown,
+    faBars,
+    faBarsProgress,
+    faBoxArchive,
+    faBuilding,
+    faCalendarDays,
+    faCalendarWeek,
+    faCheck,
+    faCircleCheck,
+    faChevronLeft,
+    faChevronRight,
+    faCircleXmark,
+    faClock,
+    faEnvelope,
+    faFaceGrinSquint,
+    faFile,
+    faFileImage,
+    faLightbulb,
+    faMagnifyingGlass,
+    faPaste,
+    faPen,
+    faPenToSquare,
+    faPlus,
+    faRightFromBracket,
+    faShareNodes,
+    faStar,
+    faTrashCan,
+    faUser,
+    faUserPlus,
+    faUsers,
+    faWindowMinimize,
+    faXmark,
+    faImage,
+    faPanorama,
+    faEye
+} from '@fortawesome/free-solid-svg-icons'
+import HelpTip from "./components/Common/HelpTip.vue";
 
-library.add(faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass, faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan, faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown);
+library.add(
+    faUsers, faEnvelope, faXmark, faCheck, faCircleCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
+    faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan,
+    faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint,
+    faImage, faPanorama, faEye
+);
 
 // `Chainable` list of global components.
 const app = createApp(App).use(router)
@@ -22,5 +65,6 @@ const app = createApp(App).use(router)
     .component('TextField', TextField)
     .component('NavBar', NavBar)
     .component('font-awesome-icon', FontAwesomeIcon)
+    .component('HelpTip', HelpTip)
 
 app.mount('#app');

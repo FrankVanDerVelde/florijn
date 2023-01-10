@@ -1,5 +1,8 @@
 # EWA - Florijn
 
+Link to deployed application: https://florijn-team-2.up.railway.app/#/login
+Link to UML system documentation: https://gitlab.fdmci.hva.nl/se-ewa/2022-2023-1/flo-2/-/wikis/Technical-documentation
+
 ## Frontend
 
 ### Getting started
