@@ -173,8 +173,15 @@ export default {
   .participant-grid {
     grid-template-columns: 1fr;
   }
-
 }
+
+@media screen and (max-width: 1080px) {
+  .participant-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
 
 .muted.error {
   margin-top: 4px;
