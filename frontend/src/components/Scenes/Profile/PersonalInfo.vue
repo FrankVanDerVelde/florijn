@@ -1,5 +1,14 @@
 <template>
   <form>
+    <div class="fixed right-[1em] top-[5em] border-t-4 border-primary-400 rounded-b text-primary-500 px-4 py-3 shadow-lg max-w-[35em]" role="alert" v-if="confirmationActive">
+      <div class="flex">
+        <div>
+          <p class="font-bold">Profile succesfully updated</p>
+          <p class="text-sm">Make sure you know how these changes affect you.</p>
+        </div>
+      </div>
+    </div>
+    
     <div class="text-[34px] font-bold mb-[10px]">Profiel</div>
     <div class="name-and-picture-container flex items-center mb-4">
       <div class="relative">
@@ -113,6 +122,7 @@ export default {
       address: {},
       avatarFile: null,
       bannerFile: null,
+      confirmationActive: false
     }
   },
   computed: {
@@ -151,7 +161,19 @@ export default {
 
       if (this.bannerFile != null) formData.append('bannerFile', this.bannerFile);
 
-      localStorage.setItem("user", JSON.stringify(await this.userRepository.updateUser(this.user.id, formData)));
+      try {
+        localStorage.setItem("user", JSON.stringify(await this.userRepository.updateUser(this.user.id, formData)));
+
+        this.confirmationActive = true;
+
+        setTimeout(() => {
+          this.confirmationActive = false;
+        }, 6000)
+      } catch {
+       
+      }
+
+      
 
       // this.userFetchService.fetchJsonFile(`/${this.user.id}/edit`, "PUT", formData).then((response) => {
       //   localStorage.setItem("user", JSON.stringify(response));

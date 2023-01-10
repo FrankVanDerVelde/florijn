@@ -76,6 +76,7 @@ const routes = [
             {
                 path: "",
                 redirect: "/adminpanel/customer-list",
+                name: "customer-list"
             },
             {
                 path: "customer-list",
