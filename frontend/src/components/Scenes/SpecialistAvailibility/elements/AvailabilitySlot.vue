@@ -38,15 +38,16 @@ export default {
       this.from = moment(this.availability.from).format('HH:mm');
       this.to = moment(this.availability.to).format('HH:mm');
     },
+
     calculateTimeDifferance() {
       const from = moment(this.availability.from);
       const to = moment(this.availability.to);
 
-      const minutesDifferance = from.diff(to, 'seconds');
+      const minutesDifferance = Math.abs(from.diff(to, 'seconds'));
       this.differance = moment()
           .startOf('day')
           .add(minutesDifferance, 'seconds')
-          .format('HH[h] mm[m]');
+          .format('H[h] mm[m]');
     }
   }
 }

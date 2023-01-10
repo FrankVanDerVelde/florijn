@@ -1,5 +1,6 @@
 package com.hva.ewa.team2.backend.domain.models.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,32 +15,33 @@ public abstract class User {
     @Setter
     @JsonView(EssentialInfo.class)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    protected Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    public Integer id;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
-    protected String email;
+    public String email;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
 //    @Column(columnDefinition = ("varchar(255) default 'defaults/default-avatar.png'"))
-    protected String avatarUrl;
+    public String avatarUrl;
 
     @Getter
     @Setter
-    protected String password;
+    @JsonIgnore
+    public String password;
 
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
-    protected Role role;
+    public Role role;
 
-    public User() {}
-
-
+    public User() {
+    }
 
     public User(int id, String email, String password, String profilePictureURL, Role role) {
         this.id = id;
@@ -53,12 +55,22 @@ public abstract class User {
     }
 
     public enum Role {
-        ADMIN,
-        SPECIALIST,
-        CLIENT
+        ADMIN(Admin.class),
+        SPECIALIST(Specialist.class),
+        CLIENT(Client.class);
+
+        private final Class<? extends User> userClass;
+
+        Role(Class<? extends User> userClass) {
+            this.userClass = userClass;
+        }
+
+        public Class<? extends User> getUserClass() {
+            return userClass;
+        }
     }
 
-    public class EssentialInfo {
+    public static class EssentialInfo {
 
     }
 

@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.auth.AuthBusinessLogic;
-import com.hva.ewa.team2.backend.rest.user.json.JsonCredentials;
 import com.hva.ewa.team2.backend.security.JWToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.NotAcceptableStatusException;
@@ -29,17 +27,12 @@ public class AuthController {
         this.authBusinessLogic = authBusinessLogic;
     }
 
-    @JsonView(User.EssentialInfo.class)
-    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserInfoByCredentials(@RequestBody JsonCredentials credentials) {
-        return ResponseEntity.ok(this.authBusinessLogic.getUserInfoByCredentials(credentials.getEmail(),
-                credentials.getPassword()));
-    }
-
     @Autowired
     private Config apiConfig;
 
-    @PostMapping(path = "/login2")
+
+    @PostMapping(path = "/login")
+    @JsonView(User.EssentialInfo.class)
     public ResponseEntity<User> login(@RequestBody ObjectNode body, HttpServletRequest request) {
 
         String email = body.get("email").asText();
@@ -57,7 +50,7 @@ public class AuthController {
             throw new NotAcceptableStatusException("Cannot authenticate account with email=" + email);
         }
 
-        JWToken jwToken = new JWToken((long) user.getId(), user.getRole(), ipAddress);
+        JWToken jwToken = new JWToken(user.getId(), user.getRole(), ipAddress);
         String tokenString = jwToken.encode(this.apiConfig.getIssuer(),
                 this.apiConfig.getPassphrase(),
                 this.apiConfig.getTokenDurationOfValidity());

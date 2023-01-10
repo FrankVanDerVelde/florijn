@@ -15,17 +15,6 @@
               <label class="mb-[12px]">Wachtwoord</label>
               <input v-model="password" required type="password" class="pl-[7px] w-80">
             </div>
-            <div class="grid grid-cols-12 mt-1 w-80">
-              <div class="col-span-6 row-start-1 radio-button-container">
-                <label class="text-neutral-400 font-semibold text-[12px]">Houd me ingelogd
-                  <input type="checkbox">
-                  <span class="checkmark"></span>
-                </label>
-              </div>
-              <div class="forgot-password col-span-6 row-start-1 text-primary-500 hover:text-primary-700"
-                   @click="forgotPassword()">Wachtwoord vergeten?
-              </div>
-            </div>
           </div>
           <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp; {{ validationText }}</p>
           <div class="submit-button">
@@ -48,54 +37,7 @@
 
 export default {
   name: "LogIn.vue",
-  inject: ['fetchService'],
-  created() {
-    if (localStorage.getItem("id") !== "null") {
-      localStorage.setItem("id", "null");
-      localStorage.setItem("role", "null");
-    }
-  },
-  methods: {
-    forgotPassword() {
-      this.$router.push(this.$route.matched[0].path + "/forgotpassword");
-    },
-    async submitButton() {
-      let userData;
-
-      try {
-        userData = await this.fetchService.fetchJsonPost("/auth/login",
-            ({email: this.email.trim(), password: this.password}));
-      } catch (e) {
-        console.error(e)
-        userData = null;
-      }
-
-      if (userData !== null) {
-
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("id", userData.id);
-        localStorage.setItem("role", userData.role);
-
-        switch (userData.role) {
-          case "ADMIN": {
-            this.$router.push({name: "admin-home"});
-            break;
-          }
-          case "SPECIALIST": {
-            this.$router.push({name: "specialist-home"});
-            break;
-          }
-          case "CLIENT": {
-            this.$router.push({name: "client-home"});
-            break;
-          }
-        }
-      } else {
-        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
-        this.password = '';
-      }
-    }
-  },
+  inject: ['authenticationRepository', 'storedTokenRepository'],
   data() {
     return {
       email: '',
@@ -103,11 +45,25 @@ export default {
       validationText: '',
     };
   },
+  methods: {
+    async submitButton() {
+      try {
+        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
+        this.pushToHome();
+      } catch (e) {
+        console.error(e)
+        this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
+        this.password = '';
+      }
+    },
+    pushToHome() {
+      this.$router.push({name: "home"});
+    }
+  },
 }
 </script>
 
 <style scoped>
-
 
 .max-width {
   max-width: 720px;
@@ -167,17 +123,6 @@ export default {
   font-size: 16px;
 }
 
-.radio-button-container {
-  margin: 2px;
-  float: left;
-  font-size: 14px;
-  color: var(--neutral-50);
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  cursor: pointer;
-}
-
 /* Hide the browser's default checkbox */
 .radio-button-container input {
   position: absolute;
@@ -186,17 +131,6 @@ export default {
   display: none;
 }
 
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 25px;
-  width: 25px;
-  background-color: var(--neutral-50);
-  border: 1px solid var(--neutral-300);;
-  border-radius: 25%;
-}
 
 /* On mouse-over, add a grey background color */
 .radio-button-container:hover input ~ .checkmark {

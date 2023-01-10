@@ -1,24 +1,27 @@
 package com.hva.ewa.team2.backend.domain.models.skill;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Skill {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private Integer id;
 
     @Getter
     @Setter
-    @ManyToOne(targetEntity = SkillGroup.class, cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id", referencedColumnName = "id")
-    private Integer groupId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private SkillGroup skillGroup;
 
     @Getter
     @Setter
@@ -29,6 +32,13 @@ public class Skill {
     private String description;
 
     public Skill() {
+    }
+
+    public Skill(Integer id, SkillGroup skillGroup, String name, String description) {
+        this.id = id;
+        this.skillGroup = skillGroup;
+        this.name = name;
+        this.description = description;
     }
 
     public Skill(int id, String name, String description) {

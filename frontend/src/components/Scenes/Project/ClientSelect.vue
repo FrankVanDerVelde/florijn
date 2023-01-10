@@ -4,7 +4,7 @@
       <ListboxButton
           class="relative w-full cursor-default rounded-md border border-neutral-200 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
         <span class="flex items-center">
-          <img v-if="value != null"
+          <Asset v-if="value != null"
                :src="value.avatarUrl ?? 'https://icons.veryicon.com/png/o/miscellaneous/bottom-navigation-bar/home-page-not-selected.png'"
                class="h-6 w-6 flex-shrink-0 rounded-full"/>
           <span class="ml-3 block truncate" :class="{'opacity-50 font-medium': value.name == null}">{{ value.name ?? "Selecteer een klant" }}</span>
@@ -24,7 +24,7 @@
                          v-slot="{ active, selected }">
             <li :class="[selected ? 'bg-opacity-50 bg-neutral-100' : active ? 'bg-neutral-100' : 'text-neutral-900', 'relative select-none py-2 pl-3 pr-9 cursor-pointer']">
               <div class="flex items-center">
-                <img :src="client.avatarUrl" alt="" class="h-6 w-6 flex-shrink-0 rounded-full"/>
+                <Asset :src="client.avatarUrl" alt="" class="h-6 w-6 flex-shrink-0 rounded-full"/>
                 <span :class="[selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate']">{{ client.name}}</span>
               </div>
 
@@ -43,10 +43,11 @@
 
 import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from '@headlessui/vue'
 import {CheckIcon, ChevronUpDownIcon} from '@heroicons/vue/20/solid'
+import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "ClientSelect",
-  components: {ListboxButton, ListboxOption, ListboxOptions, Listbox, ChevronUpDownIcon, CheckIcon},
+  components: {Asset, ListboxButton, ListboxOption, ListboxOptions, Listbox, ChevronUpDownIcon, CheckIcon},
   emits: ['update:modelValue'],
 
   data() {

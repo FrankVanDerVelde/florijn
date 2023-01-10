@@ -13,7 +13,7 @@ public class SkillGroup {
     @Getter
     @Setter
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Getter @Setter
@@ -23,17 +23,16 @@ public class SkillGroup {
     private String description;
 
     @Getter @Setter
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "group_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "skillGroup", cascade = CascadeType.ALL)
     private List<Skill> skills;
 
     public SkillGroup() {}
 
-    public SkillGroup(int id, String name, String description) {
+    public SkillGroup(Integer id, String name, String description) {
         this(id, name, description, new ArrayList<>());
     }
 
-    public SkillGroup(int id, String name, String description, ArrayList<Skill> skills) {
+    public SkillGroup(Integer id, String name, String description, ArrayList<Skill> skills) {
         this.id = id;
         this.name = name;
         this.description = description;

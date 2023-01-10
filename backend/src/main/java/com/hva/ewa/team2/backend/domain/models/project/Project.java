@@ -1,6 +1,8 @@
 package com.hva.ewa.team2.backend.domain.models.project;
 
+import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
+import com.hva.ewa.team2.backend.domain.models.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +37,7 @@ public class Project implements Serializable {
     @Getter
     @Setter
     private String logoSrc;
+
     @Getter
     @Setter
     private boolean archived;
@@ -92,6 +95,16 @@ public class Project implements Serializable {
 
     public boolean removeSpecialist(ProjectParticipant specialist) {
         return participants.remove(specialist);
+    }
+
+    public boolean hasAccess(User user, boolean requiresModerationPerm) {
+        return user != null && (user instanceof Admin ||
+                this.client.getId().equals(user.getId()) ||
+                (!requiresModerationPerm && this.participants.stream().anyMatch(p -> p.getSpecialist().getId().equals(user.getId()))
+                ));
+    }
+
+    public static class EssentialInfo extends User.EssentialInfo {
     }
 
 }

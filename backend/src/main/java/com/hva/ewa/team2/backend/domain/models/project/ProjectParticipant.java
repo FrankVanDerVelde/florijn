@@ -52,4 +52,13 @@ public class ProjectParticipant {
         this.hourlyRate = hourlyRate;
     }
 
+    @Override
+    public String toString() {
+        return "ProjectParticipant{" +
+                "id=" + id +
+                ", specialist=" + specialist +
+                ", role='" + role + '\'' +
+                ", hourlyRate=" + hourlyRate +
+                '}';
+    }
 }
