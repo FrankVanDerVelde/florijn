@@ -73,27 +73,168 @@ public class BackendApplication implements CommandLineRunner {
     }
 
     private void loadUsers() {
-        Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
-        Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
-        Address dummyAddress3 = new Address("Diemen", "Gert Jan Straat", 14, "A", "1133XJ");
+        userRepo.save(new Admin(11, "admin@test.com", "test", "users/avatars/admin1.jpeg", "Ysabella", "de Jong"));
+        userRepo.save(new Admin(12, "admin2@test.com", "test", "users/avatars/admin2.jpeg", "Hans", "Oudekerk"));
 
-        userRepo.save(new Specialist(1, "withneyk@florijn.com", "test", "users/avatars/1.avif", "Withney", "Keulen", dummyAddress1, null));
-        userRepo.save(new Specialist(2, "jant@florijn.com", "test", "users/avatars/2.avif", "Jan", "Timmermans", dummyAddress2, null));
+        // clients
+        userRepo.save(new Client(13, "contact@ing.nl", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
+        userRepo.save(new Client(14, "contact@microsoft.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
+        userRepo.save(new Client(15, "contact@mediamarkt.com", "test", "users/avatars/mediamarktlogo.png", "Media Markt", "users/avatars/mediamarktbanner.jpg"));
 
-        userRepo.save(new Admin(3, "admin@test.com", "test", null, "Admin", "Test"));
-        userRepo.save(new Specialist(4, "specialist@test.com", "test", "users/avatars/3.avif", "Kingsley", "Mckenzie", dummyAddress3, null));
-        userRepo.save(new Client(5, "contact@ing.nl", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
+        // specialist
+        userRepo.save(
+                new Specialist(1
+                , "specialist1@test.com",
+                        "test",
+                        "users/avatars/1.avif",
+                        "Whitney", "Keulen",
+                        new Address(
+                                "Hoorn",
+                                "Noorder Plantsoen",
+                                12,
+                                "",
+                                "1623AB"),
+                        "users/resumes/sample-resume.pdf"));
 
-//        setRandomSkills(new Specialist(6, "specialist2@test.com", "test", "users/avatars/6.png", "Sam", "Janssen", dummyAddress1));
-//        setRandomSkills(new Specialist(7, "specialist3@test.com", "test", "users/avatars/3.avif", "Jop", "Christensen", dummyAddress2));
+        userRepo.save(
+                new Specialist(2,
+                "specialist2@test.com",
+                        "test",
+                        "users/avatars/specialist2.jpeg",
+                        "Jan", "Timmermans",
+                        new Address(
+                                "Diemen-Zuid",
+                                "Gert Jan Straat",
+                                14,
+                                "A",
+                                "1133XJ"),
+                        "users/resumes/sample-resume.pdf"));
 
-        userRepo.save(new Client(8, "contact@microsoft.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
-        userRepo.save(new Specialist(9, "jant@florijn.com", "test", "users/avatars/2.avif", "Carl", "Rosario", null, null));
-        userRepo.save(new Specialist(10, "jant@florijn.com", "test", "users/avatars/2.avif", "Liana", "Wilkerson", null, null));
-        userRepo.save(new Specialist(11, "jant@florijn.com", "test", "users/avatars/2.avif", "Christian", "Decker", null, null));
-        userRepo.save(new Specialist(12, "jant@florijn.com", "test", "users/avatars/2.avif", "Gordon", "Hawkins", null, null));
+        userRepo.save(
+                new Specialist(3,
+                "specialist3@test.com",
+                        "test",
+                        "users/avatars/specialist3.jpeg",
+                        "Kingsley", "Mckenzie",
+                        new Address(
+                                "Diemen-Noord",
+                                "Beren straat",
+                                31,
+                                "B",
+                                "1432LM"),
+                        "users/resumes/sample-resume.pdf"));
 
+        userRepo.save(
+                new Specialist(
+                        4,
+                        "specialist4@test.com",
+                        "test",
+                        "users/avatars/specialist4.jpeg",
+                        "Albert",
+                        "van Hof",
+                        new Address(
+                                "Doordrecht",
+                                "Wester plas",
+                                63,
+                                "",
+                                "1104EX"),
+                        "users/resumes/sample-resume.pdf"));
 
+        userRepo.save(
+                new Specialist(
+                        5,
+                        "specialist5@test.com",
+                        "test",
+                        "users/avatars/specialist5.jpeg",
+                        "Anna",
+                        "Arends",
+                        new Address(
+                                "Groningen",
+                                "Groniger straat",
+                                13,
+                                "A",
+                                "2504EX"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        6,
+                        "specialist6@test.com",
+                        "test",
+                        "users/avatars/specialist6.jpeg",
+                        "Ben",
+                        "de Wilde",
+                        new Address(
+                                "Avenhorn",
+                                "Westerkogge straat",
+                                13,
+                                "",
+                                "5230PL"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        7,
+                        "specialist7@test.com",
+                        "test",
+                        "users/avatars/specialist7.jpeg",
+                        "David",
+                        "de Wit",
+                        new Address(
+                                "Maastricht",
+                                "Oesterstraat",
+                                1233,
+                                "",
+                                "1264AX"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        8,
+                        "specialist8@test.com",
+                        "test",
+                        "users/avatars/specialist8.jpeg",
+                        "Gloria",
+                        "Gonzales",
+                        new Address(
+                                "Bergen op Soom",
+                                "Bergenstraat",
+                                123,
+                                "",
+                                "7264AL"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        9,
+                        "specialist9@test.com",
+                        "test",
+                        "users/avatars/specialist9.jpeg",
+                        "Jannie",
+                        "Verstegen",
+                        new Address(
+                                "Middenmeer",
+                                "Leegwater straat",
+                                23,
+                                "",
+                                "1264AB"),
+                        "users/resumes/sample-resume.pdf"));
+
+        userRepo.save(
+                new Specialist(
+                        10,
+                        "specialist10@test.com",
+                        "test",
+                        "users/avatars/specialist10.jpeg",
+                        "Kim",
+                        "Whitfield",
+                        new Address(
+                                "Arnhem",
+                                "Gelrestraat",
+                                63,
+                                "H",
+                                "2364AB"),
+                        "users/resumes/sample-resume.pdf"));
 
     }
 
