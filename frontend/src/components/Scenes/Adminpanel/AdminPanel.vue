@@ -15,29 +15,30 @@
 import SideBarNav from "../../Common/SideBarNav.vue";
 
 export default {
-  name: "Adminpanel",
-
+  name: "AdminPanel",
   components: {
     SideBarNav
   },
   created() {
-    if (this.id === "null") {
-      this.$router.push("/home");
+    if (localStorage.getItem("user") == null) {
+      this.$router.push({name: "home"});
     }
   },
   data() {
     return {
       id: localStorage.getItem("id"),
-      sideBarLinks: [{
-        icon: 'fa-solid fa-share-nodes',
-        name: 'Klanten',
-        href: '/adminpanel/customer-list',
-      },
+      sideBarLinks: [
+        {
+          icon: 'fa-solid fa-share-nodes',
+          name: 'Klanten',
+          href: '/adminpanel/customer-list',
+        },
         {
           icon: 'fa-solid fa-user',
           name: 'Specialisten',
           href: '/adminpanel/employee-list',
-        }],
+        }
+      ],
     }
   }
 }
@@ -49,6 +50,7 @@ export default {
 .side-bar {
   margin-top: 71px;
   margin-right: 80px;
+  width: 200px;
 }
 
 </style>

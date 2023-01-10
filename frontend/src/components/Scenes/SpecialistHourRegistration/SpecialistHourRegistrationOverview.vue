@@ -1,60 +1,72 @@
 <template>
   <div>
 
-    <div v-if="this.showingModel" @click="" class="top-0 bottom-0 right-0 left-0 absolute">
+    <div v-if="this.showingModel" class="top-0 bottom-0 right-0 left-0 absolute">
       <div class="z-90 w-full h-full bg-neutral-900 opacity-20 absolute"></div>
       <div class="z-60 w-full h-full absolute flex justify-center items-center">
-        <NewActivityPopup :hour-registration="selectedHourRegistration" @activity-added="handleActivityAdded" @activity-cancel-clicked="showingModel = false"/>
+        <NewActivityPopup
+            :hour-registration="selectedHourRegistration"
+            :week-number="weekNumber"
+            :selected-day-index="selectedDayIndex"
+            @activity-added="handleActivityAdded"
+            @activity-cancel-clicked="showingModel = false"/>
       </div>
     </div>
 
     <div class="font-bold text-neutral-900 text-[32px] mb-0">Uren Registratie</div>
 
-    <div class="flex">
-      <div class="flex flex-col gap-[11px]">
-        <div class="flex justify-between w-full">
-          <p class="text-3xl text-neutral-400 font-medium ">{{year}}</p>
-          <button @click="handleTodayClicked" class="primary-button">Vandaag</button>
+    <div class="flex flex-col gap-[11px]">
+      <div class="flex justify-between">
+        <p class="text-3xl text-neutral-400 font-medium ">{{ year }}</p>
+        <button @click="handleTodayClicked" class="primary-button">Vandaag</button>
+      </div>
+
+      <div class="flex justify-center pt-2">
+        <div
+            @click="handlePrevWeekCLicked"
+            class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
+        >
+          <font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-left"/>
         </div>
-
-        <div class="flex justify-center gap-[11px] pt-2">
-          <div
-              @click="handlePrevWeekCLicked"
-              class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
-          >
-            <font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-left"/>
-          </div>
-
-          <div v-for="day in week">
+        <div class="container flex gap-[11px] px-[6px]">
+          <div v-for="day in week" class="flex flex-grow">
             <div @click="handleDateClicked(day.weekDayIndex)"
                  :class="isSelectedForDay(day) ? 'selected-day-container' : 'unselected-day-container' ">
               <p class="font-medium" :class="!isSelectedForDay(day) ? 'text-neutral-800' : 'text-neutral-0'">
-                {{ day.day }}</p>
-              <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">{{ day.date }}</p>
+                {{ day.day }}
+              </p>
+
+              <p :class="!isSelectedForDay(day) ? 'text-neutral-600' : 'text-neutral-0'">
+                {{ day.date }}
+              </p>
             </div>
           </div>
-          <div
-              @click="handleNextWeekClicked"
-              class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
-          ><font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-right"/></div>
         </div>
 
         <div
-            @click="handleAddActivityClicked"
-            class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-center cursor-pointer"
-        >+ Toevoegen</div>
-
-        <div class="flex w-full flex-col gap-4 justify-center">
-          <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0" />
-          <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id" class="flex justify-center">
-            <HourRegistrationRow
-                :hour-registration="hourRegistration"
-                @delete-hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)"
-                @row-clicked="handleHourRegistrationClicked(hourRegistration)"
-            />
-          </div>
+            @click="handleNextWeekClicked"
+            class="border-[1px] border-neutral-100 bg-neutral-50 rounded w-[50px] h-[50px] cursor-pointer flex justify-center items-center hover:bg-neutral-100"
+        >
+          <font-awesome-icon class="text-primary-500" icon="fa-solid fa-chevron-right"/>
         </div>
+      </div>
 
+      <div
+          @click="handleAddActivityClicked"
+          class="w-full h-[31px] bg-primary-50 rounded-[9px] text-primary-500 font-semibold flex justify-center items-center cursor-pointer"
+      >+ Toevoegen
+      </div>
+
+      <div class="flex w-full flex-col gap-4 justify-center">
+        <EmptyHourRegistrationRow v-if="filteredHourRegistrations.length === 0"/>
+        <div v-for="hourRegistration in filteredHourRegistrations" :key="hourRegistration.id"
+             class="flex justify-center">
+          <HourRegistrationRow
+              :hour-registration="hourRegistration"
+              @delete-hour-registration-clicked="(id) => this.handleDeleteHourRegistrationClicked(id)"
+              @row-clicked="handleHourRegistrationClicked(hourRegistration)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -69,8 +81,8 @@ import NewActivityPopup from "./elements/NewActivityPopup.vue";
 
 export default {
   name: "HourRegistrationOverview",
-  components: { PrimaryButton, CalendarDayOption, HourRegistrationRow, EmptyHourRegistrationRow, NewActivityPopup },
-  inject: ['hourRegistrationRepository', 'dateService', 'projectFetchService'],
+  components: {PrimaryButton, CalendarDayOption, HourRegistrationRow, EmptyHourRegistrationRow, NewActivityPopup},
+  inject: ['hourRegistrationRepository', 'dateService'],
   data() {
     return {
       week: [],
@@ -92,13 +104,13 @@ export default {
   methods: {
     loadWeekBar() {
       this.week = this.dateService.isoWeekDays(this.weekNumber)
-            .map(day => {
-                return {
-                    day: day.date.format("dddd"),
-                    date: day.date.format("DD MMM"),
-                    weekDayIndex: day.weekDayIndex,
-                }
-            });
+          .map(day => {
+            return {
+              day: day.date.format("dd"),
+              date: day.date.format("DD MMM"),
+              weekDayIndex: day.weekDayIndex,
+            }
+          });
       this.year = this.dateService.weekOfYear(this.weekNumber).format('YYYY');
     },
 
@@ -134,9 +146,9 @@ export default {
     },
 
     handleNextWeekClicked() {
-        this.weekNumber += 1;
-        this.loadWeekBar();
-        this.filterHourRegistrations();
+      this.weekNumber += 1;
+      this.loadWeekBar();
+      this.filterHourRegistrations();
     },
 
     handlePrevWeekCLicked() {
@@ -146,6 +158,7 @@ export default {
     },
 
     handleAddActivityClicked() {
+      this.selectedHourRegistration = null;
       this.showingModel = true
     },
 
@@ -154,7 +167,6 @@ export default {
     },
 
     async handleDeleteHourRegistrationClicked(id) {
-      console.log(id);
       await this.hourRegistrationRepository.deleteHourRegistration(id);
       await this.loadHourRegistrationsList();
       this.filterHourRegistrations();
@@ -177,7 +189,7 @@ export default {
 <style scoped>
 
 .day-container-item {
-  @apply flex flex-col items-center w-[121px] rounded-[6px] transition-colors ease-in-out cursor-pointer;
+  @apply flex flex-col w-full h-[50px] items-center px-[10px] rounded-[6px] transition-colors ease-in-out cursor-pointer;
 }
 
 .selected-day-container {

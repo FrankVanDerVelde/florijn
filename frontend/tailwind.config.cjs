@@ -9,6 +9,7 @@ module.exports = {
         "./src/components/Scenes/**/*.vue",
         "./src/components/Scenes/**/**/*.vue",
         "./src/components/Scenes/**/**/**/*.vue",
+        "./node_modules/flowbite/**/*.js"
     ],
     theme: {
         extend: {},
@@ -109,5 +110,7 @@ module.exports = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        require('flowbite/plugin')
+    ]
 }

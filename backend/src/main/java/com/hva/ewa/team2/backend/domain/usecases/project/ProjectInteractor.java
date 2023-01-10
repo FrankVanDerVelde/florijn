@@ -1,20 +1,19 @@
 package com.hva.ewa.team2.backend.domain.usecases.project;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
-import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectFilter;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectParticipant;
 import com.hva.ewa.team2.backend.domain.models.project.ProjectReport;
+import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
+import com.hva.ewa.team2.backend.rest.exceptions.UnauthorizedException;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectParticipantAddInfoRequest;
@@ -26,14 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 @Component
@@ -42,24 +37,26 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     private final UserRepository userRepo;
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
-    private final DateServiceLogic dateService;
     private final AssetService assetService;
 
     @Autowired
     public ProjectInteractor(ProjectRepository projectRepository,
                              UserRepository userRepo,
                              HourRegistrationRepository hourRegistrationRepo,
-                             DateServiceLogic dateService,
                              AssetService assetService) {
         this.projectRepo = projectRepository;
         this.userRepo = userRepo;
         this.hourRegistrationRepo = hourRegistrationRepo;
-        this.dateService = dateService;
         this.assetService = assetService;
     }
 
     @Override
-    public Project createProject(ProjectInfoRequest projectInfo) throws IOException {
+    public Project createProject(ProjectInfoRequest projectInfo, Integer userId) throws IOException {
+        final Optional<User> byId = userRepo.findById(userId);
+        if (!(byId.orElse(null) instanceof Admin)) {
+            throw new UnauthorizedException();
+        }
+
         final String title = projectInfo.getTitle();
         final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
@@ -90,21 +87,27 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project getProjectInformation(int id) {
-        return getProjectOrThrowError(id);
+    public Project getProjectInformation(int id, Integer userId) {
+        User user = this.userRepo.findById(userId).orElse(null);
+        return getProjectOrThrowError(id, user, false);
     }
 
     @Override
-    public boolean deleteProject(int id) {
+    public boolean deleteProject(int id, Integer userId) {
         // throws error if project does not exist, therefore does not delete it.
-        getProjectOrThrowError(id);
+        User user = this.userRepo.findById(userId).orElse(null);
+        getProjectOrThrowError(id, user, true);
+
+        if (!(user instanceof Admin)) {
+            throw new UnauthorizedException();
+        }
 
         projectRepo.deleteById(id);
         return true;
     }
 
     @Override
-    public Project updateProjectInformation(int pId, ProjectInfoRequest body) throws IOException {
+    public Project updateProjectInformation(int pId, ProjectInfoRequest body, Integer userId) throws IOException {
         final String title = body.getTitle();
         final String description = body.getDescription();
         final MultipartFile logoUpload = body.getLogoFile();
@@ -114,7 +117,8 @@ public class ProjectInteractor implements ProjectBusinessLogic {
                 description
         );
 
-        final Project project = getProjectOrThrowError(pId);
+        User user = this.userRepo.findById(userId).orElse(null);
+        final Project project = getProjectOrThrowError(pId, user, true);
         project.setTitle(title);
         project.setDescription(description);
 
@@ -129,8 +133,9 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project archiveProject(int id, ProjectEditVerificationRequest body, boolean unarchive) {
-        Project project = getProjectOrThrowError(id);
+    public Project archiveProject(int id, ProjectEditVerificationRequest body, boolean unarchive, Integer userId) {
+        User user = this.userRepo.findById(userId).orElse(null);
+        Project project = getProjectOrThrowError(id, user, true);
         String archiveWord = unarchive ? "unarchive" : "archive";
 
         if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
@@ -142,12 +147,17 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         project.setArchived(!unarchive);
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override
-    public Project transferOwnership(int id, ProjectTransferRequest body) {
-        Project project = getProjectOrThrowError(id);
+    public Project transferOwnership(int id, ProjectTransferRequest body, Integer userId) {
+        User user = this.userRepo.findById(userId).orElse(null);
+        Project project = getProjectOrThrowError(id, user, true);
+
+        if (!(user instanceof Admin)) {
+            throw new UnauthorizedException();
+        }
 
         if (!project.getTitle().equalsIgnoreCase(body.getTitle())) {
             throw new IllegalArgumentException("Confirmation title does not match the project title.");
@@ -161,18 +171,20 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         final Client client = validateClient(clientId);
         project.setClient(client);
 
-        return project;
+        return projectRepo.save(project);
     }
 
     @Override
-    public List<ProjectParticipant> getProjectParticipants(int id) {
-        final Project project = getProjectOrThrowError(id);
+    public List<ProjectParticipant> getProjectParticipants(int id, Integer userId) {
+        User user = this.userRepo.findById(userId).orElse(null);
+        final Project project = getProjectOrThrowError(id, user, false);
         return project.getParticipants();
     }
 
     @Override
-    public ProjectParticipant getProjectParticipant(int projectId, int userId) {
-        final Project project = getProjectOrThrowError(projectId);
+    public ProjectParticipant getProjectParticipant(int projectId, Integer requesterId, int userId) {
+        User user = this.userRepo.findById(requesterId).orElse(null);
+        final Project project = getProjectOrThrowError(projectId, user, false);
 
         final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
@@ -183,8 +195,9 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public ProjectParticipant removeProjectParticipant(int projectId, int userId) {
-        final Project project = getProjectOrThrowError(projectId);
+    public ProjectParticipant removeProjectParticipant(int projectId, Integer requesterId, int userId) {
+        User user = this.userRepo.findById(requesterId).orElse(null);
+        final Project project = getProjectOrThrowError(projectId, user, true);
 
         final ProjectParticipant participant = project.getParticipantByUserId(userId);
         if (participant == null) {
@@ -192,12 +205,14 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         }
 
         final boolean removed = project.removeSpecialist(participant);
+        projectRepo.save(project);
         return removed ? participant : null;
     }
 
     @Override
-    public ProjectParticipant addProjectParticipant(int projectId, ProjectParticipantAddInfoRequest body) {
-        final Project project = getProjectOrThrowError(projectId);
+    public ProjectParticipant addProjectParticipant(int projectId, Integer requesterId, ProjectParticipantAddInfoRequest body) {
+        User user = this.userRepo.findById(requesterId).orElse(null);
+        final Project project = getProjectOrThrowError(projectId, user, true);
         final String role = body.getRole();
         if (role.isBlank()) {
             throw new IllegalArgumentException("The provided role is invalid (not provided/empty).");
@@ -217,95 +232,85 @@ public class ProjectInteractor implements ProjectBusinessLogic {
 
         final ProjectParticipant created = new ProjectParticipant(specialist, role, hourlyRate);
         project.addSpecialist(created);
+        projectRepo.save(project);
         return created;
     }
 
     @Override
-    public List<ProjectReport> getProjectReports(int projectId, JsonNode body) {
-        final Project project = getProjectOrThrowError(projectId);
-
-        // TODO: Integrate backend authorisation here.
-        if (!body.has("userId")) {
-            throw new IllegalArgumentException("No user id was provided.");
-        }
-
-        final int userId = body.get("userId").asInt(-1);
-        final Optional<User> user = userRepo.findById(userId);
-
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("The user with ID " + userId + " does not exist.");
-        }
+    public List<ProjectReport> getProjectReports(int projectId, Integer userId) {
+        User user = this.userRepo.findById(userId).orElse(null);
+        getProjectOrThrowError(projectId, user, false);
 
         List<ProjectReport> reports = new ArrayList<>();
-
-        final TemporalField weekField = WeekFields.of(Locale.GERMANY).weekOfWeekBasedYear();
 
         LocalDateTime startMonth = LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth());
         LocalDateTime endMonth = LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth());
         LocalDateTime startWeek = LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDateTime endWeek = LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-        if (user.get() instanceof Specialist specialist) {
-            reports.add(new ProjectReport(
-                    "Totaal gemaakte uren",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId, userId))
-            ));
+        final boolean isSpecialist = user instanceof Specialist;
+        reports.add(new ProjectReport(
+                "Totaal gemaakte uren",
+                isSpecialist ? hourRegistrationRepo.getTotalHoursForProject(projectId, userId) + "" :
+                        hourRegistrationRepo.getTotalHoursForProject(projectId) + ""
+        ));
 
-            reports.add(new ProjectReport(
-                    "Gemaakte uren deze maand",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startMonth, endMonth)
-                    )
-            ));
+        reports.add(new ProjectReport(
+                "Gemaakte uren deze maand",
+                isSpecialist ? hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startMonth, endMonth) + "" :
+                        hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startMonth, endMonth) + ""
+        ));
 
-            reports.add(new ProjectReport(
-                    "Gemaakte uren deze week",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startWeek, endWeek)
-                    )
-            ));
+        reports.add(new ProjectReport(
+                "Gemaakte uren deze week",
+                isSpecialist ? hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, userId, startWeek, endWeek) + "" :
+                        hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startWeek, endWeek) + ""
+        ));
 
-            reports.add(new ProjectReport(
-                    "Verdiensten",
-                    String.format("€%,.2f", hourRegistrationRepo.getTotalRevenueForProject(projectId, userId)
-                    ).replace(".", ",")
-            ));
-        } else {
-            reports.add(new ProjectReport(
-                    "Totaal gemaakte uren",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProject(projectId))
-
-            ));
-
-            reports.add(new ProjectReport(
-                    "Gemaakte uren deze maand",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startMonth, endMonth)
-            )));
-
-            reports.add(new ProjectReport(
-                    "Gemaakte uren deze week",
-                    String.format("%.2f", hourRegistrationRepo.getTotalHoursForProjectBetween(projectId, startWeek, endWeek)
-            )));
-
-            reports.add(new ProjectReport(
-                    "Ontwikkelkosten",
-                    String.format("%.2f", hourRegistrationRepo.getTotalCostsForProject(projectId))
-                            .replace(".", ",")
-            ));
-        }
+        reports.add(new ProjectReport(
+                isSpecialist ? "Verdiensten" : "Ontwikkelkosten",
+                String.format("€%,.2f", isSpecialist ? hourRegistrationRepo.getTotalRevenueForProject(projectId, userId) :
+                        hourRegistrationRepo.getTotalCostsForProject(projectId)
+                ).replace(".", ",")
+        ));
 
         return reports;
     }
 
     @Override
-    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<ProjectFilter> filter) {
-        if (searchQuery.isPresent() && filter.isPresent()) {
-            return projectRepo.findAll(filter.get(), searchQuery.get());
-        } else if (searchQuery.isPresent()) {
-            return projectRepo.findAll(searchQuery.get());
-        } else if (filter.isPresent()) {
-            return projectRepo.findAll(filter.get());
+    public List<Project> getAllProjects(Optional<String> searchQuery, Optional<String> filter, Integer userId) {
+        final User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UnauthorizedException();
+        }
+
+        boolean queryPresent = searchQuery.isPresent();
+        boolean filterPresent = filter.isPresent();
+        boolean isAdmin = user instanceof Admin;
+
+        if (queryPresent && filterPresent) {
+            if (!isAdmin) return projectRepo.findAllByQuery(ProjectFilter.valueOf(filter.get()), searchQuery.get(), userId);
+            return projectRepo.findAllByQuery(ProjectFilter.valueOf(filter.get()), searchQuery.get());
+        } else if (queryPresent) {
+            if (!isAdmin) return projectRepo.findAllByQuery(searchQuery.get(), userId);
+            return projectRepo.findAllByQuery(searchQuery.get());
+        } else if (filterPresent) {
+            if (!isAdmin) return projectRepo.findAll(ProjectFilter.valueOf(filter.get()), userId);
+            return projectRepo.findAll(ProjectFilter.valueOf(filter.get()));
         } else {
+            if (!isAdmin) return projectRepo.findAll(userId);
             return projectRepo.findAll();
         }
+    }
+
+    @Override
+    public List<Project> getProjectsByUser(int id, Integer userId) {
+        User user = userRepo.findById(userId).orElse(null);
+
+        if (user instanceof Client || user instanceof Admin){
+            return projectRepo.findAll(ProjectFilter.UNARCHIVED, id);
+        }
+        return null;
     }
 
     private void validateProjectInformation(String title, String description) {
@@ -324,12 +329,36 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         return casted;
     }
 
-    private Project getProjectOrThrowError(int id) throws IllegalArgumentException {
+    public Project getProjectOrThrowError(int id, User user, boolean requiresModerationPerm) throws IllegalArgumentException {
         final Optional<Project> project = projectRepo.findById(id);
         if (project.isEmpty()) {
             throw new IllegalArgumentException("The project with ID " + id + " does not exist.");
         }
+        if (!project.get().hasAccess(user, requiresModerationPerm)) {
+            throw new UnauthorizedException();
+        }
+
         return project.get();
     }
 
+    @Override
+    public int getProjectCount(Integer userId) {
+        final User user = userRepo.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UnauthorizedException();
+        }
+
+        if (user instanceof Admin) return projectRepo.getCount();
+        return projectRepo.getCount(userId);
+    }
+
+    @Override
+    public Double getEarnings(Integer userId) {
+        return hourRegistrationRepo.getTotalRevenueForUser(userId);
+    }
+
+    @Override
+    public Double getHours(Integer userId) {
+        return hourRegistrationRepo.getTotalHoursForUser(userId);
+    }
 }

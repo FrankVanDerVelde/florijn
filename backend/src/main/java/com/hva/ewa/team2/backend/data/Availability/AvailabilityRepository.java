@@ -1,23 +1,19 @@
 package com.hva.ewa.team2.backend.data.Availability;
 
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
-import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
-
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface AvailabilityRepository {
+public interface AvailabilityRepository extends CrudRepository<Availability, Integer> {
 
-    List<Availability> fetchAllAvailabilityByUser(int userId, int weekNumber);
-    Optional<Availability> fetchAvailabilityById(int id);
+    @Override
+    @Query("SELECT a FROM Availability a WHERE a.id = :integer")
+    Optional<Availability> findById(Integer integer);
 
-    Availability createAvailability(CreateAvailabilityRequest request) throws Exception;
-
-    Availability updateAvailability(int id, Availability availabilityRegistration) throws Exception;
-
-    Optional<Availability> deleteAvailability(int id) throws Exception;
-
-    List<Availability> copyAvailabilityToNextWeek(int userId, int weekNumber) throws Exception;
-
+    @Query(value = "SELECT a.* FROM Availability a WHERE a.user_id = :userId AND WEEK(date) = :weekNumber AND YEAR(date) = :year", nativeQuery = true)
+    List<Availability> fetchAllAvailabilityByUser(int userId, int weekNumber, int year);
 }
+

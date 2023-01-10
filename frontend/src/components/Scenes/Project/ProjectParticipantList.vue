@@ -40,7 +40,7 @@ export default {
   props: {
     participants: {
       type: Array,
-      required: true
+      default: []
     },
     editButton: {
       type: Boolean,

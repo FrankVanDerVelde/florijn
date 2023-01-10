@@ -2,12 +2,13 @@
   <div class="page-main-mw px-20 pt-[4em]">
     <div class="container flex flex-col">
       <div class="py-0.5">
-        <p class="back-text" @click="buttonBackPage()">&lt Terug</p>
+        <p class="back-text cursor-pointer" @click="buttonBackPage()">&lt Terug</p>
       </div>
       <div class="flex grid grid-cols-16">
         <div class="flex flex-col row-start-1 col-span-7 p-2 w-full">
           <div class="box flex  p-2 justify-center h-[120px]">
-            <img :src="this.userData.avatarUrl" alt="profile picture" class="w-[82px] h-[82px] flex rounded-full mr-4">
+            <Asset :src="this.userData.avatarUrl??'defaults/default-avatar.png'" alt="profile picture"
+                   class="w-[82px] h-[82px] flex rounded-full mr-4"></Asset>
             <div class="flex flex-col justify-between container ml-2">
               <div class="flex flex-col mb-3">
                 <div class="container flex justify-between m-1">
@@ -16,21 +17,22 @@
                     <div class="flex font-semibold text-neutral-500">Developer</div>
                     <div class="flex mt-2">{{ userData.email }}</div>
                   </div>
-                  <div>
-                    <button class="bg-primary-500 border-[1px] h-[38px] w-[180px] text-sm rounded-md
-                    mr-2 text-neutral-0">Op project zetten
+                  <div v-if="this.user.role === 'ADMIN'">
+                    <button @click="viewResume()" class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
+                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV bekijken
                     </button>
-                    <button class="bg-neutral-50 border-neutral-200 mt-2 border-[1px] justify-center
-                    rounded-md bold p-2 mr-2 h-[38px] w-[180px] flex text-neutral-900">CV downloaden
-                    </button>
+                    <div v-if="this.showResumeFailText"
+                         class="mt-1 justify-center text-app_red-500 p-2 mr-2 h-[38px] w-[180px] flex ">Geen CV
+                      beschikbaar
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="box flex-col p-2 w-full mt-3">
-            <div>
-              <div class="back-text float-right" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
+            <div class="pb-3">
+              <div v-if="this.skills !== []" class="back-text float-right cursor-pointer" @click="toggleSkillList()">{{ showSkillsTitle }}</div>
               <div class="font-bold ml-2">Skills</div>
             </div>
             <div class="my-2 ml-2">
@@ -80,6 +82,19 @@
         </div>
       </div>
     </div>
+
+    <div v-if="modalActive" class="bg-white absolute top-0 bottom-0 left-0 right-0 z-10 ">
+
+      <object v-if="pdfSrc" :data="pdfSrc" class="w-full h-full pt-[60px]" type="application/pdf">
+
+      </object>
+
+      <div class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md w-[120px] h-[38px] mb-[10px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center fixed bottom-0 left-1/2 -translate-x-1/2"
+           @click="toggleModal">
+        <div>Close window</div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -87,15 +102,24 @@
 
 import ProjectListDetailsSummary from "../../Scenes/Project/ProjectsListDetailsSummary.vue";
 import SkillListSummary from "../../Scenes/Project/SkillListSummary.vue";
+import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "PublicProfile",
-  inject: ['fetchService'],
-  components: {ProjectListDetailsSummary, SkillListSummary},
+  inject: ['assetsService', 'dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'availabilityRepository'],
+  components: {ProjectListDetailsSummary, SkillListSummary, Asset},
+  computed: {
+    user() {
+      return JSON.parse(localStorage.getItem('user')) ?? {};
+    },
+    pdfSrc() {
+      return this.assetsService.getAsset(this.resumeURL);
+    }
+  },
   data() {
     return {
       specialistId: '',
-      userData: '',
+      userData: [],
       projects: [],
       skills: [],
       tempSkills: [],
@@ -105,13 +129,16 @@ export default {
       wedAv: '-',
       thuAv: '-',
       friAv: '-',
+      showResumeFailText: false,
+      modalActive: false,
+      resumeURL: null,
       showTempSkills: true,
       showSkillsTitle: 'Meer weergeven',
     }
   },
   created() {
-    if (this.id === "null" || localStorage.getItem("role") === "SPECIALIST") {
-      this.$router.push("/home");
+    if (Object.keys(this.user).length === 0) {
+      this.$router.replace({path: '/login'})
     }
     this.specialistId = this.$route.params.Id;
     this.fetchUserInfo();
@@ -121,17 +148,17 @@ export default {
   },
   methods: {
     async fetchUserInfo() {
-      this.userData = await this.fetchService.fetchUrl("/users/" + this.specialistId);
+      this.userData = await this.userRepository.getUserById(this.specialistId);
     },
     async fetchProjects() {
-      this.projects = await this.fetchService.fetchJson("/projects?user=" + this.specialistId);
+      this.projects = await this.projectRepository.fetchProjectByUserId(this.specialistId);
 
       if (this.projects == null) {
         this.projects = [];
       }
     },
     async fetchSkills() {
-      this.skills = await this.fetchService.fetchJson("/skills/user-skills/" + this.specialistId);
+      this.skills = await this.skillsRepository.fetchUserSkills(this.specialistId);
       if (this.skills == null) {
         this.skills = [];
       }
@@ -140,53 +167,55 @@ export default {
         this.tempSkills = this.skills.slice(0, 8);
       }
     },
-    async fetchAvailability() {
-      this.availability = await this.fetchService.fetchJson("/users/" + this.specialistId + "/availability");
+    async toggleModal() {
+      this.modalActive = !this.modalActive;
+    },
+    async viewResume() {
+      const resumeData = await this.userRepository.getResumeById(this.specialistId);
+      this.resumeURL = resumeData.resumeURL
 
-      //TODO: when the availibility per week is fixed, replace the api call with the added weeknumber as param
+      if (this.resumeURL == null) {
+        this.showResumeFailText = true;
+        return false;
+      }
+      await this.toggleModal();
+      this.showResumeFailText = false;
+      return true;
+    },
+    async fetchAvailability() {
+      const weekNumber = this.dateService.currentWeekOfYear();
+      const year = this.dateService.currentYear();
+      this.availability = await this.availabilityRepository.fetchAvailabilityForUserInWeek(this.specialistId, weekNumber, year)
 
       for (let i = 0; i < this.availability.length; i++) {
-        try {
-          const fromHour = this.availability[i].from[0].toString();
-          let fromMin = this.availability[i].from[1].toString();
-          const toHour = this.availability[i].to[0].toString();
-          let toMin = this.availability[i].to[1].toString();
-
-          if (fromMin.length === 1) {
-            fromMin = "0" + fromMin;
-          }
-
-          if (toMin.length === 1) {
-            toMin = "0" + toMin;
-          }
-
-          const availability = fromHour + ":" + fromMin + "-" + toHour + ":" + toMin;
-          this.availibilityHelper(i, availability)
-        } catch (e) {
-          console.log("Could not convert availability to time" + e)
-          return;
-        }
+        const dayIndex = this.dateService.dayIndex(this.availability[i].date)
+        this.availabilityHelper(dayIndex, this.availability[i])
       }
     },
-    availibilityHelper(index, availability) {
-      switch (index) {
-        case 0:
-          this.monAv = availability;
-          break;
-        case 1:
-          this.tueAv = availability;
-          break;
-        case 2:
-          this.wedAv = availability;
-          break;
-        case 3:
-          this.thuAv = availability;
-          break;
-        case 4:
-          this.friAv = availability;
-          break;
-      }
+    availabilityHelper(index, availability) {
+      const days = ['monAv', 'tueAv', 'wedAv', 'thuAv', 'friAv'];
+      const formattedAvailability = this.availabilityTimeFormatter(availability);
 
+      if (this[days[index - 1]] === '-') {
+        this[days[index - 1]] = formattedAvailability;
+      } else {
+        this[days[index - 1]] += "/" + formattedAvailability;
+      }
+    },
+    availabilityTimeFormatter(availability) {
+      const fromTime = this.getTimeHelper(availability.from)
+      const toTime = this.getTimeHelper(availability.to)
+
+      return (fromTime + "-" + toTime)
+    },
+    getTimeHelper(dateString) {
+      let date = new Date(dateString);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+
+      return hours + ":" + minutes;
     },
     buttonBackPage() {
       this.$router.back();

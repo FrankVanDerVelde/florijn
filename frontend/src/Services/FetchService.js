@@ -21,7 +21,7 @@ export default class FetchService {
 
     async fetchJson(path, options = null) {
         let path1 = this.getPath(path);
-        console.log("Fetching:", path1);
+        // console.log("Fetching:", path1);
         let response = await fetch(path1, {
             headers: {
                 'Accept': 'application/json',
@@ -32,7 +32,7 @@ export default class FetchService {
             return await response.json();
         }
 
-        console.log(response, !response.bodyUsed ? await response.text() : "")
+        // console.log(response, !response.bodyUsed ? await response.text() : "")
         return null;
     }
 

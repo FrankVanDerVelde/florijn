@@ -34,8 +34,8 @@ public class InMemoryUserRepository implements MemoryUserRepository {
         Address dummyAddress1 = new Address("Amsterdam", "Jan van Galenstraat", 53, "E", "1204EX");
         Address dummyAddress2 = new Address("Hoorn", "Noorder Plantsoen", 12, "", "1623AB");
 
-        Specialist specialist = (new Specialist(6, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1));
-        Specialist specialist2 = (new Specialist(7, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2));
+        Specialist specialist = (new Specialist(6, "specialist2@test.com", "test", "/src/assets/avatars/avatar3.avif", "Sam", "Janssen", dummyAddress1,null));
+        Specialist specialist2 = (new Specialist(7, "specialist3@test.com", "test", "/src/assets/avatars/avatar3.avif", "Jop", "Christensen", dummyAddress2, null));
 
         this.users.add(new Client(8, "contact@microsoft.com", "test", "/src/assets/microsoft-logo.png", "Microsoft", "/src/assets/microsoft-banner.jpeg"));
 

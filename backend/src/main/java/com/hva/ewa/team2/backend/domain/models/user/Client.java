@@ -30,4 +30,16 @@ public class Client extends User {
         this.bannerSrc = bannerURL;
     }
 
+    @Override
+    public String toString() {
+        return "Client{" +
+                "name='" + name + '\'' +
+                ", bannerSrc='" + bannerSrc + '\'' +
+                ", id=" + id +
+                ", email='" + email + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                '}';
+    }
 }

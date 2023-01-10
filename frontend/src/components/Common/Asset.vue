@@ -5,13 +5,14 @@
 <script>
 export default {
   name: "Asset",
-  inject: ['fetchService'],
+  inject: ['assetsService'],
 
   computed: {
     logoSrc() {
       if (this.src.startsWith("data:image")) return this.src;
+      if (this.src.startsWith("http")) return this.src;
 
-      return this.fetchService.getAsset(this.src);
+      return this.assetsService.getAsset(this.src);
     }
   },
 
@@ -28,7 +29,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

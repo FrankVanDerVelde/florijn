@@ -3,7 +3,7 @@
 <template>
     <div class="font-bold text-[28px] mb-3 uppercase">Skills</div>
 
-    <div v-for="group in this.skillGroups" class="shadow-lg rounded-lg mb-8">
+    <div v-for="group in this.skillGroups" :key="group.id" class="shadow-lg rounded-lg mb-8">
         <SkillGroup :group="group" />
     </div>
 
@@ -12,7 +12,6 @@
         <Expertise :expertises="expertises" :userExpertises="userExpertises" @toggleExpertise="updateUserExpertises">
         </Expertise>
     </div>
-
 
     <div>
         <!-- <div class="text-primary-500 bg-primary-100 rounded-full px-[11px] py-[4px] font-bold inline-block mt-2">
@@ -27,20 +26,21 @@ import SkillGroup from "./SkillsGroup.vue";
 export default {
     name: "Profile",
     components: { SkillGroup, Expertise },
-    inject: ['skillFetchService'],
+    inject: ['skillsRepository'],
     methods: {
         updateUserExpertises(expertiseId) {
-            const userExpertiseIds = this.userExpertises.map((expertise) => expertiseId);
+  
+            const userExpertiseIds = this.userExpertises.map(expertise => expertise.id);
             if (!userExpertiseIds.includes(expertiseId)) {
-                this.userExpertises.push({id: expertiseId, userId: this.user.id});     
+                this.userExpertises.push(this.expertises.filter(userExpertise => userExpertise.id === expertiseId)[0]);  
             } else {
                 this.userExpertises = this.userExpertises.filter(userExpertise => userExpertise.id != expertiseId);
             }
         }
     },
     async created() {
-        let skillGroups = await this.skillFetchService.fetchJson(`/groups`);
-        const userSkills = await this.skillFetchService.fetchJson(`/user-skills/${this.user.id}`);
+        let skillGroups = await this.skillsRepository.fetchSkillGroups();
+        const userSkills = await this.skillsRepository.fetchUserSkills(this.user.id);
 
         const userSkillIds = userSkills.map(userSkill => userSkill.skill.id);
 
@@ -66,8 +66,8 @@ export default {
 
         this.skillGroups = skillGroups;
 
-        this.expertises = await this.skillFetchService.fetchJson(`/expertises`);
-        this.userExpertises = await this.skillFetchService.fetchJson(`/user-expertises/${this.user.id}`);
+        this.expertises = await this.skillsRepository.fetchExpertises();
+        this.userExpertises = await this.skillsRepository.fetchUserExpertises(this.user.id);
     },
     data() {
         return {

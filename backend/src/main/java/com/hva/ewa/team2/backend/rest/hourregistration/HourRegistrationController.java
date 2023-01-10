@@ -4,6 +4,7 @@ import com.hva.ewa.team2.backend.domain.models.hourregistration.CreateHourRegist
 import com.hva.ewa.team2.backend.domain.models.hourregistration.HourRegistration;
 import com.hva.ewa.team2.backend.domain.models.hourregistration.UpdateHourRegistrationRequest;
 import com.hva.ewa.team2.backend.domain.usecases.hourregistration.HourRegistrationBusinessLogic;
+import com.hva.ewa.team2.backend.security.JWToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +29,15 @@ public class HourRegistrationController {
         return ResponseEntity.ok(hourRegistrations);
     }
 
-    @GetMapping(path= "/projects/{projectId}/hour-registrations")
-    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId) {
-        List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProject(projectId);
+    @GetMapping(path= "/projects/{projectId}/hour-registrations/all")
+    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) {
+        List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProject(projectId, jwtToken.getUserId());
         return ResponseEntity.ok(hourRegistrations);
     }
 
-    @GetMapping(path= "/projects/{projectId}/hour-registrations/users/{userId}")
-    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProject(@PathVariable int projectId, @PathVariable int userId) {
-        List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProjectUser(projectId, userId);
+    @GetMapping(path= "/projects/{projectId}/hour-registrations")
+    public ResponseEntity<List<HourRegistration>> getHourRegistrationsByProjectUser(@PathVariable int projectId, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) {
+        List<HourRegistration> hourRegistrations = interactor.handleFetchHourRegistrationsForProjectUser(projectId, jwtToken.getUserId());
         return ResponseEntity.ok(hourRegistrations);
     }
 

@@ -2,7 +2,9 @@
   <div class="sticky top-0 z-50 h-[60px] bg-neutral-0 border-b border-b-neutral-200 shadow shadow">
     <div class="page-main-mw h-full hidden md:flex flex-row items-center justify-between">
       <div class="flex items-center h-full">
-        <img class="h-full p-4 mr-6 object-contain h-full" :src="logo" alt="Business Logo">
+        <router-link :to="{ name: 'home' }" class="h-full">
+          <img class="h-full p-4 mr-6 object-contain h-full" :src="logo" alt="Business Logo">
+        </router-link>
 
         <div class="flex gap-7 h-full w-fit flex items-center">
           <nav-item v-for="item in links" :key="item.name" :data="item"/>
@@ -61,7 +63,9 @@ export default {
       links: [],
       staticLink: {
         name: 'Log in',
-        link: '/login'
+        link: {
+          name: 'login'
+        }
       },
       user: JSON.parse(localStorage.getItem("user")),
     }
@@ -74,55 +78,61 @@ export default {
     },
     isLoggedIn() {
       if (this.user == null) {
+        this.links = [];
         this.staticLink = {
           name: 'Log in',
-          link: '/login'
+          link: {
+            name: 'login'
+          }
         }
       } else {
+        this.links = [
+          {
+            name: 'Home',
+            link: {
+              name: 'home'
+            }
+          },
+          {
+            name: 'Projecten',
+            link: {
+              name: 'projects'
+            }
+          },
+        ];
+
         switch (this.user.role) {
           case "ADMIN":
-            this.links = [
-              {
-                name: 'Home',
-                link: '/admin/home'
-              },
-              {
-                name: 'Admin',
-                link: '/adminpanel'
-              }, {
-                name: 'Nieuw project',
-                link: '/projects/new'
-              }
-            ]
+            this.links.push(
+                {
+                  name: 'Admin',
+                  link: {
+                    name: 'admin-customer-list'
+                  }
+                }, {
+                  name: 'Nieuw project',
+                  link: {
+                    name: 'new-project'
+                  }
+                }
+            );
             break;
           case "SPECIALIST":
-            this.links = [{
-              name: 'Home',
-              link: '/specialist/home'
-            }, {
+            this.links.push({
               name: 'Profiel',
-              link: '/profile'
-            }, {
-              name: 'Projecten',
-              link: '/projects'
-            }]
+              link: {
+                name: 'profile'
+              }
+            });
             break;
           case "CLIENT":
-            this.links = [{
-              name: 'Home',
-              link: '/client/home'
-            }, {
-              name: 'Project Overzicht',
-              link: '/projects/1'
-            }, {
-              name: 'Projecten',
-              link: '/projects'
-            },]
             break;
         }
         this.staticLink = {
           name: 'Log uit',
-          link: '/home'
+          link: {
+            name: 'login'
+          }
         }
       }
     },

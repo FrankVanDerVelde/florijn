@@ -1,5 +1,23 @@
 # EWA - Florijn
 
+## General
+
+Link to deployed application: https://florijn-team-2.up.railway.app/#/login
+
+Link to UML system documentation: https://gitlab.fdmci.hva.nl/se-ewa/2022-2023-1/flo-2/-/wikis/Technical-documentation
+
+
+Login data (all users have password: 'test'):
+
+admin1@test.com (Admin)
+admin2@test.com (Admin)
+
+client1@test.com (Client) 
+another 4 clients with the same email, but 1 number added
+
+specialist1@test.com (Specialist) 
+another 9 specialists with the same email, but 1 number added
+
 ## Frontend
 
 ### Getting started

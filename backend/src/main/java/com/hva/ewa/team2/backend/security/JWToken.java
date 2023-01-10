@@ -17,11 +17,11 @@ public class JWToken {
     private static final String JWT_IPADDRESS_CLAIM = "ipa";
     public static final String JWT_ATTRIBUTE_NAME = "JWTokenInfo";
 
-    private Long userId;
+    private Integer userId;
     private User.Role role;
     private String ipAddress;
 
-    public JWToken(Long userId, User.Role role) {
+    public JWToken(Integer userId, User.Role role) {
         this.userId = userId;
         this.role = role;
     }
@@ -39,7 +39,6 @@ public class JWToken {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
-
 
     private static Key getKey(String passphrase) {
         byte[] hmacKey = passphrase.getBytes(StandardCharsets.UTF_8);
@@ -59,14 +58,14 @@ public class JWToken {
         }
         // build our token from the extracted claims
         JWToken jwToken = new JWToken(
-                Long.valueOf(claims.get(JWT_USERID_CLAIM).toString()),
+                Integer.valueOf(claims.get(JWT_USERID_CLAIM).toString()),
                 User.Role.valueOf(claims.get(JWT_ROLE_CLAIM).toString())
         );
         jwToken.setIpAddress((String) claims.get(JWT_IPADDRESS_CLAIM));
         return jwToken;
     }
 
-    public JWToken(Long userId, User.Role role, String sourceIpAddress) {
+    public JWToken(Integer userId, User.Role role, String sourceIpAddress) {
         this(userId, role);
         this.setIpAddress(sourceIpAddress);
     }
@@ -89,11 +88,11 @@ public class JWToken {
         this.ipAddress = ipAddress;
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 }
