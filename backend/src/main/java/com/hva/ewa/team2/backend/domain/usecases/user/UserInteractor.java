@@ -142,25 +142,34 @@ public class UserInteractor implements UserBusinessLogic {
 
     @Override
     public User addClient(AddClientRequestBody body) throws IOException {
-        User user = new Client(
+        Client user = new Client(
                 -1,
                 body.getEmail(),
                 body.getPassword(),
-                body.getAvatarUrl().getOriginalFilename(),
+                null,
                 body.getName(),
                 null);
 
-        final MultipartFile avatar = body.getAvatarUrl();
-        if (avatar != null) {
-            // uploading the logo to the assets.
-            String extension = FilenameUtils.getExtension(avatar.getOriginalFilename());
-            String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
-            final FileResult fileResult = assetService.uploadAsset(avatar, fileName);
+        uploadAvatar(body.getAvatarUrl(), user);
+        uploadBanner(body.getBannerSrc(), user);
 
-            user.setAvatarUrl(fileName);
-            // returning the updated project with the generated logo upload src.
-        }
         return this.userRepo.save(user);
+    }
+
+    private void uploadAvatar(MultipartFile avatar, Client client) throws IOException {
+        if (avatar == null) return;
+        String extension = FilenameUtils.getExtension(avatar.getOriginalFilename());
+        String fileName = String.format("users/avatars/%s.%s", UUID.randomUUID(), extension);
+        assetService.uploadAsset(avatar, fileName);
+        client.setAvatarUrl(fileName);
+    }
+
+    private void uploadBanner(MultipartFile banner, Client client) throws  IOException {
+        if (banner == null) return;
+        String extension = FilenameUtils.getExtension(banner.getOriginalFilename());
+        String fileName = String.format("users/banners/%s.%s", UUID.randomUUID(), extension);
+        assetService.uploadAsset(banner, fileName);
+        client.setBannerSrc(fileName);
     }
 
     @Override
