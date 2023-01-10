@@ -1,4 +1,4 @@
-import {HourRegistration} from "../../components/models/HourRegistration.js";
+import {HourRegistration} from "../../components/models/HourRegistration/HourRegistration.js";
 import {Project} from "../../components/models/Project.js";
 import moment from "moment/moment.js";
 

@@ -16,6 +16,7 @@ public abstract class User {
     @JsonView(EssentialInfo.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Integer id;
 
     @Getter

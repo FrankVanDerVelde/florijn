@@ -21,6 +21,7 @@ import {
     faCalendarDays,
     faCalendarWeek,
     faCheck,
+    faCircleCheck,
     faChevronLeft,
     faChevronRight,
     faCircleXmark,
@@ -45,15 +46,16 @@ import {
     faWindowMinimize,
     faXmark,
     faImage,
-    faPanorama
+    faPanorama,
+    faEye
 } from '@fortawesome/free-solid-svg-icons'
 import HelpTip from "./components/Common/HelpTip.vue";
 
 library.add(
-    faUsers, faEnvelope, faXmark, faCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
+    faUsers, faEnvelope, faXmark, faCheck, faCircleCheck, faWindowMinimize, faBars, faShareNodes, faChevronRight, faChevronLeft, faMagnifyingGlass,
     faBoxArchive, faCircleXmark, faUser, faRightFromBracket, faFile, faCalendarDays, faLightbulb, faClock, faCalendarWeek, faTrashCan,
     faStar, faPen, faFileImage, faPaste, faPlus, faPenToSquare, faArrowDown, faUserPlus, faBuilding, faBarsProgress, faFaceGrinSquint,
-    faImage, faPanorama
+    faImage, faPanorama, faEye
 );
 
 // `Chainable` list of global components.
