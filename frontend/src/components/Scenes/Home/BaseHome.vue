@@ -1,5 +1,5 @@
 <template>
-  <div class="page-main-mw p-3 md:p-10 flex flex-col gap-4">
+  <div class="page-main-mw p-3 py-6 md:p-10 flex flex-col gap-4">
     <div class="head flex flex-row items-center gap-4 text-primary-500">
       <Asset :src="user.avatarUrl" class="w-20 rounded-full"/>
       <div>

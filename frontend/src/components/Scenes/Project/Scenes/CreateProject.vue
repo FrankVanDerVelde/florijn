@@ -114,7 +114,7 @@ import {UserRole} from "../../../models/UserRole.js";
 export default {
     name: "CreateProject",
     components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
-    inject: ['projectRepository', 'userRepository', 'storedTokenRepository'],
+    inject: ['projectRepository', 'userRepository', 'storedTokenRepository', 'stringService'],
 
     computed: {
         user() {
@@ -250,17 +250,27 @@ export default {
             formData.append('client', this.project.client.id);
             if (this.logoFile != null) formData.append('logoFile', this.logoFile);
 
-            let response;
-            if (this.newProject) {
-                response = await this.projectRepository.createProject(formData);
-            } else {
-                response = await this.projectRepository.updateProject(this.projectId, formData);
-            }
+            try {
+                let response;
+                if (this.newProject) {
+                    response = await this.projectRepository.createProject(formData);
+                } else {
+                    response = await this.projectRepository.updateProject(this.projectId, formData);
+                }
 
-            if (response == null) {
-                this.errors.updating = `Er is een fout opgetreden tijdens het ${this.newProject ? "aanmaken" : "opslaan"} van het project.`;
-            } else {
+                // redirecting to the created project.
                 this.$router.push(`/projects/${response.id}`);
+            } catch (e) {
+                let message = (await e.response.json()).message;
+                if (message?.startsWith('Maximum upload size exceeded')) {
+                    let split = message.split(" ");
+                    const size = this.stringService.convertBytesToText(Math.round(Number.parseInt(split[split.length - 2])), true);
+
+                    this.errors.logo = `Bestand is te groot. Maximum grootte is ${size}.`;
+                    return;
+                }
+
+                this.errors.updating = `Er is een fout opgetreden tijdens het ${this.newProject ? "aanmaken" : "opslaan"} van het project.`;
             }
         },
         async getBase64(file) {

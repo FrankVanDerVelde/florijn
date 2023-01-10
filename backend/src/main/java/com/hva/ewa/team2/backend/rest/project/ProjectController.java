@@ -44,7 +44,7 @@ public class ProjectController {
     // Project CRUD
 
     @PostMapping(path = "/create")
-    public ResponseEntity<Project> createProject(@RequestBody ProjectInfoRequest project, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) throws IOException {
+    public ResponseEntity<Project> createProject(@ModelAttribute ProjectInfoRequest project, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) throws IOException {
         final URI uri = ServletUriComponentsBuilder.fromCurrentRequest().buildAndExpand().toUri();
 
         return ResponseEntity.created(uri).body(projectInteractor.createProject(project, jwtToken.getUserId()));
