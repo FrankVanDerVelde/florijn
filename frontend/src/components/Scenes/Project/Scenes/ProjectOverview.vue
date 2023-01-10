@@ -6,7 +6,7 @@
     <div class="flex items-center justify-between mb-4">
       <h2 class="header-2 !mb-0">Uren</h2>
       <router-link
-          v-if="user?.role === 'SPECIALIST'"
+          v-if="user?.role === 'SPECIALIST' && !project.archived"
           :to="{name: 'hour-registration'}"
           class="bg-primary-400 rounded-md bold p-2 h-[32px] flex items-center text-neutral-0">
         Uren registreren

@@ -33,6 +33,10 @@ export class UserRepository {
         return await this.#networkClient.executeRequest(`/users/${userId}/resume`, HttpMethod.PUT, body);
     }
 
+    async fetchUserCounts() {
+        return await this.#networkClient.executeRequest(`/users/counts`);
+    }
+
     async deleteUserById(userId) {
         return await this.#networkClient.executeRequest(`/users/${userId}`, HttpMethod.DELETE);
     }
