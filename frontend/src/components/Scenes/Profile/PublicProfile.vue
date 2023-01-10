@@ -106,14 +106,14 @@ import Asset from "../../Common/Asset.vue";
 
 export default {
   name: "PublicProfile",
-  inject: ['fetchService', 'dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'availabilityRepository'],
+  inject: ['assetsService', 'dateService', 'userRepository', 'projectRepository', 'skillsRepository', 'availabilityRepository'],
   components: {ProjectListDetailsSummary, SkillListSummary, Asset},
   computed: {
     user() {
       return JSON.parse(localStorage.getItem('user')) ?? {};
     },
     pdfSrc() {
-      return this.fetchService.getAsset(this.resumeURL);
+      return this.assetsService.getAsset(this.resumeURL);
     }
   },
   data() {
@@ -171,7 +171,8 @@ export default {
       this.modalActive = !this.modalActive;
     },
     async viewResume() {
-      this.resumeURL = await (this.userRepository.getResumeById(this.specialistId)).resumeURL;
+      const resumeData = await this.userRepository.getResumeById(this.specialistId);
+      this.resumeURL = resumeData.resumeURL
 
       if (this.resumeURL == null) {
         this.showResumeFailText = true;
