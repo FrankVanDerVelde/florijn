@@ -42,6 +42,7 @@ public class AvailabilityController {
             Availability availability = interactor.handleCreateAvailability(request);
             return ResponseEntity.ok(availability);
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -82,6 +83,4 @@ public class AvailabilityController {
         List<Availability> availabilities = interactor.handleCopyAvailabilityToNextWeek(userId, weekNumber, year);
         return ResponseEntity.ok(availabilities);
     }
-
-
 }

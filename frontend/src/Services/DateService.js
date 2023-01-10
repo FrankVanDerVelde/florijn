@@ -3,8 +3,16 @@ import "moment/locale/nl.js";
 
 export class DateService {
 
+    currentDayOfYear() {
+        return moment().dayOfYear();
+    }
+
     currentWeekOfYear() {
-        return moment().week();
+        return moment().isoWeek();
+    }
+
+    currentYear() {
+        return moment().year();
     }
 
     currentDayOfWeek() {
@@ -12,23 +20,33 @@ export class DateService {
     }
 
     weekOfYear(weekNumber) {
-        return moment().week(weekNumber);
+        return moment().isoWeek(weekNumber);
     }
 
     dayOfWeek(weekNumber, dayIndex) {
-        return moment().week(weekNumber).isoWeekday(dayIndex);
+        return moment().isoWeek(weekNumber).isoWeekday(dayIndex);
     }
 
     dayIndex(date) {
         return moment(date).day();
     }
 
+    /**
+     * Returns array of objects of each day of the week.
+     * @param {Number} weekNumber ISO week number
+     * @return {{date: Number, weekDayIndex: Moment}[]}
+     */
     isoWeekDays(weekNumber) {
         return [1, 2, 3, 4, 5, 6, 7].map(isoWeekDay => {
             return this.#createWeekDayObjectFromIndex(isoWeekDay, weekNumber);
         });
     }
 
+    /**
+     * Returns array of objects of each day in the work week.
+     * @param {Number} weekNumber ISO week number
+     * @return {{date: Number, weekDayIndex: Moment}[]}
+     */
     isoWorkWeekDays(weekNumber) {
         return [1, 2, 3, 4, 5].map(isoWeekDay => {
             return this.#createWeekDayObjectFromIndex(isoWeekDay, weekNumber);
@@ -38,7 +56,7 @@ export class DateService {
     #createWeekDayObjectFromIndex(isoWeekDay, weekNumber) {
         return {
             weekDayIndex: isoWeekDay,
-            date: moment().week(weekNumber).isoWeekday(isoWeekDay)
+            date: moment().isoWeek(weekNumber).isoWeekday(isoWeekDay)
         }
     }
 
@@ -96,6 +114,4 @@ export class DateService {
 
         return `${hours}h ${minutes}m`;
     }
-
-
 }
