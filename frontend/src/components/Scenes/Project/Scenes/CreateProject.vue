@@ -3,57 +3,56 @@
         <div class="flex gap-3 md:flex-row flex-col-reverse md:flex-row mt-4">
             <div class="w-full p-4 pt-0 sm:pt-4 md:pt-4">
                 <div class="hidden md:block">
-                    <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
+                    <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject? "Nieuw": "Wijzig" }} project</h1>
                     <hr>
-                    <router-link :to="{name: 'project-overview'}"
-                                 class="muted error !mt-[-10px] block mb-2"
-                                 v-if="!newProject">
+                    <router-link :to="{ name: 'project-overview' }" class="muted error !mt-[-10px] block mb-2"
+                        v-if="!newProject">
                         &#60; Terug naar project overzicht
                     </router-link>
                 </div>
                 <form class="pt-2" @submit.prevent="saveProject">
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Titel</div>
-                        <input @input="e => updateTitle(e)"
-                               :value="title"
-                               type="text"
-                               placeholder="Project titel"
-                               :class="{'error': 'title' in errors}">
+                        <input @input="e => updateTitle(e)" :value="title" type="text" placeholder="Project titel"
+                            :class="{ 'error': 'title' in errors }">
                     </label>
                     <div class="muted error" v-if="'title' in errors">{{ errors.title }}</div>
 
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Omschrijving</div>
-                        <input @input="e => updateDescription(e)" :value="description"
-                               type="text"
-                               placeholder="Omschrijving"
-                               :class="{'error': 'description' in errors}">
+                        <input @input="e => updateDescription(e)" :value="description" type="text"
+                            placeholder="Omschrijving" :class="{ 'error': 'description' in errors }">
                     </label>
                     <div class="muted error" v-if="'description' in errors">{{ errors.description }}</div>
 
                     <div v-if="newProject" class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Klant</div>
 
-                        <ClientSelect :clients="clients" v-model="project.client"/>
+                        <ClientSelect :clients="clients" v-model="project.client" />
                     </div>
                     <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
-                    <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
-                        <div>Logo</div>
-                        <input @change="e => updateLogo(e)"
-                               type="file"
-                               accept=".svg,.png,.webp,jpg,.jpeg"
-                               class="w-full"
-                               :class="{'error': 'logo' in errors}">
-                    </label>
+                    <div class="banner-file-title">Banner file</div>
+                    <div class="cursed-element">
+                        
+                        <label for="banner-upload-input" class="">
+                            Choose file
+                        </label>
+                        <div class="file-name">{{( logoFile && logoFile.name) && logoFile.name }}</div>
+                        <input @change="e => updateLogo(e)" type="file" name="banner-upload-input" class="hidden" :class="{ 'error': 'logo' in errors }" id="banner-upload-input" accept=".svg,.png,.webp,jpg,.jpeg">
+                    </div>
+
                     <div class="muted error" v-if="'logo' in errors">{{ errors.logo }}</div>
 
-                    <div class="muted">Het logo zal niet worden verwerkt voordat het project is {{ newProject ? "aangemaakt" : "opgeslagen" }}.
+                    <div class="muted">Het logo zal niet worden verwerkt voordat het project is {{
+                        newProject?
+                                            "aangemaakt": "opgeslagen"
+                    }}.
                         Het huidige logo zal worden gebruikt als er geen logo wordt geüpload.
                     </div>
 
                     <div class="flex flex-col items-end mt-5">
-                        <PrimaryButton type="submit" :title="newProject ? 'Maak project aan' : 'Update project'"/>
+                        <PrimaryButton type="submit" :title="newProject ? 'Maak project aan' : 'Update project'" />
                         <div class="muted error" v-if="'updating' in errors">{{ errors.updating }}</div>
                     </div>
 
@@ -62,41 +61,39 @@
 
                         <div class="mt-2 border border-app_red-200 rounded-md">
                             <ul>
-                                <DangerZoneRow v-if="user.role === 'ADMIN'"
-                                               @click="$refs.ownershipModal.open = true"
-                                               title="Eigendom overdragen"
-                                               button="Overdragen"
-                                               description="Draag het eigendom van dit project over aan een andere klant."/>
+                                <DangerZoneRow v-if="user.role === 'ADMIN'" @click="$refs.ownershipModal.open = true"
+                                    title="Eigendom overdragen" button="Overdragen"
+                                    description="Draag het eigendom van dit project over aan een andere klant." />
 
-                                <DangerZoneRow v-if="!project.archived" @click="$refs.archiveModal.open = true" title="Archiveer dit project" button="Archiveer"
-                                               description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden
-                               weergegeven en bepaalde rechten zullen worden gelimiteerd."/>
-                                <DangerZoneRow v-else @click="$refs.unarchiveModal.open = true" title="Dearchiveer dit project" button="Dearchiveer"
-                                               description="Dit project is momenteel gearchiveerd. Dit project zal niet actief in project lijsten worden weergegeven en
-                               bepaalde rechten zijn gelimiteerd. Door het project te dearchiveren, hef je deze beperkingen op."/>
+                                <DangerZoneRow v-if="!project.archived" @click="$refs.archiveModal.open = true"
+                                    title="Archiveer dit project" button="Archiveer" description="Markeer dit project als gearchiveerd. Gearchiveerde projecten zullen niet actief in de project lijsten worden
+                               weergegeven en bepaalde rechten zullen worden gelimiteerd." />
+                                <DangerZoneRow v-else @click="$refs.unarchiveModal.open = true"
+                                    title="Dearchiveer dit project" button="Dearchiveer"
+                                    description="Dit project is momenteel gearchiveerd. Dit project zal niet actief in project lijsten worden weergegeven en
+                               bepaalde rechten zijn gelimiteerd. Door het project te dearchiveren, hef je deze beperkingen op." />
                             </ul>
                         </div>
 
-                        <TransferOwnershipModal ref="ownershipModal" :clients="clients" :project="project"/>
+                        <TransferOwnershipModal ref="ownershipModal" :clients="clients" :project="project" />
 
-                        <ArchiveProjectModal v-if="!project.archived" ref="archiveModal" :project="project"/>
-                        <ArchiveProjectModal v-else ref="unarchiveModal" :project="project" :archive="false"/>
+                        <ArchiveProjectModal v-if="!project.archived" ref="archiveModal" :project="project" />
+                        <ArchiveProjectModal v-else ref="unarchiveModal" :project="project" :archive="false" />
 
                     </div>
                 </form>
             </div>
             <div class="w-full p-4">
                 <div class="md:hidden mb-4">
-                    <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject ? "Nieuw" : "Wijzig" }} project</h1>
+                    <h1 class="text-3xl leading-tight mb-2 font-bold">{{ newProject? "Nieuw": "Wijzig" }} project</h1>
                     <hr>
-                    <router-link :to="{name: 'project-overview'}"
-                                 class="muted error !mt-[-10px] block mb-2"
-                                 v-if="!newProject">
+                    <router-link :to="{ name: 'project-overview' }" class="muted error !mt-[-10px] block mb-2"
+                        v-if="!newProject">
                         &#60; Terug naar project overzicht
                     </router-link>
                 </div>
                 <h2 class="font-semibold uppercase tracking-widest text-[20px] mb-2">Preview</h2>
-                <ProjectLayout v-if="project != null" :project-info="project" :preview="true"/>
+                <ProjectLayout v-if="project != null" :project-info="project" :preview="true" />
             </div>
         </div>
     </div>
@@ -109,11 +106,11 @@ import ClientSelect from "../ClientSelect.vue";
 import DangerZoneRow from "../DangerZoneRow.vue";
 import TransferOwnershipModal from "../Modals/TransferOwnershipModal.vue";
 import ArchiveProjectModal from "../Modals/ArchiveProjectModal.vue";
-import {UserRole} from "../../../models/UserRole.js";
+import { UserRole } from "../../../models/UserRole.js";
 
 export default {
     name: "CreateProject",
-    components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
+    components: { ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout },
     inject: ['projectRepository', 'userRepository', 'storedTokenRepository'],
 
     computed: {
@@ -127,8 +124,8 @@ export default {
         if (this.user == null || (this.newProject && this.user.role !== UserRole.admin) ||
             (!this.newProject && this.user.role === UserRole.specialist)) {
 
-            if (this.newProject) this.$router.push({name: 'projects'});
-            else this.$router.push({name: 'project-overview'});
+            if (this.newProject) this.$router.push({ name: 'projects' });
+            else this.$router.push({ name: 'project-overview' });
             return;
         }
 
@@ -136,7 +133,7 @@ export default {
             this.project = await this.projectRepository.fetchProjectById(this.projectId);
 
             if (this.project == null) {
-                this.$router.push({name: 'projects'});
+                this.$router.push({ name: 'projects' });
                 return;
             }
         } else {
@@ -148,7 +145,7 @@ export default {
 
         // when a non-existing project is requested, redirect to the /projects page.
         if (this.project == null) {
-            this.$router.push({name: 'projects'});
+            this.$router.push({ name: 'projects' });
         }
     },
 
@@ -277,11 +274,10 @@ export default {
 </script>
 
 <style scoped>
-
 hr {
     color: var(--neutral-100);
     height: 20px;
-//border-bottom: 1px solid var(--neutral-100);
+    /* border-bottom: 1px solid var(--neutral-100); */
 }
 
 .muted {
@@ -296,7 +292,8 @@ hr {
     color: var(--app_red-400)
 }
 
-input, select {
+input,
+select {
     width: 100%;
     border-color: rgb(209, 213, 219);
     --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -312,7 +309,44 @@ input, select {
     font-weight: 400;
 }
 
-input.error, select.error {
+input.error,
+select.error {
     border-color: var(--app_red-300);
+}
+
+.cursed-element {
+    width: 100%;
+    border-color: rgb(209, 213, 219);
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), 0 0 #0000, var(--tw-shadow);
+    border-radius: 0.375rem;
+    margin-top: 0.25rem;
+    background: #fff;
+    border-width: 1px;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+}
+
+.cursed-element label {
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+.banner-file-title {
+color: #4b5563;
+font-size: 16px;
+font-weight: bold;
+margin-top: 10px;
+}
+
+.file-name {
+    margin-left: 10px;
 }
 </style>
