@@ -3,7 +3,7 @@
     <div class="head flex flex-row items-center gap-4 text-primary-500">
       <Asset :src="user.avatarUrl" class="w-20 rounded-full"/>
       <div>
-        <p>Hi {{ name }}</p>
+        <p>Hoi {{ name }}</p>
         <h1 class="text-4xl font-semibold">Welkom terug! 👋</h1>
       </div>
     </div>

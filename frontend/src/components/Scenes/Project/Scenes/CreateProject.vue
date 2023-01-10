@@ -222,7 +222,6 @@ export default {
 
             if (this.project.client != null) {
                 let filter = this.clients.filter(c => c.id === this.project.client?.id);
-                console.log(this.clients)
                 if (filter.length > 0) this.project.client = filter[0];
             }
 
@@ -244,8 +243,6 @@ export default {
         },
         async saveProject() {
             if (!this.validate()) return;
-
-            console.log(this.logoFile);
 
             const formData = new FormData();
             formData.append('title', this.title);

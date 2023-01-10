@@ -167,7 +167,6 @@ export default {
     },
 
     async handleDeleteHourRegistrationClicked(id) {
-      console.log(id);
       await this.hourRegistrationRepository.deleteHourRegistration(id);
       await this.loadHourRegistrationsList();
       this.filterHourRegistrations();

@@ -104,7 +104,7 @@ export default {
   },
   created() {
     this.userId = this.storedTokenRepository.getUser().id;
-    console.log([this.year, this.dayOfYear])
+
     this.momentDate = moment().year(this.year).dayOfYear(this.dayOfYear).startOf('day');
     if (this.availability) {
       this.from = moment(this.availability.from).format('HH:mm');
@@ -112,7 +112,6 @@ export default {
     }
     this.loadHolidayEvent();
 
-    console.log(this.momentDate)
     if (this.momentDate.isSameOrBefore(moment())) {
       this.editingEnabled = false;
     } else {

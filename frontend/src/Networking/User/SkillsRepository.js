@@ -40,7 +40,6 @@ export default class SkillsRepository {
     }
 
     async updateUserSkillGroup(userId, skillGroup) {
-        console.log(userId, skillGroup, `/skills/update-user-skill-group/${userId}`)
         return await this.#networkClient.executeRequest(
             `/skills/update-user-skill-group/${userId}`,
             HttpMethod.PUT,

@@ -63,7 +63,7 @@ export class UserRepository {
         let formData = this.#createFormDataFromBody(body);
 
         for (const [key, value] of formData.entries()) {
-            console.log(`key:${key}, value: ${value}`);
+            // console.log(`key:${key}, value: ${value}`);
         }
 
         return await this.#networkClient.executeRequestWithFormData(path, HttpMethod.POST, formData);

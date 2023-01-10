@@ -30,7 +30,7 @@ export default {
   emits: ["selectedParticipant"],
 
   created() {
-    console.log(this.participant.user.avatarUrl)
+
   },
 
   computed: {

@@ -98,7 +98,6 @@ export default {
   },
   inject: ['userRepository'],
   async created() {
-    console.log(this.user)
     if (this.user === null) {
       this.user = {};
     }
@@ -147,8 +146,6 @@ export default {
       formData.append('id',
         adjustedUser.id
       );
-
-      // console.log(Object.fromEntries(formData))
 
       if (this.avatarFile != null) formData.append('avatarFile', this.avatarFile);
 
