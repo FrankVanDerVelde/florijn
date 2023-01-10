@@ -9,7 +9,7 @@ export class NetworkClient {
     constructor(baseURL = import.meta.env.VITE_BACKEND_URL) {
         this.#baseURL = baseURL;
         this.#storedTokenRepository = StoredTokenRepository.shared;
-        this.#loggingEnabled = true;
+        this.#loggingEnabled = false;
     }
 
     /**
@@ -126,19 +126,19 @@ export class NetworkClient {
 
     #logFetchConfiguration(method, url, body, options) {
         if (this.#loggingEnabled) {
-            // console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
+            console.log(`NetworkClient - ${method} ${url}\nbody: %o\noptions: %o`, body, options);
         }
     }
 
     #logNetworkResponse(response, data) {
         if (this.#loggingEnabled) {
-            // console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
+            console.log(`NetworkClient - status code: ${response.status} response: %o`, data);
         }
     }
 
     #logNetworkError(method, url, options, error) {
         if (this.#loggingEnabled) {
-            // console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
+            console.error(`NetworkClient - request failed for request: ${method} ${url}\nwith options: %o.\nerror: %o`, options, error);
         }
     }
 
