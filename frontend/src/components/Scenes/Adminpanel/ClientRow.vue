@@ -9,10 +9,6 @@
               <div class="font-bold">{{ client.name }}</div>
               <div class="font-semibold text-neutral-500">{{ client.email }}</div>
             </div>
-            <button id="detailsbutton"
-                    class="bg-neutral-100 border-neutral-200 border-[1px] font-semibold rounded-md bold p-2 mr-2 h-[31px] flex items-center text-neutral-900">
-              Details
-            </button>
           </div>
         </div>
       </div>
