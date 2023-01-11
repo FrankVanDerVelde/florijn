@@ -6,7 +6,6 @@ Link to deployed application: https://florijn-team-2.up.railway.app/#/login
 
 Link to UML system documentation: https://gitlab.fdmci.hva.nl/se-ewa/2022-2023-1/flo-2/-/wikis/Technical-documentation
 
-
 Login data (all users have password: 'test'):
 
 admin1@test.com (Admin)
@@ -21,7 +20,13 @@ another 9 specialists with the same email, but 1 number added
 ## Frontend
 
 ### Getting started
-to run the website, in the terminal and sure you are in the frontend folder and run `npm install`. Then run `npm run dev` and you should have the website running. 
+to run the website, in the terminal and sure you are in the frontend folder and run `npm install`. 
+Then run `npm run dev` and you should have the website running.
+
+You might experience some CSS problems at this point. We use a CSS utility framework called `Tailwind`. Execute the following command when you are in `/frontend`:
+```npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css```
+
+This command will generate a CSS file, if you want it to execute on each save add the watch flag: `--watch` at the end. 
 
 ### Vue 3
 This project uses [Vue 3](https://vuejs.org) as Frontend Framework
@@ -67,7 +72,6 @@ We will use the Spring framework in Java for creating the REST API. The database
 #### Interface Adapters
 - We use `Controller`'s for handling our REST requests, this will rely on the Spring framework
 - We use `Repository`'s for (database) CRUD operations.
-- We use `Presenter`'s for formatting the outgoing models to make them ready for the view.
 
 #### Application Business Rules
 `Interactor`'s will incorporate the application-specific business rules of the application.
