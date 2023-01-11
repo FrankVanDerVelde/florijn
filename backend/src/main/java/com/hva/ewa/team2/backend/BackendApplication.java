@@ -63,6 +63,9 @@ public class BackendApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        // checking if the user table is filled with data, if so, cancel seeding.
+        if (!userRepo.findAll().isEmpty()) return;
+
         loadSkills();
         loadUsers();
         loadProjects();
@@ -255,7 +258,7 @@ public class BackendApplication implements CommandLineRunner {
                 "ING bankier web applicatie",
                 "De nieuwe web applicatie voor internet bankieren bij ING.",
                 ingClient,
-                "projects/logo-1.png",
+                "projects/logo-1.webp",
                 new ArrayList<>(),
                 true);
 
@@ -288,7 +291,8 @@ public class BackendApplication implements CommandLineRunner {
         Project KPN = new Project(0,
                 "KPN all in one service manager",
                 "De nieuwe service manager voor KPN telefoneren, internet en tv.",
-                KPNClient);
+                KPNClient,
+                "projects/logo-4.png");
 
         KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(6), "Network specialist", 50));
         KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(7), "Designer", 60));
