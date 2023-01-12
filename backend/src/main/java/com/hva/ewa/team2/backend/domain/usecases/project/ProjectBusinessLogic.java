@@ -22,6 +22,8 @@ public interface ProjectBusinessLogic {
 
     Project updateProjectInformation(int pId, ProjectInfoRequest jsonBody, Integer userId) throws IOException;
 
+    Project updateProjectInformation(Project project, ProjectInfoRequest jsonBody) throws IOException;
+
     Project archiveProject(int pId, ProjectEditVerificationRequest body, boolean unarchive, Integer userId);
 
     Project transferOwnership(int pId, ProjectTransferRequest body, Integer userId);

@@ -57,18 +57,14 @@ export class UserRepository {
     async addClient(name, email, password, avatarUrl = null, bannerSrc = null) {
         const path = `/users/add/client`;
         const body = {
+            email: email,
             name: name,
-            lasstname: email,
             password: password,
             avatarUrl: avatarUrl,
-            // bannerSrc: bannerSrc
+            bannerSrc: bannerSrc,
         };
 
         let formData = this.#createFormDataFromBody(body);
-
-        for (const [key, value] of formData.entries()) {
-            // console.log(`key:${key}, value: ${value}`);
-        }
 
         return await this.#networkClient.executeRequestWithFormData(path, HttpMethod.POST, formData);
     }

@@ -195,8 +195,11 @@ export default {
       this.resetValidationErrors();
 
       this.validateSelectedProject();
+
       this.validateFrom();
       this.validateTo();
+      this.validateCorrectTimeOrder();
+
       this.validateDescription();
 
       if (this.isFormValid === null) {
@@ -222,6 +225,20 @@ export default {
       if (!this.form.to) {
         this.isFormValid = false;
         this.errors.to = 'Vul een eindtijd in.';
+      }
+    },
+
+    validateCorrectTimeOrder() {
+      if (this.form.from && this.form.to) {
+        const from = moment(this.form.from, 'hh:mm');
+        const to = moment(this.form.to, 'hh:mm');
+        if (from.isSame(to)) {
+          this.isFormValid = false;
+          this.errors.submitError = "Tijden zijn hetzelfde";
+        } else if (from.isAfter(to)) {
+          this.isFormValid = false;
+          this.errors.submitError = "De aangegeven begintijd is na de startijd.";
+        }
       }
     },
 

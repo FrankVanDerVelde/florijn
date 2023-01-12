@@ -64,5 +64,4 @@ public class AssetController {
             default -> MediaType.ALL_VALUE;
         };
     }
-
 }
