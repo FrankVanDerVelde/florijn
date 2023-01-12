@@ -258,7 +258,7 @@ public class BackendApplication implements CommandLineRunner {
                 "ING bankier web applicatie",
                 "De nieuwe web applicatie voor internet bankieren bij ING.",
                 ingClient,
-                "projects/logo-1.webp",
+                "projects/9a160d9b-0817-4d87-b6e6-441fcd8e8329.webp",
                 new ArrayList<>(),
                 true);
 
@@ -292,7 +292,7 @@ public class BackendApplication implements CommandLineRunner {
                 "KPN all in one service manager",
                 "De nieuwe service manager voor KPN telefoneren, internet en tv.",
                 KPNClient,
-                "projects/logo-4.png");
+                "projects/974dafd7-5324-4f65-8ceb-36e1b0f2587e.png");
 
         KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(6), "Network specialist", 50));
         KPN.addSpecialist(new ProjectParticipant(allSpecialist.get(7), "Designer", 60));

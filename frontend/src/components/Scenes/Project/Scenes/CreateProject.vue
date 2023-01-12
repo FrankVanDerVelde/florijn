@@ -32,7 +32,7 @@
                     </div>
                     <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
-                    <div class="banner-file-title">Banner file</div>
+                    <div class="banner-file-title">Upload logo</div>
                     <div class="cursed-element">
                         
                         <label for="banner-upload-input" class="">
