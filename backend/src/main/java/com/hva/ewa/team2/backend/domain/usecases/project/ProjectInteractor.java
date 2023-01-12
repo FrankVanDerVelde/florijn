@@ -12,7 +12,6 @@ import com.hva.ewa.team2.backend.domain.models.user.Admin;
 import com.hva.ewa.team2.backend.domain.models.user.Client;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
-import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
 import com.hva.ewa.team2.backend.rest.exceptions.UnauthorizedException;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectEditVerificationRequest;
 import com.hva.ewa.team2.backend.rest.project.request.ProjectInfoRequest;
@@ -30,6 +29,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ProjectInteractor implements ProjectBusinessLogic {
@@ -60,30 +60,13 @@ public class ProjectInteractor implements ProjectBusinessLogic {
         final String title = projectInfo.getTitle();
         final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
-        final MultipartFile logoUpload = projectInfo.getLogoFile();
 
         validateProjectInformation(title, description);
         final Client client = validateClient(clientId.orElse(-1));
 
         // creating temp project to update.
         Project newProject = new Project(0, title, description, client);
-        final Project savedProject = projectRepo.save(newProject);
-
-        // TODO:
-        //  If we generate the a random UUID/hash for the logo file name,
-        //  we can prevent to save the object twice and save the logo to the system before saving the project to the database,
-        //  passing along the logo url instantly.
-        if (logoUpload != null) {
-            // uploading the logo to the assets.
-            String extension = FilenameUtils.getExtension(logoUpload.getName());
-            final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/" + savedProject.getId() + "." + extension);
-
-            newProject.setLogoSrc(fileResult.getPath());
-            // returning the updated project with the generated logo upload src.
-            return projectRepo.save(newProject);
-        }
-        // no logo uploaded, returning the project without a logo (default).
-        return savedProject;
+        return this.updateProjectInformation(newProject, projectInfo);
     }
 
     @Override
@@ -107,7 +90,7 @@ public class ProjectInteractor implements ProjectBusinessLogic {
     }
 
     @Override
-    public Project updateProjectInformation(int pId, ProjectInfoRequest body, Integer userId) throws IOException {
+    public Project updateProjectInformation(Project project, ProjectInfoRequest body) throws IOException {
         final String title = body.getTitle();
         final String description = body.getDescription();
         final MultipartFile logoUpload = body.getLogoFile();
@@ -117,19 +100,26 @@ public class ProjectInteractor implements ProjectBusinessLogic {
                 description
         );
 
-        User user = this.userRepo.findById(userId).orElse(null);
-        final Project project = getProjectOrThrowError(pId, user, true);
         project.setTitle(title);
         project.setDescription(description);
 
         if (logoUpload != null) {
             String extension = FilenameUtils.getExtension(logoUpload.getOriginalFilename());
-            final FileResult fileResult = assetService.uploadAsset(logoUpload, "projects/logo-" + pId + "." + extension, true);
+            final String fileLocation = "projects/" + UUID.randomUUID() + "." + extension;
+            assetService.uploadAsset(logoUpload, fileLocation, true);
 
-            project.setLogoSrc(fileResult.getPath());
+            project.setLogoSrc(fileLocation);
         }
 
         return projectRepo.save(project);
+    }
+
+    @Override
+    public Project updateProjectInformation(int pId, ProjectInfoRequest body, Integer userId) throws IOException {
+        User user = this.userRepo.findById(userId).orElse(null);
+        final Project project = getProjectOrThrowError(pId, user, true);
+
+        return this.updateProjectInformation(project, body);
     }
 
     @Override
