@@ -1,4 +1,4 @@
-class Participant {
+export default class Participant {
 
     #id;
     #firstName;
@@ -58,5 +58,24 @@ class Participant {
 
     set email(value) {
         this.#email = value;
+    }
+
+    static createDummy(id) {
+        const sampleFirstNames = ["Henk", "Lisa", "Kylie", "Samira", "Pedro"];
+        const sampleLastNames = ["de Jong", "Gonzales", "de Vogel", "de Berg", "de Wilde"];
+        const sampleRole = ["SPECIALIST", "ADMIN", "CLIENT"];
+
+        const chosenRole = sampleRole[Math.floor(Math.random()*sampleRole.length)]
+
+        const newParticipant = new Participant(
+            id,
+            sampleFirstNames[Math.floor(Math.random()*sampleFirstNames.length)],
+            sampleLastNames[Math.floor(Math.random()*sampleLastNames.length)],
+            chosenRole,
+            "6.png",
+            `${sampleRole}${id}@test.com`
+        );
+
+        return newParticipant;
     }
 }
