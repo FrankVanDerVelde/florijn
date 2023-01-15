@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 
 export default {
   name: "LogIn.vue",
@@ -48,12 +49,19 @@ export default {
   methods: {
     async submitButton() {
       try {
-        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
+        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.hashMethod(this.password));
         this.pushToHome();
       } catch (e) {
         console.error(e)
         this.validationText = 'De inloggegevens zijn onjuist ingevuld! Probeer het nogmaals';
         this.password = '';
+      }
+    },
+    hashMethod(password){
+      if (password != null){
+        const salt = "mixer";
+        const key = CryptoJS.PBKDF2(password, salt, { keySize: 512/32, iterations: 1000 });
+        return key.toString(CryptoJS.enc.Hex);
       }
     },
     pushToHome() {

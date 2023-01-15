@@ -53,7 +53,7 @@
           </div>
           <div class="box flex flex-col mt-3 p-2">
             <div class="font-bold">Beschikbaarheid</div>
-            <div class="my-2" v-if="this.availability.length === 0">Er is geen beschikbaarheid gevonden voor
+            <div class="my-2 av-error" v-if="this.availability.length === 0">Er is geen beschikbaarheid gevonden voor
               {{ this.userData.firstName }}
             </div>
             <div class="my-2 flex-row text-sm" v-else>

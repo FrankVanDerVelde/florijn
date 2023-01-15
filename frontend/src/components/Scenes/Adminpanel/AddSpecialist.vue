@@ -58,6 +58,7 @@
 
 <script>
 import Asset from "../../Common/Asset.vue";
+import CryptoJS from 'crypto-js'
 
 export default {
   name: "AddSpecialist",
@@ -168,10 +169,17 @@ export default {
           this.firstName,
           this.lastName,
           this.email,
-          this.password,
+          this.hashMethod(this.password),
           this.avatarUrl
       );
       this.navigateToSpecialistList();
+    },
+    hashMethod(password){
+      if (password != null){
+        const salt = "mixer";
+        const key = CryptoJS.PBKDF2(password, salt, { keySize: 512/32, iterations: 1000 });
+        return key.toString(CryptoJS.enc.Hex);
+      }
     },
 
     handleCancelTapped() {

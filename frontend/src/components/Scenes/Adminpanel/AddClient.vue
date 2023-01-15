@@ -101,6 +101,7 @@
 <script>
 import Asset from "../../Common/Asset.vue";
 import HelpTip from "../../Common/HelpTip.vue";
+import CryptoJS from 'crypto-js'
 
 export default {
   name: "AddClient",
@@ -223,11 +224,18 @@ export default {
 
     async addClient() {
       try {
-        await this.userRepository.addClient(this.form.companyName, this.form.email, this.form.password, this.form.avatarUrl, this.form.bannerSrc);
+        await this.userRepository.addClient(this.form.companyName, this.form.email, this.hashMethod(this.form.password), this.form.avatarUrl, this.form.bannerSrc);
         this.navigateToCustomerList();
       } catch (e) {
         console.error(e);
         this.showErrorAddingClient();
+      }
+    },
+    hashMethod(password){
+      if (password != null){
+        const salt = "mixer";
+        const key = CryptoJS.PBKDF2(password, salt, { keySize: 512/32, iterations: 1000 });
+        return key.toString(CryptoJS.enc.Hex);
       }
     },
 

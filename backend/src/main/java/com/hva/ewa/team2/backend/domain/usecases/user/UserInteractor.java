@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hva.ewa.team2.backend.common.services.asset.AssetService;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
 import com.hva.ewa.team2.backend.domain.models.user.*;
+import com.hva.ewa.team2.backend.rest.exceptions.UnauthorizedException;
 import com.hva.ewa.team2.backend.rest.user.json.JsonSkills;
 import com.hva.ewa.team2.backend.rest.asset.json.FileResult;
 import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
@@ -121,9 +122,13 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User addAdmin(JsonNode body) {
+    public User addAdmin(JsonNode body, Integer userId) {
         if (body.get("email") == null || body.get("password") == null || body.get("avatarUrl") == null)
             throw new IllegalStateException("The fields email and/or password and/or avatarUrl isn't found!");
+
+        User currentUser = this.userRepo.findById(userId).orElse(null);
+        if (!(currentUser instanceof Admin))
+            throw new UnauthorizedException("The user isn't authorized for adding admins!");
 
         String email = body.get("email").asText();
         String password = body.get("password").asText();
@@ -141,7 +146,11 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User addClient(AddClientRequestBody body) throws IOException {
+    public User addClient(AddClientRequestBody body, Integer userId) throws IOException {
+        User currentUser = this.userRepo.findById(userId).orElse(null);
+        if (!(currentUser instanceof Admin))
+            throw new UnauthorizedException("The user isn't authorized for adding clients!");
+
         Client user = new Client(
                 -1,
                 body.getEmail(),
@@ -173,7 +182,11 @@ public class UserInteractor implements UserBusinessLogic {
     }
 
     @Override
-    public User addSpecialist(AddSpecialistRequestBody body) throws IOException {
+    public User addSpecialist(AddSpecialistRequestBody body, Integer userId) throws IOException {
+        User currentUser = this.userRepo.findById(userId).orElse(null);
+        if (!(currentUser instanceof Admin))
+            throw new UnauthorizedException("The user isn't authorized for adding specialists!");
+
         User user = new Specialist(
                 -1,
                 body.getEmail(),

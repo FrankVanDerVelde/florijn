@@ -3,7 +3,6 @@ package com.hva.ewa.team2.backend.rest.user;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hva.ewa.team2.backend.data.user.UserRepository;
-import com.hva.ewa.team2.backend.domain.models.project.Project;
 import com.hva.ewa.team2.backend.domain.models.user.Address;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.domain.usecases.user.UserBusinessLogic;
@@ -45,7 +44,6 @@ public class UserController {
     @JsonView(User.EssentialInfo.class)
     @GetMapping(path = "/role/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<? extends User>> getUsersByRole(@PathVariable User.Role role) {
-//        System.out.println(jwtToken);
         return ResponseEntity.ok(this.userBusinessLogic.getUsersByRole(role, role.getUserClass()));
     }
 
@@ -75,18 +73,18 @@ public class UserController {
     }
 
     @PostMapping(path = "/add/client")
-    public ResponseEntity<User> addUser(@ModelAttribute AddClientRequestBody body) throws IOException {
-        return ResponseEntity.ok(this.userBusinessLogic.addClient(body));
+    public ResponseEntity<User> addUser(@ModelAttribute AddClientRequestBody body, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.addClient(body, jwtToken.getUserId()));
     }
 
     @PostMapping(path = "/add/specialist")
-    public ResponseEntity<User> addUser(@ModelAttribute AddSpecialistRequestBody body) throws IOException {
-        return ResponseEntity.ok(this.userBusinessLogic.addSpecialist(body));
+    public ResponseEntity<User> addUser(@ModelAttribute AddSpecialistRequestBody body, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) throws IOException {
+        return ResponseEntity.ok(this.userBusinessLogic.addSpecialist(body, jwtToken.getUserId()));
     }
 
     @PostMapping(path = "/add/admin", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addUser(@RequestBody JsonNode body) {
-        return ResponseEntity.ok(this.userBusinessLogic.addAdmin(body));
+    public ResponseEntity<User> addUser(@RequestBody JsonNode body, @RequestAttribute(JWToken.JWT_ATTRIBUTE_NAME) JWToken jwtToken) {
+        return ResponseEntity.ok(this.userBusinessLogic.addAdmin(body, jwtToken.getUserId()));
     }
 
     @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

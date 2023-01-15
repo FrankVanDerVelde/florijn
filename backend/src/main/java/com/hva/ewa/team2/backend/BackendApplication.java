@@ -76,21 +76,23 @@ public class BackendApplication implements CommandLineRunner {
 
     private void loadUsers() {
 
+        String testPassword = "d366cd85a595517b1e641fb8e7c8c5eb8a82888cd9fd01cb7cc070dc58fe2b5423f5440f1a926d18e2aee19e58339eb84549edbdc63573abc32ba4a520e5cd4b";
+
         // admins
-        userRepo.save(new Admin(0, "admin1@test.com", "test", "users/avatars/admin1.jpeg", "Maria", "de Jong"));
-        userRepo.save(new Admin(0, "admin2@test.com", "test", "users/avatars/admin2.jpeg", "Hans", "Oudekerk"));
+        userRepo.save(new Admin(0, "admin1@test.com", testPassword, "users/avatars/admin1.jpeg", "Maria", "de Jong"));
+        userRepo.save(new Admin(0, "admin2@test.com", testPassword, "users/avatars/admin2.jpeg", "Hans", "Oudekerk"));
 
         // clients
-        userRepo.save(new Client(0, "client1@test.com", "test", "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
-        userRepo.save(new Client(0, "client2@test.com", "test", "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
-        userRepo.save(new Client(0, "client3@test.com", "test", "users/avatars/mediamarktlogo.png", "Media Markt", "users/banners/mediamarktbanner.jpg"));
-        userRepo.save(new Client(0, "client4@test.com", "test", "users/avatars/kpn-logo.png", "KPN", "users/banners/kp-banner.jpeg"));
+        userRepo.save(new Client(0, "client1@test.com", testPassword, "users/avatars/5.webp", "ING", "users/banners/5.jpg"));
+        userRepo.save(new Client(0, "client2@test.com", testPassword, "users/avatars/8.png", "Microsoft", "users/banners/8.jpg"));
+        userRepo.save(new Client(0, "client3@test.com", testPassword, "users/avatars/mediamarktlogo.png", "Media Markt", "users/banners/mediamarktbanner.jpg"));
+        userRepo.save(new Client(0, "client4@test.com", testPassword, "users/avatars/kpn-logo.png", "KPN", "users/banners/kp-banner.jpeg"));
 
         // specialists
         userRepo.save(
                 new Specialist(0
                 , "specialist1@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/1.avif",
                         "Whitney", "Keulen",
                         new Address(
@@ -104,7 +106,7 @@ public class BackendApplication implements CommandLineRunner {
         userRepo.save(
                 new Specialist(0,
                 "specialist2@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist2.jpeg",
                         "Jan", "Timmermans",
                         new Address(
@@ -118,7 +120,7 @@ public class BackendApplication implements CommandLineRunner {
         userRepo.save(
                 new Specialist(0,
                 "specialist3@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist3.jpeg",
                         "Kingsley", "Mckenzie",
                         new Address(
@@ -133,7 +135,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist4@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist4.jpeg",
                         "Albert",
                         "van Hof",
@@ -149,7 +151,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist5@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist5.jpeg",
                         "Anna",
                         "Arends",
@@ -165,7 +167,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist6@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist6.jpeg",
                         "Ben",
                         "de Wilde",
@@ -181,7 +183,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist7@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist7.jpeg",
                         "David",
                         "de Wit",
@@ -197,7 +199,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         8,
                         "specialist8@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist8.jpeg",
                         "Gloria",
                         "Gonzales",
@@ -213,7 +215,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist9@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist9.jpeg",
                         "Jannie",
                         "Verstegen",
@@ -229,7 +231,7 @@ public class BackendApplication implements CommandLineRunner {
                 new Specialist(
                         0,
                         "specialist10@test.com",
-                        "test",
+                        testPassword,
                         "users/avatars/specialist10.jpeg",
                         "Kim",
                         "Whitfield",

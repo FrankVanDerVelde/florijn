@@ -21,9 +21,9 @@ public interface UserBusinessLogic {
 
     User updateUser(int id, JsonUserData body) throws IOException;
 
-    User addAdmin(JsonNode body);
-    User addClient(AddClientRequestBody body) throws IOException;
-    User addSpecialist(AddSpecialistRequestBody body) throws IOException;
+    User addAdmin(JsonNode body, Integer userId);
+    User addClient(AddClientRequestBody body, Integer userId) throws IOException;
+    User addSpecialist(AddSpecialistRequestBody body, Integer userId) throws IOException;
 
     User deleteUserById(int id);
 
