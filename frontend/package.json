@@ -49,7 +49,7 @@
   "jest": {
     "preset": "@vue/cli-plugin-unit-jest",
     "testMatch": [
-      "**/tests/**/*.spec.js"
+      "<rootDir>/tests/**/*.spec.js"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",

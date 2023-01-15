@@ -10,21 +10,27 @@ beforeEach(function () {
 
   inMemoryUserRepo = new InMemoryEntitiesService(10000, Participant.createDummy);
 
-  wrapper = shallowMount(PersonalInfo, {
+  wrapper = mount(PersonalInfo, {
     propsData: {},
-    mocks: {
-      user: { "id": 1, "email": "specialist1@test.com", "avatarUrl": "users/avatars/1.avif", "role": "SPECIALIST", "firstName": "Whitney", "lastName": "Keulen" }
-    },
+    // mocks: {
+      
+    // },
     // stubs: {},
     // methods: {},
     global: {
       provide: {
         "userRepository": inMemoryUserRepo
       },
-      stubs: ['FontAwesomeIcon']
+      stubs: ['FontAwesomeIcon', 'Asset']
     }
   });
+  wrapper.setData({user: { "id": 1, "email": "specialist1@test.com", "avatarUrl": "users/avatars/1.avif", "role": "SPECIALIST", "firstName": "Whitney", "lastName": "Keulen" }})
 
+  wrapper.setData({address: {place: "Hoorn", street: "Noorderplantsoen", houseNumber: "3", houseNumberAddition: "B", postalCode: "1643AK"}})
+
+
+  // avatarFile: null,
+  // bannerFile: null,
 })
 
 test('Proper initalization of the user service', function () {
@@ -61,3 +67,16 @@ test('deleteById deletes the specified user', function () {
     .toBeUndefined();
 })
 
+test('form fields load data succesfully', function () {
+  // console.log(wrapper)
+  expect(wrapper.find("#voornaam").element.value).toBe(wrapper.vm.user.firstName);
+  expect(wrapper.find("#achternaam").element.value).toBe(wrapper.vm.user.lastName);
+  expect(wrapper.find("#email").element.value).toBe(wrapper.vm.user.email);
+
+  expect(wrapper.find("#woonplaats").element.value).toBe(wrapper.vm.address.place);
+  expect(wrapper.find("#straat").element.value).toBe(wrapper.vm.address.street);
+  expect(wrapper.find("#huisnummer").element.value).toBe(wrapper.vm.address.houseNumber);
+  expect(wrapper.find("#toevoeging").element.value).toBe(wrapper.vm.address.houseNumberAddition);
+  expect(wrapper.find("#postcode").element.value).toBe(wrapper.vm.address.postalCode);
+
+})
