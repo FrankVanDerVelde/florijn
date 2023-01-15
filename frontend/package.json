@@ -1,18 +1,20 @@
 {
   "name": "frontend",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "npx http-server -p ${PORT} ./dist",
+    "build": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css && vite build",
+    "test:unit": "vue-cli-service test:unit",
+    "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "dev": "vite",
     "dev-host": "vite --host",
-    "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch",
-    "build": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css && vite build",
-    "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "npx http-server -p ${PORT} ./dist",
+    "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch"
   },
   "dependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
@@ -31,12 +33,34 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.1.0",
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/test-utils": "^2.2.7",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
     "autoprefixer": "^10.4.12",
+    "babel-jest": "^27.0.6",
     "eslint": "^8.24.0",
     "eslint-plugin-vue": "^9.6.0",
+    "jest": "^27.0.5",
     "postcss": "^8.4.17",
     "tailwindcss": "^3.2.1",
     "vite": "3.1.8",
     "vite-plugin-node-polyfills": "^0.4.0"
+  },
+  "jest": {
+    "preset": "@vue/cli-plugin-unit-jest",
+    "testMatch": [
+      "**/tests/**/*.spec.js"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "/images/(.*)$": "<rootDir>/public/images/$1",
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.vue$": "@vue/vue3-jest",
+      "^.+\\.(jpg|jpeg|png|gif|svg|mp3|mp4|mpeg)$": "<rootDir>/jest-media-transformer.js"
+    },
+    "verbose": false
   }
 }
