@@ -41,7 +41,7 @@ export default {
         },
 
         disabled() {
-            return this.projectTitle.toLowerCase() !== this.project.title.toLowerCase();
+            return this.projectTitle.toLowerCase() !== this.project?.title?.toLowerCase();
         },
         buttons() {
             return {

@@ -5,9 +5,9 @@ export class Project {
     description
     client
 
-    constructor(id, name, description, client = null) {
+    constructor(id, title, description, client = null) {
         this.id = id;
-        this.title = name;
+        this.title = title;
         this.description = description;
         this.client = client;
     }

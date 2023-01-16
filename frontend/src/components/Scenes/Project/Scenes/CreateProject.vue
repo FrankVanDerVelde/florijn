@@ -61,7 +61,7 @@
 
                         <div class="mt-2 border border-app_red-200 rounded-md">
                             <ul>
-                                <DangerZoneRow v-if="user.role === 'ADMIN'" @click="$refs.ownershipModal.open = true"
+                                <DangerZoneRow v-if="user?.role === 'ADMIN'" @click="$refs.ownershipModal.open = true"
                                     title="Eigendom overdragen" button="Overdragen"
                                     description="Draag het eigendom van dit project over aan een andere klant." />
 
@@ -121,8 +121,9 @@ export default {
 
     async created() {
         // redirect the user to home if they do not have permission to view the page.
-        if (this.user == null || (this.newProject && this.user.role !== UserRole.admin) ||
-            (!this.newProject && this.user.role === UserRole.specialist)) {
+        console.log("found user:", this.user);
+        if (!this.user|| (this.newProject && this.user?.role !== UserRole.admin) ||
+            (!this.newProject && this.user?.role === UserRole.specialist)) {
 
             if (this.newProject) this.$router.push({ name: 'projects' });
             else this.$router.push({ name: 'project-overview' });
@@ -130,9 +131,14 @@ export default {
         }
 
         if (!this.newProject) {
-            this.project = await this.projectRepository.fetchProjectById(this.projectId);
+            let errorOccurred = false;
+            try {
+                this.project = await this.projectRepository.fetchProjectById(this.projectId);
+            } catch (e) {
+                errorOccurred = true;
+            }
 
-            if (this.project == null) {
+            if (errorOccurred || this.project == null) {
                 this.$router.push({ name: 'projects' });
                 return;
             }
@@ -151,7 +157,6 @@ export default {
 
     props: {
         projectId: {
-            type: String,
             default: "-1"
         },
         newProject: {
