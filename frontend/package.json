@@ -61,6 +61,7 @@
       "^.+\\.vue$": "@vue/vue3-jest",
       "^.+\\.(jpg|jpeg|png|gif|svg|mp3|mp4|mpeg)$": "<rootDir>/jest-media-transformer.js"
     },
-    "verbose": false
+    "verbose": false,
+    "snapshotSerializers": ["jest-serializer-vue"]
   }
 }
