@@ -14,21 +14,21 @@
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Titel</div>
                         <input @input="e => updateTitle(e)" :value="title" type="text" placeholder="Project titel"
-                            :class="{ 'error': 'title' in errors }">
+                            id="title-input" :class="{ 'error': 'title' in errors }">
                     </label>
                     <div class="muted error" v-if="'title' in errors">{{ errors.title }}</div>
 
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Omschrijving</div>
                         <input @input="e => updateDescription(e)" :value="description" type="text"
-                            placeholder="Omschrijving" :class="{ 'error': 'description' in errors }">
+                               id="description-input"  placeholder="Omschrijving" :class="{ 'error': 'description' in errors }">
                     </label>
                     <div class="muted error" v-if="'description' in errors">{{ errors.description }}</div>
 
                     <div v-if="newProject" class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Klant</div>
 
-                        <ClientSelect :clients="clients" v-model="project.client" />
+                        <ClientSelect id="client-input" :clients="clients" v-model="project.client" />
                     </div>
                     <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
@@ -111,7 +111,7 @@ import { UserRole } from "../../../models/UserRole.js";
 export default {
     name: "CreateProject",
     components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
-    inject: ['projectRepository', 'userRepository', 'storedTokenRepository', 'stringService'],
+    inject: ['projectRepository', 'userRepository', 'stringService'],
 
     computed: {
         user() {
@@ -162,7 +162,7 @@ export default {
 
     data() {
         return {
-            project: null,
+            project: {},
             title: "",
             description: "",
             logoFile: null,

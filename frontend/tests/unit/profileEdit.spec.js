@@ -1,14 +1,14 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import PersonalInfo from '../../src/components/Scenes/Profile/PersonalInfo.vue';
 import InMemoryEntitiesService from '../mockRepos/InMemoryEntitiesService.js';
-import Participant from '../../src/components/models/Participant.js';
+import Specialist from '../../src/components/models/user/Specialist.js';
 
 let wrapper;
 let inMemoryUserRepo;
 
 beforeEach(function () {
 
-  inMemoryUserRepo = new InMemoryEntitiesService(10000, Participant.createDummy);
+  inMemoryUserRepo = new InMemoryEntitiesService(10000, Specialist.createDummy);
 
   wrapper = mount(PersonalInfo, {
     propsData: {},

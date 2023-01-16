@@ -1,6 +1,6 @@
 <template>
   <section class="border-bottom">
-    <h1>{{ project.title }}</h1>
+    <h1 class="title">{{ project.title }}</h1>
     <p class="description">{{ project.description }}</p>
 
     <div class="flex items-center justify-between mb-[24px]">
