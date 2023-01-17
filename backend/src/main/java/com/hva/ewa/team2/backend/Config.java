@@ -26,7 +26,8 @@ public class Config implements WebMvcConfigurer {
     private int tokenDurationOfValidity;
 
     // path prefixes that will be protected by the authentication filter
-    public Set<String> SECURED_PATHS = Set.of("/users","/skills", "/projects", "/hour-registrations", "/availability");
+    public Set<String> SECURED_PATHS = Set.of();
+//    public Set<String> SECURED_PATHS = Set.of("/users","/skills", "/projects", "/hour-registrations", "/availability");
 
     public static final String IP_FORWARDED_FOR = "X-Forwarded-For";
 
