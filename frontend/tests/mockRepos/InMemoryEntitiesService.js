@@ -7,11 +7,11 @@ export default class InMemoryEntitiesService {
         return this._entities;
     }
 
-    constructor(initialId = 10000, sampleCreator = null) {
+    constructor(initialId = 10000, sampleCreator = null, numberOfSamples = 10) {
         this._lastId = initialId;
         this._entities = [];
         if (sampleCreator != null) {
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < numberOfSamples; i++) {
                 const sample = sampleCreator(this._lastId);
                 this.save(sample);
                 this._lastId++;

@@ -46,6 +46,7 @@
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
+import Participant from "../Project/Participant.vue";
 import AddParticipantModal from "./AddParticipantModal.vue";
 import DeleteParticipantModal from "./DeleteParticipantModal.vue";
 import ProjectParticipant from "./ProjectParticipant.vue";

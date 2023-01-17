@@ -14,21 +14,21 @@
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Titel</div>
                         <input @input="e => updateTitle(e)" :value="title" type="text" placeholder="Project titel"
-                            :class="{ 'error': 'title' in errors }">
+                            id="title-input" :class="{ 'error': 'title' in errors }">
                     </label>
                     <div class="muted error" v-if="'title' in errors">{{ errors.title }}</div>
 
                     <label class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Omschrijving</div>
                         <input @input="e => updateDescription(e)" :value="description" type="text"
-                            placeholder="Omschrijving" :class="{ 'error': 'description' in errors }">
+                               id="description-input"  placeholder="Omschrijving" :class="{ 'error': 'description' in errors }">
                     </label>
                     <div class="muted error" v-if="'description' in errors">{{ errors.description }}</div>
 
                     <div v-if="newProject" class="block text-base leading-5 text-gray-600 font-bold mt-3 w-full">
                         <div>Klant</div>
 
-                        <ClientSelect :clients="clients" v-model="project.client" />
+                        <ClientSelect id="client-input" :clients="clients" v-model="project.client" />
                     </div>
                     <div class="muted error" v-if="'client' in errors">{{ errors.client }}</div>
 
@@ -61,7 +61,7 @@
 
                         <div class="mt-2 border border-app_red-200 rounded-md">
                             <ul>
-                                <DangerZoneRow v-if="user.role === 'ADMIN'" @click="$refs.ownershipModal.open = true"
+                                <DangerZoneRow v-if="user?.role === 'ADMIN'" @click="$refs.ownershipModal.open = true"
                                     title="Eigendom overdragen" button="Overdragen"
                                     description="Draag het eigendom van dit project over aan een andere klant." />
 
@@ -111,7 +111,7 @@ import { UserRole } from "../../../models/UserRole.js";
 export default {
     name: "CreateProject",
     components: {ArchiveProjectModal, TransferOwnershipModal, DangerZoneRow, ClientSelect, PrimaryButton, ProjectLayout},
-    inject: ['projectRepository', 'userRepository', 'storedTokenRepository', 'stringService'],
+    inject: ['projectRepository', 'userRepository', 'stringService'],
 
     computed: {
         user() {
@@ -121,8 +121,9 @@ export default {
 
     async created() {
         // redirect the user to home if they do not have permission to view the page.
-        if (this.user == null || (this.newProject && this.user.role !== UserRole.admin) ||
-            (!this.newProject && this.user.role === UserRole.specialist)) {
+        console.log("found user:", this.user);
+        if (!this.user|| (this.newProject && this.user?.role !== UserRole.admin) ||
+            (!this.newProject && this.user?.role === UserRole.specialist)) {
 
             if (this.newProject) this.$router.push({ name: 'projects' });
             else this.$router.push({ name: 'project-overview' });
@@ -130,9 +131,14 @@ export default {
         }
 
         if (!this.newProject) {
-            this.project = await this.projectRepository.fetchProjectById(this.projectId);
+            let errorOccurred = false;
+            try {
+                this.project = await this.projectRepository.fetchProjectById(this.projectId);
+            } catch (e) {
+                errorOccurred = true;
+            }
 
-            if (this.project == null) {
+            if (errorOccurred || this.project == null) {
                 this.$router.push({ name: 'projects' });
                 return;
             }
@@ -151,7 +157,6 @@ export default {
 
     props: {
         projectId: {
-            type: String,
             default: "-1"
         },
         newProject: {
@@ -162,7 +167,7 @@ export default {
 
     data() {
         return {
-            project: null,
+            project: {},
             title: "",
             description: "",
             logoFile: null,
