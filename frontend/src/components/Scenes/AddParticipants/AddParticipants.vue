@@ -67,15 +67,17 @@ export default {
 
   methods: {
     addParticipant(specialist) {
+      //clear the selected specialistList
       this.selectedSpecialist = null;
 
+      //check if text-fields are filled in correctly
       if (specialist.role === "" || specialist.hourlyRate === "") {
-        // console.log("role or hourlyRate is null");
         this.validation = true;
         return;
       }
       specialist.userId = specialist.participant.id
 
+      //add the specialist to the project
       this.project.participants.push({
         role: specialist.role, hourlyRate: specialist.hourlyRate, user:
             {
@@ -87,13 +89,17 @@ export default {
               lastName: specialist.participant.lastName
             }
       })
+
+      //add the specialist to the project
       this.projectRepository.addParticipant(`${this.$route.params.projectId}`, specialist)
+      //update the specialists which are added to the project
       this.filteredParticipantsList = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
       this.validation = false;
 
     },
 
     async skillSelect(selectedSkill) {
+      //check if the selected skill is already in the selectedFilters array
       if (!selectedSkill.checked) {
         this.selectedFilters.push(selectedSkill.selectedSkill.id)
       } else {
@@ -108,6 +114,7 @@ export default {
         return
       }
 
+      //filter the specialists based on the selected skills
       this.filteredParticipantsList = await this.userRepository.fetchUsersBySkills( this.selectedFilters)
       this.filteredParticipantsList = this.filteredParticipantsList.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
 
@@ -116,6 +123,7 @@ export default {
     deleteParticipant(selectedParticipant) {
       this.selectedDeleteSpecialist = null;
       const participant = selectedParticipant.participant.participant;
+      //remove the participant from the project
       this.project.participants = this.project.participants.filter(projectParticipant => projectParticipant.user.id !== participant.user.id)
       this.projectRepository.deleteParticipant(`${this.$route.params.projectId}`, `${participant.user.id}`)
       this.skillSelect()

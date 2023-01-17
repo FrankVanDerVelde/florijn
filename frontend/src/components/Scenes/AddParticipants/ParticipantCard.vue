@@ -74,6 +74,7 @@ export default {
     async fetchSkills() {
       this.userSkills = await this.skillsRepository.fetchUserSkills(this.participant.id)
 
+      // Get the skills of the user
       for (let i = 0; i < this.userSkills.length; i++) {
         if (this.skill.includes(this.userSkills[i].skill.id)) {
           if (this.userSkills[i].rating === 0) {
