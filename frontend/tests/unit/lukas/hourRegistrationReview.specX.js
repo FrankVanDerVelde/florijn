@@ -9,7 +9,6 @@ import {HourRegistrationStatus} from "../../../src/components/models/HourRegistr
 import {DateService} from "../../../src/Services/DateService";
 import Asset from "../../../src/components/Common/Asset.vue";
 import Participant from "../../../src/components/Scenes/Project/Participant.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 let wrapper;
 const hourRegistrationRepository = new InMemoryHourRegistrationRepo();

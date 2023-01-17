@@ -1,14 +1,14 @@
 <template>
 
-<!--  <router-link :to="{name: 'project-overview'}"-->
-<!--               class="muted error mt-15 block mb-2">-->
-<!--    &#60; Terug naar project overzicht-->
-<!--  </router-link>-->
+  <router-link :to="{name: 'project-overview'}"
+               class="muted error mt-15 block mb-2">
+    &#60; Terug naar project overzicht
+  </router-link>
 
 
   <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
 
-  <div class="flex flex-row flex-wrap gap-8">
+  <div class="flex flex-row flex-wrap gap-8 user">
     <ProjectParticipant v-for="participant in project.participants" :key="participant.id" :participant="participant" :edit="true"
                  @selectedParticipant="item => selectedDeleteSpecialist = item"/>
   </div>
@@ -74,6 +74,7 @@ export default {
         this.validation = true;
         return;
       }
+      console.log(specialist);
       specialist.userId = specialist.participant.id
 
       this.project.participants.push({
@@ -126,8 +127,6 @@ export default {
 
 
   async created() {
-    try {
-
       this.project = await this.projectRepository.fetchProjectById(`/${this.$route.params.projectId}`);
       this.specialists = await this.userRepository.fetchUsers("SPECIALIST")
       this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
@@ -140,8 +139,7 @@ export default {
       if (this.project == null) {
         this.$router.push({name: 'projects'});
       }
-    } catch {
-    }
+
   },
 
 

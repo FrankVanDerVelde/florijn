@@ -3,10 +3,12 @@ package com.hva.ewa.team2.backend.data.Availability;
 import com.hva.ewa.team2.backend.domain.models.availability.Availability;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface AvailabilityRepository extends CrudRepository<Availability, Integer> {
 
     @Override

@@ -43,4 +43,10 @@ export default class InMemoryProjectRepo extends InMemoryEntitiesService {
         return project;
     }
 
+    addParticipant(projectId, userId) {
+        let project = this.findById(projectId);
+        project.addParticipant(userId);
+        this.save(project);
+    }
+
 }

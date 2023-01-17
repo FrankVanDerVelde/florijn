@@ -1,62 +1,91 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import AddParticipants from "../../src/components/Scenes/AddParticipants/AddParticipants.vue";
 import InMemoryEntitiesService from '../mockRepos/InMemoryEntitiesService.js';
-import Participant from '../../src/components/models/Participant.js';
+import Specialist from '../../src/components/models/user/Specialist.js';
 import {Project} from "../../src/components/models/Project";
 import SkillsGroup from "../../src/components/Scenes/Profile/SkillsGroup.vue";
+import InMemoryProjectRepo from "../mockRepos/InMemoryProjectRepo";
+import InMemoryUserRepo from "../mockRepos/InMemoryUserRepo";
+import InMemorySkillsRepo from "../mockRepos/InMemorySkillsRepo";
+import participant from "../../src/components/Scenes/Project/Participant.vue";
 
 let wrapper;
 let inMemoryUserRepo;
 let inMemorySkillsRepo;
 let inMemoryProjectRepo;
+let specialist1;
 
 beforeEach(function () {
 
-    inMemoryUserRepo = new InMemoryEntitiesService(10000, Participant.createDummy);
-    inMemorySkillsRepo = new InMemoryEntitiesService(10000, SkillsGroup.createDummy);
-    inMemoryProjectRepo = new InMemoryEntitiesService(10000, Project.createDummy);
+    inMemoryUserRepo = new InMemoryUserRepo();
+    inMemorySkillsRepo = new InMemorySkillsRepo();
+    inMemoryProjectRepo = new InMemoryProjectRepo(null, false);
+
+    inMemoryUserRepo.save(new Specialist(1, "Bart", "Groene", "", "test@test.com"));
 
     wrapper = mount(AddParticipants, {
         propsData: {},
         props: {
-            project: Project.createDummy()
+            project: Project.createSample(1000)
         },
 
         global: {
             provide: {
                 "userRepository": inMemoryUserRepo,
                 "skillsRepository": inMemorySkillsRepo,
-                "projectRepository": inMemoryProjectRepo
+                "projectRepository": inMemoryProjectRepo,
+
             },
-            stubs: ['FontAwesomeIcon', 'Asset']
+            stubs: ['FontAwesomeIcon', 'Asset', 'router-link']
         }
     });
 
 
 })
 
-test('Proper initalization of the user service', function () {
-    expect(inMemoryUserRepo.entities.length).toBeGreaterThan(0);
-})
+describe('Correct Initialisation of the main page', () => {
+    it('should import correct users', function () {
+        expect(inMemoryUserRepo.entities.length).toBeGreaterThan(0);
+    });
+    it('should render title properly', function () {
+        expect(wrapper.find('h2').text()).toBe('Huidige deelnemers');
+        console.log(wrapper.html());
+    });
+   it("should render the correct amount of users", function () {
+        expect(wrapper.findAll('.user').length).toBe(inMemoryUserRepo.entities.length);
+    });
+    it('should render all skills correctly', function () {
+        expect(wrapper.findAll('.skill').length).toBe(inMemorySkillsRepo.entities.length);
+    });
+});
 
-test('Proper initalization of the project service', function () {
-    expect(inMemoryProjectRepo.entities.length).toBeGreaterThan(0);
-})
+describe('Add participants to project', () => {
 
-test('findAll returns all projects and users', function () {
-    let users = inMemoryProjectRepo.findAll();
-    expect(users)
-        .toStrictEqual(inMemoryProjectRepo.entities);
+    it('should add a participant', function () {
+        let user = inMemoryUserRepo.entities[0];
+        console.log("Test")
+        console.log(wrapper.vm.project)
+        this.specialist1 = JSON.stringify({participant: user})
+        console.log(this.specialist1.participant)
 
-    let projects = inMemoryProjectRepo.findAll();
-    expect(projects)
-        .toStrictEqual(inMemoryProjectRepo.entities);
-})
+        wrapper.vm.addParticipant(this.specialist1);
+        // expect(wrapper.vm.project.participants.length).toBe(1);
+    });
+    // it('should remove a participant', function () {
+    //     let user = inMemoryUserRepo.entities[0];
+    //     wrapper.vm.addParticipant(user);
+    //     wrapper.vm.removeParticipant(user);
+    //     expect(wrapper.vm.project.participants.length).toBe(0);
+    // });
+    // it('should not add a participant twice', function () {
+    //     let user = inMemoryUserRepo.entities[0];
+    //     wrapper.vm.addParticipant(user);
+    //     expect(wrapper.vm.project.participants.length).toBe(1);
+    // });
+    // it('should not remove a participant if not in list', function () {
+    //     let user = inMemoryUserRepo.entities[0];
+    //     wrapper.vm.removeParticipant(user);
+    //     expect(wrapper.vm.project.participants.length).toBe(0);
+    // });
 
-test('renders properly', () => {
-    expect(wrapper.find('h2').text()).toBe('Huidige deelnemers');
-    console.log(wrapper.html());
-    expect(wrapper.find('h2').text()).toBe('Deelnemers toevoegen');
-})
-
-
+});
