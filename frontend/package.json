@@ -1,20 +1,20 @@
 {
   "name": "frontend",
-  "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "private": true,
   "scripts": {
-    "start": "npx http-server -p ${PORT} ./dist",
+    "build": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css && vite build",
+    "test:unit": "vue-cli-service test:unit",
+    "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "dev": "vite",
     "dev-host": "vite --host",
-    "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch",
-    "build": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css && vite build",
-    "build-tailwind": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css",
     "preview": "vite preview",
-    "test:unit": "vue-cli-service test:unit",
-    "test:clear-cache": "node_modules/.bin/jest --clearCache"
+    "start": "npx http-server -p ${PORT} ./dist",
+    "tailwind-watch": "npx tailwindcss -i src/assets/css/input.css -o src/assets/css/output.css --watch"
   },
   "dependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
     "@fortawesome/fontawesome-svg-core": "^6.2.0",
     "@fortawesome/free-brands-svg-icons": "^6.2.0",
     "@fortawesome/free-regular-svg-icons": "^6.2.0",
@@ -22,7 +22,6 @@
     "@fortawesome/vue-fontawesome": "^3.0.1",
     "@headlessui/vue": "^1.7.4",
     "@heroicons/vue": "^2.0.13",
-    "crypto-js": "^4.1.1",
     "date-holidays": "3.16.12",
     "flowbite": "^1.6.0",
     "http-server": "^14.1.1",
@@ -33,48 +32,34 @@
     "vue-session": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/preset-env": "^7.20.2",
     "@vitejs/plugin-vue": "^3.1.0",
-    "@vue/cli-plugin-unit-jest": "^5.0.8",
-    "@vue/test-utils": "^2.0.2",
-    "@vue/vue3-jest": "^27.0.0-alpha.4",
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/test-utils": "^2.2.7",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
     "autoprefixer": "^10.4.12",
-    "babel-jest": "^27.5.1",
+    "babel-jest": "^27.0.6",
     "eslint": "^8.24.0",
     "eslint-plugin-vue": "^9.6.0",
-    "jest": "^27.5.1",
-    "jest-expect-message": "^1.1.2",
+    "jest": "^27.0.5",
     "postcss": "^8.4.17",
     "tailwindcss": "^3.2.1",
     "vite": "3.1.8",
     "vite-plugin-node-polyfills": "^0.4.0"
   },
-  "eslintConfig": {
-    "env": {
-      "node": true,
-      "jest": true
-    },
-    "overrides": [
-      {
-        "files": [
-          "**/src/**/*.spec.js"
-        ]
-      }
-    ]
-  },
   "jest": {
     "preset": "@vue/cli-plugin-unit-jest",
-    "setupFilesAfterEnv": [
-      "jest-expect-message"
-    ],
     "testMatch": [
-      "**/src/**/*.spec.js"
+      "<rootDir>/tests/**/*.spec.js"
     ],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/src/$1",
       "/images/(.*)$": "<rootDir>/public/images/$1",
       "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+    },
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.vue$": "@vue/vue3-jest",
+      "^.+\\.(jpg|jpeg|png|gif|svg|mp3|mp4|mpeg)$": "<rootDir>/jest-media-transformer.js"
     },
     "verbose": false
   }

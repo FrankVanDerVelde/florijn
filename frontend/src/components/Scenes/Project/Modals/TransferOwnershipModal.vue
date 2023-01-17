@@ -35,7 +35,7 @@ export default {
 
     computed: {
         disabled() {
-            return this.projectTitle.toLowerCase() !== this.project.title.toLowerCase() || this.project.client.id === this.originalClient.id;
+            return this.projectTitle.toLowerCase() !== this.project?.title?.toLowerCase() || this.project?.client?.id === this.originalClient.id;
         },
         buttons() {
             return {

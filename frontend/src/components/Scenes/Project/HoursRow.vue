@@ -1,6 +1,7 @@
 <template>
     <HoursInfoPopup v-if="showPopup"
                     :registry="registry"
+                    :id="`hr-popup`"
                     @close="showPopup = false"
                     @changeStatus="updateRegistryStatus"/>
     <tr @click="showPopup = true">
@@ -25,10 +26,10 @@
 </template>
 
 <script>
-import Participant from "./Participant.vue";
 import HourRegistryStatus from "./HourRegistryStatus.vue";
 import HoursInfoPopup from "./HoursInfoPopup.vue";
 import SmallTableCard from "../../Common/SmallTableCard.vue";
+import Participant from "./Participant.vue";
 
 export default {
     name: "hoursRow",
