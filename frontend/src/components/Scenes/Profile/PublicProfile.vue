@@ -36,7 +36,7 @@
               <div class="font-bold ml-2">Skills</div>
             </div>
             <div class="my-2 ml-2">
-              <div v-if="this.skills.length === 0">Er zijn geen skills gevonden voor {{ this.userData.firstName }}</div>
+              <div class="skill-error" v-if="this.skills.length === 0">Er zijn geen skills gevonden voor {{ this.userData.firstName }}</div>
               <skill-list-summary v-if="showTempSkills === true" v-for="skill in tempSkills" :key="skill.id"
                                   :skill="skill"/>
               <skill-list-summary v-else v-for="skill in skills" :key="skill.id" :skill="skill"/>
@@ -47,7 +47,7 @@
           <div class="box flex flex-col p-2">
             <div class="font-bold">Projecten</div>
             <project-list-details-summary v-for="project in projects" :key="project.id" :project="project"/>
-            <div class="my-2" v-if="this.projects.length === 0">Er zijn geen projecten gevonden voor
+            <div class="my-2 pro-error" v-if="this.projects.length === 0">Er zijn geen projecten gevonden voor
               {{ this.userData.firstName }}
             </div>
           </div>

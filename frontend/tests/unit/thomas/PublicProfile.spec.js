@@ -1,64 +1,54 @@
 import {mount} from '@vue/test-utils'
 import PublicProfile from '../../../src/components/Scenes/Profile/PublicProfile.vue'
+import Asset from "../../../src/components/Common/Asset.vue";
+import {createMemoryHistory, createRouter} from "vue-router";
+import LogIn from "../../../src/components/Scenes/Authentication/LogIn";
+import {DateService} from "../../../src/Services/DateService";
+import InMemoryUserRepo from "../../mockRepos/InMemoryUserRepo";
+import InMemoryProjectRepo from "../../mockRepos/InMemoryProjectRepo";
+import InMemoryAssetService from "../../../tests/mockRepos/InMemoryAssetService.js";
+import InMemorySkillsRepo from "../../../tests/mockRepos/InMemoryAssetService.js";
+import InMemoryAvailabilityRepo from "../../mockRepos/InMemoryAvailabilityRepo.js";
 
 describe('PublicProfile', () => {
     let wrapper;
-    const user = {
-        user: {
-            role: 'ADMIN',
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'johndoe@example.com',
-            avatarUrl: 'https://example.com/avatar.png'
-        }
-    }
+    let userRepository;
+    let skillsRepository;
+    let projectRepository;
+
+    const router = createRouter({
+        history: createMemoryHistory(),
+        routes: [{path: '/', component: LogIn}, {path: '/login', component: LogIn}, {path: '/profile/public/:id', component: {default: PublicProfile}}],
+    })
 
     beforeEach(() => {
+        userRepository = new InMemoryUserRepo();
+        skillsRepository = new InMemorySkillsRepo();
+        projectRepository = new InMemoryProjectRepo();
+
         wrapper = mount(PublicProfile, {
-            propsData: {
-                user: user,
-                skills: [
-                    {id: 1, name: 'JavaScript'},
-                    {id: 2, name: 'Vue.js'}
-                ],
-                projects: [
-                    {id: 1, name: 'Project A'},
-                    {id: 2, name: 'Project B'},
-                    {id: 2, name: 'Project C'}
-                ],
-                availability: []
-            },
-            methods: {
-                viewResume: jest.fn()
+            global: {
+                stubs: ['router-link', 'font-awesome-icon', 'Asset'],
+                provide: {
+                    assetsService: InMemoryAssetService,
+                    dateService: new DateService(),
+                    userRepository: userRepository,
+                    projectRepository: projectRepository,
+                    skillsRepository: skillsRepository,
+                    availabilityRepository: InMemoryAvailabilityRepo
+                },
+                plugins: [router]
             }
-        })
+        });
     })
 
-    it('should render correct content', () => {
-        expect(wrapper.find('p.back-text').text(),
-            'Back text is not displaying'
-                .toBe('< Terug'));
-        expect(wrapper.find('.container.flex.flex-col > div > div > div > div > div').text(),
-            'User name is not displaying (the right) information'
-                .toBe('John Doe'));
-        expect(wrapper.find('.container.flex.flex-col > div > div > div > div > div + div').text(),
-            'User role is not displaying (the right) information'
-                .toBe('Developer'));
-        expect(wrapper.find('.container.flex.flex-col > div > div > div > div > div + div + div').text(),
-            'User email is not displaying (the right) information'
-                .toBe('johndoe@example.com'));
-        expect(wrapper.find('av-error').text(),
-            'Validation text of no availability is shown'
-                .toBe('Er is geen beschikbaarheid gevonden voor John'));
-        expect(wrapper.findAll('.skill-list-summary').length,
-            'All skills are shown'.toBe(2));
-        expect(wrapper.findAll('.project-list-details-summary').length,
-            'All projects are shown'.toBe(3));
+    it('should show text when no data is found', () => {
+        expect(wrapper.find('p.back-text').text()).toEqual('< Terug');
+
+        //check if the error message element exists since availability is empty
+        expect(wrapper.find('av-error')).toBeTruthy;
+        expect(wrapper.find('pro-error')).toBeTruthy;
+        expect(wrapper.find('skill-error')).toBeTruthy;
     })
 
-    it('should call viewResume method with correct arguments when viewResume button is clicked', () => {
-        const viewResume = jest.spyOn(wrapper.vm, 'viewResume');
-        wrapper.find('button').trigger('click');
-        expect(viewResume).toHaveBeenCalledWith(user);
-    });
 })

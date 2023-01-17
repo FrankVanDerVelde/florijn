@@ -78,4 +78,7 @@ export default class InMemoryProjectRepo extends InMemoryEntitiesService {
         return project;
     }
 
+    fetchProjectByUserId(id){
+        return null;
+    }
 }
