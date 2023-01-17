@@ -1,5 +1,5 @@
 import {mount} from '@vue/test-utils'
-import PublicProfile from './PublicProfile.vue'
+import PublicProfile from '../../../src/components/Scenes/Profile/PublicProfile.vue'
 
 describe('PublicProfile', () => {
     let wrapper;

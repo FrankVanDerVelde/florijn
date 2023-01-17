@@ -7,9 +7,6 @@ import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
-import com.hva.ewa.team2.backend.rest.user.AddClientRequestBody;
-import com.hva.ewa.team2.backend.rest.user.AddSpecialistRequestBody;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -49,7 +49,7 @@ export default {
   methods: {
     async submitButton() {
       try {
-        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.hashMethod(this.password));
+        await this.authenticationRepository.authenticateWithCredentials(this.email.trim(), this.password);
         this.pushToHome();
       } catch (e) {
         console.error(e)

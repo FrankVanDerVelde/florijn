@@ -1,5 +1,5 @@
 import {mount} from '@vue/test-utils'
-const LogIn = require('../Authentication/LogIn');
+const LogIn = require('../../../src/components/Scenes/Authentication/LogIn');
 
 describe('LogIn.vue', () => {
     let wrapper;

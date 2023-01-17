@@ -1,5 +1,5 @@
-import {AuthenticationRepository} from './AuthenticationRepository';
-import {StoredTokenRepository} from './StoredTokenRepository';
+import {AuthenticationRepository} from '../../../src/Networking/Authentication/AuthenticationRepository';
+import {StoredTokenRepository} from '../../../src/Networking/Authentication/StoredTokenRepository';
 
 describe('AuthenticationRepository', () => {
     let authenticationRepository;
