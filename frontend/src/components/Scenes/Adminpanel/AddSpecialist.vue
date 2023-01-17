@@ -169,7 +169,7 @@ export default {
           this.firstName,
           this.lastName,
           this.email,
-          this.hashMethod(this.password),
+          this.password,
           this.avatarUrl
       );
       this.navigateToSpecialistList();

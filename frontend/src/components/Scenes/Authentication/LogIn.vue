@@ -16,7 +16,7 @@
               <input v-model="password" required type="password" class="pl-[7px] w-80">
             </div>
           </div>
-          <p class="text-center w-80 min-h-[50px] text-app_red-500">&nbsp; {{ validationText }}</p>
+          <p class="text-center w-80 min-h-[50px] text-app_red-500 error-text">&nbsp; {{ validationText }}</p>
           <div class="submit-button">
             <button class="bg-primary-500 text-neutral-50 font-semibold hover:bg-primary-700 py-2.5
           text-sm leading-5 rounded-lg w-80">Log in

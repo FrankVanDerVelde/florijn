@@ -224,7 +224,7 @@ export default {
 
     async addClient() {
       try {
-        await this.userRepository.addClient(this.form.companyName, this.form.email, this.hashMethod(this.form.password), this.form.avatarUrl, this.form.bannerSrc);
+        await this.userRepository.addClient(this.form.companyName, this.form.email, this.form.password, this.form.avatarUrl, this.form.bannerSrc);
         this.navigateToCustomerList();
       } catch (e) {
         console.error(e);
