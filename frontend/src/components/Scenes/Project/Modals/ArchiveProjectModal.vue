@@ -83,10 +83,18 @@ export default {
             let authBody = {
                 title: this.projectTitle
             };
-            const res = this.archive ? await this.projectRepository.archiveProject(this.project.id, authBody)
-                : await this.projectRepository.unarchiveProject(this.project.id, authBody);
 
-            if (res == null) {
+            let errorOccurred = false;
+            let res;
+            try {
+                res = this.archive ? await this.projectRepository.archiveProject(this.project.id, authBody)
+                    : await this.projectRepository.unarchiveProject(this.project.id, authBody);
+            } catch (e) {
+                console.error("Something went wrong", e);
+                errorOccurred = true;
+            }
+
+            if (errorOccurred || res == null) {
                 console.error(`Could not ${this.archive ? 'archive' : 'unarchive'} project.`);
                 return;
             }

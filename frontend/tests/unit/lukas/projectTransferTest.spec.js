@@ -12,14 +12,14 @@ import DangerZoneRow from "../../../src/components/Scenes/Project/DangerZoneRow.
 import TransferOwnershipModal from "../../../src/components/Scenes/Project/Modals/TransferOwnershipModal.vue";
 import 'intersection-observer';
 
-let projectRepository
-let userRepository;
+export let projectRepository
+export let userRepository;
 
 beforeEach(async () => {
     loadRepos();
 });
 
-function loadRepos() {
+export function loadRepos() {
     if (userRepository == null) userRepository = new InMemoryUserRepo();
     userRepository.save(new Client(5, 'ING', '', 'contact@ing.nl'));
     userRepository.save(new Client(6, 'KPN', '', 'something@kpn.nl'));
@@ -30,7 +30,7 @@ function loadRepos() {
     projectRepository.save(new Project(1, 'Hello World', 'I am a disney princess', userRepository.findById(5)));
 }
 
-async function createWrapper(user = userRepository.findById(7)) {
+export async function createWrapper(user = userRepository.findById(7)) {
     const router = createRouter({
         history: createMemoryHistory(),
         routes: [],

@@ -44,6 +44,27 @@ export default class InMemoryProjectRepo extends InMemoryEntitiesService {
         return project;
     }
 
+    #confirmArchiveProject(projectId, body, archive) {
+        let project = this.findById(projectId);
+        if (!project) return null;
+
+        if (body.title !== project.title) {
+            throw new Error('Title does not match');
+        }
+
+        project.archived = archive;
+        this.save(project);
+        return project;
+    }
+
+    async archiveProject(projectId, body) {
+        return this.#confirmArchiveProject(projectId, body, true);
+    }
+
+    async unarchiveProject(projectId, body) {
+        return this.#confirmArchiveProject(projectId, body, false);
+    }
+
     async transferProject(projectId, body) {
         let project = this.findById(projectId);
         if (!project) return null;
