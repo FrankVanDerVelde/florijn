@@ -6,6 +6,7 @@
             <div></div>
             <div class="flex justify-end mr-3">
                 <div
+                id="formButton"
                     class="bg-primary-500 text-neutral-0 active:bg-white:text-primary-500 flex justify-center items-center rounded-md h-[32px] w-[96px] hover:bg-primary-600 capitalize font-bold text-[14px] text-center cursor-pointer"
                     @click="handleFormButton">
                     <div>{{ this.active ? "save" : "aanpassen" }}</div>

@@ -54,7 +54,10 @@ test('Find by id returns the specified user', function () {
     .toStrictEqual(user2);
   expect(inMemoryUserRepo.findById(user3.id))
     .toStrictEqual(user3);
+    // BICEP (Boundy condition explored)
   expect(inMemoryUserRepo.findById(99999))
+    .toBeUndefined();
+    expect(inMemoryUserRepo.findById(-1))
     .toBeUndefined();
 })
 
