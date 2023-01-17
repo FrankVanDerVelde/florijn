@@ -14,5 +14,4 @@ class BackendApplicationTests {
     void contextLoads() {
         assertNotNull(application);
     }
-
 }

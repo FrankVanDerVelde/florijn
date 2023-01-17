@@ -1,6 +1,8 @@
 import moment from "moment/moment.js";
 import "moment/locale/nl.js";
 
+
+
 export class DateService {
 
     currentDayOfYear() {

@@ -113,7 +113,6 @@ public class Specialist extends User {
         return "{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", skills=" + skills +
                 ", address=" + address +
                 ", id=" + id +
                 ", email='" + email + '\'' +

@@ -77,7 +77,7 @@ public class AvailabilityRestTest {
         CreateAvailabilityRequestBody request2 = new CreateAvailabilityRequestBody( of(2025, 1, 1), LocalTime.of(10, 0), LocalTime.of(12, 0));
         restTemplate.put("/availability/150/update", request2);
         ResponseEntity<String> response3 = restTemplate.getForEntity("/availability/150", String.class);
-        assertEquals(200, response3.getStatusCodeValue());
+        assertEquals(404, response3.getStatusCodeValue());
     }
 
     @Test

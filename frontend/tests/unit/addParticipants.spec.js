@@ -1,13 +1,10 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import AddParticipants from "../../src/components/Scenes/AddParticipants/AddParticipants.vue";
-import InMemoryEntitiesService from '../mockRepos/InMemoryEntitiesService.js';
 import Specialist from '../../src/components/models/user/Specialist.js';
 import {Project} from "../../src/components/models/Project";
-import SkillsGroup from "../../src/components/Scenes/Profile/SkillsGroup.vue";
 import InMemoryProjectRepo from "../mockRepos/InMemoryProjectRepo";
 import InMemoryUserRepo from "../mockRepos/InMemoryUserRepo";
 import InMemorySkillsRepo from "../mockRepos/InMemorySkillsRepo";
-import participant from "../../src/components/Scenes/Project/Participant.vue";
 
 let wrapper;
 let inMemoryUserRepo;
