@@ -20,7 +20,7 @@
             {{ this.formatDate }}
         </td>
         <td class="status">
-            <HourRegistryStatus id="hr-status" status="hello"/>
+            <HourRegistryStatus id="hr-status" :status="registry.status"/>
         </td>
     </tr>
 </template>
