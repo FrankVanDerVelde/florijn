@@ -5,8 +5,8 @@
 
     <div class="flex items-center justify-between mb-[24px]">
       <Stats class="!pb-0">
-        <Stat :dot="false" icon="users">{{ participantCount }} Deelnemers</Stat>
-        <stat v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</stat>
+        <Stat id="stat-participants" :dot="false" icon="users">{{ participantCount }} Deelnemers</Stat>
+        <Stat id="stat-archived" v-if="project.archived" :dot="false" icon="box-archive">Gearchiveerd</Stat>
       </Stats>
       <button
           v-if="editButton"
