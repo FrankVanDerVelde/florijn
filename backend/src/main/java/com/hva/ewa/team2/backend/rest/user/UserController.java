@@ -62,7 +62,6 @@ public class UserController {
     @GetMapping(path = "/{id}/resume", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Map<String, String>> getResume(@PathVariable int id) throws IOException {
-//        return ResponseEntity.ok(this.userBusinessLogic.getResume(id));
         return ResponseEntity.ok(Collections.singletonMap("resumeURL", this.userBusinessLogic.getResume(id)));
     }
 

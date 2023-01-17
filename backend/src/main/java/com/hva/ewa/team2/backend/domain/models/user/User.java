@@ -27,7 +27,6 @@ public abstract class User {
     @Getter
     @Setter
     @JsonView(EssentialInfo.class)
-//    @Column(columnDefinition = ("varchar(255) default 'defaults/default-avatar.png'"))
     public String avatarUrl;
 
     @Getter
