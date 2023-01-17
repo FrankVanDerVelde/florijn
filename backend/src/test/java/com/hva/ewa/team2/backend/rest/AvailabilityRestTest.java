@@ -1,7 +1,5 @@
 package com.hva.ewa.team2.backend.rest;
 
-import com.hva.ewa.team2.backend.domain.models.availability.Availability;
-import com.hva.ewa.team2.backend.domain.models.availability.CreateAvailabilityRequest;
 import com.hva.ewa.team2.backend.domain.models.user.Specialist;
 import com.hva.ewa.team2.backend.domain.models.user.User;
 import com.hva.ewa.team2.backend.rest.availability.CreateAvailabilityRequestBody;
@@ -12,11 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static java.time.LocalDate.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static java.time.LocalDate.of;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AvailabilityRestTest {
@@ -63,19 +60,20 @@ public class AvailabilityRestTest {
         assertEquals(404, response3.getStatusCodeValue());
     }
 
-@Test
+    @Test
     void updateAvailability() {
         CreateAvailabilityRequestBody request = new CreateAvailabilityRequestBody( of(2025, 1, 1), LocalTime.of(10, 0), LocalTime.of(11, 0));
 
         ResponseEntity<String> response = restTemplate.postForEntity("/users/1/availability", request, String.class);
+        System.out.println(response.getBody());
         assertEquals(200, response.getStatusCodeValue());
 
         ResponseEntity<String> response2 = restTemplate.getForEntity("/users/1/availability", String.class);
         assertEquals(200, response2.getStatusCodeValue());
 
         CreateAvailabilityRequestBody request2 = new CreateAvailabilityRequestBody( of(2025, 1, 1), LocalTime.of(10, 0), LocalTime.of(12, 0));
-        restTemplate.put("/availability/144/update", request2);
-        ResponseEntity<String> response3 = restTemplate.getForEntity("/availability/144", String.class);
+        restTemplate.put("/availability/150/update", request2);
+        ResponseEntity<String> response3 = restTemplate.getForEntity("/availability/150", String.class);
         assertEquals(200, response3.getStatusCodeValue());
     }
 
