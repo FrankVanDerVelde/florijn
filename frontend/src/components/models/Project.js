@@ -35,4 +35,8 @@ export class Project {
     set description(value) {
         this._description = value;
     }
+
+    static createDummy(id) {
+        return new Project(id, "Project " + id, "Description " + id);
+    }
 }

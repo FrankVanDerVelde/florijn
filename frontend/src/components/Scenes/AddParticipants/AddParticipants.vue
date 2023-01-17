@@ -1,9 +1,9 @@
 <template>
 
-  <router-link :to="{name: 'project-overview'}"
-               class="muted error mt-15 block mb-2">
-    &#60; Terug naar project overzicht
-  </router-link>
+<!--  <router-link :to="{name: 'project-overview'}"-->
+<!--               class="muted error mt-15 block mb-2">-->
+<!--    &#60; Terug naar project overzicht-->
+<!--  </router-link>-->
 
 
   <h2 class="!mb-0 mt-4 header-2" >Huidige deelnemers</h2>
@@ -46,7 +46,6 @@
 <script>
 import ParticipantCard from "./ParticipantCard.vue";
 import FilterParticipants from "./FilterParticipants.vue";
-import Participant from "../Project/Participant.vue";
 import AddParticipantModal from "./AddParticipantModal.vue";
 import DeleteParticipantModal from "./DeleteParticipantModal.vue";
 import ProjectParticipant from "./ProjectParticipant.vue";
@@ -126,24 +125,27 @@ export default {
 
 
   async created() {
-    this.project = await this.projectRepository.fetchProjectById(`/${this.$route.params.projectId}`);
-    this.specialists = await this.userRepository.fetchUsers("SPECIALIST")
-    this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
+    try {
 
-    this.skillGroup = await this.skillsRepository.fetchSkillGroups()
-    this.filteredParticipantsList = this.specialists;
-    this.skillGroup.forEach(skill => skill.skills.forEach(skill => skill.checked = false))
+      this.project = await this.projectRepository.fetchProjectById(`/${this.$route.params.projectId}`);
+      this.specialists = await this.userRepository.fetchUsers("SPECIALIST")
+      this.specialists = this.specialists.filter(specialist => !this.project.participants.some(participant => participant.user.id === specialist.id))
 
-    // when a non-existing project is requested, redirect to the /projects page.
-    if (this.project == null) {
-      this.$router.push({name: 'projects'});
+      this.skillGroup = await this.skillsRepository.fetchSkillGroups()
+      this.filteredParticipantsList = this.specialists;
+      this.skillGroup.forEach(skill => skill.skills.forEach(skill => skill.checked = false))
+
+      // when a non-existing project is requested, redirect to the /projects page.
+      if (this.project == null) {
+        this.$router.push({name: 'projects'});
+      }
+    } catch {
     }
   },
 
 
   data() {
     return {
-      project: {},
       specialists: {},
       skillset: {},
       selectedFilters: [],

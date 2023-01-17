@@ -16,7 +16,6 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 
 @Component
-@Primary
 public class AvailabilityIteractor implements AvailabilityBusinessLogic {
 
     private final AvailabilityRepository availabilityRepository;
