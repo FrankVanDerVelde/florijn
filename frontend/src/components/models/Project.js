@@ -5,6 +5,7 @@ export class Project {
     description
     client
     archived
+    participants = []
 
     constructor(id, title, description, client = null, archived = false) {
         this.id = id;

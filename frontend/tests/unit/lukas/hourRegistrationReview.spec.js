@@ -9,14 +9,19 @@ import {HourRegistrationStatus} from "../../../src/components/models/HourRegistr
 import {DateService} from "../../../src/Services/DateService";
 import Asset from "../../../src/components/Common/Asset.vue";
 import Participant from "../../../src/components/Scenes/Project/Participant.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import HourRegistryStatus from "../../../src/components/Scenes/Project/HourRegistryStatus.vue";
+import {reactive} from "vue";
 
 let wrapper;
-const hourRegistrationRepository = new InMemoryHourRegistrationRepo();
-const projectRepository = new InMemoryProjectRepo(hourRegistrationRepository);
 
-beforeEach(() => {
-    wrapper = mount(ProjectOverview, {
+let hourRegistrationRepository;
+let projectRepository;
+
+beforeEach(async () => {
+    hourRegistrationRepository = new InMemoryHourRegistrationRepo();
+    projectRepository = new InMemoryProjectRepo(hourRegistrationRepository);
+
+    wrapper = await mount(ProjectOverview, {
         propsData: {
             project: projectRepository.entities[0],
         },
@@ -52,50 +57,45 @@ describe('can click popup', () => {
         // wait for Vue created hook to finish before continue testing
         await wrapper.vm.$nextTick();
 
-        setTimeout(() => {
+        expect(wrapper.vm.hourRegistry.length).toBeGreaterThan(0);
+        const hour = wrapper.vm.hourRegistry[0];
 
-            expect(wrapper.vm.hourRegistry.length).toBeGreaterThan(0);
-            const hour = wrapper.vm.hourRegistry[0];
+        expect(hour).toBeDefined();
+        let hourRowEl = wrapper.findComponent(HoursRow);
 
-            expect(hour).toBeDefined();
-            let hourRowEl = wrapper.findComponent(HoursRow);
+        expect(hourRowEl.exists()).toBe(true);
 
-            expect(hourRowEl.exists()).toBe(true);
+        // hidden by default.
+        expect(hourRowEl.vm.showPopup).toStrictEqual(false);
+        expect(wrapper.find(`#hr-popup-${hour.id}`).exists()).toBe(false);
 
-            // hidden by default.
-            expect(hourRowEl.vm.showPopup).toStrictEqual(false);
-            expect(wrapper.find(`#hr-${hour.id} #hr-popup`).exists()).toBe(false);
-
-            // clicking on the row
-            hourRowEl.trigger('click');
-            expect(hourRowEl.vm.showPopup).toStrictEqual(true);
-            expect(wrapper.find(`#hr-${hour.id} #hr-popup`).exists()).toBe(true);
-        }, 10)
+        // clicking on the row
+        await hourRowEl.find('tr').trigger('click');
+        await wrapper.vm.$nextTick();
+        expect(hourRowEl.vm.showPopup).toStrictEqual(true);
+        expect(wrapper.find(`#hr-popup-${hour.id}`).exists()).toBe(true);
     });
-    it('popup contains right data', () => {
+    it('popup contains right data', async() => {
         const hour = wrapper.vm.hourRegistry[0];
         expect(hour).toBeDefined();
         expect(hour.status).toStrictEqual(null);
 
-        setTimeout(() => {
-            let hourRowEl = wrapper.findComponent(HoursRow);
-            expect(hourRowEl.html()).toContain("In afwachting");
+        let hourRowEl = wrapper.findComponent(HoursRow);
+        expect(hourRowEl.html()).toContain("In afwachting");
 
-            hourRowEl.trigger('click');
+        await hourRowEl.find('tr').trigger('click');
+        await wrapper.vm.$nextTick();
 
-            let popupEl = wrapper.findComponent(HoursInfoPopup);
+        let popupEl = wrapper.findComponent(HoursInfoPopup);
 
-            expect(popupEl.find('#review-btns').exists()).toBe(true);
-            expect(popupEl.find('#review-btns .reject').exists()).toBe(true);
-            expect(popupEl.find('#review-btns .accept').exists()).toBe(true);
-        }, 10);
+        expect(popupEl.find('#review-btns').exists()).toBe(true);
+        expect(popupEl.find('#review-btns .reject').exists()).toBe(true);
+        expect(popupEl.find('#review-btns .accept').exists()).toBe(true);
     });
-    it('can reject and accept', () => {
-        const hour = wrapper.vm.hourRegistry[0];
-
-        const rowWrapper = mount(HoursRow, {
-            propsData: {
-                registry: hour,
+    it('can reject and accept', async () => {
+        const rowWrapper = await mount(HoursRow, {
+            props: {
+                registry: reactive(hourRegistrationRepository.entities[0]),
             },
             data() {
                 return {
@@ -112,25 +112,26 @@ describe('can click popup', () => {
         });
 
         rowWrapper.vm.showPopup = true;
+        await rowWrapper.vm.$nextTick();
 
-        console.log(rowWrapper.html());
         const popupWrapper = rowWrapper.findComponent(HoursInfoPopup);
 
-        expect(hour).toBeDefined();
-        expect(hour.status).toStrictEqual(null);
+        expect(rowWrapper.vm.registry).toBeDefined();
+        expect(rowWrapper.vm.registry.status).toStrictEqual(null);
 
-        popupWrapper.trigger('changeStatus', true);
-        expect(hour.status).toStrictEqual(HourRegistrationStatus.accepted);
-        expect(rowWrapper.html()).toContain("Goedgekeurd");
+        let acceptButton = popupWrapper.find('.accept');
+        await acceptButton.trigger('click');
+        await rowWrapper.vm.$nextTick();
 
-        hour.status = null;
-        expect(hour.status).toStrictEqual(null);
-        expect(rowWrapper.html()).toContain("In afwachting");
+        expect(rowWrapper.vm.registry.status).toStrictEqual(HourRegistrationStatus.accepted);
 
-        popupWrapper.trigger('changeStatus', false);
-        expect(hour.status).toStrictEqual(HourRegistrationStatus.rejected);
-        expect(rowWrapper.html()).toContain("Afgewezen");
-        expect("smash").toStrictEqual("lol");
+        rowWrapper.vm.registry.status = null;
+        await rowWrapper.vm.$nextTick();
+        expect(rowWrapper.vm.registry.status).toStrictEqual(null);
+
+        await popupWrapper.find('.reject').trigger('click');
+        await rowWrapper.vm.$nextTick();
+        expect(rowWrapper.vm.registry.status).toStrictEqual(HourRegistrationStatus.rejected);
     });
 
 });
