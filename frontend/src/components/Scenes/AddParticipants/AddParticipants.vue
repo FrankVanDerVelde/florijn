@@ -68,6 +68,7 @@ export default {
   methods: {
     addParticipant(specialist) {
       this.selectedSpecialist = null;
+      console.log(specialist);
 
       if (specialist.role === "" || specialist.hourlyRate === "") {
         // console.log("role or hourlyRate is null");

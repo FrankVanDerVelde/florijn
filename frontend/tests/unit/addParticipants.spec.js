@@ -57,35 +57,8 @@ describe('Correct Initialisation of the main page', () => {
     it('should render all skills correctly', function () {
         expect(wrapper.findAll('.skill').length).toBe(inMemorySkillsRepo.entities.length);
     });
+    it('should render all users correctly', function () {
+        expect(wrapper.findAll('.user').length).toBe(inMemoryUserRepo.entities.length);
+    })
 });
 
-describe('Add participants to project', () => {
-
-    it('should add a participant', function () {
-        let user = inMemoryUserRepo.entities[0];
-        console.log("Test")
-        console.log(wrapper.vm.project)
-        this.specialist1 = JSON.stringify({participant: user})
-        console.log(this.specialist1.participant)
-
-        wrapper.vm.addParticipant(this.specialist1);
-        // expect(wrapper.vm.project.participants.length).toBe(1);
-    });
-    // it('should remove a participant', function () {
-    //     let user = inMemoryUserRepo.entities[0];
-    //     wrapper.vm.addParticipant(user);
-    //     wrapper.vm.removeParticipant(user);
-    //     expect(wrapper.vm.project.participants.length).toBe(0);
-    // });
-    // it('should not add a participant twice', function () {
-    //     let user = inMemoryUserRepo.entities[0];
-    //     wrapper.vm.addParticipant(user);
-    //     expect(wrapper.vm.project.participants.length).toBe(1);
-    // });
-    // it('should not remove a participant if not in list', function () {
-    //     let user = inMemoryUserRepo.entities[0];
-    //     wrapper.vm.removeParticipant(user);
-    //     expect(wrapper.vm.project.participants.length).toBe(0);
-    // });
-
-});

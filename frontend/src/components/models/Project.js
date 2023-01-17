@@ -11,7 +11,6 @@ export class Project {
         this.title = title;
         this.description = description;
         this.client = client;
-        this.archived = archived;
         this.participants = participants;
     }
 
