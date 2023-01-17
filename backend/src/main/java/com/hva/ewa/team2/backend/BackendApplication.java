@@ -1,6 +1,6 @@
 package com.hva.ewa.team2.backend;
 
-import com.hva.ewa.team2.backend.common.services.date.DateService;
+import com.hva.ewa.team2.backend.common.services.date.DateServiceLogic;
 import com.hva.ewa.team2.backend.data.Availability.AvailabilityRepository;
 import com.hva.ewa.team2.backend.data.hourregistration.HourRegistrationRepository;
 import com.hva.ewa.team2.backend.data.project.ProjectRepository;
@@ -21,19 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.orm.jpa.EntityManagerHolder;
 
-import javax.persistence.EntityManagerFactory;
-import javax.print.attribute.standard.Media;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.hva.ewa.team2.backend"})
 public class BackendApplication implements CommandLineRunner {
 
     private final UserRepository userRepo;
@@ -42,11 +39,11 @@ public class BackendApplication implements CommandLineRunner {
     private final ExpertiseRepository expertiseRepository;
     private final ProjectRepository projectRepo;
     private final HourRegistrationRepository hourRegistrationRepo;
-    private final DateService dateService;
+    private final DateServiceLogic dateService;
     private final AvailabilityRepository availability;
 
     @Autowired
-    public BackendApplication(UserRepository userRepo, SkillRepository skillRepo, SkillGroupRepository skillGroupRepository, ExpertiseRepository expertiseRepository, ProjectRepository projectRepo, HourRegistrationRepository hourRegistrationRepo, DateService dateService, AvailabilityRepository availability) {
+    public BackendApplication(UserRepository userRepo, SkillRepository skillRepo, SkillGroupRepository skillGroupRepository, ExpertiseRepository expertiseRepository, ProjectRepository projectRepo, HourRegistrationRepository hourRegistrationRepo, DateServiceLogic dateService, AvailabilityRepository availability) {
         this.userRepo = userRepo;
         this.skillRepo = skillRepo;
         this.skillGroupRepository = skillGroupRepository;

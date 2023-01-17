@@ -89,6 +89,21 @@ public class Project implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Project project = (Project) o;
+
+        return getId().equals(project.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
     public void addSpecialist(ProjectParticipant specialist) {
         participants.add(specialist);
     }

@@ -57,6 +57,8 @@ public class ProjectInteractor implements ProjectBusinessLogic {
             throw new UnauthorizedException();
         }
 
+        System.out.println(projectInfo);
+
         final String title = projectInfo.getTitle();
         final Optional<Integer> clientId = projectInfo.getClient();
         final String description = projectInfo.getDescription();
