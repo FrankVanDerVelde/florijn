@@ -1,7 +1,7 @@
-<template>
+<template v-if="registry && Object.keys(registry).length > 0">
     <HoursInfoPopup v-if="showPopup"
                     :registry="registry"
-                    :id="`hr-popup`"
+                    :id="`hr-popup-${registry.id}`"
                     @close="showPopup = false"
                     @changeStatus="updateRegistryStatus"/>
     <tr @click="showPopup = true">
@@ -20,7 +20,7 @@
             {{ this.formatDate }}
         </td>
         <td class="status">
-            <hour-registry-status :status="registry.status"/>
+            <HourRegistryStatus id="hr-status" status="hello"/>
         </td>
     </tr>
 </template>

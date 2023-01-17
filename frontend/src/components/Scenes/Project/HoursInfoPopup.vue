@@ -93,7 +93,7 @@
                             </div>
                         </div>
 
-                        <div v-if="registry.status == null && user.role !== 'SPECIALIST'" id="review-btns" class="flex gap-2 mt-6">
+                        <div v-if="registry.status == null && user?.role !== 'SPECIALIST'" id="review-btns" class="flex gap-2 mt-6">
                             <button class="reject" @click="$emit('changeStatus', false)">Afwijzen</button>
                             <button class="accept" @click="$emit('changeStatus', true)">Goedkeuren</button>
                         </div>

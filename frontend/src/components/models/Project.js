@@ -4,12 +4,15 @@ export class Project {
     title
     description
     client
+    archived
+    participants = []
 
-    constructor(id, title, description, client = null) {
+    constructor(id, title, description, client = null, archived = false) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.client = client;
+        this.archived = archived;
     }
 
     static createSample(id) {

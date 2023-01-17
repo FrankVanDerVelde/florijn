@@ -26,7 +26,7 @@ export default class InMemoryHourRegistrationRepo extends InMemoryEntitiesServic
                     project,
                     participant,
                     new Date(2021, 1, 1, 8, 0, 0),
-                    new Date(2022, 1, 1, 10, 0, 0),
+                    new Date(2021, 1, 1, 10, 0, 0),
                     "You know nothing, Jon Snow",
                     null
                 ));
@@ -39,18 +39,19 @@ export default class InMemoryHourRegistrationRepo extends InMemoryEntitiesServic
     }
 
     updateStatusForHourRegistration(regId, status) {
-        const reg = this.entities.find(hr => hr.id === regId);
+        const reg = this.findById(regId);
         if (reg == null) return null;
 
         reg.status = status;
+        this.save(reg);
         return reg;
     }
 
-    acceptHourRegistration(regId) {
+    async acceptHourRegistration(regId) {
         return this.updateStatusForHourRegistration(regId, HourRegistrationStatus.accepted);
     }
 
-    rejectHourRegistration(regId) {
+    async rejectHourRegistration(regId) {
         return this.updateStatusForHourRegistration(regId, HourRegistrationStatus.rejected);
     }
 }

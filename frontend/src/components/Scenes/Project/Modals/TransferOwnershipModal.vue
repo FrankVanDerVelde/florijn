@@ -61,6 +61,9 @@ export default {
         clients: {
             type: Array,
             required: true
+        },
+        user: {
+            required: true,
         }
     },
 
@@ -86,9 +89,7 @@ export default {
                 return;
             }
 
-            const user = JSON.parse(localStorage.getItem('user'));
-
-            if (user.role === "ADMIN") {
+            if (this.user?.role === "ADMIN") {
                 this.$router.push({name: 'project-overview', params: {projectId: this.project.id}})
             } else {
                 this.$router.push({name: 'projects'});
