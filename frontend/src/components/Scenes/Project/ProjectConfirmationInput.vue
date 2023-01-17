@@ -2,7 +2,7 @@
   <div class="mt-3">
     <label class="block text-base leading-5 text-gray-600 font-bold mt-3">Bevestiging</label>
     <p class="text-sm text-gray-600 block mb-1">Typ de project titel in het invoerveld om deze actie te bevestigen: "<kbd>{{ needed }}</kbd>"</p>
-    <input :placeholder="needed" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"/>
+    <input id="confirm-input" :placeholder="needed" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"/>
   </div>
 </template>
 
