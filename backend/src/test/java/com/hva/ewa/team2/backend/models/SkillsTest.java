@@ -40,21 +40,6 @@ public class SkillsTest {
         testSkill = new Skill(100, "test-skill", "description");
 
         userSkillList = skillRepo.getAllSkills();
-//        for (int i = 0; i < 5; i++) {
-//            specialist = userRepo.save(new Specialist(0
-//                    , "skillstest@test.com",
-//                    "test",
-//                    "users/avatars/1.avif",
-//                    "Skills", "Test",
-//                    new Address(
-//                            "Hoorn",
-//                            "Noorder Plantsoen",
-//                            12,
-//                            "",
-//                            "1623AB"),
-//                    "users/resumes/sample-resume.pdf"));
-//        }
-
     }
 
     @Test
