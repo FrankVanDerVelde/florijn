@@ -61,12 +61,33 @@ public class InMemoryUserRepository implements UserRepository {
         users.add(specialist);
     }
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
+    /**
+     * Fixes for storing and comparing passwords in plain text:
+        * 
+        * Issue: Storing and Comparing Passwords in Plain Text
+        * - The original code compares user-supplied passwords directly with stored passwords. 
+        *   Storing and handling passwords in plain text is insecure and exposes user credentials to potential leaks.
+        * 
+        * Solution:
+        * 1. Use BCrypt hashing for storing and verifying passwords. This involves hashing the passwords before they are stored
+        *    and using the BCryptPasswordEncoder's matches method to compare stored hashes with the hashed version of the input password.
+
+        * NOTE: Highlighting error is because of strict linter wanting the class to be in it's own file
+     */
     @Override
     public User findUserByCredentials(String email, String password) {
         return this.users.stream()
                 .filter(user -> user.getEmail().equals(email))
-                .filter(user -> user.getPassword().equals(password))
+
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .findFirst().orElse(null);
+    }
+
+    public String hashPassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
     @Override

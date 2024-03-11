@@ -19,6 +19,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Fixes for Cross-Site Request Forgery (CSRF) vulnerability:
+ * 
+ * Issue: Vulnerable to CSRF Attacks
+ * - The original application does not implement CSRF protection, making it vulnerable to attacks where
+ *   malicious websites could perform unauthorized actions on behalf of an authenticated user without their consent.
+ * 
+ * Solution:
+ * 1. Integrate Spring Security and enable CSRF protection. Spring Security provides built-in support for CSRF tokens,
+ *    which are required for state-changing operations, thereby preventing CSRF attacks.
+ */
+@EnableWebSecurity
 @RestController
 @ResponseBody
 @RequestMapping("/projects")
