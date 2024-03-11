@@ -84,4 +84,9 @@ public class HourRegistration {
         return ChronoUnit.MINUTES.between(from, to) / 60d;
     }
 
+    public String getName() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getName'");
+    }
+
 }

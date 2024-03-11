@@ -32,13 +32,15 @@ public class CreateHourRegistrationRequestBody {
     public String createHourRegistration(@RequestBody String objectData) {
         try {
             HourRegistration registration = objectMapper.readValue(objectData, HourRegistration.class);
-            return "Received registration for: " + escapeHtml(registration.toString());
+            String safeName = escapeHtml(registration.getName()); // Example for a getName() method
+            return "Received registration for: " + safeName;
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
-    
+
     private String escapeHtml(String input) {
+        if (input == null) return null;
         return input.replace("&", "&amp;")
                     .replace("<", "&lt;")
                     .replace(">", "&gt;")
