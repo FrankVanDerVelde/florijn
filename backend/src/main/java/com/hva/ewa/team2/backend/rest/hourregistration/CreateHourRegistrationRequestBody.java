@@ -1,35 +1,22 @@
-package com.hva.ewa.team2.backend.rest.hourregistration;
+import java.io.*;
+import java.util.Base64;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
-
+@RestController
 public class CreateHourRegistrationRequestBody {
 
-    @Getter @Setter
-    @JsonProperty("project_id")
-    private int projectId;
-
-    @Getter @Setter
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime from;
-
-    @Getter @Setter
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
-    private LocalDateTime to;
-
-    @Getter @Setter
-    private String description;
-
-    public CreateHourRegistrationRequestBody(int projectId, LocalDateTime from, LocalDateTime to, String description) {
-        this.projectId = projectId;
-        this.from = from;
-        this.to = to;
-        this.description = description;
+    @PostMapping("/createHourRegistration")
+    public String unsafeDeserialize(@RequestParam String objectData) {
+        try {
+            byte[] data = Base64.getDecoder().decode(objectData);
+            ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+            Object o = ois.readObject();
+            ois.close();
+            return "Deserialized object: " + o.toString();
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
-
-    public CreateHourRegistrationRequestBody() { }
 }
